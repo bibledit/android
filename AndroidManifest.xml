@@ -3,8 +3,8 @@
 <manifest 
     xmlns:android="http://schemas.android.com/apk/res/android" 
     package="org.bibledit.android" 
-    android:versionCode="69"
-    android:versionName="1.0.668"
+    android:versionCode="70"
+    android:versionName="1.0.691"
   >
 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,8 +16,8 @@
     android:targetSdkVersion="11"
   />
 
-  <!-- Some Chromebooks don't support touch. 
-   It is not essential but still it's good to explicitly state that it does not require touch. -->
+  <!-- Some Chromebooks don't support touch. -->
+  <!-- It is not essential but still it's good to explicitly state that it does not require touch. -->
   <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
   <supports-screens
