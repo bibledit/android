@@ -1,17 +1,20 @@
 #!/bin/sh
 
 
-# Export environment variables to find the Android SDK
-# To use this script to set the variables, run it like $ . ~/scr/android
-export ANDROID_HOME=/home/teus/documents/dev/android-sdk-linux
-export PATH=$PATH:/home/teus/documents/dev/android-sdk-linux/platform-tools:/home/teus/documents/dev/android-sdk-linux/tools
+# See the "debug" and "native" scripts for more information.
 
 
-# Build source.
+export ANDROID_HOME=~/scr/android-sdk-macosx
+export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-macosx/tools:~/scr/android-ndk-r10e
+# ant clean
+# EXIT_CODE=$?
+# if [ $EXIT_CODE != 0 ]; then
+# exit
+# fi
+# ndk-build
 ant release
 EXIT_CODE=$?
 if [ $EXIT_CODE != 0 ]; then
   exit
 fi
-
-
+# ndk-build clean
