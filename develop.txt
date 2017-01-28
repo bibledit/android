@@ -1,0 +1,3 @@
+The app can be moved from the phone's internal memory to the SD card. After installation, then moving it to the SD card, it keeps working after that. When then moving the app back to the phone's internal memory, and starting the app, it then crashes.
+
+The app needs the Android System Webview for work well. It appears that the Android System Webview needs Android 5.0 or higher.

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		CA087CEF1E3CE2DB003B308A /* develop.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = develop.txt; sourceTree = "<group>"; };
 		CA3BB0A01B148FD100BAAA33 /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
 		CA679B181B1C78A2002E3407 /* bibledit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bibledit.cpp; sourceTree = "<group>"; };
 		CA679B191B1C78A2002E3407 /* bibledit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bibledit.h; sourceTree = "<group>"; };
@@ -20,7 +21,6 @@
 		CA97BC151B0F7E1E00877437 /* proguard-project.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "proguard-project.txt"; sourceTree = "<group>"; };
 		CA97BC161B0F7E1E00877437 /* project.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = project.properties; sourceTree = "<group>"; };
 		CA97BC171B0F7E1E00877437 /* release */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = release; sourceTree = "<group>"; };
-		CA97BC181B0F7E3600877437 /* testing.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = testing.txt; sourceTree = "<group>"; };
 		CA97BC1B1B0F7E4A00877437 /* MainActivity.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; name = MainActivity.java; path = src/org/bibledit/android/MainActivity.java; sourceTree = "<group>"; };
 		CA97BC201B0F7EE300877437 /* main.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = main.xml; sourceTree = "<group>"; };
 		CA97BC221B0F7EE300877437 /* strings.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = strings.xml; sourceTree = "<group>"; };
@@ -67,6 +67,7 @@
 				CA97BC121B0F7E0400877437 /* build.xml */,
 				CA6FFB001C773BEA00239D5C /* copy */,
 				CA97BC131B0F7E0C00877437 /* debug */,
+				CA087CEF1E3CE2DB003B308A /* develop.txt */,
 				CAE0F22B1B1DDCBE00970969 /* gdb */,
 				CAE2DAFA1B10DE4A008EE025 /* jni */,
 				CA97BC1F1B0F7EE300877437 /* layout */,
@@ -78,7 +79,6 @@
 				CA97BC171B0F7E1E00877437 /* release */,
 				CAA820141CF9C7E200D8FDF6 /* run */,
 				CA97BC231B0F7EED00877437 /* src */,
-				CA97BC181B0F7E3600877437 /* testing.txt */,
 				CA97BC211B0F7EE300877437 /* values */,
 			);
 			sourceTree = "<group>";
