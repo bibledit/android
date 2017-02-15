@@ -11,16 +11,19 @@ export ANDROID_HOME=~/scr/android-sdk-macosx
 export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-macosx/tools:~/scr/android-ndk-r10e
 
 
-# Build the locale databases for inclusion with the Android package.
+# Build several databases and other data for inclusion with the Android package.
 # The reason for this is that building them on Android takes a lot of time during the setup phase.
-# To include pre-built databases, that will speed up the setup phase of Bibledit on Android.
+# To include pre-built data, that will speed up the setup phase of Bibledit on Android.
 # This gives a better user experience.
+# At the end, it removes the journal entries that were logged in the process.
 pushd ../lib
 ./configure
 make --jobs=24
 ./generate . locale
 ./generate . mappings
 ./generate . versifications
+./generate . samplebible
+rm logbook/1*
 popd
 
 
