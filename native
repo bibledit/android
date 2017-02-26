@@ -16,18 +16,17 @@ export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-maco
 # To include pre-built data, that will speed up the setup phase of Bibledit on Android.
 # This gives a better user experience.
 # At the end, it removes the journal entries that were logged in the process.
-pushd ../lib
+pushd ../cloud
 ./configure
 make --jobs=24
 ./generate . locale
 ./generate . mappings
 ./generate . versifications
-rm logbook/1*
 popd
 
 
 # Refresh the Bibledit source code in the jni folder.
-rsync -a --exclude '*.o' --delete ../lib/* jni
+rsync -a --exclude '*.o' --delete ../cloud/* jni
 pushd jni
 ./configure --enable-android
 rm -f bibledit
