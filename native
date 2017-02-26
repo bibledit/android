@@ -22,7 +22,6 @@ make --jobs=24
 ./generate . locale
 ./generate . mappings
 ./generate . versifications
-./generate . samplebible
 rm logbook/1*
 popd
 
