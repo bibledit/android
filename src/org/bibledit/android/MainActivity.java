@@ -116,6 +116,7 @@ public class MainActivity extends Activity
     public native void StartLibrary ();
     public native Boolean IsRunning ();
     public native String IsSynchronizing ();
+    public native String GetExternalUrl ();
     public native void StopLibrary ();
     public native void ShutdownLibrary ();
     public native void Log (String message);
@@ -394,6 +395,12 @@ public class MainActivity extends Activity
                     }
                 }
                 previousSyncState = syncState;
+                String externalUrl = GetExternalUrl ();
+                if (externalUrl != null && !externalUrl.isEmpty ()) {
+                    Log.d ("Bibledit start Browser", externalUrl);
+                    Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (externalUrl));
+                    startActivity(browserIntent);
+                }
                 startTimer ();
             }
         };

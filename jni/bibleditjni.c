@@ -75,6 +75,12 @@ jstring Java_org_bibledit_android_MainActivity_IsSynchronizing (JNIEnv* env, job
 }
 
 
+jstring Java_org_bibledit_android_MainActivity_GetExternalUrl (JNIEnv* env, jobject obj)
+{
+    return (*env)->NewStringUTF(env, bibledit_get_external_url ());
+}
+
+
 void Java_org_bibledit_android_MainActivity_StopLibrary (JNIEnv* env, jobject obj)
 {
     bibledit_stop_library ();
