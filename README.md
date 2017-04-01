@@ -6,10 +6,6 @@ To get a shell on the device: $ adb shell
 
 To view the logbook from within the shell on the device: $ logcat
 
-## Dependencies
-
-Native dependencies are in folder "sqlite" and can be built from there.
-
 ## Build test release
 
 Run script ./copy to copy the source to a temporal location separate from the source repository.
