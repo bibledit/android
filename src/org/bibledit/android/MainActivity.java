@@ -36,6 +36,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import android.os.Process;
 import android.view.WindowManager;
+import android.webkit.DownloadListener;
+import android.app.DownloadManager;
+import android.widget.Toast;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -89,6 +92,23 @@ public class MainActivity extends Activity
         webview.getSettings().setBuiltInZoomControls (true);
         webview.getSettings().setSupportZoom (true);
         webview.setWebViewClient(new WebViewClient());
+        webview.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype,
+                                         long contentLength) {
+                DownloadManager.Request request = new DownloadManager.Request (Uri.parse (url));
+                request.allowScanningByMediaScanner();
+                // Notification once download is completed.
+                request.setNotificationVisibility (DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Uri uri = Uri.parse (url);
+                String filename = uri.getLastPathSegment ();
+                request.setDestinationInExternalPublicDir (Environment.DIRECTORY_DOWNLOADS, filename);
+                DownloadManager dm = (DownloadManager) getSystemService (DOWNLOAD_SERVICE);
+                dm.enqueue (request);
+                // Notification that the file is being downloaded.
+                Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
+            }
+        });
         webview.loadUrl (webAppUrl);
         
         // Install the assets if needed.
