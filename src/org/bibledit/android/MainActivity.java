@@ -108,8 +108,8 @@ public class MainActivity extends Activity
     
     
     // A native method that is implemented by the native library which is packaged with this application.
-    // Through trial and error it was discovered that there should be no understores (_) in the function name,
-    // to avoid a "java.lang.UnsatisfiedLinkError: Native method not found" exception.
+    // There should be no understores (_) in the function name.
+    // This avoids a "java.lang.UnsatisfiedLinkError: Native method not found" exception.
     public native String GetVersionNumber ();
     public native void SetTouchEnabled (Boolean enabled);
     public native void InitializeLibrary (String resources, String webroot);
