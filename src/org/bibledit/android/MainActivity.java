@@ -39,6 +39,9 @@ import android.view.WindowManager;
 import android.webkit.DownloadListener;
 import android.app.DownloadManager;
 import android.widget.Toast;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.graphics.Bitmap;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -54,7 +57,20 @@ public class MainActivity extends Activity
     Timer timer;
     TimerTask timerTask;
     String previousSyncState;
+    private ValueCallback<Uri> myUploadMessage;
+    private final static int FILECHOOSER_RESULTCODE = 1;
+
     
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == myUploadMessage) return;
+            Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+            myUploadMessage.onReceiveValue (result);
+            myUploadMessage = null;
+        }
+    }
+
     
     // Function is called when the app gets launched.
     @Override
@@ -107,6 +123,32 @@ public class MainActivity extends Activity
                 dm.enqueue (request);
                 // Notification that the file is being downloaded.
                 Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
+            }
+        });
+        webview.setWebChromeClient(new WebChromeClient() {
+            // The undocumented method overrides.
+            // The compiler fails if you try to put @Override here.
+            // It needs three interfaces to handle the various versions of Android.
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
+            }
+            public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
             }
         });
         webview.loadUrl (webAppUrl);
