@@ -38,7 +38,7 @@ rm -f server
 rm -f unittest
 rm -f generate
 rm valgrind
-rm -r xcode
+rm -rf cloud.xcodeproj
 rm -r executable
 rm aclocal.m4
 rm AUTHORS
