@@ -81,6 +81,12 @@ jstring Java_org_bibledit_android_MainActivity_GetExternalUrl (JNIEnv* env, jobj
 }
 
 
+jstring Java_org_bibledit_android_MainActivity_GetPagesToOpen (JNIEnv* env, jobject obj)
+{
+    return (*env)->NewStringUTF(env, bibledit_get_pages_to_open ());
+}
+
+
 void Java_org_bibledit_android_MainActivity_StopLibrary (JNIEnv* env, jobject obj)
 {
     bibledit_stop_library ();
