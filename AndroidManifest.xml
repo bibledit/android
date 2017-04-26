@@ -47,8 +47,6 @@
       </intent-filter>
     </activity>
 
-    <service android:enabled="true" android:name=".RunServer" />
-    
   </application>
   
 </manifest>
