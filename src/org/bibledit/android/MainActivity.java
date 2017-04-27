@@ -42,6 +42,9 @@ import android.widget.Toast;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.graphics.Bitmap;
+import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.LinearLayout.LayoutParams;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -52,6 +55,7 @@ public class MainActivity extends Activity
 {
     
     WebView webview;
+    TabHost tabhost;
     int resumecounter = 0;
     String webAppUrl = "http://localhost:8080";
     Timer timer;
@@ -102,56 +106,7 @@ public class MainActivity extends Activity
         
         StartLibrary ();
         
-        webview = new WebView (this);
-        setContentView (webview);
-        webview.getSettings().setJavaScriptEnabled (true);
-        webview.getSettings().setBuiltInZoomControls (true);
-        webview.getSettings().setSupportZoom (true);
-        webview.setWebViewClient(new WebViewClient());
-        webview.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype,
-                                         long contentLength) {
-                DownloadManager.Request request = new DownloadManager.Request (Uri.parse (url));
-                request.allowScanningByMediaScanner();
-                // Notification once download is completed.
-                request.setNotificationVisibility (DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                Uri uri = Uri.parse (url);
-                String filename = uri.getLastPathSegment ();
-                request.setDestinationInExternalPublicDir (Environment.DIRECTORY_DOWNLOADS, filename);
-                DownloadManager dm = (DownloadManager) getSystemService (DOWNLOAD_SERVICE);
-                dm.enqueue (request);
-                // Notification that the file is being downloaded.
-                Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
-            }
-        });
-        webview.setWebChromeClient(new WebChromeClient() {
-            // The undocumented method overrides.
-            // The compiler fails if you try to put @Override here.
-            // It needs three interfaces to handle the various versions of Android.
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
-            }
-            public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
-            }
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
-            }
-        });
-        webview.loadUrl (webAppUrl);
+        StartWebView ();
         
         // Install the assets if needed.
         installAssets (webroot);
@@ -435,6 +390,8 @@ public class MainActivity extends Activity
     private void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
+                
+                // Check whether to keep the screen on during send and receive.
                 String syncState = IsSynchronizing ();
                 // Log.d ("Bibledit syncing", syncState);
                 if (syncState.equals ("true")) {
@@ -458,12 +415,39 @@ public class MainActivity extends Activity
                     }
                 }
                 previousSyncState = syncState;
+                
+                // Check whether to open an external URL in the system browser.
                 String externalUrl = GetExternalUrl ();
                 if (externalUrl != null && !externalUrl.isEmpty ()) {
                     Log.d ("Bibledit start Browser", externalUrl);
                     Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (externalUrl));
                     startActivity(browserIntent);
                 }
+                
+                // Checking on whether to open tabbed views.
+                String URLs = GetPagesToOpen ();
+                Log.d ("Bibledit pages to open", URLs);
+                if (URLs != null && !URLs.isEmpty()) {
+                    String lines[] = URLs.split ("\\n");
+                    Log.d ("Lines count ", String.valueOf (lines.length));
+                    if (lines.length == 1) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                StartWebView ();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                StartTabHost ();
+                            }
+                        });
+                    }
+                }
+
+                // Start timeout for next iteration.
                 startTimer ();
             }
         };
@@ -483,4 +467,123 @@ public class MainActivity extends Activity
         super.onBackPressed();
     }
     
+    
+    private void StartWebView ()
+    {
+        webview = new WebView (this);
+        setContentView (webview);
+        webview.getSettings().setJavaScriptEnabled (true);
+        webview.getSettings().setBuiltInZoomControls (true);
+        webview.getSettings().setSupportZoom (true);
+        webview.setWebViewClient(new WebViewClient());
+        webview.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype,
+                                         long contentLength) {
+                DownloadManager.Request request = new DownloadManager.Request (Uri.parse (url));
+                request.allowScanningByMediaScanner();
+                // Notification once download is completed.
+                request.setNotificationVisibility (DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Uri uri = Uri.parse (url);
+                String filename = uri.getLastPathSegment ();
+                request.setDestinationInExternalPublicDir (Environment.DIRECTORY_DOWNLOADS, filename);
+                DownloadManager dm = (DownloadManager) getSystemService (DOWNLOAD_SERVICE);
+                dm.enqueue (request);
+                // Notification that the file is being downloaded.
+                Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
+            }
+        });
+        webview.setWebChromeClient(new WebChromeClient() {
+            // The undocumented method overrides.
+            // The compiler fails if you try to put @Override here.
+            // It needs three interfaces to handle the various versions of Android.
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
+            }
+            public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                myUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
+            }
+        });
+        webview.loadUrl (webAppUrl);
+    }
+    
+    
+    private void StartTabHost ()
+    {
+        tabhost = null;
+        
+        setContentView (R.layout.main);
+        
+        tabhost = (TabHost) findViewById (R.id.tabhost);
+        tabhost.setup ();
+        
+        TabHost.TabSpec tabspec;
+        TabContentFactory factory;
+        
+        tabspec = tabhost.newTabSpec("T");
+        tabspec.setIndicator("Translate");
+        factory = new TabHost.TabContentFactory () {
+            @Override
+            public View createTabContent (String tag) {
+                WebView webview = new WebView (getApplicationContext ());
+                webview.getSettings().setJavaScriptEnabled (true);
+                webview.setWebViewClient (new WebViewClient());
+                webview.loadUrl ("https://bibledit.org:8081/editone/index");
+                return webview;
+            }
+        };
+        tabspec.setContent(factory);
+        tabhost.addTab (tabspec);
+        
+        tabspec = tabhost.newTabSpec("R");
+        tabspec.setIndicator("Resources");
+        factory = new TabHost.TabContentFactory () {
+            @Override
+            public View createTabContent (String tag) {
+                WebView webview = new WebView (getApplicationContext ());
+                webview.getSettings().setJavaScriptEnabled (true);
+                webview.setWebViewClient (new WebViewClient());
+                webview.loadUrl ("https://bibledit.org:8081/resource/index");
+                return webview;
+            }
+        };
+        tabspec.setContent(factory);
+        tabhost.addTab (tabspec);
+        
+        tabspec = tabhost.newTabSpec("N");
+        tabspec.setIndicator("Notes");
+        factory = new TabHost.TabContentFactory () {
+            @Override
+            public View createTabContent (String tag) {
+                WebView webview = new WebView (getApplicationContext ());
+                webview.getSettings().setJavaScriptEnabled (true);
+                webview.setWebViewClient (new WebViewClient());
+                webview.loadUrl ("https://bibledit.org:8081/notes/index");
+                return webview;
+            }
+        };
+        tabspec.setContent(factory);
+        tabhost.addTab (tabspec);
+        
+        for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+            tabhost.getTabWidget().getChildAt(i).getLayoutParams().height /= 2;
+        }
+        
+    }
+
 }
