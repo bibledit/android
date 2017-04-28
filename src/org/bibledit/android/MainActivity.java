@@ -54,8 +54,8 @@ import android.widget.LinearLayout.LayoutParams;
 public class MainActivity extends Activity
 {
     
-    WebView webview;
-    TabHost tabhost;
+    WebView webview = null;
+    TabHost tabhost = null;
     int resumecounter = 0;
     String webAppUrl = "http://localhost:8080";
     Timer timer;
@@ -470,6 +470,8 @@ public class MainActivity extends Activity
     
     private void StartWebView ()
     {
+        if (webview != null) return;
+        tabhost = null;
         webview = new WebView (this);
         setContentView (webview);
         webview.getSettings().setJavaScriptEnabled (true);
@@ -525,7 +527,9 @@ public class MainActivity extends Activity
     
     private void StartTabHost ()
     {
-        tabhost = null;
+        if (tabhost != null) return;
+
+        webview = null;
         
         setContentView (R.layout.main);
         
