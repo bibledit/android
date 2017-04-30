@@ -57,7 +57,7 @@ public class MainActivity extends Activity
     WebView webview = null;
     TabHost tabhost = null;
     int resumecounter = 0;
-    String webAppUrl = "http://localhost:8080";
+    String webAppUrl = "http://localhost:8080/";
     Timer timer;
     TimerTask timerTask;
     String previousSyncState;
@@ -106,7 +106,7 @@ public class MainActivity extends Activity
         
         StartLibrary ();
         
-        StartWebView ();
+        StartWebView (webAppUrl);
         
         // Install the assets if needed.
         installAssets (webroot);
@@ -425,23 +425,23 @@ public class MainActivity extends Activity
                 }
                 
                 // Checking on whether to open tabbed views.
-                String URLs = GetPagesToOpen ();
-                Log.d ("Bibledit pages to open", URLs);
-                if (URLs != null && !URLs.isEmpty()) {
-                    String lines[] = URLs.split ("\\n");
+                final String PagesToOpen = GetPagesToOpen ();
+                Log.d ("Bibledit pages to open", PagesToOpen);
+                if (PagesToOpen != null && !PagesToOpen.isEmpty()) {
+                    final String lines[] = PagesToOpen.split ("\\n");
                     Log.d ("Lines count ", String.valueOf (lines.length));
                     if (lines.length == 1) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                StartWebView ();
+                                StartWebView (PagesToOpen);
                             }
                         });
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                StartTabHost ();
+                                StartTabHost (lines);
                             }
                         });
                     }
@@ -468,7 +468,7 @@ public class MainActivity extends Activity
     }
     
     
-    private void StartWebView ()
+    private void StartWebView (String PageToOpen)
     {
         if (webview != null) return;
         tabhost = null;
@@ -521,11 +521,11 @@ public class MainActivity extends Activity
                 MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
             }
         });
-        webview.loadUrl (webAppUrl);
+        webview.loadUrl (webAppUrl + PageToOpen);
     }
     
     
-    private void StartTabHost ()
+    private void StartTabHost (String[] URLs)
     {
         if (tabhost != null) return;
 
@@ -539,50 +539,24 @@ public class MainActivity extends Activity
         TabHost.TabSpec tabspec;
         TabContentFactory factory;
         
-        tabspec = tabhost.newTabSpec("T");
-        tabspec.setIndicator("Translate");
-        factory = new TabHost.TabContentFactory () {
-            @Override
-            public View createTabContent (String tag) {
-                WebView webview = new WebView (getApplicationContext ());
-                webview.getSettings().setJavaScriptEnabled (true);
-                webview.setWebViewClient (new WebViewClient());
-                webview.loadUrl ("https://bibledit.org:8081/editone/index");
-                return webview;
-            }
-        };
-        tabspec.setContent(factory);
-        tabhost.addTab (tabspec);
-        
-        tabspec = tabhost.newTabSpec("R");
-        tabspec.setIndicator("Resources");
-        factory = new TabHost.TabContentFactory () {
-            @Override
-            public View createTabContent (String tag) {
-                WebView webview = new WebView (getApplicationContext ());
-                webview.getSettings().setJavaScriptEnabled (true);
-                webview.setWebViewClient (new WebViewClient());
-                webview.loadUrl ("https://bibledit.org:8081/resource/index");
-                return webview;
-            }
-        };
-        tabspec.setContent(factory);
-        tabhost.addTab (tabspec);
-        
-        tabspec = tabhost.newTabSpec("N");
-        tabspec.setIndicator("Notes");
-        factory = new TabHost.TabContentFactory () {
-            @Override
-            public View createTabContent (String tag) {
-                WebView webview = new WebView (getApplicationContext ());
-                webview.getSettings().setJavaScriptEnabled (true);
-                webview.setWebViewClient (new WebViewClient());
-                webview.loadUrl ("https://bibledit.org:8081/notes/index");
-                return webview;
-            }
-        };
-        tabspec.setContent(factory);
-        tabhost.addTab (tabspec);
+        for (int i = 0; i < URLs.length; i++) {
+            final String URL = URLs [i];
+            Log.d ("URL", URL);
+            tabspec = tabhost.newTabSpec(URL);
+            tabspec.setIndicator(URL);
+            factory = new TabHost.TabContentFactory () {
+                @Override
+                public View createTabContent (String tag) {
+                    WebView webview = new WebView (getApplicationContext ());
+                    webview.getSettings().setJavaScriptEnabled (true);
+                    webview.setWebViewClient (new WebViewClient());
+                    webview.loadUrl (webAppUrl + URL);
+                    return webview;
+                }
+            };
+            tabspec.setContent(factory);
+            tabhost.addTab (tabspec);
+        }
         
         for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
             tabhost.getTabWidget().getChildAt(i).getLayoutParams().height /= 2;
