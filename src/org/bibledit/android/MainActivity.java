@@ -468,6 +468,17 @@ public class MainActivity extends Activity
                     } catch (JSONException e) {
                         Log.d ("Bibledit", e.getMessage ());
                     }
+                } else {
+                    if (tabhost != null) {
+                        if (tabhost.getCurrentTab () == 0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    StartWebView (webAppUrl);
+                                }
+                            });
+                        }
+                    }
                 }
                 
                 // Start timeout for next iteration.
@@ -587,6 +598,7 @@ public class MainActivity extends Activity
             tabhost.getTabWidget().getChildAt(i).getLayoutParams().height /= 2;
         }
         
+        tabhost.setCurrentTab (active);
     }
     
 }
