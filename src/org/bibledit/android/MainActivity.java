@@ -45,6 +45,11 @@ import android.graphics.Bitmap;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.LinearLayout.LayoutParams;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.List;
+import java.util.ArrayList;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -63,7 +68,7 @@ public class MainActivity extends Activity
     String previousSyncState;
     private ValueCallback<Uri> myUploadMessage;
     private final static int FILECHOOSER_RESULTCODE = 1;
-
+    
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -74,7 +79,7 @@ public class MainActivity extends Activity
             myUploadMessage = null;
         }
     }
-
+    
     
     // Function is called when the app gets launched.
     @Override
@@ -116,11 +121,11 @@ public class MainActivity extends Activity
         
         // Keep-awake timer.
         startTimer ();
-
+        
         /* FORCHROMEOS
-        Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
-        startActivity(browserIntent);
-        FORCHROMEOS */
+         Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
+         startActivity(browserIntent);
+         FORCHROMEOS */
     }
     
     
@@ -425,28 +430,46 @@ public class MainActivity extends Activity
                 }
                 
                 // Checking on whether to open tabbed views.
-                final String PagesToOpen = GetPagesToOpen ();
-                Log.d ("Bibledit pages to open", PagesToOpen);
-                if (PagesToOpen != null && !PagesToOpen.isEmpty()) {
-                    final String lines[] = PagesToOpen.split ("\\n");
-                    Log.d ("Lines count ", String.valueOf (lines.length));
-                    if (lines.length == 1) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                StartWebView (PagesToOpen);
+                final String jsonString = GetPagesToOpen ();
+                if (jsonString != null && !jsonString.isEmpty()) {
+                    try {
+                        JSONArray jsonArray = new JSONArray (jsonString);
+                        int length = jsonArray.length();
+                        Log.d ("JSON array length", Integer.toString (length));
+                        if (length == 1) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            final String URL = jsonObject.getString ("url");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    StartWebView (URL);
+                                }
+                            });
+                        } else {
+                            final List<String> URLs = new ArrayList<String>();
+                            final List<String> labels = new ArrayList<String>();
+                            Integer active = 0;
+                            for (int i = 0; i < length; i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String URL = jsonObject.getString ("url");
+                                URLs.add (URL);
+                                String label = jsonObject.getString ("label");
+                                labels.add (label);
+                                if (jsonObject.getBoolean ("active")) active = i;
                             }
-                        });
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                StartTabHost (lines);
-                            }
-                        });
+                            final Integer tab = active;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    StartTabHost (URLs, labels, tab);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        Log.d ("Bibledit", e.getMessage ());
                     }
                 }
-
+                
                 // Start timeout for next iteration.
                 startTimer ();
             }
@@ -525,10 +548,10 @@ public class MainActivity extends Activity
     }
     
     
-    private void StartTabHost (String[] URLs)
+    private void StartTabHost (List<String> URLs, List<String> labels, Integer active)
     {
         if (tabhost != null) return;
-
+        
         webview = null;
         
         setContentView (R.layout.main);
@@ -539,11 +562,13 @@ public class MainActivity extends Activity
         TabHost.TabSpec tabspec;
         TabContentFactory factory;
         
-        for (int i = 0; i < URLs.length; i++) {
-            final String URL = URLs [i];
+        for (int i = 0; i < URLs.size(); i++) {
+            final String URL = URLs.get (i);
             Log.d ("URL", URL);
-            tabspec = tabhost.newTabSpec(URL);
-            tabspec.setIndicator(URL);
+            final String label = labels.get (i);
+            Log.d ("label", label);
+            tabspec = tabhost.newTabSpec (label);
+            tabspec.setIndicator (label);
             factory = new TabHost.TabContentFactory () {
                 @Override
                 public View createTabContent (String tag) {
@@ -563,5 +588,5 @@ public class MainActivity extends Activity
         }
         
     }
-
+    
 }
