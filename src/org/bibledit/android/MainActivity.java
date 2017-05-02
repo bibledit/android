@@ -86,7 +86,6 @@ public class MainActivity extends Activity
     public void onCreate (Bundle savedInstanceState)
     {
         super.onCreate (savedInstanceState);
-        // Log.d ("Bibledit", "onCreate");
         
         
         // The directory of the external files.
@@ -157,7 +156,6 @@ public class MainActivity extends Activity
     @Override
     protected void onStart ()
     {
-        // Log.d ("Bibledit", "onStart");
         super.onStart();
         StartLibrary ();
         startTimer ();
@@ -168,7 +166,6 @@ public class MainActivity extends Activity
     @Override
     protected void onRestart ()
     {
-        // Log.d ("Bibledit", "onRestart");
         super.onRestart();
         StartLibrary ();
         startTimer ();
@@ -179,7 +176,6 @@ public class MainActivity extends Activity
     @Override
     public void onResume ()
     {
-        // Log.d ("Bibledit", "onResume");
         super.onResume();
         StartLibrary ();
         checkUrl ();
@@ -191,7 +187,6 @@ public class MainActivity extends Activity
     @Override
     public void onPause ()
     {
-        // Log.d ("Bibledit", "onPause");
         super.onPause ();
         StopLibrary ();
         stopTimer ();
@@ -202,7 +197,6 @@ public class MainActivity extends Activity
     @Override
     protected void onStop ()
     {
-        // Log.d ("Bibledit", "onStop");
         super.onStop();
         StopLibrary ();
         stopTimer ();
@@ -213,7 +207,6 @@ public class MainActivity extends Activity
     @Override
     public void onDestroy ()
     {
-        // Log.d ("Bibledit", "onDestroy");
         super.onDestroy ();
         StopLibrary ();
         stopTimer ();
@@ -235,7 +228,6 @@ public class MainActivity extends Activity
     // The fix was to add "keyboard" to the above "configChanges" element.
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // Log.d ("Bibledit", "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
     
@@ -398,7 +390,6 @@ public class MainActivity extends Activity
                 
                 // Check whether to keep the screen on during send and receive.
                 String syncState = IsSynchronizing ();
-                // Log.d ("Bibledit syncing", syncState);
                 if (syncState.equals ("true")) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -406,7 +397,6 @@ public class MainActivity extends Activity
                             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
                     });
-                    // Log.d ("Bibledit", "keep screen on");
                 }
                 if (syncState.equals ("false")) {
                     if (syncState.equals (previousSyncState)) {
@@ -416,7 +406,6 @@ public class MainActivity extends Activity
                                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                         });
-                        // Log.d ("Bibledit", "do not keep screen on");
                     }
                 }
                 previousSyncState = syncState;
@@ -424,7 +413,7 @@ public class MainActivity extends Activity
                 // Check whether to open an external URL in the system browser.
                 String externalUrl = GetExternalUrl ();
                 if (externalUrl != null && !externalUrl.isEmpty ()) {
-                    Log.d ("Bibledit start Browser", externalUrl);
+                    Log.d ("Bibledit start browser", externalUrl);
                     Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (externalUrl));
                     startActivity(browserIntent);
                 }
@@ -435,38 +424,26 @@ public class MainActivity extends Activity
                     try {
                         JSONArray jsonArray = new JSONArray (jsonString);
                         int length = jsonArray.length();
-                        Log.d ("JSON array length", Integer.toString (length));
-                        if (length == 1) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-                            final String URL = jsonObject.getString ("url");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    StartWebView (URL);
-                                }
-                            });
-                        } else {
-                            final List<String> URLs = new ArrayList<String>();
-                            final List<String> labels = new ArrayList<String>();
-                            Integer active = 0;
-                            for (int i = 0; i < length; i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                String URL = jsonObject.getString ("url");
-                                URLs.add (URL);
-                                String label = jsonObject.getString ("label");
-                                labels.add (label);
-                                if (jsonObject.getBoolean ("active")) active = i;
-                            }
-                            final Integer tab = active;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    StartTabHost (URLs, labels, tab);
-                                }
-                            });
+                        final List<String> URLs = new ArrayList<String>();
+                        final List<String> labels = new ArrayList<String>();
+                        Integer active = 0;
+                        for (int i = 0; i < length; i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String URL = jsonObject.getString ("url");
+                            URLs.add (URL);
+                            String label = jsonObject.getString ("label");
+                            labels.add (label);
+                            if (jsonObject.getBoolean ("active")) active = i;
                         }
+                        final Integer tab = active;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                StartTabHost (URLs, labels, tab);
+                            }
+                        });
                     } catch (JSONException e) {
-                        Log.d ("Bibledit", e.getMessage ());
+                        Log.d ("Bibledit error", e.getMessage ());
                     }
                 } else {
                     if (tabhost != null) {
@@ -575,9 +552,7 @@ public class MainActivity extends Activity
         
         for (int i = 0; i < URLs.size(); i++) {
             final String URL = URLs.get (i);
-            Log.d ("URL", URL);
             final String label = labels.get (i);
-            Log.d ("label", label);
             tabspec = tabhost.newTabSpec (label);
             tabspec.setIndicator (label);
             factory = new TabHost.TabContentFactory () {
