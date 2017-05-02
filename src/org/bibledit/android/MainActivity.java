@@ -178,7 +178,6 @@ public class MainActivity extends Activity
     {
         super.onResume();
         StartLibrary ();
-        checkUrl ();
         startTimer ();
     }
     
@@ -323,42 +322,21 @@ public class MainActivity extends Activity
     }
     
     
-    // Checks whether the browser has a Bibledit page opened.
-    // If not, it navigates the browser to the Bibledit home page.
-    private void checkUrl ()
-    {
-        // Bail out on the activity's first resume.
-        // Else it crashes on checking its URL.
-        resumecounter++;
-        if (resumecounter <= 1) return;
-        
-        Boolean load_index = false;
-        String url = webview.getUrl ();
-        if (url.length () >= 21) {
-            String bit = url.substring (0, 21);
-            if (bit.compareTo (webAppUrl) != 0) {
-                load_index = true;
-            }
-        } else load_index = true;
-        if (load_index) {
-            // Load the index page.
-            webview.loadUrl (webAppUrl);
-        } else {
-            // Just to be sure that any javascript runs, reload the loaded URL.
-            // This was disabled later, as reloading the page could lead to the loss of the information that page contained, e.g. when creating a note.
-            // webview.loadUrl (url);
-        }
-    }
-    
-    
     /*
+     
+     Upon resume, it used to check that the URL loaded in the webview as a page
+     served by the embedded webserver. Later a modification was done to the app.
+     An external page is no longer loaded in the embedded webview.
+     It is now loaded in the system browser.
+     Therefore this check on a local URL is no longer needed.
+     It was removed.
      
      There was an idea that the app would shut down itself after it would be in the background for a while.
      This works well when another app is started and thus Bibledit goes to the background.
      But when the screen is powered off, then when Bibledit quits itself, Android keeps restarting it.
      And when the screen is powered on again, then Bibledit cannot find the page.
      Thus since this does not work well, it was not implemented.
-     
+     Here's the code that was supposed to do it:
      System.runFinalizersOnExit (true);
      this.finish ();
      Process.killProcess (Process.myPid());
@@ -468,10 +446,16 @@ public class MainActivity extends Activity
     @Override
     public void onBackPressed() {
         // The Android back button navigates back in the web view.
-        // That is the behaviour people expect.
-        if (webview.canGoBack()) {
+        // This is the behaviour people expect.
+        if ((webview != null) && webview.canGoBack()) {
             webview.goBack();
             return;
+        } else if (tabhost != null) {
+            WebView webview = (WebView) tabhost.getCurrentView ();
+            if (webview.canGoBack ()) {
+                webview.goBack ();
+                return;
+            }
         }
         
         // Otherwise defer to system default behavior.
