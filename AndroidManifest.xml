@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android" 
     package="org.bibledit.android"
     android:installLocation="auto"
-    android:versionCode="73"
-    android:versionName="5.0.151"
+    android:versionCode="74"
+    android:versionName="5.0.169"
   >
 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
