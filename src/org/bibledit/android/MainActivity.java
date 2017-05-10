@@ -68,6 +68,7 @@ public class MainActivity extends Activity
     String previousSyncState;
     private ValueCallback<Uri> myUploadMessage;
     private final static int FILECHOOSER_RESULTCODE = 1;
+    String previousTabsState;
     
     
     @Override
@@ -396,43 +397,44 @@ public class MainActivity extends Activity
                     startActivity(browserIntent);
                 }
                 
-                // Checking on whether to open tabbed views.
+                // Checking on whether to open tabbed views or remain with the single view.
                 final String jsonString = GetPagesToOpen ();
-                if (jsonString != null && !jsonString.isEmpty()) {
-                    try {
-                        JSONArray jsonArray = new JSONArray (jsonString);
-                        int length = jsonArray.length();
-                        final List<String> URLs = new ArrayList<String>();
-                        final List<String> labels = new ArrayList<String>();
-                        Integer active = 0;
-                        for (int i = 0; i < length; i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            String URL = jsonObject.getString ("url");
-                            URLs.add (URL);
-                            String label = jsonObject.getString ("label");
-                            labels.add (label);
-                            if (jsonObject.getBoolean ("active")) active = i;
-                        }
-                        final Integer tab = active;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                StartTabHost (URLs, labels, tab);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Log.d ("Bibledit error", e.getMessage ());
-                    }
-                } else {
-                    if (tabhost != null) {
-                        if (tabhost.getCurrentTab () == 0) {
+                if (jsonString != null) {
+                    if (!jsonString.equals (previousTabsState)) {
+                        if (jsonString.isEmpty ()) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     StartWebView (webAppUrl);
                                 }
                             });
+                        } else {
+                            try {
+                                JSONArray jsonArray = new JSONArray (jsonString);
+                                int length = jsonArray.length();
+                                final List<String> URLs = new ArrayList<String>();
+                                final List<String> labels = new ArrayList<String>();
+                                Integer active = 0;
+                                for (int i = 0; i < length; i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    String URL = jsonObject.getString ("url");
+                                    URLs.add (URL);
+                                    String label = jsonObject.getString ("label");
+                                    labels.add (label);
+                                    if (URL.contains ("resource")) active = i;
+                                }
+                                final Integer tab = active;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        StartTabHost (URLs, labels, tab);
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                Log.d ("Bibledit error", e.getMessage ());
+                            }
                         }
+                        previousTabsState = jsonString;
                     }
                 }
                 
@@ -465,7 +467,6 @@ public class MainActivity extends Activity
     
     private void StartWebView (String PageToOpen)
     {
-        if (webview != null) return;
         tabhost = null;
         webview = new WebView (this);
         setContentView (webview);
@@ -522,8 +523,6 @@ public class MainActivity extends Activity
     
     private void StartTabHost (List<String> URLs, List<String> labels, Integer active)
     {
-        if (tabhost != null) return;
-        
         webview = null;
         
         setContentView (R.layout.main);
