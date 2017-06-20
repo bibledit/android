@@ -119,7 +119,7 @@ public class MainActivity extends Activity
         // Log information about where to find Bibledit's data.
         Log ("Bibledit data location: " + webroot);
         
-        // Keep-awake timer.
+        // Timer for running repeating tasks.
         startTimer ();
         
         /* FORCHROMEOS
@@ -232,7 +232,7 @@ public class MainActivity extends Activity
     }
     
     
-    // This is used to load the native Bibledit library on application startup.
+    // This loads the native Bibledit library on application startup.
     // Library libbibleditjni calls the Bibledit library.
     // The library has already been unpacked into
     // /data/data/org.bibledit.android/lib/libbbibleditjni.so
@@ -325,8 +325,9 @@ public class MainActivity extends Activity
     
     /*
      
-     Upon resume, it used to check that the URL loaded in the webview as a page
-     served by the embedded webserver. Later a modification was done to the app.
+     Upon resume, it used to check that the URL loaded in the webview is a page
+     served by the embedded webserver. 
+     The app was modified subsequently, as follows:
      An external page is no longer loaded in the embedded webview.
      It is now loaded in the system browser.
      Therefore this check on a local URL is no longer needed.
@@ -397,7 +398,7 @@ public class MainActivity extends Activity
                     startActivity(browserIntent);
                 }
                 
-                // Checking on whether to open tabbed views or remain with the single view.
+                // Check whether to open tabbed views or return to the default single view.
                 final String jsonString = GetPagesToOpen ();
                 if (jsonString != null) {
                     if (!jsonString.equals (previousTabsState)) {
@@ -465,6 +466,7 @@ public class MainActivity extends Activity
     }
     
     
+    // Open the single webview configuration.
     private void StartWebView (String PageToOpen)
     {
         tabhost = null;
@@ -520,7 +522,8 @@ public class MainActivity extends Activity
         webview.loadUrl (webAppUrl + PageToOpen);
     }
     
-    
+
+    // Open several webviews in tabs.
     private void StartTabHost (List<String> URLs, List<String> labels, Integer active)
     {
         webview = null;
