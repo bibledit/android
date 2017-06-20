@@ -51,12 +51,6 @@ void Java_org_bibledit_android_MainActivity_SetTouchEnabled (JNIEnv* env, jobjec
 }
 
 
-void Java_org_bibledit_android_MainActivity_SetQuitAtMidnight (JNIEnv* env, jobject obj)
-{
-    bibledit_set_quit_at_midnight ();
-}
-
-
 void Java_org_bibledit_android_MainActivity_StartLibrary (JNIEnv* env, jobject obj)
 {
     bibledit_start_library ();
