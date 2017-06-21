@@ -44,6 +44,7 @@ import android.webkit.WebChromeClient;
 import android.graphics.Bitmap;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.LinearLayout.LayoutParams;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +70,8 @@ public class MainActivity extends Activity
     private ValueCallback<Uri> myUploadMessage;
     private final static int FILECHOOSER_RESULTCODE = 1;
     String previousTabsState;
+    String lastTabUrl;
+    String lastTabIdentifier;
     
     
     @Override
@@ -326,7 +329,7 @@ public class MainActivity extends Activity
     /*
      
      Upon resume, it used to check that the URL loaded in the webview is a page
-     served by the embedded webserver. 
+     served by the embedded webserver.
      The app was modified subsequently, as follows:
      An external page is no longer loaded in the embedded webview.
      It is now loaded in the system browser.
@@ -423,6 +426,8 @@ public class MainActivity extends Activity
                                     String label = jsonObject.getString ("label");
                                     labels.add (label);
                                     if (URL.contains ("resource")) active = i;
+                                    lastTabIdentifier = label;
+                                    lastTabUrl = URL;
                                 }
                                 final Integer tab = active;
                                 runOnUiThread(new Runnable() {
@@ -522,7 +527,7 @@ public class MainActivity extends Activity
         webview.loadUrl (webAppUrl + PageToOpen);
     }
     
-
+    
     // Open several webviews in tabs.
     private void StartTabHost (List<String> URLs, List<String> labels, Integer active)
     {
@@ -560,6 +565,38 @@ public class MainActivity extends Activity
         }
         
         tabhost.setCurrentTab (active);
+        
+        tabhost.setOnTabChangedListener(new OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                // Check whether to reload the settings page.
+                // The reason for this is as follows:
+                // When the user clicks any of the links in the settings page,
+                // there is no way to go back to the main settings page.
+                // The above applies in tabbed mode, as there's no menu then.
+                // So when the settings tab is activated,
+                // it ensures that the main setting page is loaded.
+                if (tabId.equals (lastTabIdentifier)) {
+                    final WebView webview = (WebView) tabhost.getCurrentView ();
+                    String actualUrl = webview.getUrl ();
+                    final String desiredUrl = webAppUrl + lastTabUrl;
+                    if (!actualUrl.equals (desiredUrl)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                WebViewLoadURL (webview, desiredUrl);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+    
+    
+    private void WebViewLoadURL (WebView webview, String url)
+    {
+        webview.loadUrl (url);
     }
     
 }
