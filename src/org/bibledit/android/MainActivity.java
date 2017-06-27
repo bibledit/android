@@ -474,13 +474,16 @@ public class MainActivity extends Activity
     // Open the single webview configuration.
     private void StartWebView (String PageToOpen)
     {
+        // Indicate that the view is now plain.
         tabhost = null;
+        // Set up the webview.
         webview = new WebView (this);
         setContentView (webview);
         webview.getSettings().setJavaScriptEnabled (true);
         webview.getSettings().setBuiltInZoomControls (true);
         webview.getSettings().setSupportZoom (true);
         webview.setWebViewClient(new WebViewClient());
+        // Enable file download.
         webview.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype,
@@ -498,6 +501,7 @@ public class MainActivity extends Activity
                 Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
             }
         });
+        // Set high quality client.
         webview.setWebChromeClient(new WebChromeClient() {
             // The undocumented method overrides.
             // The compiler fails if you try to put @Override here.
@@ -524,6 +528,9 @@ public class MainActivity extends Activity
                 MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
             }
         });
+        // Enable debugging this WebView from a developer's machine.
+        webview.setWebContentsDebuggingEnabled (true);
+        // Load page.
         webview.loadUrl (webAppUrl + PageToOpen);
     }
     
