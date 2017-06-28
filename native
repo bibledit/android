@@ -33,6 +33,7 @@ rm -f bibledit
 rm -r autom4te.cache
 rm dev
 rm -f *.a
+rm -f *.tar
 rm reconfigure
 rm -f server
 rm -f unittest
