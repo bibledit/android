@@ -538,66 +538,74 @@ public class MainActivity extends Activity
     // Open several webviews in tabs.
     private void StartTabHost (List<String> URLs, List<String> labels, Integer active)
     {
-        webview = null;
-        
-        setContentView (R.layout.main);
-        
-        tabhost = (TabHost) findViewById (R.id.tabhost);
-        tabhost.setup ();
-        
-        TabHost.TabSpec tabspec;
-        TabContentFactory factory;
-        
-        for (int i = 0; i < URLs.size(); i++) {
-            final String URL = URLs.get (i);
-            final String label = labels.get (i);
-            tabspec = tabhost.newTabSpec (label);
-            tabspec.setIndicator (label);
-            factory = new TabHost.TabContentFactory () {
+      webview = null;
+      
+      setContentView (R.layout.main);
+      
+      tabhost = (TabHost) findViewById (R.id.tabhost);
+      tabhost.setup ();
+      
+      TabHost.TabSpec tabspec;
+      TabContentFactory factory;
+      
+      for (int i = 0; i < URLs.size(); i++) {
+        final String URL = URLs.get (i);
+        final String label = labels.get (i);
+        tabspec = tabhost.newTabSpec (label);
+        tabspec.setIndicator (label);
+        factory = new TabHost.TabContentFactory () {
+          @Override
+          public View createTabContent (String tag) {
+            WebView webview = new WebView (getApplicationContext ());
+            webview.getSettings().setJavaScriptEnabled (true);
+            webview.setWebViewClient (new WebViewClient());
+            webview.loadUrl (webAppUrl + URL);
+            return webview;
+          }
+        };
+        tabspec.setContent(factory);
+        tabhost.addTab (tabspec);
+      }
+
+      // It used to halve the height of the tabs on the screen.
+      // The goal of that was to use less space on the screen,
+      // leaving more space for the editing areas.
+      // But a user made this remark:
+      // "On my new 8 inch tablet,
+      // the tabbed menu is so small
+      // that I often miss and the top Android status bar pulls down instead."
+      // So it is better to not halve the height, but use another reduction factor.
+      for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+        tabhost.getTabWidget().getChildAt(i).getLayoutParams().height *= 0.75;
+      }
+      
+      tabhost.setCurrentTab (active);
+
+      tabhost.setOnTabChangedListener(new OnTabChangeListener(){
+        @Override
+        public void onTabChanged(String tabId) {
+          // Check whether to reload the settings page.
+          // The reason for this is as follows:
+          // When the user clicks any of the links in the settings page,
+          // there is no way to go back to the main settings page.
+          // The above applies in tabbed mode, as there's no menu then.
+          // So when the settings tab is activated,
+          // it ensures that the main setting page is loaded.
+          if (tabId.equals (lastTabIdentifier)) {
+            final WebView webview = (WebView) tabhost.getCurrentView ();
+            String actualUrl = webview.getUrl ();
+            final String desiredUrl = webAppUrl + lastTabUrl;
+            if (!actualUrl.equals (desiredUrl)) {
+              runOnUiThread(new Runnable() {
                 @Override
-                public View createTabContent (String tag) {
-                    WebView webview = new WebView (getApplicationContext ());
-                    webview.getSettings().setJavaScriptEnabled (true);
-                    webview.setWebViewClient (new WebViewClient());
-                    webview.loadUrl (webAppUrl + URL);
-                    return webview;
+                public void run() {
+                  WebViewLoadURL (webview, desiredUrl);
                 }
-            };
-            tabspec.setContent(factory);
-            tabhost.addTab (tabspec);
-        }
-        
-        for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
-            tabhost.getTabWidget().getChildAt(i).getLayoutParams().height /= 2;
-        }
-        
-        tabhost.setCurrentTab (active);
-        
-        tabhost.setOnTabChangedListener(new OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId) {
-                // Check whether to reload the settings page.
-                // The reason for this is as follows:
-                // When the user clicks any of the links in the settings page,
-                // there is no way to go back to the main settings page.
-                // The above applies in tabbed mode, as there's no menu then.
-                // So when the settings tab is activated,
-                // it ensures that the main setting page is loaded.
-                if (tabId.equals (lastTabIdentifier)) {
-                    final WebView webview = (WebView) tabhost.getCurrentView ();
-                    String actualUrl = webview.getUrl ();
-                    final String desiredUrl = webAppUrl + lastTabUrl;
-                    if (!actualUrl.equals (desiredUrl)) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                WebViewLoadURL (webview, desiredUrl);
-                            }
-                        });
-                    }
-                }
+              });
             }
-        });
+          }
+        }
+      });
     }
     
     
