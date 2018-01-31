@@ -124,11 +124,17 @@ public class MainActivity extends Activity
         
         // Timer for running repeating tasks.
         startTimer ();
-        
-        /* FORCHROMEOS
+      
+        // On Chrome OS, open a web browser, to operate the app from there.
+        if ((this.getPackageManager().hasSystemFeature("org.chromium.arc.device_management"))) {
+          Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
+          startActivity(browserIntent);
+        }
+
+        /* FORTodoCHROMEOS
          Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
          startActivity(browserIntent);
-         FORCHROMEOS */
+         FORTodoCHROMEOS */
     }
     
     
