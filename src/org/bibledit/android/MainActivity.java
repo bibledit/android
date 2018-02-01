@@ -126,15 +126,19 @@ public class MainActivity extends Activity
         startTimer ();
       
         // On Chrome OS, open a web browser, to operate the app from there.
-        if ((this.getPackageManager().hasSystemFeature("org.chromium.arc.device_management"))) {
-          Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
-          startActivity(browserIntent);
-        }
-
-        /* FORTodoCHROMEOS
-         Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
-         startActivity(browserIntent);
-         FORTodoCHROMEOS */
+        // This has been disabled now. The reason is the following:
+        // https://developer.android.com/topic/arc/index.html
+        // Chromebooks run the entire Android OS in a container, similar to Docker or LXC. This means that Android will not have direct access to the system's LAN interface. Instead, IPv4 traffic will pass through an internal layer of network address translation (NAT), and IPv6 unicast traffic will be routed through an extra hop. Outbound unicast connections from an Android app to the internet should mostly work as-is; but in general, inbound connections are blocked. Multicast or broadcast packets from Android will not be forwarded to the LAN through the firewall.
+        // As a special exception to the multicast restriction, Chrome OS runs a service that forwards mDNS traffic between Android and the LAN interface, so the standard Network Service Discovery APIs are the recommended way to discover other devices on the LAN segment. After finding a device on the LAN, an Android app can use standard TCP or UDP unicast sockets to communicate with it.
+        // IPv4 connections originating from Android will use the Chrome OS host's IPv4 address. Internally, the Android app will see a private IPv4 address assigned to the network interface. IPv6 connections originating from Android will use a different address from the Chrome OS host, as the Android container will have a dedicated public IPv6 address.
+        // if ((this.getPackageManager().hasSystemFeature("org.chromium.arc.device_management"))) {
+          // Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
+          // startActivity(browserIntent);
+        // }
+        // FORCHROMEOS
+        // Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
+        // startActivity(browserIntent);
+        // FORCHROMEOS
     }
     
     
