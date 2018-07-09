@@ -18,7 +18,7 @@ export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-maco
 # At the end, it removes the journal entries that were logged in the process.
 pushd ../cloud
 ./configure
-make --jobs=`sysctl hw.ncpu`
+make --jobs=4
 ./generate . locale
 ./generate . mappings
 ./generate . versifications
