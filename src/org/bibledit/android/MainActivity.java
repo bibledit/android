@@ -239,6 +239,7 @@ public class MainActivity extends Activity
     // This is according to the specifications.
     // But then the editor would go away, and the app would go back to the home screen after the restart.
     // The fix was to add "keyboard" to the above "configChanges" element.
+    // https://developer.android.com/guide/topics/resources/runtime-changes
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
