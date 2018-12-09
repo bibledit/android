@@ -540,7 +540,9 @@ public class MainActivity extends Activity
             }
         });
         // Enable debugging this WebView from a developer's machine.
-        webview.setWebContentsDebuggingEnabled (true);
+        // But this failed to work since December 2018 on some Android versions:
+        // W/dalvikvm(14740): VFY: unable to resolve static method 45: Landroid/webkit/WebView;.setWebContentsDebuggingEnabled
+        // webview.setWebContentsDebuggingEnabled (true);
         // Load page.
         webview.loadUrl (webAppUrl + PageToOpen);
     }
