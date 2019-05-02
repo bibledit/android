@@ -618,10 +618,15 @@ public class MainActivity extends Activity
               });
             }
           }
+          // Hide the soft keyboard.
+          // See https://github.com/bibledit/cloud/issues/269 for reasons.
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              hideKeyboard ();
+            }
+          });
         }
-        // Hide the soft keyboard.
-        // See https://github.com/bibledit/cloud/issues/269 for reasons.
-        hideKeyboard ();
       });
     }
     
