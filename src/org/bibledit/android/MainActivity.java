@@ -51,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
+import android.view.inputmethod.InputMethodManager;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -618,13 +619,38 @@ public class MainActivity extends Activity
             }
           }
         }
+        // Hide the soft keyboard.
+        // See https://github.com/bibledit/cloud/issues/269 for reasons.
+        hideKeyboard ();
       });
     }
     
     
     private void WebViewLoadURL (WebView webview, String url)
     {
-        webview.loadUrl (url);
+      webview.loadUrl (url);
     }
+
+  
+    private void hideKeyboard ()
+    {
+      Log.d ("Bibledit", "hide keyboard 1");
+  
+      // Get the input manager that has the keyboard.
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     
+      Log.d ("Bibledit", "hide keyboard 2");
+    
+      // If no view currently has focus, then there's no keyboard to hide.
+      if (webview == null) return;
+    
+      Log.d ("Bibledit", "hide keyboard 3");
+    
+      // Hide the soft keyboard.
+      imm.hideSoftInputFromWindow (webview.getWindowToken(), 0);
+    
+      Log.d ("Bibledit", "hide keyboard 4");
+    }
+  
+
 }
