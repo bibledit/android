@@ -620,10 +620,11 @@ public class MainActivity extends Activity
           }
           // Hide the soft keyboard.
           // See https://github.com/bibledit/cloud/issues/269 for reasons.
+          final WebView webview = (WebView) tabhost.getCurrentView ();
           runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              hideKeyboard ();
+              hideKeyboard (webview);
             }
           });
         }
@@ -637,7 +638,7 @@ public class MainActivity extends Activity
     }
 
   
-    private void hideKeyboard ()
+    private void hideKeyboard (WebView webview)
     {
       Log.d ("Bibledit", "hide keyboard 1");
   
