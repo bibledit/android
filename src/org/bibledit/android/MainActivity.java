@@ -73,7 +73,8 @@ public class MainActivity extends Activity
     String previousTabsState;
     String lastTabUrl;
     String lastTabIdentifier;
-    
+    String previousDisableSelectionPopup = "false";
+
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -158,7 +159,8 @@ public class MainActivity extends Activity
     public native void ShutdownLibrary ();
     public native void Log (String message);
     public native String GetLastPage ();
-    
+    public native String DisableSelectionPopupChromeOS ();
+
     
     @Override
     public boolean onCreateOptionsMenu (Menu menu)
@@ -455,7 +457,31 @@ public class MainActivity extends Activity
                         previousTabsState = jsonString;
                     }
                 }
-                
+              
+                String disableSelectionPopup = DisableSelectionPopupChromeOS ();
+                Log.d ("disableSelectionPopup", disableSelectionPopup); // Todo
+              /*
+              if (syncState.equals ("true")) {
+                runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                  }
+                });
+              }
+              if (syncState.equals ("false")) {
+                if (syncState.equals (previousSyncState)) {
+                  runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    }
+                  });
+                }
+              }
+               */
+                previousDisableSelectionPopup = disableSelectionPopup;
+
                 // Start timeout for next iteration.
                 startTimer ();
             }
