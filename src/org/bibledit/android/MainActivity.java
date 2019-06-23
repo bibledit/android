@@ -643,22 +643,14 @@ public class MainActivity extends Activity
   
     private void hideKeyboard (WebView webview)
     {
-      Log.d ("Bibledit", "hide keyboard 1"); // Todo
-  
       // Get the input manager that has the keyboard.
       InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    
-      Log.d ("Bibledit", "hide keyboard 2");
     
       // If no view currently has focus, then there's no keyboard to hide.
       if (webview == null) return;
     
-      Log.d ("Bibledit", "hide keyboard 3");
-    
       // Hide the soft keyboard.
       imm.hideSoftInputFromWindow (webview.getWindowToken(), 0);
-    
-      Log.d ("Bibledit", "hide keyboard 4");
     }
   
   
