@@ -52,6 +52,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
 import android.view.inputmethod.InputMethodManager;
+import android.view.ActionMode;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -457,18 +458,6 @@ public class MainActivity extends Activity
                         previousTabsState = jsonString;
                     }
                 }
-              
-                String disableSelectionPopup = DisableSelectionPopupChromeOS ();
-                Log.d ("disableSelectionPopup", disableSelectionPopup); // Todo
-                if (!syncState.equals (previousSyncState)) {
-                  runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    }
-                  });
-                }
-                previousDisableSelectionPopup = disableSelectionPopup;
 
                 // Start timeout for next iteration.
                 startTimer ();
@@ -654,7 +643,7 @@ public class MainActivity extends Activity
   
     private void hideKeyboard (WebView webview)
     {
-      Log.d ("Bibledit", "hide keyboard 1");
+      Log.d ("Bibledit", "hide keyboard 1"); // Todo
   
       // Get the input manager that has the keyboard.
       InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -672,5 +661,18 @@ public class MainActivity extends Activity
       Log.d ("Bibledit", "hide keyboard 4");
     }
   
-
+  
+    @Override
+    public void onActionModeStarted (ActionMode mode)
+    {
+      // https://developer.android.com/reference/android/view/ActionMode.html
+      final String disable = DisableSelectionPopupChromeOS ();
+      if (disable.equals ("true")) {
+        Menu menu = mode.getMenu ();
+        menu.clear();
+        //mode.finish ();
+        //mode.invalidate ();
+      }
+    }
+  
 }
