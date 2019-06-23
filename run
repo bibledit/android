@@ -15,8 +15,8 @@ export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-maco
 
 
 echo Install Bibledit.
-adb install -r bin/Bibledit-debug.apk
+~/scr/adb install -r bin/Bibledit-debug.apk
 
 
 echo Start Bibledit.
-adb shell am start -a android.intent.action.MAIN -n org.bibledit.android/.MainActivity
+~/scr/adb shell am start -a android.intent.action.MAIN -n org.bibledit.android/.MainActivity
