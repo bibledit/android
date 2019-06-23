@@ -460,26 +460,14 @@ public class MainActivity extends Activity
               
                 String disableSelectionPopup = DisableSelectionPopupChromeOS ();
                 Log.d ("disableSelectionPopup", disableSelectionPopup); // Todo
-              /*
-              if (syncState.equals ("true")) {
-                runOnUiThread(new Runnable() {
-                  @Override
-                  public void run() {
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                  }
-                });
-              }
-              if (syncState.equals ("false")) {
-                if (syncState.equals (previousSyncState)) {
+                if (!syncState.equals (previousSyncState)) {
                   runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     }
                   });
                 }
-              }
-               */
                 previousDisableSelectionPopup = disableSelectionPopup;
 
                 // Start timeout for next iteration.
