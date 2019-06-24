@@ -124,7 +124,14 @@ public class MainActivity extends Activity
         
         // Log information about where to find Bibledit's data.
         Log ("Bibledit data location: " + webroot);
-        
+      
+        // Log information about whether running on Android or on Chrome OS. Todo
+        if (getApplicationContext().getPackageManager().hasSystemFeature("org.chromium.arc.device_management")) {
+          Log ("Running on Chrome OS");
+        } else {
+          Log ("Running on Android");
+        }
+      
         // Timer for running repeating tasks.
         startTimer ();
       
