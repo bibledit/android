@@ -125,9 +125,12 @@ public class MainActivity extends Activity
         // Log information about where to find Bibledit's data.
         Log ("Bibledit data location: " + webroot);
       
-        // Log information about whether running on Android or on Chrome OS. Todo
+        // Log information about whether running on Android or on Chrome OS.
         if (getApplicationContext().getPackageManager().hasSystemFeature("org.chromium.arc.device_management")) {
           Log ("Running on Chrome OS");
+          // Enable Chrome OS in the library, for something specific to Chrome.
+          // See https://github.com/bibledit/cloud/issues/282.
+          RunOnChromeOS ();
         } else {
           Log ("Running on Android");
         }
@@ -167,6 +170,7 @@ public class MainActivity extends Activity
     public native void ShutdownLibrary ();
     public native void Log (String message);
     public native String GetLastPage ();
+    public native void RunOnChromeOS ();
     public native String DisableSelectionPopupChromeOS ();
 
     

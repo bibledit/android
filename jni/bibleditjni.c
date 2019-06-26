@@ -107,6 +107,12 @@ jstring Java_org_bibledit_android_MainActivity_GetLastPage (JNIEnv* env, jobject
 }
 
 
+void Java_org_bibledit_android_MainActivity_RunOnChromeOS (JNIEnv* env, jobject obj)
+{
+  bibledit_run_on_chrome_os ();
+}
+
+
 jstring Java_org_bibledit_android_MainActivity_DisableSelectionPopupChromeOS (JNIEnv* env, jobject obj)
 {
   return (*env)->NewStringUTF(env, bibledit_disable_selection_popup_chrome_os ());
