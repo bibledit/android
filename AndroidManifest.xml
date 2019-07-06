@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" 
     package="org.bibledit.android"
     android:installLocation="auto"
-    android:versionCode="99"
+    android:versionCode="100"
     android:versionName="5.0.781"
   >
 
@@ -13,10 +13,11 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <!-- A target SDK version of 24 allows free-form resizing of the app making it feel more natural. -->
-  <!-- Starting November 1, 2018, apps on Google Play will be required to target API level 26 or higher. -->
+  <!-- 2018: Apps on Google Play will be required to target API level 26 or higher. -->
+  <!-- 2019: Apps on Google Play will be required to target API level 28 or higher. -->
   <uses-sdk
     android:minSdkVersion="11"
-    android:targetSdkVersion="26"
+    android:targetSdkVersion="28"
   />
 
   <!-- Some Chromebooks don't support touch. -->
