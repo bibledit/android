@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.ArrayList;
 import android.view.inputmethod.InputMethodManager;
 import android.view.ActionMode;
+import android.webkit.SslErrorHandler;
+import android.net.http.SslError;
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -500,66 +502,78 @@ public class MainActivity extends Activity
     // Open the single webview configuration.
     private void StartWebView (String PageToOpen)
     {
-        // Indicate that the view is now plain.
-        tabhost = null;
-        // Set up the webview.
-        webview = new WebView (this);
-        setContentView (webview);
-        webview.getSettings().setJavaScriptEnabled (true);
-        webview.getSettings().setBuiltInZoomControls (true);
-        webview.getSettings().setSupportZoom (true);
-        webview.setWebViewClient(new WebViewClient());
-        // Enable file download.
-        webview.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype,
-                                         long contentLength) {
-                DownloadManager.Request request = new DownloadManager.Request (Uri.parse (url));
-                request.allowScanningByMediaScanner();
-                // Notification once download is completed.
-                request.setNotificationVisibility (DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                Uri uri = Uri.parse (url);
-                String filename = uri.getLastPathSegment ();
-                request.setDestinationInExternalPublicDir (Environment.DIRECTORY_DOWNLOADS, filename);
-                DownloadManager dm = (DownloadManager) getSystemService (DOWNLOAD_SERVICE);
-                dm.enqueue (request);
-                // Notification that the file is being downloaded.
-                Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
-            }
-        });
-        // Set high quality client.
-        webview.setWebChromeClient(new WebChromeClient() {
-            // The undocumented method overrides.
-            // The compiler fails if you try to put @Override here.
-            // It needs three interfaces to handle the various versions of Android.
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
-            }
-            public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
-            }
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                myUploadMessage = uploadMsg;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
-            }
-        });
-        // Enable debugging this WebView from a developer's machine.
-        // But this failed to work since December 2018 on some Android versions:
-        // W/dalvikvm(14740): VFY: unable to resolve static method 45: Landroid/webkit/WebView;.setWebContentsDebuggingEnabled
-        // webview.setWebContentsDebuggingEnabled (true);
-        // Load page.
-        webview.loadUrl (webAppUrl + PageToOpen);
+      // Indicate that the view is now plain.
+      tabhost = null;
+      // Set up the webview.
+      webview = new WebView (this);
+      setContentView (webview);
+      webview.getSettings().setJavaScriptEnabled (true);
+      webview.getSettings().setBuiltInZoomControls (true);
+      webview.getSettings().setSupportZoom (true);
+      webview.getSettings().setDomStorageEnabled (true);
+      webview.setWebViewClient(new WebViewClient(){
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+          // The server at https://localhost does not have a good certificate.
+          // That causes an SSL error.
+          // Not calling the super method,
+          // will effectually cancel the check on the certificate.
+          // super.onReceivedSslError(view, handler, error);
+          // Then proceed with the SSL connection as usual.
+          handler.proceed();
+        }
+      });
+
+      // Enable file download.
+      webview.setDownloadListener(new DownloadListener() {
+        @Override
+        public void onDownloadStart (String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+          DownloadManager.Request request = new DownloadManager.Request (Uri.parse (url));
+          request.allowScanningByMediaScanner();
+          // Notification once download is completed.
+          request.setNotificationVisibility (DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+          Uri uri = Uri.parse (url);
+          String filename = uri.getLastPathSegment ();
+          request.setDestinationInExternalPublicDir (Environment.DIRECTORY_DOWNLOADS, filename);
+          DownloadManager dm = (DownloadManager) getSystemService (DOWNLOAD_SERVICE);
+          dm.enqueue (request);
+          // Notification that the file is being downloaded.
+          Toast.makeText (getApplicationContext(), "Downloading file", Toast.LENGTH_LONG).show ();
+        }
+      });
+      // Set high quality client.
+      webview.setWebChromeClient(new WebChromeClient() {
+        // The undocumented method overrides.
+        // The compiler fails if you try to put @Override here.
+        // It needs three interfaces to handle the various versions of Android.
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+          myUploadMessage = uploadMsg;
+          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+          intent.addCategory(Intent.CATEGORY_OPENABLE);
+          intent.setType("*/*");
+          MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
+        }
+        public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
+          myUploadMessage = uploadMsg;
+          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+          intent.addCategory(Intent.CATEGORY_OPENABLE);
+          intent.setType("*/*");
+          MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+        }
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+          myUploadMessage = uploadMsg;
+          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+          intent.addCategory(Intent.CATEGORY_OPENABLE);
+          intent.setType("*/*");
+          MainActivity.this.startActivityForResult (Intent.createChooser (intent, "File Chooser"), MainActivity.FILECHOOSER_RESULTCODE);
+        }
+      });
+      // Enable debugging this WebView from a developer's machine.
+      // But this failed to work since December 2018 on some Android versions:
+      // W/dalvikvm(14740): VFY: unable to resolve static method 45: Landroid/webkit/WebView;.setWebContentsDebuggingEnabled
+      // webview.setWebContentsDebuggingEnabled (true);
+      // Load page.
+      webview.loadUrl (webAppUrl + PageToOpen);
     }
     
     
