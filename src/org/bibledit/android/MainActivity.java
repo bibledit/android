@@ -686,15 +686,31 @@ public class MainActivity extends Activity
     webview.setWebViewClient(new WebViewClient() {
       @Override
       public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        // The server at https://localhost does not have a good certificate.
-        // That causes an SSL error.
-        // Not calling the super method,
-        // will effectually cancel the check on the certificate.
-        // super.onReceivedSslError(view, handler, error);
-        // https://stackoverflow.com/questions/7416096/android-webview-not-loading-an-https-url
+        // The embedded server at https://localhost has a known certificate.
+        // But creating working certificates for localhost is impossible.
+        // This error handler is going to check the certificate it received.
+        // If the error handler is 100% sure that the certificate
+        // is from the server embedded in the app, it proceeds.
+        // In all other cases it cancels the operations.
+        // This is the most secure solution possible.
+        // https://developer.android.com/reference/android/net/http/SslError
+        // https://developer.android.com/reference/android/webkit/SslErrorHandler
         // https://github.com/bibledit/cloud/issues/293
-        // Proceed with the SSL connection as usual.
-        handler.proceed();
+        // Check 1: The certificate has been issued to a specific known name.
+        String issuedToName = error.getCertificate().getIssuedTo().getCName();
+        boolean issuedToGood = (issuedToName.indexOf ("localhost.daplie.com") == 0);
+        // Check 2: The URL is localhost at a known port.
+        // That can only be this app's embedded webserver.
+        String url = error.getUrl();
+        boolean urlGood = url.indexOf ("https://localhost:8081") == 0;
+        // Check 3: The certificate has been issued by a specific known name.
+        String issuedByName = error.getCertificate().getIssuedBy().getCName();
+        boolean issuedByGood = issuedByName.indexOf ("RapidSSL SHA256 CA") == 0;
+        // If all checks passed, we're 100% sure this is our known certificate, so it's secure.
+        boolean proceed = (issuedToGood && urlGood && issuedByGood);
+        // Take decision what to do for full security.
+        if (proceed) handler.proceed();
+        else handler.cancel();
       }
     });
     return webview;
@@ -702,4 +718,5 @@ public class MainActivity extends Activity
   
   
 }
+
 
