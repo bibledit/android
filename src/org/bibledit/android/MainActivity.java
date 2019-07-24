@@ -67,7 +67,7 @@ public class MainActivity extends Activity
   WebView webview = null;
   TabHost tabhost = null;
   int resumecounter = 0;
-  String webAppUrl = "https://localhost:8081/";
+  String webAppUrl = "http://localhost:8080/";
   Timer timer;
   TimerTask timerTask;
   String previousSyncState;
