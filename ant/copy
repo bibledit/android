@@ -12,6 +12,6 @@ BIBLEDITANDROID=/tmp/bibledit-android
 echo Synchronizing relevant source code to $BIBLEDITANDROID
 mkdir -p $BIBLEDITANDROID
 rm $BIBLEDITANDROID/* 2> /dev/null
-rsync --archive --delete ../cloud /tmp/bibledit-android/
+rsync --archive --delete ../../cloud /tmp/bibledit-android/
 rsync --archive --delete ../android /tmp/bibledit-android/
 echo Done
