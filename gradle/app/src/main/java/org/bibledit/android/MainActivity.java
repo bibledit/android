@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity
     static {
         // Todo System.loadLibrary("gnustl_shared");
         // Todo System.loadLibrary("bibleditjni");
-        System.loadLibrary("native-lib");
+        System.loadLibrary("bibledit");
     }
 
 
