@@ -21,6 +21,11 @@
         android:xlargeScreens="true"
         />
 
+    <!--
+    Configuration to allow clear text:
+    https://developer.android.com/about/versions/pie/android-9.0-changes-28
+    https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
+    -->
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
