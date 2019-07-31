@@ -10,6 +10,18 @@
 # export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-macosx/tools:~/scr/android-ndk-r10e
 
 
+
+# Put all the code of the cloud kernel in the assets folder, just as the code is.
+# This is in preparation for subsequent steps.
+rm -rf app/src/main/assets/external
+cp -r ../../cloud app/src/main/assets/external
+if [ $? -ne 0 ]; then exit; fi
+
+
+
+
+exit
+
 # Build several databases and other data for inclusion with the Android package.
 # The reason for this is that building them on Android takes a lot of time during the setup phase.
 # To include pre-built data, that will speed up the setup phase of Bibledit on Android.
