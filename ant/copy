@@ -10,8 +10,10 @@ ANDROIDSOURCE=`dirname $0`
 cd $ANDROIDSOURCE
 BIBLEDITANDROID=/tmp/bibledit-android
 echo Synchronizing relevant source code to $BIBLEDITANDROID
+rm -rf $BIBLEDITANDROID
 mkdir -p $BIBLEDITANDROID
 rm $BIBLEDITANDROID/* 2> /dev/null
 rsync --archive --delete ../../cloud /tmp/bibledit-android/
-rsync --archive --delete ../android /tmp/bibledit-android/
+rsync --archive --delete ../ant /tmp/bibledit-android/
+mv /tmp/bibledit-android/ant /tmp/bibledit-android/android
 echo Done
