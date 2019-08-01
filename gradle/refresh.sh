@@ -114,12 +114,18 @@ rm_rf_assets_cpp sources/sblgnt
 rm_rf_assets_cpp sources/oshb.xml.gz
 rm_rf_assets_cpp unittests
 rm_rf_assets_cpp config/local.server.key
-
+rm -rf $CPPFOLDER/databases
 
 
 exit
 
 
+find . -name "*.h" -delete
+find . -name "*.cpp" -delete
+find . -name "*.c" -delete
+find . -name "*.o" -delete
+find . -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
+find . -name ".dirstamp" -delete
 
 
 
