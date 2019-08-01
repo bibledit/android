@@ -1,0 +1,248 @@
+<p class="success">##success##</p>
+<p class="error">##error##</p>
+
+<!-- #BEGINZONE advancedmode -->
+<h3>translate("Preferences")</h3>
+<!-- #ENDZONE advancedmode -->
+
+<p>
+translate("General font size for the interface"):
+<a href="?fontsizegeneral=">##fontsizegeneral##%</a>.
+translate("Size throughout the interface.")
+</p>
+
+<br>
+<p>
+translate("Relative font size for the menu"):
+<a href="?fontsizemenu=">##fontsizemenu##%</a>.
+translate("The size of the font for the menu, relative to the general font size.")
+</p>
+
+<!-- #BEGINZONE advancedmode -->
+
+<!-- #BEGINZONE bibles -->
+<br>
+<p>
+translate("Relative font size for the Bible editors"):
+<a href="?fontsizeeditors=">##fontsizeeditors##%</a>.
+translate("The size of the font for the Bible editors, relative to the general font size.")
+</p>
+<!-- #ENDZONE bibles -->
+
+<!-- #BEGINZONE resources -->
+<br>
+<p>
+translate("Relative font size for the resources"):
+<a href="?fontsizeresources=">##fontsizeresources##%</a>.
+translate("The size of the font for the resources, relative to the general font size.")
+</p>
+
+<br>
+<p>
+translate("Relative font size for Hebrew resources"):
+<a href="?fontsizehebrew=">##fontsizehebrew##%</a>.
+translate("The size of Hebrew text within resources, relative to the resources font size.")
+</p>
+
+<br>
+<p>
+translate("Relative font size for Greek resources"):
+<a href="?fontsizegreek=">##fontsizegreek##%</a>.
+translate("The size of Greek text within resources, relative to the resources font size.")
+</p>
+<!-- #ENDZONE resources -->
+
+<!-- #BEGINZONE bibles -->
+<br>
+<p>
+translate("Initial vertical position of the editing cursor in the Bible editors"):
+<a href="?caretposition=">##caretposition##%</a>.
+</p>
+<!-- #ENDZONE bibles -->
+
+<br>
+<p>
+translate("Show breadcrumbs"):
+<a href="?breadcrumbs=">##breadcrumbs##</a>.
+</p>
+
+<br>
+<p>
+translate("Workspace menu fade-out delay"):
+<a href="?workspacefadeoutdelay=">##workspacefadeoutdelay## seconds</a>.
+translate("How long it takes for the workspace menu to start fading out.")
+</p>
+
+<!-- #BEGINZONE bibles -->
+<br>
+<p>
+translate("While editing the Bible text and saving it, Bibledit looks at how much the text of the chapter or verse to be saved differs from the existing chapter or verse text.")
+translate("If the text to be saved differs more than a certain percentage from the existing text, Bibledit will not save it.")
+translate("This safety mechanisms prevents accidental loss of Bible data in many cases.")
+translate("The permitted difference can be set below as a percentage.")
+</p>
+<p>translate("Maximum difference for:")</p>
+<table>
+  <tr>
+    <td><label for="chapterpercentage">translate("Chapter editors:")</label></td>
+    <td><input type="range" name="chapterpercentage" id="chapterpercentage" value="##chapterpercentage##" min="10" max="100"></td>
+    <td><label id="chapterpercentageval" for="chapterpercentage">##chapterpercentage##</label>%</td>
+  </tr>
+  <tr>
+    <td><label for="versepercentage">translate("Verse editor:")</label></td>
+    <td><input type="range" name="versepercentage" id="versepercentage" value="##versepercentage##" min="10" max="100"></td>
+    <td><label id="versepercentageval" for="versepercentage">##versepercentage##</label>%</td>
+  </tr>
+</table>
+<!-- #ENDZONE bibles -->
+
+<br>
+<p>
+translate("Keep main menu always visible"):
+<a href="?menuvisible=">##menuvisible##</a>.
+translate("This works in both basic and advanced mode.")
+</p>
+
+<!-- #BEGINZONE touch -->
+<br>
+<p>translate("Enable swipe navigation actions"): <a href="?swipeactions=">##swipeactions##</a>.</p>
+<!-- #ENDZONE touch -->
+
+<br>
+<p>
+translate("Show a link in the Bible editor to select another Bible editor"):
+<a href="?fasteditorswitch=">##fasteditorswitch##</a>.
+</p>
+
+<br>
+<p>
+translate("Available Bible editors in the Bible editor selector:")
+[<a href="../editor/select">...</a>]
+</p>
+<p>translate("Text editors:") <a href="?fastswitchvisualeditors=">##fastswitchvisualeditors##</a>.</p>
+<p>translate("USFM editor:") <a href="?fastswitchusfmeditors=">##fastswitchusfmeditors##</a>.</p>
+
+<br>
+<p>
+translate("Enable the Styles button in the visual Bible editors"):
+<a href="?enablestylesbutton=">##enablestylesbutton##</a>.
+</p>
+
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE basicmode -->
+
+<br>
+<p>
+translate ("Select the Bible for editing:")
+<a id="bibleselect" href="?changebible=">##bible##</a>.
+</p>
+
+<!-- #BEGINZONE client_connected -->
+<br>
+<p>
+<a href="/sendreceive/index">translate ("Send and receive.")</a>
+translate ("This is for sending your changes to Bibledit Cloud, and receiving changes made by others.")
+</p>
+<!-- #ENDZONE client_connected -->
+
+<!-- #BEGINZONE client_mode -->
+<br>
+<p>
+<a href="/client/index">translate ("Connection to Bibledit Cloud.")</a>
+translate ("This is for collaboration with fellow translators and for backup.")
+</p>
+<!-- #ENDZONE client_mode -->
+
+<!-- #BEGINZONE can_use_advanced_mode -->
+<br>
+<p>
+<a href="/index/index?mode=advanced">translate ("Switch to advanced mode.")</a>
+translate ("Advanced mode offers more options than basic mode.")
+translate ("Once in advanced mode, return to basic mode via menu Settings / Basic mode.")
+</p>
+<!-- #ENDZONE can_use_advanced_mode -->
+
+<br>
+<p>
+translate ("Show the changes"):
+<a href="?showchanges">##showchanges##</a>.
+translate ("Whether to have a menu entry to go to the changes.")
+</p>
+
+<!-- #BEGINZONE cloud_mode -->
+<br>
+<p>
+<a href="/session/logout">translate ("Logout.")</a>
+</p>
+<!-- #ENDZONE cloud_mode -->
+
+<!-- #ENDZONE basicmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<br>
+<p>
+translate ("Controls for selecting and dismissing change notifications at the top"):
+<a href="?dismisschangesattop">##dismisschangesattop##</a>.
+translate ("This applies to the page with the change notifications.")
+translate ("Normally the controls are at the bottom of the page.")
+</p>
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE basicmode -->
+<!-- #BEGINZONE tabs_possible -->
+<br>
+<p>
+translate("Display main menu in tabbed view"):
+<a href="?mainmenutabs=">##mainmenutabs##</a>.
+</p>
+<!-- #ENDZONE tabs_possible -->
+<!-- #ENDZONE basicmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<br>
+<p>
+translate ("Quickly edit consultation note contents"):
+<a href="?quickeditnotecontents">##quickeditnotecontents##</a>.
+translate ("This adds a control for editing the note contents right below the note contents.")
+translate ("This is an extra control in addition to the normal one.")
+</p>
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<br>
+<p>
+translate ("The list of consultation notes shows the Bible the note refers to"):
+<a href="?showbibleinnoteslist">##showbibleinnoteslist##</a>.
+</p>
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<br>
+<p>
+translate ("The consultation notes show the note status"):
+<a href="?shownotestatus">##shownotestatus##</a>.
+</p>
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<br>
+<p>
+translate ("Show the current verse text while creating a new consultation note"):
+<a href="?showversetextcreatenote">##showversetextcreatenote##</a>.
+</p>
+<!-- #ENDZONE advancedmode -->
+
+<!-- #BEGINZONE advancedmode -->
+<!-- #BEGINZONE chromeos -->
+<br>
+<p>
+translate ("Disable the pop-up menu when text is selected"):
+<a href="?disableselectionpopupchromeos">##disableselectionpopupchromeos##</a>.
+</p>
+<!-- #ENDZONE chromeos -->
+<!-- #ENDZONE advancedmode -->
+
+<br>
+
+<script type="text/javascript" src="index.js?##VERSION##"></script>
