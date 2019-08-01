@@ -10,30 +10,51 @@
 # export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-macosx/tools:~/scr/android-ndk-r10e
 
 
+echo Define the assets
+ASSETSFOLDER=app/src/main/assets
+EXTERNALFOLDER=$ASSETSFOLDER/external
 
-# Put all the code of the cloud kernel in the assets folder, just as the code is.
-# This is in preparation for subsequent steps.
-rm -rf app/src/main/assets/external
-cp -r ../../cloud app/src/main/assets/external
+
+echo Put all the code of the Bibledit kernel into the following folder:
+echo $EXTERNALFOLDER
+echo This is in preparation for subsequent steps.
+rsync -a --delete --exclude .git ../../cloud/ $EXTERNALFOLDER/
 if [ $? -ne 0 ]; then exit; fi
 
 
+echo Clean the code up a bit by removing a couple of things.
+pushd $EXTERNALFOLDER
+rm -f *.gz
+popd
+
+
+echo Build several databases and other data for inclusion with the Android package.
+echo The reason for this is that building them on Android takes a lot of time during the setup phase.
+echo To include pre-built data, that will speed up the setup phase of Bibledit on Android.
+echo This gives a better user experience.
+echo At the end, it removes the journal entries that were logged in the process.
+pushd $EXTERNALFOLDER
+./configure
+make --jobs=4
+if [ $? -ne 0 ]; then exit; fi
+./generate . locale
+if [ $? -ne 0 ]; then exit; fi
+./generate . mappings
+if [ $? -ne 0 ]; then exit; fi
+./generate . versifications
+if [ $? -ne 0 ]; then exit; fi
+popd
+
+
+echo Clean the Bibledit kernel source code.
+pushd $EXTERNALFOLDER
+make distclean
+if [ $? -ne 0 ]; then exit; fi
+popd
 
 
 exit
 
-# Build several databases and other data for inclusion with the Android package.
-# The reason for this is that building them on Android takes a lot of time during the setup phase.
-# To include pre-built data, that will speed up the setup phase of Bibledit on Android.
-# This gives a better user experience.
-# At the end, it removes the journal entries that were logged in the process.
-pushd ../../cloud
-./configure
-make --jobs=4
-./generate . locale
-./generate . mappings
-./generate . versifications
-popd
 
 
 # Refresh the Bibledit source code in the jni folder.
