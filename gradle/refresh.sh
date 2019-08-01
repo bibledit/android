@@ -53,61 +53,74 @@ if [ $? -ne 0 ]; then exit; fi
 popd
 
 
+
+CPPFOLDER=app/src/main/cpp
+echo Synchronize the Bibledit kernel source code to the cpp folder at $CPPFOLDER.
+rsync -av --delete --exclude bibleditjni.cpp --exclude CMakeLists.txt --exclude native.cpp --exclude stub.cpp --exclude stub.h $EXTERNALFOLDER/ $CPPFOLDER/
+if [ $? -ne 0 ]; then exit; fi
+
+
+echo Configure the code in the $CPPFOLDER folder for Android.
+pushd $CPPFOLDER
+./configure --enable-android
+popd
+
+
+echo Cleaning files out from the assets and the cpp folders.
+function rm_rf_assets_cpp
+{
+  rm -rf $EXTERNALFOLDER/$1
+  rm -rf $CPPFOLDER/$1
+}
+rm_rf_assets_cpp bibledit
+rm_rf_assets_cpp autom4te.cache
+rm_rf_assets_cpp dev
+rm_rf_assets_cpp *.a
+rm_rf_assets_cpp *.tar
+rm_rf_assets_cpp *.tar.gz
+rm_rf_assets_cpp reconfigure
+rm_rf_assets_cpp server
+rm_rf_assets_cpp unittest
+rm_rf_assets_cpp generate
+rm_rf_assets_cpp valgrind
+rm_rf_assets_cpp cloud.xcodeproj
+rm_rf_assets_cpp executable
+rm_rf_assets_cpp aclocal.m4
+rm_rf_assets_cpp AUTHORS
+rm_rf_assets_cpp ChangeLog
+rm_rf_assets_cpp compile
+rm_rf_assets_cpp config.guess
+rm_rf_assets_cpp config.h.in
+rm_rf_assets_cpp config.log
+rm_rf_assets_cpp config.status
+rm_rf_assets_cpp config.sub
+rm_rf_assets_cpp configure
+rm_rf_assets_cpp configure.ac
+rm_rf_assets_cpp COPYING
+rm_rf_assets_cpp depcomp
+rm_rf_assets_cpp DEVELOP
+rm_rf_assets_cpp INSTALL
+rm_rf_assets_cpp install-sh
+rm_rf_assets_cpp Makefile
+rm_rf_assets_cpp Makefile.in
+rm_rf_assets_cpp missing
+rm_rf_assets_cpp NEWS
+rm_rf_assets_cpp README
+rm_rf_assets_cpp stamp-h1
+rm_rf_assets_cpp sources/hebrewlexicon
+rm_rf_assets_cpp sources/morphgnt
+rm_rf_assets_cpp sources/morphhb
+rm_rf_assets_cpp sources/sblgnt
+rm_rf_assets_cpp sources/oshb.xml.gz
+rm_rf_assets_cpp unittests
+rm_rf_assets_cpp config/local.server.key
+
+
+
 exit
 
 
 
-# Refresh the Bibledit source code in the jni folder.
-rsync -a --exclude '*.o' --delete ../../cloud/* jni
-pushd jni
-./configure --enable-android
-rm -f bibledit
-rm -r autom4te.cache
-rm dev
-rm -f *.a
-rm -f *.tar
-rm -f *.tar.gz
-rm reconfigure
-rm -f server
-rm -f unittest
-rm -f generate
-rm valgrind
-rm -rf cloud.xcodeproj
-rm -r executable
-rm aclocal.m4
-rm AUTHORS
-rm ChangeLog
-rm compile
-rm config.guess
-rm config.h.in
-rm config.log
-rm config.status
-rm config.sub
-rm configure
-rm configure.ac
-rm COPYING
-rm depcomp
-rm DEVELOP
-rm INSTALL
-rm install-sh
-rm Makefile
-rm Makefile.in
-rm missing
-rm NEWS
-rm README
-rm stamp-h1
-rm -rf sources/hebrewlexicon
-rm -rf sources/morphgnt
-rm -rf sources/morphhb
-rm -rf sources/sblgnt
-rm sources/oshb.xml.gz
-rm -rf unittests
-rm config/local.server.key
-popd
-
-
-# Remove some data so that the .apk does not exceed 50 Mbytes - the limit Google Play puts on it.
-# Update: The new limit is now 100 Mbytes.
 
 
 # Android does not provide 'stoi' in C++.
