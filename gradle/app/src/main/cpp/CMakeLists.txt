@@ -20,6 +20,12 @@ add_library( # Sets the name of the library.
         native.cpp
         bibleditjni.cpp
         stub.cpp
+        # Start Bibledit kernel.
+        miniz/miniz.c
+        microtar/microtar.c
+        library/locks.c
+
+        # End Bibledit kernel.
         )
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -47,3 +53,9 @@ target_link_libraries( # Specifies the target library.
         # included in the NDK.
         ${log-lib}
         )
+
+# To locate the header files during compile time,
+# add the path(s) to the header files.
+include_directories(
+        .
+)
