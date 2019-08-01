@@ -115,31 +115,26 @@ rm_rf_assets_cpp sources/oshb.xml.gz
 rm_rf_assets_cpp unittests
 rm_rf_assets_cpp config/local.server.key
 rm -rf $CPPFOLDER/databases
-
-
-exit
-
-
-find . -name "*.h" -delete
-find . -name "*.cpp" -delete
-find . -name "*.c" -delete
-find . -name "*.o" -delete
-find . -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
-find . -name ".dirstamp" -delete
-
+find $EXTERNALFOLDER -name "*.h" -delete
+find $EXTERNALFOLDER -name "*.cpp" -delete
+find $EXTERNALFOLDER -name "*.c" -delete
+find $EXTERNALFOLDER -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
+find $CPPFOLDER -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
+find $EXTERNALFOLDER -name ".dirstamp" -delete
+find $CPPFOLDER -name ".dirstamp" -delete
 
 
 # Android does not provide 'stoi' in C++.
-sed -i.bak '/HAVE_STOI/d' jni/config.h
+# sed -i.bak '/HAVE_STOI/d' jni/config.h
 # No libsword.
-sed -i.bak '/HAVE_SWORD/d' jni/config.h
+# sed -i.bak '/HAVE_SWORD/d' jni/config.h
 # No file-upload possible from web view.
-sed -i.bak '/CONFIG_ENABLE_FILE_UPLOAD/d' jni/config/config.h
+# sed -i.bak '/CONFIG_ENABLE_FILE_UPLOAD/d' jni/config/config.h
 # Android does not need BSD memory profiling calls.
-sed -i.bak '/HAVE_MACH_MACH/d' jni/config.h
+# sed -i.bak '/HAVE_MACH_MACH/d' jni/config.h
 # Cleanup
-rm jni/config.h.bak
-rm jni/config/config.h.bak
+# rm jni/config.h.bak
+# rm jni/config/config.h.bak
 
 
 # The following command saves all source files from Makefile.am to file.
@@ -150,15 +145,11 @@ rm jni/config/config.h.bak
 # * Remove tabs.
 # * Remove new lines.
 # * Remove backslashes.
-sed -n "/libbibledit_a_SOURCES/,/bin_PROGRAMS/p" jni/Makefile.am | tail -n +2 | sed '$d' | strings | tr -d '\n' | sed 's/\\//g' > jni/sources.txt
+# sed -n "/libbibledit_a_SOURCES/,/bin_PROGRAMS/p" jni/Makefile.am | tail -n +2 | sed '$d' | strings | tr -d '\n' | sed 's/\\//g' > jni/sources.txt
 
 
 # Create Android.mk Makefile from Android.am.
-sed "s|SOURCEFILES|$(cat jni/sources.txt)|" jni/Android.am > jni/Android.mk
-rm jni/sources.txt
+# sed "s|SOURCEFILES|$(cat jni/sources.txt)|" jni/Android.am > jni/Android.mk
+# rm jni/sources.txt
 
 
-# Build native code.
-# https://developer.android.com/tools/sdk/ndk/index.html
-ndk-build clean
-ndk-build NDK_DEBUG=1
