@@ -1,0 +1,24 @@
+<h1>translate("Stylesheet") ##name##</h1>
+<table>
+  <thead>
+    <tr>
+      <td>translate("Style")</td>
+      <td>translate("Name")</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    ##markerblock##
+  </tbody>
+</table>
+<br>
+<p><a href="?name=##name##&new=">translate("Add a style to the stylesheet.")</a></p>
+<p><a href="indext?sheet=##name##">translate("Select this stylesheet.")</a></p>
+<p><a href="indexm?delete=##name##">translate("Delete the entire stylesheet.")</a></p>
+<p>
+translate("You can copy or backup this stylesheet.")
+translate("The stylesheet is kept in one folder.")
+translate("The name of the folder is this:")
+##folder##
+</p>
+
