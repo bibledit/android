@@ -124,17 +124,22 @@ find $EXTERNALFOLDER -name ".dirstamp" -delete
 find $CPPFOLDER -name ".dirstamp" -delete
 
 
-# Android does not provide 'stoi' in C++.
-# sed -i.bak '/HAVE_STOI/d' jni/config.h
-# No libsword.
-# sed -i.bak '/HAVE_SWORD/d' jni/config.h
-# No file-upload possible from web view.
-# sed -i.bak '/CONFIG_ENABLE_FILE_UPLOAD/d' jni/config/config.h
-# Android does not need BSD memory profiling calls.
-# sed -i.bak '/HAVE_MACH_MACH/d' jni/config.h
-# Cleanup
-# rm jni/config.h.bak
-# rm jni/config/config.h.bak
+echo Adapting native source to Android.
+pushd $CPPFOLDER
+
+echo Android does not provide 'stoi' in C++.
+sed -i. '/HAVE_STOI/d' config.h
+
+echo No libsword.
+sed -i. '/HAVE_SWORD/d' config.h
+
+echo No file-upload possible from web view.
+sed -i. '/CONFIG_ENABLE_FILE_UPLOAD/d' config/config.h
+
+echo Android does not need BSD memory profiling calls.
+sed -i. '/HAVE_MACH_MACH/d' config.h
+
+popd
 
 
 # The following command saves all source files from Makefile.am to file.
