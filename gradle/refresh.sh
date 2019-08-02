@@ -5,11 +5,6 @@
 # Example: ./refresh.sh
 
 
-# Export environment variables to find the Android SDK and NDK tools. Todo go out.
-# export ANDROID_HOME=~/scr/android-sdk-macosx
-# export PATH=$PATH:~/scr/android-sdk-macosx/platform-tools:~/scr/android-sdk-macosx/tools:~/scr/android-ndk-r10e
-
-
 echo Define the assets
 ASSETSFOLDER=app/src/main/assets
 EXTERNALFOLDER=$ASSETSFOLDER/external
