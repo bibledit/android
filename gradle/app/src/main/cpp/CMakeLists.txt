@@ -99,6 +99,12 @@ add_library( # Sets the name of the library.
         mbedtls/x509write_crt.c
         mbedtls/x509write_csr.c
         mbedtls/xtea.c
+        utf8proc/utf8proc.c
+        sqlite/sqlite3.c
+        jsonxx/jsonxx.cpp
+        parsewebdata/ParseMultipartFormData.cpp
+        parsewebdata/ParseWebData.cpp
+
 
         # End Bibledit kernel.
         )
