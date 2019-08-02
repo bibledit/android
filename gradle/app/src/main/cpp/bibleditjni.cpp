@@ -18,7 +18,7 @@
 
 #include <jni.h>
 #include "stub.h"
-//#include "library/bibledit.h"
+#include "library/bibledit.h"
 #include <string.h>
 
 
@@ -65,7 +65,7 @@ Java_org_bibledit_android_MainActivity_StartLibrary (JNIEnv * env, jobject obj)
 }
 
 
-extern "C" JNIEXPORT bool JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_org_bibledit_android_MainActivity_IsRunning (JNIEnv * env, jobject obj)
 {
     return bibledit_is_running ();
