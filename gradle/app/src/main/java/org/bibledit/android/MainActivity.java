@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     WebView webview = null;
     TabHost tabhost = null;
     int resumecounter = 0;
-    String webAppUrl = "http://bibledit.org:8080/"; // Todo  "http://localhost:8080/";
+    String webAppUrl = "http://localhost:8080/";
     Timer timer;
     TimerTask timerTask;
     String previousSyncState;
@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity
         File file = new File (externalDirectory);
         if (!file.exists ()) webroot = internalDirectory;
 
-        // Todo InitializeLibrary (webroot, webroot);
+        InitializeLibrary (webroot, webroot);
 
-        // Todo SetTouchEnabled (true);
+        SetTouchEnabled (true);
 
-        // Todo StartLibrary ();
+        StartLibrary ();
 
         StartWebView (webAppUrl);
 
@@ -108,16 +108,16 @@ public class MainActivity extends AppCompatActivity
         installAssets (webroot);
 
         // Log information about where to find Bibledit's data.
-        // Todo Log ("Bibledit data location: " + webroot);
+        Log ("Bibledit data location: " + webroot);
 
         // Log information about whether running on Android or on Chrome OS.
         if (getApplicationContext().getPackageManager().hasSystemFeature("org.chromium.arc.device_management")) {
-            // Todo Log ("Running on Chrome OS");
+            Log ("Running on Chrome OS");
             // Enable Chrome OS in the library, for something specific to Chrome.
             // See https://github.com/bibledit/cloud/issues/282.
-            // Todo RunOnChromeOS ();
+            RunOnChromeOS ();
         } else {
-            // Todo Log ("Running on Android");
+            Log ("Running on Android");
         }
 
         // Timer for running repeating tasks.
@@ -137,9 +137,6 @@ public class MainActivity extends AppCompatActivity
         // Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (webAppUrl));
         // startActivity(browserIntent);
         // FORCHROMEOS
-
-        // Example of a call to a native method
-        Log.d("bibledit", stringFromJNI());
     }
 
 
@@ -147,20 +144,20 @@ public class MainActivity extends AppCompatActivity
     // that areimplemented by the native library which is packaged with this application.
     // There should be no understores (_) in the function name.
     // This avoids a "java.lang.UnsatisfiedLinkError: Native method not found" exception.
-    // Todo public native String GetVersionNumber ();
-    // Todo public native void SetTouchEnabled (Boolean enabled);
-    // Todo public native void InitializeLibrary (String resources, String webroot);
-    // Todo public native void StartLibrary ();
-    // Todo public native Boolean IsRunning ();
-    // Todo public native String IsSynchronizing ();
-    // Todo public native String GetExternalUrl ();
-    // Todo public native String GetPagesToOpen ();
-    // Todo public native void StopLibrary ();
-    // Todo public native void ShutdownLibrary ();
-    // Todo public native void Log (String message);
-    // Todo public native String GetLastPage ();
-    // Todo public native void RunOnChromeOS ();
-    // Todo public native String DisableSelectionPopupChromeOS ();
+    public native String GetVersionNumber ();
+    public native void SetTouchEnabled (boolean enabled);
+    public native void InitializeLibrary (String resources, String webroot);
+    public native void StartLibrary ();
+    public native boolean IsRunning ();
+    public native String IsSynchronizing ();
+    public native String GetExternalUrl ();
+    public native String GetPagesToOpen ();
+    public native void StopLibrary ();
+    public native void ShutdownLibrary ();
+    public native void Log (String message);
+    public native String GetLastPage ();
+    public native void RunOnChromeOS ();
+    public native String DisableSelectionPopupChromeOS ();
     public native String stringFromJNI();
 
 
@@ -176,7 +173,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart ()
     {
         super.onStart();
-        // Todo StartLibrary ();
+        StartLibrary ();
         startTimer ();
     }
 
@@ -186,7 +183,7 @@ public class MainActivity extends AppCompatActivity
     protected void onRestart ()
     {
         super.onRestart();
-        // Todo StartLibrary ();
+        StartLibrary ();
         startTimer ();
     }
 
@@ -196,7 +193,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume ()
     {
         super.onResume();
-        // Todo StartLibrary ();
+        StartLibrary ();
         startTimer ();
     }
 
@@ -206,7 +203,7 @@ public class MainActivity extends AppCompatActivity
     public void onPause ()
     {
         super.onPause ();
-        // Todo StopLibrary ();
+        StopLibrary ();
         stopTimer ();
     }
 
@@ -216,7 +213,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStop ()
     {
         super.onStop();
-        // Todo StopLibrary ();
+        StopLibrary ();
         stopTimer ();
     }
 
@@ -226,10 +223,10 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy ()
     {
         super.onDestroy ();
-        // Todo StopLibrary ();
+        StopLibrary ();
         stopTimer ();
         // Crashes: while (IsRunning ()) {};
-        // Todo ShutdownLibrary ();
+        ShutdownLibrary ();
     }
 
 
@@ -253,14 +250,11 @@ public class MainActivity extends AppCompatActivity
 
 
     // This loads the native Bibledit library on application startup.
-    // Library libbibleditjni calls the Bibledit library.
+    // Library libbibledit calls the Bibledit library.
     // The library has already been unpacked into
-    // /data/data/org.bibledit.android/lib/libbbibleditjni.so
+    // /data/data/org.bibledit.android/lib/libbbibledit.so
     // at installation time by the package manager.
-    // Used to load the 'native-lib' library on application startup. Todo out.
     static {
-        // Todo System.loadLibrary("gnustl_shared");
-        // Todo System.loadLibrary("bibleditjni");
         System.loadLibrary("bibledit");
     }
 
@@ -275,7 +269,7 @@ public class MainActivity extends AppCompatActivity
             {
                 SharedPreferences preferences = getPreferences (Context.MODE_PRIVATE);
                 String installedVersion = preferences.getString ("version", "");
-                String libraryVersion = ""; // Todo GetVersionNumber ();
+                String libraryVersion = GetVersionNumber ();
                 if (installedVersion.equals (libraryVersion)) return;
 
                 try {
@@ -338,7 +332,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 finally {
                 }
-                // Todo preferences.edit ().putString ("version", GetVersionNumber ()).apply ();
+                preferences.edit ().putString ("version", GetVersionNumber ()).apply ();
             }
         };
         thread.start ();
@@ -393,7 +387,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
 
                 // Check whether to keep the screen on during send and receive.
-                String syncState = ""; // Todo IsSynchronizing ();
+                String syncState = IsSynchronizing ();
                 if (syncState.equals ("true")) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -415,7 +409,7 @@ public class MainActivity extends AppCompatActivity
                 previousSyncState = syncState;
 
                 // Check whether to open an external URL in the system browser.
-                String externalUrl = ""; // Todo GetExternalUrl ();
+                String externalUrl = GetExternalUrl ();
                 if (externalUrl != null && !externalUrl.isEmpty ()) {
                     Log.d ("Bibledit start browser", externalUrl);
                     Intent browserIntent = new Intent (Intent.ACTION_VIEW, Uri.parse (externalUrl));
@@ -423,14 +417,14 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 // Check whether to open tabbed views or return to the default single view.
-                final String jsonString = ""; // Todo GetPagesToOpen ();
+                final String jsonString = GetPagesToOpen ();
                 if (jsonString != null) {
                     if (!jsonString.equals (previousTabsState)) {
                         if (jsonString.isEmpty ()) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Todo StartWebView (webAppUrl);
+                                    StartWebView (webAppUrl);
                                 }
                             });
                         } else {
@@ -454,7 +448,7 @@ public class MainActivity extends AppCompatActivity
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        // Todo StartTabHost (URLs, labels, tab);
+                                        StartTabHost (URLs, labels, tab);
                                     }
                                 });
                             } catch (JSONException e) {
@@ -657,14 +651,14 @@ public class MainActivity extends AppCompatActivity
     public void onActionModeStarted (ActionMode mode)
     {
         // https://developer.android.com/reference/android/view/ActionMode.html
-        final String disable = ""; // Todo DisableSelectionPopupChromeOS ();
+        final String disable = DisableSelectionPopupChromeOS ();
         if (disable.equals ("true")) {
             Menu menu = mode.getMenu ();
             menu.clear();
             //mode.finish ();
             //mode.invalidate ();
         }
-        super.onActionModeStarted(mode); // Todo check if this keeps working on Chrome, it was added, this line.
+        super.onActionModeStarted(mode);
     }
 
 
@@ -709,7 +703,6 @@ public class MainActivity extends AppCompatActivity
         });
         return webview;
     }
-
 
 
 }
