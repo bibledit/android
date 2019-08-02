@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+    /*
 const char * bibledit_get_version_number ();
 const char * bibledit_get_network_port ();
 void bibledit_initialize_library (const char * package, const char * webroot);
@@ -22,6 +23,7 @@ void bibledit_shutdown_library ();
 void bibledit_log (const char * message);
 void bibledit_run_on_chrome_os ();
 const char * bibledit_disable_selection_popup_chrome_os ();
+    */
 
 #ifdef __cplusplus
 }

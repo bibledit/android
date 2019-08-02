@@ -1,6 +1,8 @@
 #include "stub.h"
 
 
+/*
+
 const char * bibledit_get_version_number ()
 {
     return "1.0";
@@ -76,3 +78,5 @@ const char * bibledit_disable_selection_popup_chrome_os ()
 {
     return "";
 }
+
+*/
