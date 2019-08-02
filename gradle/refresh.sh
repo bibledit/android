@@ -137,6 +137,12 @@ sed -i. '/HAVE_MACH_MACH/d' config.h
 popd
 
 
+echo Create assets index.
+pushd $EXTERNALFOLDER
+find . -type f | cut -c 3- > ../asset.external
+popd
+
+
 # The following command saves all source files from Makefile.am to file.
 # It uses several steps to obtain the result:
 # * Obtain source files between the correct patterns.
