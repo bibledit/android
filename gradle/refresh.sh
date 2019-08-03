@@ -109,6 +109,7 @@ rm_rf_assets_cpp sources/sblgnt
 rm_rf_assets_cpp sources/oshb.xml.gz
 rm_rf_assets_cpp unittests
 rm_rf_assets_cpp config/local.server.key
+rm_rf_assets_cpp config/local.privkey.pem
 rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
