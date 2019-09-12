@@ -667,7 +667,11 @@ public class MainActivity extends AppCompatActivity
         WebView webview = new WebView (this);
         webview.getSettings().setJavaScriptEnabled (true);
         if (zoom) {
-            webview.getSettings().setBuiltInZoomControls (true);
+            // No build-in zoom controls,
+            // because these may cover clickable links,
+            // which then can't be clicked anymore.
+            // https://github.com/bibledit/cloud/issues/321
+            webview.getSettings().setBuiltInZoomControls (false);
             webview.getSettings().setSupportZoom (true);
         }
         webview.getSettings().setDomStorageEnabled (true);
