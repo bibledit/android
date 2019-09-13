@@ -127,6 +127,7 @@ add_library( # Sets the name of the library.
         filter/memory.cpp
         filter/webview.cpp
         filter/mail.cpp
+        filter/html.cpp
         flate/flate.cpp
         assets/view.cpp
         assets/page.cpp
