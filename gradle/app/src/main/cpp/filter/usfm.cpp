@@ -426,13 +426,14 @@ string usfm_get_chapter_text (string usfm, int chapter_number)
 {
   // Empty input: Ready.
   if (usfm.empty ()) return usfm;
-  
+
   // Remove the part of the USFM that precedes the chapter fragment.
   if (chapter_number) {
     // Normal chapter marker (new line after the number).
     bool found = false;
     string marker = usfm_get_opening_usfm ("c", false) + convert_to_string (chapter_number) + "\n";
     size_t pos = usfm.find (marker);
+    // Was the chapter found?
     if (pos != string::npos) {
       found = true;
       usfm.erase (0, pos);
@@ -444,6 +445,14 @@ string usfm_get_chapter_text (string usfm, int chapter_number)
       found = true;
       usfm.erase (0, pos);
     }
+    // Another observed unusual situation: A non-breaking space after the chapter number.
+    marker = usfm_get_opening_usfm ("c", false) + convert_to_string (chapter_number) + non_breaking_space_u00A0 ();
+    pos = usfm.find (marker);
+    if (pos != string::npos) {
+      found = true;
+      usfm.erase (0, pos);
+    }
+
     // Starting chapter markup not found: Non-existing chapter.
     if (!found) return "";
   }
@@ -758,7 +767,8 @@ string usfm_safely_store_verse (void * webserver_request,
   bool verses_match = true;
   if (save_verses.size () == existing_verses.size ()) {
     for (unsigned int i = 0; i < save_verses.size (); i++) {
-      if (save_verses [i] != existing_verses [i]) verses_match = false;
+      if (save_verses [i] != existing_verses [i])
+        verses_match = false;
     }
   } else {
     verses_match = false;
