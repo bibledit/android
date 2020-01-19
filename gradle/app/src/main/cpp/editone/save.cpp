@@ -34,6 +34,7 @@
 #include <access/bible.h>
 #include <bb/logic.h>
 #include <editone/logic.h>
+#include <edit/logic.h>
 #include <developer/logic.h>
 #include <rss/logic.h>
 #include <sendreceive/logic.h>
@@ -54,7 +55,7 @@ bool editone_save_acl (void * webserver_request)
 }
 
 
-string editone_save (void * webserver_request)
+string editone_save (void * webserver_request) // Todo
 {
   Webserver_Request * request = (Webserver_Request *) webserver_request;
 
@@ -117,18 +118,17 @@ string editone_save (void * webserver_request)
   string oldText = request->database_bibles()->getChapter (bible, book, chapter);
 
   
-  // If the most recent save operation on this chapter was done a few seconds ago,
-  // email the user,
+  // If the most recent save operation on this chapter
+  // caused the chapter to be different, email the user,
   // suggesting to check if the user's edit came through.
   // The rationale is that if Bible text was saved through Send/receive,
   // or if another user saved Bible text,
-  // it's worth to check on this.
+  // it's worth to check on this. Todo can go out, do it differently.
   // Because the user's editor may not yet have loaded this updated Bible text.
   // https://github.com/bibledit/cloud/issues/340
-  int age = request->database_bibles()->getChapterAge (bible, book, chapter);
-  if (age < 2) {
-    string old_verse_usfm = usfm_get_verse_text (oldText, verse);
-    bible_logic_recent_save_email (bible, book, chapter, verse, username, old_verse_usfm, usfm);
+  string old_usfm_snapshot = getLoadedUsfm (webserver_request, bible, book, chapter, "editone");
+  if (old_usfm_snapshot != oldText) {
+    bible_logic_recent_save_email (bible, book, chapter, verse, username, old_usfm_snapshot, oldText); // Todo
   }
 
   
@@ -148,6 +148,9 @@ string editone_save (void * webserver_request)
     }
     rss_logic_schedule_update (username, bible, book, chapter, oldText, newText);
 #endif
+
+    // Store a copy of the USFM now saved as identical to what's loaded in the editor for later reference. Todo
+    storeLoadedUsfm (webserver_request, bible, book, chapter, "editone", "save editone");
 
     return locale_logic_text_saved ();
   }
