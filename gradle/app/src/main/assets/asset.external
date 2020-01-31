@@ -246,6 +246,7 @@ databases/client/gitflag
 databases/localization_uk.sqlite
 odf/README
 odf/template.odt
+tasks/holder
 bibles/gitflag
 personalize/index.html
 personalize/index.js
@@ -352,6 +353,7 @@ editusfm/index.html
 editusfm/index.js
 user/notifications.html
 user/account.html
+trash/holder
 sqlite/readme.txt
 miniz/readme.txt
 consistency/index.html
@@ -471,6 +473,7 @@ manage/privileges.js
 manage/users.html
 manage/privileges.html
 manage/write.html
+ipc/holder
 pugixml/pugiconfig.hpp
 pugixml/pugixml.hpp
 pugixml/readme.txt
@@ -540,6 +543,7 @@ assets/success.html
 assets/header.html
 assets/error.html
 assets/xhtml_finish.html
+tmp/holder
 webbb/lens.png
 webbb/search.html
 client/index.html
