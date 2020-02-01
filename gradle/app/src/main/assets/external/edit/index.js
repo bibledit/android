@@ -203,10 +203,12 @@ function editorLoadChapter (reload)
           positionCaret (editorCaretPosition);
         }
         editorScheduleCaretPositioning ();
+        // Alert on reloading soon after save, or after text reload.
+        // https://github.com/bibledit/cloud/issues/346
         editorLoadDate = new Date();
         var seconds = (editorLoadDate.getTime() - editorSaveDate.getTime()) / 1000;
-        if (seconds < 2) {
-          alert (editorChapterVerseUpdatedLoaded);
+        if ((seconds < 2) || reload) {
+          if (editorWriteAccess) alert (editorChapterVerseUpdatedLoaded);
         }
       } else {
         // Checksum error: Reload.
@@ -263,7 +265,7 @@ function editorSaveChapter (sync)
       editorSaveDate = new Date();
       var seconds = (editorSaveDate.getTime() - editorLoadDate.getTime()) / 1000;
       if (seconds < 2) {
-        alert (editorChapterVerseUpdatedLoaded);
+        if (editorWriteAccess) alert (editorChapterVerseUpdatedLoaded);
       }
     },
   });

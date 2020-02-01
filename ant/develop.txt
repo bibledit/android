@@ -1,9 +1,0 @@
-The app can be moved from the phone's internal memory to the SD card. After installation, then moving it to the SD card, it keeps working after that. When then moving the app back to the phone's internal memory, and starting the app, it then crashes.
-
-The app needs the Android System WebView to work well. This component requires Android 5.0 or higher.
-
-Android Studio device emulation. Run Android Studio. Create and run a simple project. In the emulator, create a virtual device, and run it. Check which command line runs it. This command line can be used separately also.
-
-Use ADB to debug on Chrome OS via the network:
-~/scr/adb connect 192.168.2.nnn
-

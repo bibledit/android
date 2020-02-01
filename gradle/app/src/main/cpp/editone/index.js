@@ -208,7 +208,6 @@ function oneverseEditorLoadVerse ()
           quill.enable (oneverseEditorWriteAccess);
           // The browser may reformat the loaded html, so take the possible reformatted data for reference.
           oneverseLoadedText = $ (".ql-editor").html ();
-          oneverseReloadFlag = false;
           oneverseCaretMovedTimeoutStart ();
           // Create CSS for embedded styles.
           css4embeddedstyles ();
@@ -222,11 +221,13 @@ function oneverseEditorLoadVerse ()
         if (response !== false) {
           oneverseScrollVerseIntoView ();
           oneversePositionCaret ();
+          // https://github.com/bibledit/cloud/issues/346
           oneverseEditorLoadDate = new Date();
           var seconds = (oneverseEditorLoadDate.getTime() - oneverseEditorSaveDate.getTime()) / 1000;
-          if (seconds < 2) {
-            alert (oneverseEditorVerseUpdatedLoaded);
+          if ((seconds < 2) | oneverseReloadFlag)  {
+            if (oneverseEditorWriteAccess) alert (oneverseEditorVerseUpdatedLoaded);
           }
+          oneverseReloadFlag = false;
         }
         if (response === false) {
           // Checksum or other error: Reload.
@@ -286,7 +287,7 @@ function oneverseEditorSaveVerse (sync)
       oneverseEditorSaveDate = new Date();
       var seconds = (oneverseEditorSaveDate.getTime() - oneverseEditorLoadDate.getTime()) / 1000;
       if (seconds < 2) {
-        alert (oneverseEditorVerseUpdatedLoaded);
+        if (oneverseEditorWriteAccess) alert (oneverseEditorVerseUpdatedLoaded);
       }
     }
   });

@@ -123,13 +123,14 @@ function usfmEditorLoadChapter ()
           } else {
             usfmPositionCaretViaAjax ();
           }
-          usfmReload = false;
+          // Alert on reload soon after save, or on any reload.
+          // https://github.com/bibledit/cloud/issues/346
           usfmLoadDate = new Date();
           var seconds = (usfmLoadDate.getTime() - usfmSaveDate.getTime()) / 1000;
-          console.log (seconds);
-          if (seconds < 2) {
-            alert (usfmEditorVerseUpdatedLoaded);
+          if ((seconds < 2) | usfmReload) {
+            if (usfmEditorWriteAccess) alert (usfmEditorVerseUpdatedLoaded); // Todo
           }
+          usfmReload = false;
         } else {
           // Checksum error: Reload.
           usfmReload = true;
@@ -188,7 +189,7 @@ function usfmEditorSaveChapter (sync)
       usfmSaveDate = new Date();
       var seconds = (usfmSaveDate.getTime() - usfmLoadDate.getTime()) / 1000;
       if (seconds < 2) {
-        alert (usfmEditorVerseUpdatedLoaded);
+        if (usfmEditorWriteAccess) alert (usfmEditorVerseUpdatedLoaded); // Todo
       }
     }
   });
