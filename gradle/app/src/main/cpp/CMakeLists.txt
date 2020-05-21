@@ -454,6 +454,8 @@ add_library( # Sets the name of the library.
         quill/logic.cpp
         rss/logic.cpp
         rss/feed.cpp
+        nmt/logic.cpp
+        nmt/index.cpp
 
 
         # End Bibledit kernel.
