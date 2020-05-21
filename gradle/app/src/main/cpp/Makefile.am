@@ -433,7 +433,9 @@ libbibledit_a_SOURCES = \
 	rss/logic.cpp \
 	rss/feed.cpp \
 	microtar/microtar.c \
-	miniz/miniz.c
+	miniz/miniz.c \
+	nmt/index.cpp \
+	nmt/logic.cpp
 
 bin_PROGRAMS = server unittest generate
 
@@ -521,7 +523,8 @@ unittest_SOURCES = \
 	unittests/webview.cpp \
 	unittests/javascript.cpp \
 	unittests/french.cpp \
-  unittests/merge.cpp
+  unittests/merge.cpp \
+  unittests/nmt.cpp
 
 unittest_LDADD = libbibledit.a
 
