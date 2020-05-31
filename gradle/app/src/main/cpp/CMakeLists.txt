@@ -282,7 +282,6 @@ add_library( # Sets the name of the library.
         compare/index.cpp
         compare/compare.cpp
         jobs/index.cpp
-        editverse/index.cpp
         editone/index.cpp
         editone/load.cpp
         editone/save.cpp
