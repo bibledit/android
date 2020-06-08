@@ -13,7 +13,7 @@ EXTERNALFOLDER=$ASSETSFOLDER/external
 echo Put all the code of the Bibledit kernel into the following folder:
 echo $EXTERNALFOLDER
 echo This is in preparation for subsequent steps.
-rsync -a --delete --exclude .git ../../cloud/ $EXTERNALFOLDER/
+rsync -a --delete --exclude .git ../cloud/ $EXTERNALFOLDER/
 if [ $? -ne 0 ]; then exit; fi
 
 
