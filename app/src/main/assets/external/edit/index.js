@@ -184,7 +184,6 @@ function editorLoadChapter (reload)
       if (window.frameElement) {
         iframe = $(window.frameElement);
         var data_editor_number = iframe.attr("data-editor-no");
-        console.log (data_editor_number);
         if (data_editor_number > 1) {
           editorWriteAccess = false;
         }
@@ -304,7 +303,7 @@ function editorGetHtml ()
 
 /*
 
-Portion dealing with triggers for editor's content change.
+Portion dealing with triggers for when the editor's content changes.
 
 */
 
@@ -670,7 +669,7 @@ function editorScrollVerseIntoView ()
   var bounds = quill.getBounds (position);
   var workspaceHeight = $("#workspacewrapper").height();
   var currentScrollTop = $("#workspacewrapper").scrollTop();
-  var scrollTo = bounds.top - (workspaceHeight /  2);
+  var scrollTo = bounds.top - (workspaceHeight * verticalCaretPosition / 100);
   scrollTo = parseInt (scrollTo);
   var lowerBoundary = currentScrollTop - (workspaceHeight / 10);
   var upperBoundary = currentScrollTop + (workspaceHeight / 10);
