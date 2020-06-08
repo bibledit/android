@@ -22,3 +22,4 @@ app/.cxx/cmake/debug/armeabi-v7a/.ninja_deps
 app/.cxx/cmake/debug/armeabi-v7a/android_gradle_build_bibledit_armeabi-v7a.stderr.txt
 app/.cxx/cmake/debug/armeabi-v7a/cmake_server_log.txt
 
+gradle/.idea/caches/build_file_checksums.ser

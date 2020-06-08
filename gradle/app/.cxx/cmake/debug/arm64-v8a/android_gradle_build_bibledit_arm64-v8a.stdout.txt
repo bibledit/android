@@ -1,0 +1,164 @@
+ninja: Entering directory `/Users/teus/dev/android/gradle/app/.cxx/cmake/debug/arm64-v8a'
+[1/438] Building CXX object CMakeFiles/bibledit.dir/stub.cpp.o
+[2/438] Building C object CMakeFiles/bibledit.dir/library/locks.c.o
+[3/438] Building C object CMakeFiles/bibledit.dir/mbedtls/aesni.c.o
+[4/438] Building C object CMakeFiles/bibledit.dir/mbedtls/arc4.c.o
+[5/438] Building CXX object CMakeFiles/bibledit.dir/bibleditjni.cpp.o
+[6/438] Building C object CMakeFiles/bibledit.dir/mbedtls/asn1parse.c.o
+[7/438] Building C object CMakeFiles/bibledit.dir/microtar/microtar.c.o
+[8/438] Building C object CMakeFiles/bibledit.dir/mbedtls/base64.c.o
+[9/438] Building C object CMakeFiles/bibledit.dir/mbedtls/asn1write.c.o
+[10/438] Building C object CMakeFiles/bibledit.dir/mbedtls/blowfish.c.o
+[11/438] Building C object CMakeFiles/bibledit.dir/mbedtls/certs.c.o
+[12/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ccm.c.o
+[13/438] Building C object CMakeFiles/bibledit.dir/mbedtls/chacha20.c.o
+[14/438] Building C object CMakeFiles/bibledit.dir/mbedtls/chachapoly.c.o
+[15/438] Building C object CMakeFiles/bibledit.dir/mbedtls/aes.c.o
+[16/438] Building C object CMakeFiles/bibledit.dir/mbedtls/camellia.c.o
+[17/438] Building C object CMakeFiles/bibledit.dir/mbedtls/cipher_wrap.c.o
+[18/438] Building C object CMakeFiles/bibledit.dir/mbedtls/cipher.c.o
+[19/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ctr_drbg.c.o
+[20/438] Building C object CMakeFiles/bibledit.dir/mbedtls/debug.c.o
+[21/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ecjpake.c.o
+[22/438] Building C object CMakeFiles/bibledit.dir/mbedtls/dhm.c.o
+[23/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ecdh.c.o
+[24/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ecdsa.c.o
+[25/438] Building C object CMakeFiles/bibledit.dir/mbedtls/des.c.o
+[26/438] Building C object CMakeFiles/bibledit.dir/mbedtls/entropy_poll.c.o
+[27/438] Building C object CMakeFiles/bibledit.dir/mbedtls/entropy.c.o
+[28/438] Building C object CMakeFiles/bibledit.dir/mbedtls/havege.c.o
+[29/438] Building C object CMakeFiles/bibledit.dir/mbedtls/md2.c.o
+[30/438] Building C object CMakeFiles/bibledit.dir/mbedtls/md4.c.o
+[31/438] Building C object CMakeFiles/bibledit.dir/mbedtls/gcm.c.o
+[32/438] Building C object CMakeFiles/bibledit.dir/mbedtls/md.c.o
+[33/438] Building C object CMakeFiles/bibledit.dir/mbedtls/hmac_drbg.c.o
+[34/438] Building C object CMakeFiles/bibledit.dir/mbedtls/memory_buffer_alloc.c.o
+[35/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ecp_curves.c.o
+[36/438] Building C object CMakeFiles/bibledit.dir/mbedtls/bignum.c.o
+[37/438] Building C object CMakeFiles/bibledit.dir/mbedtls/error.c.o
+[38/438] Building C object CMakeFiles/bibledit.dir/mbedtls/md_wrap.c.o
+[39/438] Building C object CMakeFiles/bibledit.dir/mbedtls/padlock.c.o
+[40/438] Building C object CMakeFiles/bibledit.dir/mbedtls/md5.c.o
+[41/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pkcs11.c.o
+[42/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pk.c.o
+[43/438] Building C object CMakeFiles/bibledit.dir/mbedtls/net_sockets.c.o
+/Users/teus/dev/android/gradle/app/src/main/cpp/mbedtls/net_sockets.c:334:37: warning: passing 'int *' to parameter of type 'socklen_t *' (aka 'unsigned int *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                    (void *) &type, &type_len ) != 0 ||
+                                    ^~~~~~~~~
+/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/sys/socket.h:311:92: note: passing argument to parameter '__value_length' here
+__socketcall int getsockopt(int __fd, int __level, int __option, void* __value, socklen_t* __value_length);
+                                                                                           ^
+/Users/teus/dev/android/gradle/app/src/main/cpp/mbedtls/net_sockets.c:344:80: warning: passing 'int *' to parameter of type 'socklen_t *' (aka 'unsigned int *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                                             (struct sockaddr *) &client_addr, &n );
+                                                                               ^~
+/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/sys/socket.h:301:71: note: passing argument to parameter '__addr_length' here
+__socketcall int accept(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
+                                                                      ^
+/Users/teus/dev/android/gradle/app/src/main/cpp/mbedtls/net_sockets.c:352:59: warning: passing 'int *' to parameter of type 'socklen_t *' (aka 'unsigned int *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                        (struct sockaddr *) &client_addr, &n );
+                                                          ^~
+/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/bits/fortify/socket.h:49:124: note: passing argument to parameter 'addr_len' here
+ssize_t recvfrom(int fd, void* const buf __pass_object_size0, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len)
+                                                                                                                           ^
+/Users/teus/dev/android/gradle/app/src/main/cpp/mbedtls/net_sockets.c:387:59: warning: passing 'int *' to parameter of type 'socklen_t *' (aka 'unsigned int *') converts between pointers to integer types with different sign [-Wpointer-sign]
+                         (struct sockaddr *) &local_addr, &n ) != 0 ||
+                                                          ^~
+/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/sys/socket.h:310:76: note: passing argument to parameter '__addr_length' here
+__socketcall int getsockname(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
+                                                                           ^
+4 warnings generated.
+[44/438] Building C object CMakeFiles/bibledit.dir/mbedtls/oid.c.o
+[45/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pem.c.o
+[46/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pk_wrap.c.o
+[47/438] Building C object CMakeFiles/bibledit.dir/mbedtls/platform.c.o
+[48/438] Building C object CMakeFiles/bibledit.dir/mbedtls/platform_util.c.o
+[49/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pkcs12.c.o
+[50/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pkcs5.c.o
+[51/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pkwrite.c.o
+[52/438] Building C object CMakeFiles/bibledit.dir/mbedtls/poly1305.c.o
+[53/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ecp.c.o
+[54/438] Building C object CMakeFiles/bibledit.dir/mbedtls/rsa_internal.c.o
+[55/438] Building C object CMakeFiles/bibledit.dir/mbedtls/pkparse.c.o
+[56/438] Building C object CMakeFiles/bibledit.dir/mbedtls/sha512.c.o
+[57/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_cache.c.o
+[58/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_ciphersuites.c.o
+[59/438] Building C object CMakeFiles/bibledit.dir/mbedtls/sha256.c.o
+[60/438] Building C object CMakeFiles/bibledit.dir/mbedtls/sha1.c.o
+[61/438] Building C object CMakeFiles/bibledit.dir/mbedtls/threading.c.o
+[62/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_cookie.c.o
+[63/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ripemd160.c.o
+[64/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_ticket.c.o
+[65/438] Building C object CMakeFiles/bibledit.dir/mbedtls/version.c.o
+[66/438] Building CXX object CMakeFiles/bibledit.dir/native.cpp.o
+[67/438] Building C object CMakeFiles/bibledit.dir/mbedtls/version_features.c.o
+[68/438] Building C object CMakeFiles/bibledit.dir/mbedtls/timing.c.o
+[69/438] Building C object CMakeFiles/bibledit.dir/mbedtls/rsa.c.o
+[70/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509_create.c.o
+[71/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509_csr.c.o
+[72/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509.c.o
+[73/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509_crl.c.o
+[74/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509write_crt.c.o
+[75/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509write_csr.c.o
+[76/438] Building C object CMakeFiles/bibledit.dir/mbedtls/xtea.c.o
+[77/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_cli.c.o
+[78/438] Building C object CMakeFiles/bibledit.dir/mbedtls/x509_crt.c.o
+[79/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_srv.c.o
+[80/438] Building C object CMakeFiles/bibledit.dir/miniz/miniz.c.o
+[81/438] Building C object CMakeFiles/bibledit.dir/mbedtls/ssl_tls.c.o
+[82/438] Building C object CMakeFiles/bibledit.dir/webserver/io.c.o
+[83/438] Building C object CMakeFiles/bibledit.dir/utf8proc/utf8proc.c.o
+[84/438] Building CXX object CMakeFiles/bibledit.dir/parsewebdata/ParseWebData.cpp.o
+[85/438] Building CXX object CMakeFiles/bibledit.dir/parsewebdata/ParseMultipartFormData.cpp.o
+[86/438] Building CXX object CMakeFiles/bibledit.dir/library/bibledit.cpp.o
+[87/438] Building CXX object CMakeFiles/bibledit.dir/webserver/request.cpp.o
+[88/438] Building CXX object CMakeFiles/bibledit.dir/webserver/webserver.cpp.o
+[89/438] Building CXX object CMakeFiles/bibledit.dir/jsonxx/jsonxx.cpp.o
+[90/438] Building CXX object CMakeFiles/bibledit.dir/webserver/http.cpp.o
+[91/438] Building CXX object CMakeFiles/bibledit.dir/bootstrap/bootstrap.cpp.o
+[92/438] Building CXX object CMakeFiles/bibledit.dir/filter/roles.cpp.o
+[93/438] Building CXX object CMakeFiles/bibledit.dir/filter/md5.cpp.o
+[94/438] Building CXX object CMakeFiles/bibledit.dir/filter/archive.cpp.o
+[95/438] Building CXX object CMakeFiles/bibledit.dir/filter/url.cpp.o
+In file included from /Users/teus/dev/android/gradle/app/src/main/cpp/filter/url.cpp:24:
+/Users/teus/dev/android/gradle/app/src/main/cpp/./filter/UriCodec.cpp:92:14: warning: result of comparison of constant -1 with expression of type 'char' is always true [-Wtautological-constant-out-of-range-compare]
+      if (-1 != (dec1 = HEX2DEC[*(pSrc + 1)])
+          ~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/teus/dev/android/gradle/app/src/main/cpp/./filter/UriCodec.cpp:93:17: warning: result of comparison of constant -1 with expression of type 'char' is always true [-Wtautological-constant-out-of-range-compare]
+          && -1 != (dec2 = HEX2DEC[*(pSrc + 2)]))
+             ~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.
+[96/438] Building CXX object CMakeFiles/bibledit.dir/filter/usfm.cpp.o
+[97/438] Building CXX object CMakeFiles/bibledit.dir/filter/passage.cpp.o
+[98/438] Building CXX object CMakeFiles/bibledit.dir/filter/css.cpp.o
+[99/438] Building CXX object CMakeFiles/bibledit.dir/filter/git.cpp.o
+[100/438] Building CXX object CMakeFiles/bibledit.dir/filter/string.cpp.o
+[101/438] Building CXX object CMakeFiles/bibledit.dir/filter/shell.cpp.o
+[102/438] Building CXX object CMakeFiles/bibledit.dir/filter/text.cpp.o
+[103/438] Building CXX object CMakeFiles/bibledit.dir/filter/memory.cpp.o
+[104/438] Building CXX object CMakeFiles/bibledit.dir/filter/webview.cpp.o
+[105/438] Building CXX object CMakeFiles/bibledit.dir/filter/date.cpp.o
+[106/438] Building CXX object CMakeFiles/bibledit.dir/filter/mail.cpp.o
+[107/438] Building CXX object CMakeFiles/bibledit.dir/filter/merge.cpp.o
+[108/438] Building CXX object CMakeFiles/bibledit.dir/filter/html.cpp.o
+[109/438] Building CXX object CMakeFiles/bibledit.dir/filter/diff.cpp.o
+[110/438] Building CXX object CMakeFiles/bibledit.dir/flate/flate.cpp.o
+[111/438] Building CXX object CMakeFiles/bibledit.dir/assets/page.cpp.o
+[112/438] Building CXX object CMakeFiles/bibledit.dir/assets/external.cpp.o
+[113/438] Building CXX object CMakeFiles/bibledit.dir/index/listing.cpp.o
+[114/438] Building CXX object CMakeFiles/bibledit.dir/index/index.cpp.o
+[115/438] Building CXX object CMakeFiles/bibledit.dir/config/globals.cpp.o
+[116/438] Building CXX object CMakeFiles/bibledit.dir/assets/header.cpp.o
+[117/438] Building C object CMakeFiles/bibledit.dir/sqlite/sqlite3.c.o
+[118/438] Building CXX object CMakeFiles/bibledit.dir/assets/view.cpp.o
+[119/438] Building CXX object CMakeFiles/bibledit.dir/menu/logic.cpp.o
+[120/438] Building CXX object CMakeFiles/bibledit.dir/locale/translate.cpp.o
+[121/438] Building CXX object CMakeFiles/bibledit.dir/menu/index.cpp.o
+[122/438] Building CXX object CMakeFiles/bibledit.dir/database/logs.cpp.o
+[123/438] Building CXX object CMakeFiles/bibledit.dir/locale/logic.cpp.o
+[124/438] Building CXX object CMakeFiles/bibledit.dir/database/config/general.cpp.o
+[125/438] Building CXX object CMakeFiles/bibledit.dir/database/users.cpp.o
+[126/438] Building CXX object CMakeFiles/bibledit.dir/database/config/bible.cpp.o
+[127/438] Building CXX object CMakeFiles/bibledit.dir/database/sqlite.cpp.o
+[128/438] Building CXX object CMakeFiles/bibledit.dir/database/config/user.cpp.o
+[129/438] Building CXX object CMakeFiles/bibledit.dir/database/books.cpp.o
+[130/438] Building CXX object CMakeFiles/bibledit.dir/database/bibles.cpp.o

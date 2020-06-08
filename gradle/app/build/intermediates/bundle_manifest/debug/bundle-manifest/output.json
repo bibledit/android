@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "org.bibledit.android",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "BUNDLE_MANIFEST"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 117,
+        "versionName": "5.0.892",
+        "outputFile": "app-debug.apk",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "org.bibledit.android",
+        "split": "",
+        "minSdkVersion": "14"
+      }
+    }
+  ]
+}
