@@ -1,6 +1,6 @@
 {
   "abi": "X86",
-  "abiPlatformVersion": 16,
+  "abiPlatformVersion": 18,
   "buildSettings": {
     "environmentVariables": []
   },
@@ -16,7 +16,7 @@
         "ndk"
       ],
       "buildRoot": "/Users/teus/dev/android/gradle/app/.cxx/cmake/debug/x86",
-      "cmakeToolchain": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake",
+      "cmakeToolchain": "/Users/teus/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
       "cmakeExecutable": "/Users/teus/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake",
       "variables": [
         {
@@ -29,7 +29,7 @@
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake"
+          "value": "/Users/teus/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake"
         },
         {
           "name": "ANDROID_ABI",
@@ -37,11 +37,11 @@
         },
         {
           "name": "ANDROID_NDK",
-          "value": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669"
+          "value": "/Users/teus/Library/Android/sdk/ndk-bundle"
         },
         {
           "name": "ANDROID_PLATFORM",
-          "value": "android-16"
+          "value": "android-18"
         },
         {
           "name": "CMAKE_ANDROID_ARCH_ABI",
@@ -49,7 +49,7 @@
         },
         {
           "name": "CMAKE_ANDROID_NDK",
-          "value": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669"
+          "value": "/Users/teus/Library/Android/sdk/ndk-bundle"
         },
         {
           "name": "CMAKE_EXPORT_COMPILE_COMMANDS",
@@ -69,7 +69,7 @@
         },
         {
           "name": "CMAKE_SYSTEM_VERSION",
-          "value": "16"
+          "value": "18"
         }
       ]
     }
@@ -98,7 +98,7 @@
         "minimumCmakeVersion": "3.10.2",
         "ninjaExe": "/Users/teus/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja"
       },
-      "cmakeToolchainFile": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake",
+      "cmakeToolchainFile": "/Users/teus/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
       "cxxFolder": "/Users/teus/dev/android/gradle/app/.cxx",
       "gradleModulePathName": ":app",
       "intermediatesFolder": "/Users/teus/dev/android/gradle/app/build/intermediates",
@@ -111,7 +111,7 @@
         "X86",
         "X86_64"
       ],
-      "ndkFolder": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669",
+      "ndkFolder": "/Users/teus/Library/Android/sdk/ndk-bundle",
       "ndkMetaAbiList": [
         {
           "abi": "ARMEABI_V7A",
@@ -166,10 +166,11 @@
         "X86_64"
       ],
       "ndkDefaultStl": "LIBCXX_STATIC",
-      "ndkVersion": "21.0.6113669",
+      "ndkVersion": "21.2.6472646",
       "project": {
         "compilerSettingsCacheFolder": "/Users/teus/dev/android/gradle/.cxx",
         "cxxFolder": "/Users/teus/dev/android/gradle/.cxx",
+        "ideBuildTargetAbi": "x86",
         "isBuildOnlyTargetAbiEnabled": true,
         "isCmakeBuildCohabitationEnabled": false,
         "isNativeCompilerSettingsCacheEnabled": false,
@@ -180,10 +181,10 @@
       "splitsAbiFilterSet": [],
       "stlSharedObjectMap": {
         "LIBCXX_SHARED": {
-          "ARMEABI_V7A": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so",
-          "ARM64_V8A": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so",
-          "X86": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so",
-          "X86_64": "/Users/teus/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so"
+          "ARMEABI_V7A": "/Users/teus/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so",
+          "ARM64_V8A": "/Users/teus/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so",
+          "X86": "/Users/teus/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so",
+          "X86_64": "/Users/teus/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so"
         },
         "LIBCXX_STATIC": {},
         "NONE": {},
@@ -193,10 +194,7 @@
     "objFolder": "/Users/teus/dev/android/gradle/app/build/intermediates/cmake/debug/obj",
     "variantName": "debug",
     "validAbiList": [
-      "ARMEABI_V7A",
-      "ARM64_V8A",
-      "X86",
-      "X86_64"
+      "X86"
     ],
     "prefabDirectory": "/Users/teus/dev/android/gradle/app/.cxx/cmake/debug/prefab",
     "prefabPackageDirectoryList": []

@@ -1,7 +1,7 @@
 [
   {
     "level": "INFO",
-    "message": "Start JSON generation. Platform version: 16 min SDK version: x86",
+    "message": "Start JSON generation. Platform version: 18 min SDK version: x86",
     "file": "/Users/teus/dev/android/gradle/app/src/main/cpp/CMakeLists.txt",
     "tag": "debug|x86"
   },
