@@ -9,3 +9,4 @@ gradle/app/.cxx/cmake/debug/armeabi-v7a/.ninja_deps
 gradle/app/.cxx/cmake/debug/armeabi-v7a/android_gradle_build_bibledit_armeabi-v7a.stderr.txt
 gradle/app/.cxx/cmake/debug/armeabi-v7a/cmake_server_log.txt
 gradle/.idea/caches/build_file_checksums.ser
+*.ser
