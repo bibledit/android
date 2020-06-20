@@ -3,8 +3,8 @@
     package="org.bibledit.android"
     android:installLocation="auto"
     android:targetSandboxVersion="2"
-    android:versionCode="118"
-    android:versionName="5.0.893" >
+    android:versionCode="119"
+    android:versionName="5.0.896" >
 
     <uses-sdk
         android:minSdkVersion="18"

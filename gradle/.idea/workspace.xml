@@ -9,7 +9,18 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="" />
+    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,6 +80,7 @@
     <property name="settings.editor.selected.configurable" value="preferences.language.Kotlin" />
   </component>
   <component name="PsdUISettings">
+    <option name="MODULE_TAB" value="Default Config" />
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -176,10 +188,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="326" key="#PSD" timestamp="1590927904760">
+    <state x="549" y="326" key="#PSD" timestamp="1592404089471">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state x="549" y="326" key="#PSD/0.23.2048.1129@0.23.2048.1129" timestamp="1590927904760" />
+    <state x="549" y="326" key="#PSD/0.23.2048.1129@0.23.2048.1129" timestamp="1592404089471" />
     <state width="1358" height="271" key="GridCell.Tab.0.bottom" timestamp="1591721499657">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>

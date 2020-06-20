@@ -2,8 +2,8 @@
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="org.bibledit.android"
 4    android:installLocation="auto"
-5    android:versionCode="118"
-6    android:versionName="5.0.893" >
+5    android:versionCode="119"
+6    android:versionName="5.0.896" >
 7
 8    <uses-sdk
 9        android:minSdkVersion="18"
