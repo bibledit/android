@@ -16,10 +16,14 @@
       <change beforePath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/workspace/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/workspace/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
