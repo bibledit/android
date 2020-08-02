@@ -10,3 +10,6 @@ gradle/app/.cxx/cmake/debug/armeabi-v7a/android_gradle_build_bibledit_armeabi-v7
 gradle/app/.cxx/cmake/debug/armeabi-v7a/cmake_server_log.txt
 gradle/.idea/caches/build_file_checksums.ser
 *.ser
+gradle/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class
+gradle/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class
+gradle/app/build/intermediates/processed_res/debug/out/resources-debug.ap_

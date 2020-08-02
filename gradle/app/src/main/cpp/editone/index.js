@@ -237,7 +237,7 @@ function oneverseEditorLoadVerse ()
           if (oneverseVerseLoading in oneverseEditorSaveDate) {
             var seconds = (oneverseEditorLoadDate[oneverseVerseLoading].getTime() - oneverseEditorSaveDate[oneverseVerseLoading].getTime()) / 1000;
             if ((seconds < 2) | oneverseReloadFlag)  {
-              if (oneverseEditorWriteAccess) alert (oneverseEditorVerseUpdatedLoaded);
+              if (oneverseEditorWriteAccess) oneverseReloadAlert (oneverseEditorVerseUpdatedLoaded);
             }
           }
           oneverseReloadFlag = false;
@@ -709,10 +709,10 @@ function visualVerseEditorSelectionChangeHandler (range, oldRange, source)
 {
   // Bail out if editor not focused.
   if (!range) return;
-  
+
   // Bail out if text was selected.
   if (range.length != 0) return;
-  
+
   oneverseCaretMovedTimeoutStart ();
 }
 
@@ -762,13 +762,8 @@ function oneverseApplyNotesStyle (style)
   quill.setSelection (caret, 0);
   quill.insertText (caret, caller, "character", "notecall" + noteId, "user");
 
-  // Append note text to notes section:
-  // <p class="b-f"><span class="i-notebody1">1</span> + .</p>
-  var length = quill.getLength ();
-  quill.insertText (length, "\n", "paragraph", style, "user");
-  quill.insertText (length, caller, "character", "notebody" + noteId, "user");
-  length++;
-  quill.insertText (length, " + .", "character", "", "user");
+  // Append note text to notes section.
+  assetsEditorAddNote (quill, style, caller, noteId, oneverseNavigationChapter, oneverseNavigationVerse);
 
   oneverseInsertedNotesCount++;
   
@@ -887,4 +882,29 @@ function oneverseSwipeRight (event)
   } else if (parent.window.navigatePreviousVerse != 'undefined') {
     parent.window.navigatePreviousVerse (event);
   }
+}
+
+
+/*
+
+Section for reload notifications.
+
+*/
+
+
+function oneverseReloadAlert (message)
+{
+  // Take action only if the editor has focus and the user can type in it.
+  if (quill.hasFocus ()) {
+    notifyItSuccess (message)
+    quill.enable (false);
+    setTimeout (oneverseReloadAlertTimeout, 3000);
+  }
+}
+
+
+function oneverseReloadAlertTimeout ()
+{
+  quill.enable (oneverseEditorWriteAccess);
+  quill.focus ();
 }

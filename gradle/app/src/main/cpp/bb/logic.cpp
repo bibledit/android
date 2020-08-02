@@ -426,11 +426,15 @@ void bible_logic_merge_irregularity_mail (vector <string> users, vector <Merge_C
   
   for (auto & conflict : conflicts) {
     
+    // Add the passage to the subject.
+    string newsubject = conflict.subject;
+    if (conflict.book) newsubject.append (" | " + filter_passage_display (conflict.book, conflict.chapter, ""));
+    
     // Create the body of the email.
     xml_document document;
     xml_node node;
     node = document.append_child ("h3");
-    node.text ().set (conflict.subject.c_str());
+    node.text ().set (newsubject.c_str());
 
     // Storage of the changes the user sent, and the result that was saved, in raw USFM, per verse.
     vector <string> change_usfm;
@@ -452,7 +456,7 @@ void bible_logic_merge_irregularity_mail (vector <string> users, vector <Merge_C
 
     // Add some information for the user.
     node = document.append_child ("p");
-    node.text ().set ("You sent changes to the Cloud. The Cloud crossed the parts below out, and replaced it with the bold text below.");
+    node.text ().set ("You sent changes to the Cloud. The changes were merged with other changes already in the Cloud. The crossed out parts below could not be merged. They were replaced with the bold text below. You may want to check the changes or resend them.");
 
     // Go over each verse where the change differs from the resulting text that was saved.
     // For each verse, outline the difference between the change and the result.
@@ -469,13 +473,12 @@ void bible_logic_merge_irregularity_mail (vector <string> users, vector <Merge_C
     // Add some information for the user.
     document.append_child ("hr");
     document.append_child ("br");
-    document.append_child ("br");
     xml_node div_node;
     div_node = document.append_child ("div");
-    div_node.append_attribute ("style") = "font-size: xx-small";
+    div_node.append_attribute ("style") = "font-size: 30%";
 
     node = div_node.append_child ("p");
-    node.text ().set ("Here are some details.");
+    node.text ().set ("Full details follow below.");
     
     // Add the base text.
     div_node.append_child ("br");
@@ -512,7 +515,7 @@ void bible_logic_merge_irregularity_mail (vector <string> users, vector <Merge_C
     
     // Schedule the mail for sending to the user(s).
     for (auto user : users) {
-      email_schedule (user, conflict.subject, html);
+      email_schedule (user, newsubject, html);
     }
   }
 }

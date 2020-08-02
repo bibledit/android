@@ -218,7 +218,7 @@ function editorLoadChapter (reload)
         editorLoadDate = new Date();
         var seconds = (editorLoadDate.getTime() - editorSaveDate.getTime()) / 1000;
         if ((seconds < 2) || reload) {
-          if (editorWriteAccess) alert (editorChapterVerseUpdatedLoaded);
+          if (editorWriteAccess) editorReloadAlert (editorChapterVerseUpdatedLoaded);
         }
       } else {
         // Checksum error: Reload.
@@ -275,7 +275,7 @@ function editorSaveChapter (sync)
       editorSaveDate = new Date();
       var seconds = (editorSaveDate.getTime() - editorLoadDate.getTime()) / 1000;
       if (seconds < 2) {
-        if (editorWriteAccess) alert (editorChapterVerseUpdatedLoaded);
+        if (editorWriteAccess) editorReloadAlert (editorChapterVerseUpdatedLoaded);
       }
     },
   });
@@ -912,14 +912,9 @@ function applyNotesStyle (style)
   quill.setSelection (caret, 0);
   quill.insertText (caret, caller, "character", "notecall" + noteId, "user");
 
-  // Append note text to notes section:
-  // <p class="b-f"><span class="i-notebody1">1</span> + .</p>
-  var length = quill.getLength ();
-  quill.insertText (length, "\n", "paragraph", style, "user");
-  quill.insertText (length, caller, "character", "notebody" + noteId, "user");
-  length++;
-  quill.insertText (length, " + .", "character", "", "user");
-  
+  // Append note text to notes section.
+  assetsEditorAddNote (quill, style, caller, noteId, editorNavigationChapter, editorNavigationVerse);
+
   editorInsertedNotesCount++;
   
   editorActiveStylesFeedback ();
@@ -1054,4 +1049,28 @@ function editorSwipeRight (event)
   }
 }
 
+
+/*
+
+Section for reload notifications.
+
+*/
+
+
+function editorReloadAlert (message)
+{
+  // Take action only if the editor has focus and the user can type in it.
+  if (quill.hasFocus ()) {
+    notifyItSuccess (message)
+    quill.enable (false);
+    setTimeout (editorReloadAlertTimeout, 3000);
+  }
+}
+
+
+function editorReloadAlertTimeout ()
+{
+  quill.enable (editorWriteAccess);
+  quill.focus ();
+}
 

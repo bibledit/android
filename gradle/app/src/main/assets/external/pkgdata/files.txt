@@ -1,6 +1,7 @@
 /access
 /assets
 /assets/checkbox.js
+/assets/editor.js
 /assets/error.html
 /assets/external.js
 /assets/footer.html
@@ -234,7 +235,6 @@
 /editusfm
 /editusfm/index.html
 /editusfm/index.js
-/editverse
 /email
 /email/index.html
 /esword

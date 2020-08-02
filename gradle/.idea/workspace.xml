@@ -11,21 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/android_gradle_build_bibledit_arm64-v8a.stdout.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/arm64-v8a/android_gradle_build_bibledit_arm64-v8a.stdout.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/config/logic.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/config/logic.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/export/bibledropbox.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/export/bibledropbox.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/navigation/passage.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/navigation/passage.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/navigation/update.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/bibledit.dir/navigation/update.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/android_gradle_build_bibledit_armeabi-v7a.stdout.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/.cxx/cmake/debug/armeabi-v7a/android_gradle_build_bibledit_armeabi-v7a.stdout.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/org/bibledit/android/BuildConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/bundle_manifest/debug/bundle-manifest/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/bundle_manifest/debug/bundle-manifest/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/bundle_manifest/debug/bundle-manifest/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/bundle_manifest/debug/bundle-manifest/output.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libbibledit.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libbibledit.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/instant_app_manifest/debug/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/instant_app_manifest/debug/output.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class" afterDir="false" />
@@ -36,32 +25,29 @@
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/output.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/resources-debug.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/resources-debug.ap_" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/asset.external" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/asset.external" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/assets/xhtml_start.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/assets/xhtml_start.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/dtl/Diff.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/dtl/Diff.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/shortcuts.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/shortcuts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery-3.1.0.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery-3.1.0.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/navigation/passage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/navigation/passage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/xhtml_start.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/xhtml_start.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/classes/merge.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/classes/merge.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/dtl/Diff.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/dtl/Diff.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/shortcuts.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/shortcuts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery-3.1.0.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery-3.1.0.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/update.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/update.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -235,6 +221,10 @@
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
     <state x="549" y="326" key="#PSD/0.23.2048.1129@0.23.2048.1129" timestamp="1592404089471" />
+    <state x="717" y="225" key="#app" timestamp="1595261853582">
+      <screen x="0" y="23" width="2048" height="1129" />
+    </state>
+    <state x="717" y="225" key="#app/0.23.2048.1129@0.23.2048.1129" timestamp="1595261853582" />
     <state width="1358" height="271" key="GridCell.Tab.0.bottom" timestamp="1591721499657">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>

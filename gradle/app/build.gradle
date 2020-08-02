@@ -9,8 +9,8 @@ android {
         // 2018: Apps on Google Play will be required to target API level 26 or higher.
         // 2019: Apps on Google Play will be required to target API level 28 or higher.
         targetSdkVersion 28
-        versionCode 122
-        versionName "5.0.901"
+        versionCode 124
+        versionName "5.0.904"
         externalNativeBuild {
             cmake {
                 cppFlags ""
