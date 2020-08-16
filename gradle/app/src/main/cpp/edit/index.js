@@ -124,9 +124,13 @@ function navigationNewPassage ()
   } else {
     return;
   }
-
+  
   if ((editorNavigationBook != editorLoadedBook) || (editorNavigationChapter != editorLoadedChapter)) {
+    // Fixed: Reload text message when switching to another chapter.
+    // https://github.com/bibledit/cloud/issues/408
+    editorSaveDate = new Date(0);
     editorSaveChapter ();
+    editorSaveDate = new Date(0);
     editorLoadChapter (false);
   } else {
     editorScheduleCaretPositioning ();
