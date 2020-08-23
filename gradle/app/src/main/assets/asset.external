@@ -295,6 +295,11 @@ notifit/tests.html
 notifit/notifit.min.js
 utf8/utf8cpp.html
 utf8/ReleaseNotes
+cloud-macos.xcodeproj/project.pbxproj
+cloud-macos.xcodeproj/xcuserdata/teus.xcuserdatad/xcschemes/xcschememanagement.plist
+cloud-macos.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+cloud-macos.xcodeproj/project.xcworkspace/xcuserdata/teus.xcuserdatad/UserInterfaceState.xcuserstate
+cloud-macos.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 config/config.txt
 config/local.chain.pem
 config/userfacingurl.txt
@@ -565,6 +570,7 @@ rangy13/rangy-classapplier.min.js
 rangy13/rangy-selectionsaverestore.js
 parsewebdata/COPYING
 email/index.html
+cloud-macos.entitlements
 editor/select.html
 editor/select.js
 git/gitflag

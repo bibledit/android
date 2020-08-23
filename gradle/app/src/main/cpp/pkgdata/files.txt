@@ -48,6 +48,7 @@
 /classes
 /client
 /client/index.html
+/cloud-macos.entitlements
 /collaboration
 /collaboration/index.html
 /collaboration/link.html
