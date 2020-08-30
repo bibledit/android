@@ -985,6 +985,10 @@
 /unittests/tests/merge_3_modification.usfm
 /unittests/tests/merge_3_result.usfm
 /unittests/tests/merge_3_server.usfm
+/unittests/tests/merge_4_base.usfm
+/unittests/tests/merge_4_modification.usfm
+/unittests/tests/merge_4_result.usfm
+/unittests/tests/merge_4_server.usfm
 /unittests/tests/nl.po
 /unittests/tests/notes.sqlite.damaged
 /unittests/tests/onlinebible1.exp

@@ -555,7 +555,8 @@ void bible_logic_unsafe_save_mail (const string & message, const string & explan
 // This function sends an email
 // if the USFM received from the client
 // does not match the USFM that gets stored on the server.
-void bible_logic_client_receive_merge_mail (const string & bible, int book, int chapter, const string & user,
+void bible_logic_client_receive_merge_mail (const string & bible, int book, int chapter,
+                                            const string & user,
                                             const string & client_old,
                                             const string & client_new,
                                             const string & server)
@@ -585,7 +586,8 @@ void bible_logic_client_receive_merge_mail (const string & bible, int book, int 
   // No differences found: Done.
   if (client_diff.empty ()) return;
   
-  string subject = "Saved Bible text was merged";
+  string location = bible + " " + filter_passage_display (book, chapter, "");
+  string subject = "Saved Bible text was merged " + location;
   
   // Create the body of the email.
   xml_document document;
@@ -607,7 +609,7 @@ void bible_logic_client_receive_merge_mail (const string & bible, int book, int 
   information.append (translate ("You may want to check the result of the merge, whether it is correct."));
   node.text ().set (information.c_str());
   node = document.append_child ("p");
-  string location = bible + " " + filter_passage_display (book, chapter, "") +  ".";
+  location = bible + " " + filter_passage_display (book, chapter, "") +  ".";
   node.text ().set (location.c_str ());
 
   for (unsigned int i = 0; i < client_diff.size(); i++) {
@@ -810,9 +812,7 @@ void bible_logic_recent_save_email (const string & bible, int book, int chapter,
   string information;
   information.append (translate ("Bibledit saved the Bible text below."));
   information.append (" ");
-  information.append (translate ("But it found that other Bible text was saved to the same chapter."));
-  information.append (" ");
-  information.append (translate ("This may have been done by you or by someone else."));
+  information.append (translate ("But Bibledit is not entirely sure that all went well."));
   information.append (" ");
   information.append (translate ("You may want to check whether the Bible text was saved correctly."));
   node.text ().set (information.c_str());

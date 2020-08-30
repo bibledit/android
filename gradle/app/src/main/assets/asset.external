@@ -298,8 +298,11 @@ utf8/ReleaseNotes
 cloud-macos.xcodeproj/project.pbxproj
 cloud-macos.xcodeproj/xcuserdata/teus.xcuserdatad/xcschemes/xcschememanagement.plist
 cloud-macos.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+cloud-macos.xcodeproj/project.xcworkspace/xcuserdata/teus.xcuserdatad/IDEFindNavigatorScopes.plist
+cloud-macos.xcodeproj/project.xcworkspace/xcuserdata/teus.xcuserdatad/WorkspaceSettings.xcsettings
 cloud-macos.xcodeproj/project.xcworkspace/xcuserdata/teus.xcuserdatad/UserInterfaceState.xcuserstate
 cloud-macos.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+cloud-macos.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 config/config.txt
 config/local.chain.pem
 config/userfacingurl.txt
