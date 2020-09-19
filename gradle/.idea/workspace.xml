@@ -9,28 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/cloud-macos.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/cloud-macos.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery-3.5.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery-3.5.1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery.stylesheet.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/jquery/jquery.stylesheet.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/rangy13/rangy-classapplier.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/rangy13/rangy-classapplier.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/cloud-macos.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/cloud-macos.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery-3.5.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery-3.5.1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery.stylesheet.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/jquery/jquery.stylesheet.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/miniz/miniz.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/miniz/miniz.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/miniz/miniz.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/miniz/miniz.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/rangy13/rangy-classapplier.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/rangy13/rangy-classapplier.js" afterDir="false" />
-    </list>
+    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
