@@ -187,6 +187,12 @@ libbibledit_a_SOURCES = \
 	editone/save.cpp \
 	editone/verse.cpp \
 	editone/logic.cpp \
+  editone2/index.cpp \
+  editone2/load.cpp \
+  editone2/save.cpp \
+  editone2/verse.cpp \
+  editone2/logic.cpp \
+  editone2/update.cpp \
 	navigation/passage.cpp \
 	navigation/update.cpp \
 	navigation/poll.cpp \
@@ -202,6 +208,7 @@ libbibledit_a_SOURCES = \
 	editor/html2usfm.cpp \
 	editor/usfm2html.cpp \
 	editor/select.cpp \
+  editor/html2format.cpp \
 	edit/edit.cpp \
 	edit/id.cpp \
 	edit/index.cpp \
@@ -212,6 +219,16 @@ libbibledit_a_SOURCES = \
 	edit/preview.cpp \
 	edit/position.cpp \
 	edit/navigate.cpp \
+  edit2/edit.cpp \
+  edit2/id.cpp \
+  edit2/index.cpp \
+  edit2/load.cpp \
+  edit2/save.cpp \
+  edit2/styles.cpp \
+  edit2/logic.cpp \
+  edit2/preview.cpp \
+  edit2/position.cpp \
+  edit2/navigate.cpp \
 	search/all.cpp \
 	search/index.cpp \
 	search/replace.cpp \
@@ -523,7 +540,8 @@ unittest_SOURCES = \
 	unittests/javascript.cpp \
 	unittests/french.cpp \
   unittests/merge.cpp \
-  unittests/nmt.cpp
+  unittests/nmt.cpp \
+  unittests/html2format.cpp
 
 unittest_LDADD = libbibledit.a
 

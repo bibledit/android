@@ -302,6 +302,7 @@ add_library( # Sets the name of the library.
         editor/html2usfm.cpp
         editor/usfm2html.cpp
         editor/select.cpp
+        editor/html2format.cpp
         edit/edit.cpp
         edit/id.cpp
         edit/index.cpp
@@ -455,6 +456,22 @@ add_library( # Sets the name of the library.
         rss/feed.cpp
         nmt/logic.cpp
         nmt/index.cpp
+        editone2/index.cpp
+        editone2/load.cpp
+        editone2/save.cpp
+        editone2/verse.cpp
+        editone2/logic.cpp
+        editone2/update.cpp
+        edit2/edit.cpp
+        edit2/id.cpp
+        edit2/index.cpp
+        edit2/load.cpp
+        edit2/save.cpp
+        edit2/styles.cpp
+        edit2/logic.cpp
+        edit2/preview.cpp
+        edit2/position.cpp
+        edit2/navigate.cpp
 
 
         # End Bibledit kernel.
