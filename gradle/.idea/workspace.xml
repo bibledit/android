@@ -10,65 +10,78 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_annotation_annotation_1_1_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_resources_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_resources_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_common_2_1_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_collection_collection_1_1_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_core_core_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_common_2_1_0_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/asset.external" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/asset.external" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/cloud-macos.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/cloud-macos.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/edit/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editone/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/edit2/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/edit2/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/installcloudsourcedebian.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/installcloudsourcedebian.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.bubble.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.bubble.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.core.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.core.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.core.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.core.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.snow.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/quill/quill.snow.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/view.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/view.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/cloud-macos.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/cloud-macos.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/libraries.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/libraries.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/load.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/load.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/navigate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/navigate.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/position.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/position.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/save.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit2/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit2/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit2/load.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit2/load.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit2/navigate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit2/navigate.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit2/position.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit2/position.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit2/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit2/save.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editor/html2format.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editor/html2format.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editor/html2usfm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editor/html2usfm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editor/html2usfm.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editor/html2usfm.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editor/usfm2html.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editor/usfm2html.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editor/usfm2html.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editor/usfm2html.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/diff.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/diff.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/diff.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/diff.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/installcloudsourcedebian.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/installcloudsourcedebian.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.bubble.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.bubble.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.core.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.core.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.core.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.core.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.snow.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/quill/quill.snow.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_4_API_22" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -99,14 +112,13 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" />
     <property name="ApkExportedModule" value="app" />
-    <property name="BundleExportedModule" value="app" />
+    <property name="BundleExportedModule" value="gradle.app" />
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/app" />
     <property name="ExportApk.BuildVariants" value="release" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -133,12 +145,13 @@
       </method>
     </configuration>
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="app" />
+      <module name="gradle.app" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
@@ -174,17 +187,22 @@
       </Native>
       <Profilers>
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
         <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
         <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
       </Profilers>
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
       <method v="2">
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="refresh.sh" type="BashConfigurationType" factoryName="Bash" temporary="true">
-      <module name="app" />
+      <module name="gradle.app" />
       <option name="INTERPRETER_OPTIONS" value="bash" />
       <option name="INTERPRETER_PATH" value="/usr/bin/env" />
       <option name="PROJECT_INTERPRETER" value="false" />
@@ -196,11 +214,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Bash.refresh.sh" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -220,39 +233,42 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="549" y="326" key="#PSD" timestamp="1600529562238">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
     <state x="549" y="326" key="#PSD/0.23.2048.1129@0.23.2048.1129" timestamp="1600529562238" />
-    <state x="717" y="225" key="#app" timestamp="1595261853582">
+    <state x="668" y="293" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1605434213223">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state x="717" y="225" key="#app/0.23.2048.1129@0.23.2048.1129" timestamp="1595261853582" />
-    <state width="1358" height="229" key="GridCell.Tab.0.bottom" timestamp="1597583982090">
+    <state x="668" y="293" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.2048.1129@0.23.2048.1129" timestamp="1605434213223" />
+    <state x="380" y="150" width="1200" height="800" key="AVDManager" timestamp="1605436013650">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state width="1358" height="229" key="GridCell.Tab.0.bottom/0.23.2048.1129@0.23.2048.1129" timestamp="1597583982090" />
-    <state width="1358" height="229" key="GridCell.Tab.0.center" timestamp="1597583982089">
+    <state x="380" y="150" width="1200" height="800" key="AVDManager/0.23.2048.1129@0.23.2048.1129" timestamp="1605436013650" />
+    <state width="1358" height="271" key="GridCell.Tab.0.bottom" timestamp="1605436301278">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state width="1358" height="229" key="GridCell.Tab.0.center/0.23.2048.1129@0.23.2048.1129" timestamp="1597583982089" />
-    <state width="1358" height="229" key="GridCell.Tab.0.left" timestamp="1597583982088">
+    <state width="1358" height="271" key="GridCell.Tab.0.bottom/0.23.2048.1129@0.23.2048.1129" timestamp="1605436301278" />
+    <state width="1358" height="271" key="GridCell.Tab.0.center" timestamp="1605436301277">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state width="1358" height="229" key="GridCell.Tab.0.left/0.23.2048.1129@0.23.2048.1129" timestamp="1597583982088" />
-    <state width="1358" height="229" key="GridCell.Tab.0.right" timestamp="1597583982089">
+    <state width="1358" height="271" key="GridCell.Tab.0.center/0.23.2048.1129@0.23.2048.1129" timestamp="1605436301277" />
+    <state width="1358" height="271" key="GridCell.Tab.0.left" timestamp="1605436301277">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
-    <state width="1358" height="229" key="GridCell.Tab.0.right/0.23.2048.1129@0.23.2048.1129" timestamp="1597583982089" />
+    <state width="1358" height="271" key="GridCell.Tab.0.left/0.23.2048.1129@0.23.2048.1129" timestamp="1605436301277" />
+    <state width="1358" height="271" key="GridCell.Tab.0.right" timestamp="1605436301277">
+      <screen x="0" y="23" width="2048" height="1129" />
+    </state>
+    <state width="1358" height="271" key="GridCell.Tab.0.right/0.23.2048.1129@0.23.2048.1129" timestamp="1605436301277" />
     <state x="424" y="187" width="1200" height="800" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1599930354932">
       <screen x="0" y="23" width="2048" height="1129" />
     </state>
