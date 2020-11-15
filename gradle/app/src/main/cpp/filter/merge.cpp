@@ -29,6 +29,9 @@ using dtl::Diff3;
 using namespace pugi;
 
 
+static mutex filter_merge_mutex;
+
+
 // This uses the dtl:: library for merge in C++.
 // At times the library failed to merge.
 // It was tried whether the Linux "merge" command was able to successfully merge such cases.
@@ -46,8 +49,7 @@ vector <string> filter_merge_merge (const vector <string>& base, const vector <s
   // It is unclear at this time whether the code below
   // to find the differences between texts, is thread-safe.
   // So just to be sure, a mutex is placed around it.
-  static mutex mutex1;
-  lock_guard<mutex> lock(mutex1);
+  filter_merge_mutex.lock();
 
   vector <string> user_sequence (user);
   vector <string> base_sequence (base);
@@ -55,7 +57,9 @@ vector <string> filter_merge_merge (const vector <string>& base, const vector <s
 
   Diff3 <string, vector <string>> diff3 (user_sequence, base_sequence, server_sequence);
   diff3.compose ();
-  if (!diff3.merge ()) {
+  bool merged = diff3.merge ();
+  filter_merge_mutex.unlock();
+  if (!merged) {
     return {};
   }
   return diff3.getMergedSequence ();
