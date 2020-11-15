@@ -13,3 +13,4 @@ gradle/.idea/caches/build_file_checksums.ser
 gradle/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class
 gradle/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildConfig.class
 gradle/app/build/intermediates/processed_res/debug/out/resources-debug.ap_
+*.aab
