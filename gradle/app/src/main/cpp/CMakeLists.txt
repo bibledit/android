@@ -282,11 +282,6 @@ add_library( # Sets the name of the library.
         compare/index.cpp
         compare/compare.cpp
         jobs/index.cpp
-        editone/index.cpp
-        editone/load.cpp
-        editone/save.cpp
-        editone/verse.cpp
-        editone/logic.cpp
         navigation/passage.cpp
         navigation/update.cpp
         navigation/poll.cpp
@@ -299,10 +294,12 @@ add_library( # Sets the name of the library.
         editusfm/offset.cpp
         editusfm/save.cpp
         editor/styles.cpp
+        editor/style.cpp
         editor/html2usfm.cpp
         editor/usfm2html.cpp
         editor/select.cpp
         editor/html2format.cpp
+        editor/id.cpp
         edit/edit.cpp
         edit/id.cpp
         edit/index.cpp
@@ -463,15 +460,16 @@ add_library( # Sets the name of the library.
         editone2/logic.cpp
         editone2/update.cpp
         edit2/edit.cpp
-        edit2/id.cpp
         edit2/index.cpp
         edit2/load.cpp
         edit2/save.cpp
-        edit2/styles.cpp
         edit2/logic.cpp
         edit2/preview.cpp
         edit2/position.cpp
         edit2/navigate.cpp
+        edit2/update.cpp
+        redirect/index.cpp
+        tbsx/text.cpp
 
 
         # End Bibledit kernel.

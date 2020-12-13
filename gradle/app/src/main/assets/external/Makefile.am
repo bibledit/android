@@ -182,11 +182,7 @@ libbibledit_a_SOURCES = \
 	compare/index.cpp \
 	compare/compare.cpp \
 	jobs/index.cpp \
-	editone/index.cpp \
-	editone/load.cpp \
-	editone/save.cpp \
-	editone/verse.cpp \
-	editone/logic.cpp \
+	redirect/index.cpp \
   editone2/index.cpp \
   editone2/load.cpp \
   editone2/save.cpp \
@@ -210,6 +206,8 @@ libbibledit_a_SOURCES = \
 	editor/usfm2html.cpp \
 	editor/select.cpp \
   editor/html2format.cpp \
+  editor/id.cpp \
+  editor/style.cpp \
 	edit/edit.cpp \
 	edit/id.cpp \
 	edit/index.cpp \
@@ -221,15 +219,14 @@ libbibledit_a_SOURCES = \
 	edit/position.cpp \
 	edit/navigate.cpp \
   edit2/edit.cpp \
-  edit2/id.cpp \
   edit2/index.cpp \
   edit2/load.cpp \
   edit2/save.cpp \
-  edit2/styles.cpp \
   edit2/logic.cpp \
   edit2/preview.cpp \
   edit2/position.cpp \
   edit2/navigate.cpp \
+  edit2/update.cpp \
 	search/all.cpp \
 	search/index.cpp \
 	search/replace.cpp \
@@ -452,7 +449,8 @@ libbibledit_a_SOURCES = \
 	microtar/microtar.c \
 	miniz/miniz.c \
 	nmt/index.cpp \
-	nmt/logic.cpp
+	nmt/logic.cpp \
+  tbsx/text.cpp
 
 bin_PROGRAMS = server unittest generate
 
