@@ -135,6 +135,9 @@ sed -i. '/CONFIG_ENABLE_FILE_UPLOAD/d' config/config.h
 echo Android does not need BSD memory profiling calls.
 sed -i. '/HAVE_MACH_MACH/d' config.h
 
+echo No libicu.
+sed -i. '/HAVE_ICU/d' config.h
+
 popd
 
 

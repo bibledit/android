@@ -153,6 +153,7 @@ libbibledit_a_SOURCES = \
 	user/logic.cpp \
 	manage/index.cpp \
 	manage/users.cpp \
+  manage/accounts.cpp \
 	manage/exports.cpp \
 	manage/hyphenation.cpp \
 	manage/hyphenate.cpp \
@@ -160,6 +161,7 @@ libbibledit_a_SOURCES = \
 	manage/privileges.cpp \
 	system/index.cpp \
 	system/logic.cpp \
+  system/indonesianfree.cpp \
 	collaboration/index.cpp \
 	collaboration/link.cpp \
 	collaboration/settings.cpp \
@@ -450,7 +452,17 @@ libbibledit_a_SOURCES = \
 	miniz/miniz.c \
 	nmt/index.cpp \
 	nmt/logic.cpp \
-  tbsx/text.cpp
+  tbsx/text.cpp \
+  read/index.cpp \
+  read/load.cpp \
+  read/verse.cpp \
+  resource/divider.cpp \
+  filter/indonesian.cpp \
+  session/confirm.cpp \
+  sources/abbott-smith.cpp \
+  database/abbottsmith.cpp \
+  resource/comparative9edit.cpp \
+  resource/comparative1edit.cpp
 
 bin_PROGRAMS = server unittest generate
 
@@ -558,6 +570,7 @@ AM_CXXFLAGS += $(CURL_CFLAGS)
 AM_CXXFLAGS += $(OPENSSL_CFLAGS)
 AM_CXXFLAGS += $(GTK_CFLAGS)
 AM_CXXFLAGS += $(WEBKIT2GTK_CFLAGS)
+AM_CXXFLAGS += $(ICU_CFLAGS)
 
 LIBS = -Wall -lpthread -L. -g -rdynamic -ldl
 LIBS += $(CURL_LIBS)
@@ -565,6 +578,7 @@ LIBS += $(OPENSSL_LIBS)
 LIBS += $(GTK_LIBS)
 LIBS += $(WEBKIT2GTK_LIBS)
 LIBS += -L/usr/local/lib -lmimetic
+LIBS += $(ICU_LIBS)
 
 # The core library compiles and embeds the mbedtls library.
 # On Debian this gives a lintian error:

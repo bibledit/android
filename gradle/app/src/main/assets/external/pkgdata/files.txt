@@ -1,15 +1,18 @@
 /access
 /assets
+/assets/browserconfig.xml
 /assets/checkbox.js
 /assets/editor.js
 /assets/error.html
 /assets/external.js
 /assets/footer.html
 /assets/header.html
+/assets/header-id.js
 /assets/header.js
 /assets/logo48x48.png
 /assets/logo48x48.xpm
 /assets/message.html
+/assets/site.webmanifest
 /assets/success.html
 /assets/workspacewrapper_finish.html
 /assets/workspacewrapper_start.html
@@ -72,10 +75,12 @@
 /css/editor.css
 /css/mouse.css
 /css/stylesheet.css
+/css/stylesheet-id.css
 /css/touch.css
 /database
 /database/config
 /databases
+/databases/abbottsmith.sqlite
 /databases/cache
 /databases/cache/gitflag
 /databases/client
@@ -232,7 +237,6 @@
 /edit/index.html
 /edit/index.js
 /edit/keys.js
-/editone
 /editone2
 /editone2/index.html
 /editone2/index.js
@@ -254,6 +258,7 @@
 /export/usfm.html
 /filter
 /filter/cas.crt
+/filter/focus.js
 /filter/passage.js
 /filter/url.js
 /filter/usfm.js
@@ -357,6 +362,7 @@
 /logbook/gitflag
 /man
 /manage
+/manage/accounts.html
 /manage/exports.html
 /manage/hyphenation.html
 /manage/index.html
@@ -379,6 +385,8 @@
 /mapping/Vulgate.txt
 /mbedtls
 /mbedtls/0readme.txt
+/mbedtls.old
+/mbedtls.old/0readme.txt
 /menu
 /microtar
 /microtar/LICENSE
@@ -414,6 +422,7 @@
 /notes/index.js
 /notes/note.html
 /notes/poll.js
+/notes/quill.js
 /notes/select.html
 /notes/severity-1.html
 /notes/severity-n.html
@@ -444,10 +453,18 @@
 /personalize/index.html
 /personalize/index.js
 /pix
+/pix/android-chrome-192x192.png
+/pix/android-chrome-512x512.png
+/pix/apple-touch-icon.png
+/pix/bibledit_logo.svg
 /pix/book.svg
 /pix/check.png
+/pix/favicon-16x16.png
+/pix/favicon-32x32.png
 /pix/favicon.ico
 /pix/loading.gif
+/pix/mstile-150x150.png
+/pix/safari-pinned-tab.svg
 /pix/splash.jpg
 /pkgdata
 /pkgdata/create.sh
@@ -494,6 +511,7 @@
 /quill/quill.js
 /quill/quill.min.js
 /quill/quill.min.js.map
+/quill/quill.notes.css
 /quill/quill.snow.css
 /quill/readme.txt
 /rangy13
@@ -510,6 +528,9 @@
 /rangy13/rangy-serializer.min.js
 /rangy13/rangy-textrange.js
 /rangy13/rangy-textrange.min.js
+/read
+/read/index.html
+/read/index.js
 /redirect
 /related
 /related/ot-quotations-in-nt.xml
@@ -519,6 +540,9 @@
 /resource/bb2resource.html
 /resource/bbgateway.html
 /resource/cache.html
+/resource/comparative1edit.html
+/resource/comparative9edit.html
+/resource/divider.html
 /resource/download.html
 /resource/image.html
 /resource/images.html
@@ -578,6 +602,9 @@
 /slip/readme.txt
 /slip/slip.js
 /sources
+/sources/abbott-smith
+/sources/abbott-smith/abbott-smith.tei_lemma.xml
+/sources/abbott-smith.txt
 /sources/description.txt
 /sources/etcbc4.txt
 /sources/hebrewlexicon
@@ -779,6 +806,7 @@
 /sync
 /system
 /system/index.html
+/system/indonesianfree.html
 /tasks
 /tasks/holder
 /tbsx
@@ -992,6 +1020,7 @@
 /unittests/tests/flate2.html
 /unittests/tests/flate3.html
 /unittests/tests/Genesis-1-1-18.gif
+/unittests/tests/invalid-utf8-2.usfm
 /unittests/tests/invalid-utf8-new.txt
 /unittests/tests/invalid-utf8-old.txt
 /unittests/tests/json1.txt
@@ -1014,6 +1043,9 @@
 /unittests/tests/merge_4_server.usfm
 /unittests/tests/nl.po
 /unittests/tests/notes.sqlite.damaged
+/unittests/tests/odf2txt
+/unittests/tests/odf2txt/odf2txt.py
+/unittests/tests/odf2txt/out.txt
 /unittests/tests/onlinebible1.exp
 /unittests/tests/onlinebible2.exp
 /unittests/tests/ShonaNumbers23.usfm
