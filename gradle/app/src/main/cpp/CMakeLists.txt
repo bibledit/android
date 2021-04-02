@@ -470,6 +470,16 @@ add_library( # Sets the name of the library.
         edit2/update.cpp
         redirect/index.cpp
         tbsx/text.cpp
+        database/abbottsmith.cpp
+        resource/divider.cpp
+        read/index.cpp
+        resource/comparative1edit.cpp
+        resource/comparative9edit.cpp
+        session/confirm.cpp
+        read/verse.cpp
+        read/load.cpp
+        system/indonesianfree.cpp
+        manage/accounts.cpp
 
 
         # End Bibledit kernel.
