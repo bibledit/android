@@ -1,0 +1,27 @@
+Categories:
+ - Reading
+ - Writing
+License: GPL-3.0-or-later
+WebSite: https://bibledit.org
+SourceCode: https://github.com/bibledit/android.git
+IssueTracker: https://github.com/bibledit/android.git/issues
+Translation: https://translations.launchpad.net/bibledit
+Changelog: http://bibledit.org:8090/help/changelog
+Donate: https://bibledit.org/donate.html
+
+AutoName: Bibledit
+
+RepoType: git
+Repo: https://github.com/bibledit/android.git
+
+Builds:
+  - versionName: 5.0.942
+    versionCode: 141
+    commit: 5506625005fc239c8e120c7164d189247ba3e55a
+    subdir: gradle
+    gradle:
+      - yes
+    ndk: r21d  
+
+AutoUpdateMode: Version %v
+UpdateCheckMode: Tags
