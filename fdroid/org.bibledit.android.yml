@@ -21,7 +21,8 @@ Builds:
     subdir: gradle
     gradle:
       - yes
-    ndk: r21e  
+    ndk: r21e
+    output: build/outputs/apk/bibledit-release-unsigned.apk  
 
 AutoUpdateMode: Version %v
 UpdateCheckMode: Tags
