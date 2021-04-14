@@ -1,0 +1,126 @@
+Try 1
+=====
+
+Following https://f-droid.org/en/docs/Submitting_to_F-Droid_Quick_Start_Guide/
+Submitting to F-Droid Quick Start Guide
+
+Lessons learned:
+Timeout issues on VirtualBox withon Ubuntu 18.04 running on VirtualBox on macOS. There are two virtual boxes one running inside the other. So it's better to run the F-Droid build server on real hardware.
+
+Download Android Studio for Linux.
+https://developer.android.com/studio/index.html#downloads
+
+
+Skip this just now:
+$ sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+$ cd
+$ mkdir Android
+$ cd Android
+$ mkdir Sdk
+$ cd Sdk
+$ tar xf ~/android-studio-ide-201.7199119-linux.tar 
+
+
+# Run Android Studio and complete the setup with default values.
+
+
+# sudo apt install openjdk-8-jdk subversion git git-svn mercurial bzr virtualbox ruby ruby-dev vagrant python3 python3-paramiko python3-pil python3-pyasn1-modules python3-clint python3-vagrant
+vagrant plugin install vagrant-cachier
+
+
+# ln -s ~/Android/Sdk/build-tools/30.0.3/aapt ~/Android/Sdk/platform-tools/
+
+
+# sudo apt install python3-pip
+
+
+sudo apt install fdroidserver
+sudo apt install vagrant
+
+
+cd
+mkdir code
+cd code
+git clone https://gitlab.com/fdroid/fdroidserver.git
+git clone https://gitlab.com/fdroid/fdroiddata.git
+#echo 'export PATH="~/code/fdroidserver:$PATH"' >> ~/.profile
+#source ~/.profile
+
+cd 
+cd code
+cd fdroiddata
+cp ../fdroidserver/examples/config.yml .
+chmod 0600 config.yml
+echo 'sdk_path: "$HOME/Android/Sdk"' >> config.yml
+
+# Set up Vagrant build box
+cd
+cd code
+cd fdroidserver
+cp examples/makebuildserver.config.py .
+#pip3 install python-git gitpython
+#pip3 install qrcode
+./makebuildserver
+# Now wait several hours for this to finish
+
+# Build a package (the F-Droid client) just to check it works
+cd
+cd code
+cd fdroiddata
+mkdir repo
+fdroid update --create-key
+fdroid readmeta  # Should give no output if it worked
+fdroid build --server org.fdroid.fdroid
+
+
+
+Try 2
+=====
+
+https://f-droid.org/en/docs/Build_Server_Setup/#overview-of-the-setup
+Build Server Setup
+
+https://f-droid.org/en/docs/Installing_the_Server_and_Repo_Tools/
+Installing the Server and Repo Tools
+
+$ sudo apt purge fdroidserver
+$ sudo add-apt-repository ppa:fdroid/fdroidserver
+$ sudo apt install fdroidserver
+
+$ mkdir ~/android-sdk-linux
+$ cd ~/android-sdk-linux
+$ wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+$ echo "87f6dcf41d4e642e37ba03cb2e387a542aa0bd73cb689a9e7152aad40a6e7a08  commandlinetools-linux-6858069_latest.zip" | sha256sum -c
+commandlinetools-linux-6858069_latest.zip: OK
+$ unzip commandlinetools-linux-6858069_latest.zip
+$ export ANDROID_HOME="$HOME/android-sdk-linux"
+$ ./cmdline-tools/bin/sdkmanager --sdk_root="$ANDROID_HOME" platform-tools "build-tools;30.0.3"
+
+$ cd
+$ echo export ANDROID_HOME=$ANDROID_HOME >> .bashrc
+
+$ sudo apt install vagrant virtualbox git python3-certifi python3-libvirt python3-requestbuilder python3-yaml python3-clint python3-vagrant python3-paramiko python3-pyasn1 python3-pyasn1-modules python3-requests python3-git
+
+$ cd
+$ git clone https://gitlab.com/fdroid/fdroidserver.git
+$ cp fdroidserver/examples/makebuildserver.config.py fdroidserver
+
+$ sudo apt purge fdroidserver
+
+$ echo "PATH=\$PATH:$HOME/fdroidserver" >> ~/.bashrc
+
+$ cd fdroidserver
+$ ./makebuildserver
+
+$ cd
+$ git clone https://gitlab.com/fdroid/fdroiddata.git
+$ cp fdroidserver/examples/config.yml fdroiddata
+$ sed -i "s@^[# ]*build_server_always.*@build_server_always: true@" fdroiddata/config.yml
+
+
+Test building latest fdroid:
+$ cd
+$ cd fdroiddata
+$ fdroid build org.fdroid.fdroid -l --server
+
+
