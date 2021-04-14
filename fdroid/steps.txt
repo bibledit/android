@@ -1,3 +1,7 @@
+Distributing Bibledit with F-Droid steps taken
+==============================================
+
+
 Try 1
 =====
 
@@ -122,5 +126,45 @@ Test building latest fdroid:
 $ cd
 $ cd fdroiddata
 $ fdroid build org.fdroid.fdroid -l --server
+
+
+Import Bibledit
+===============
+
+https://f-droid.org/en/docs/Importing_Applications/
+
+Importing Applications
+
+$ fdroid import --url=https://github.com/bibledit/android.git --subdir=gradle
+
+$ nano org.bibledit.android.yml
+
+
+Building
+========
+
+$ cd
+$ cd fdroiddata
+$ fdroid build org.bibledit.android -l --server
+
+
+It gave an error as follows:
+Execution failed for task ':app:generateJsonModelRelease'.
+> /home/vagrant/build/org.bibledit.android/gradle/app/src/main/cpp/CMakeLists.txt : C/C++ release|armeabi : CMake Error at /home/vagrant/build/org.bibledit.android/gradle/app/.cxx/cmake/release/armeabi/pre-ndk-r15-wrapper-android.toolchain.cmake:2 (include):
+    include could not find load file:
+      /home/vagrant/android-ndk/r12b/build/cmake/android.toolchain.cmake
+  Call Stack (most recent call first):
+    /home/vagrant/android-sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineSystem.cmake:94 (include)
+    CMakeLists.txt
+
+Try 1:
+
+Android Studio:
+4:12 PM	NDK Resolution Outcome: Gradle model version=6.5, NDK version=21.1.6352462
+
+Default NDK version was r12b.
+That is too old.
+So update the metadata:
+    ndk: r21e
 
 
