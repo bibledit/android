@@ -287,7 +287,6 @@ css/editor.css
 css/touch.css
 css/stylesheet.css
 css/mouse.css
-css/stylesheet-id.css
 notifit/LICENSE
 notifit/notifit.css
 notifit/index.js
@@ -548,9 +547,14 @@ resource/user1view.html
 resource/download.html
 checksum/logic.js
 i18n/i18n.sh
+fonts/Montserrat-License(OFL).txt
+fonts/Montserrat-Light.ttf
+fonts/Esteban-Regular.ttf
 fonts/SIL-Licenses.txt
 fonts/SIL-README.txt
 fonts/Cardo-Regular.ttf
+fonts/Montserrat-Regular.ttf
+fonts/Esteban-License(OFL).txt
 fonts/SILEOT.ttf
 sprint/index.html
 sprint/index.js
@@ -590,7 +594,6 @@ assets/external.js
 assets/editor.js
 assets/site.webmanifest
 assets/checkbox.js
-assets/header-id.js
 assets/workspacewrapper_finish.html
 assets/logo48x48.xpm
 assets/footer.html

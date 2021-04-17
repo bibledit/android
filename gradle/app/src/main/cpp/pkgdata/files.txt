@@ -7,7 +7,6 @@
 /assets/external.js
 /assets/footer.html
 /assets/header.html
-/assets/header-id.js
 /assets/header.js
 /assets/logo48x48.png
 /assets/logo48x48.xpm
@@ -75,7 +74,6 @@
 /css/editor.css
 /css/mouse.css
 /css/stylesheet.css
-/css/stylesheet-id.css
 /css/touch.css
 /database
 /database/config
@@ -265,6 +263,11 @@
 /flate
 /fonts
 /fonts/Cardo-Regular.ttf
+/fonts/Esteban-License(OFL).txt
+/fonts/Esteban-Regular.ttf
+/fonts/Montserrat-License(OFL).txt
+/fonts/Montserrat-Light.ttf
+/fonts/Montserrat-Regular.ttf
 /fonts/SILEOT.ttf
 /fonts/SIL-Licenses.txt
 /generate

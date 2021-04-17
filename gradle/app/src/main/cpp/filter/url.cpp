@@ -149,6 +149,14 @@ void redirect_browser (void * webserver_request, string path)
   
   location.append (path);
 
+  // If the page contains the topbar suppressing query,
+  // the same query will be appended on the URL of the redirected page.
+  if (request->query.count ("topbar") || request->post.count ("topbar")) {
+    string new_location = filter_url_build_http_query (location, "topbar", "0");
+    location.clear ();
+    location.append (new_location);
+  }
+
   request->header = "Location: " + location;
   request->response_code = 302;
 }
