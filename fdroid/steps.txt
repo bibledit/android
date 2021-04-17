@@ -169,3 +169,7 @@ So update the metadata:
 
 
 Remaining steps at https://github.com/bibledit/cloud/issues/555
+
+
+F-Droid uses fastlane as described here:
+https://gitlab.com/snippets/1895688

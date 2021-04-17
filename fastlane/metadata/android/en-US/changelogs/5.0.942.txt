@@ -1,0 +1,5 @@
+Displays footnotes of BibleGateway resources.
+A client can display and cache a comparative resource.
+Navigation through Ctrl-G now supports navigation history.
+Move consultation note editors from NicEdit to Quill.
+Faster mechanism to retrieve bulk content from SWORD books.
