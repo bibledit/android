@@ -168,3 +168,4 @@ So update the metadata:
     ndk: r21e
 
 
+Remaining steps at https://github.com/bibledit/cloud/issues/555

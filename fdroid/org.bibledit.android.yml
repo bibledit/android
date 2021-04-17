@@ -18,11 +18,10 @@ Builds:
   - versionName: 5.0.942
     versionCode: 141
     commit: 5506625005fc239c8e120c7164d189247ba3e55a
-    subdir: gradle
+    subdir: gradle/app
     gradle:
       - yes
     ndk: r21e
-    output: build/outputs/apk/bibledit-release-unsigned.apk  
 
 AutoUpdateMode: Version %v
 UpdateCheckMode: Tags
