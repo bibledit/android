@@ -1,1 +1,1 @@
-Bible Editor
+Enables translation teams to edit Scripture on any device
