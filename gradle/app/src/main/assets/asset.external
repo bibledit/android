@@ -477,6 +477,8 @@ microtar/LICENSE
 microtar/source.txt
 microtar/readme.txt
 consultations/gitflag
+.github/workflows/stale.yml
+.github/workflows/build.yml
 pkgdata/files.txt
 pkgdata/install.sh
 pkgdata/create.sh
