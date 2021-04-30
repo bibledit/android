@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     WebView webview = null;
     TabHost tabhost = null;
     int resumecounter = 0;
-    String webAppUrl = "http://localhost:8080/";
+    String webAppUrl = "";
     Timer timer;
     TimerTask timerTask;
     String previousSyncState;
@@ -79,6 +79,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get the free port number found by the library.
+        String port = GetNetworkPort ();
+        webAppUrl = "http://localhost:" + port + "/";
 
         // The directory of the external files.
         // On a Nexus 10 this is /storage/emulated/0/Android/data/org.bibledit.android/files
@@ -141,10 +145,11 @@ public class MainActivity extends AppCompatActivity
 
 
     // List of native methods
-    // that areimplemented by the native library which is packaged with this application.
+    // that are implemented by the native library which is packaged with this application.
     // There should be no understores (_) in the function name.
     // This avoids a "java.lang.UnsatisfiedLinkError: Native method not found" exception.
     public native String GetVersionNumber ();
+    public native String GetNetworkPort ();
     public native void SetTouchEnabled (boolean enabled);
     public native void InitializeLibrary (String resources, String webroot);
     public native void StartLibrary ();

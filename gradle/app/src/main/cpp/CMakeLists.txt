@@ -310,6 +310,7 @@ add_library( # Sets the name of the library.
         edit/preview.cpp
         edit/position.cpp
         edit/navigate.cpp
+        edit/update.cpp
         search/all.cpp
         search/index.cpp
         search/replace.cpp
@@ -459,15 +460,6 @@ add_library( # Sets the name of the library.
         editone2/verse.cpp
         editone2/logic.cpp
         editone2/update.cpp
-        edit2/edit.cpp
-        edit2/index.cpp
-        edit2/load.cpp
-        edit2/save.cpp
-        edit2/logic.cpp
-        edit2/preview.cpp
-        edit2/position.cpp
-        edit2/navigate.cpp
-        edit2/update.cpp
         redirect/index.cpp
         tbsx/text.cpp
         database/abbottsmith.cpp

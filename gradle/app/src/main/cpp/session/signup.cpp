@@ -255,8 +255,8 @@ string session_signup (void * webserver_request)
       node = initial_document.append_child ("p");
       information = "Nama pengguna: " + user;
       node.text ().set (information.c_str());
-      node = initial_document.append_child ("p");
-      node.text ().set ("Kata sandi:");
+//      node = initial_document.append_child ("p");
+//      node.text ().set ("Kata sandi:");
       node = initial_document.append_child ("p");
       node.text ().set (R"(• Kalau Saudara lupa kata sandi, di halaman login kliklah tautan tentang “Aku lupa kata sandiku!””)");
       node = initial_document.append_child ("p");
@@ -310,7 +310,7 @@ string session_signup (void * webserver_request)
       information = "Harga pendaftaran sebagai anggota adalah Rp 100.000,- setahun. Para anggota diberi izin menginstal program Bibledit dan sumber penelitiannya di komputer dan tablet. Dengan demikian Saudara dapat bekerja dengan Bibledit tanpa menggunakan pulsa data Internet. Lihat informasi lebih lanjut mengenai tingkat anggota di situs alkitabkita.info.";
       node.text ().set (information.c_str());
       node = subsequent_document.append_child ("p");
-      information = "Kami tim situs alkitabkita.info sangat berharap dengan menggunakan Bibledit ini Saudara akan dimampukan meneliti Firman Tuhan secara lebih mendalam. Mohon jangan menggunakan kemampuan itu untuk membanggakan dirimu sendiri, tetapi gunakanlah [erase//kemampuan itu] untuk memuliakan TUHAN, untuk mengajar, dan menerjemahkan Firman TUHAN dengan lebih wajar, jelas, dan tepat.";
+      information = "Kami tim situs alkitabkita.info sangat berharap dengan menggunakan Bibledit ini Saudara akan dimampukan meneliti Firman Tuhan secara lebih mendalam. Mohon jangan menggunakan kemampuan itu untuk membanggakan dirimu sendiri, tetapi gunakanlah untuk memuliakan TUHAN, untuk mengajar, dan menerjemahkan Firman TUHAN dengan lebih wajar, jelas, dan tepat.";
       node.text ().set (information.c_str());
       node = subsequent_document.append_child ("p");
       information = "Tuhan memberkati!";

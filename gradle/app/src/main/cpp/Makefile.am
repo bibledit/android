@@ -220,15 +220,7 @@ libbibledit_a_SOURCES = \
 	edit/preview.cpp \
 	edit/position.cpp \
 	edit/navigate.cpp \
-  edit2/edit.cpp \
-  edit2/index.cpp \
-  edit2/load.cpp \
-  edit2/save.cpp \
-  edit2/logic.cpp \
-  edit2/preview.cpp \
-  edit2/position.cpp \
-  edit2/navigate.cpp \
-  edit2/update.cpp \
+  edit/update.cpp \
 	search/all.cpp \
 	search/index.cpp \
 	search/replace.cpp \
@@ -552,7 +544,8 @@ unittest_SOURCES = \
 	unittests/french.cpp \
   unittests/merge.cpp \
   unittests/nmt.cpp \
-  unittests/html2format.cpp
+  unittests/html2format.cpp \
+  unittests/studylight.cpp
 
 unittest_LDADD = libbibledit.a
 
@@ -571,6 +564,7 @@ AM_CXXFLAGS += $(OPENSSL_CFLAGS)
 AM_CXXFLAGS += $(GTK_CFLAGS)
 AM_CXXFLAGS += $(WEBKIT2GTK_CFLAGS)
 AM_CXXFLAGS += $(ICU_CFLAGS)
+AM_CXXFLAGS += $(XML2_CFLAGS)
 
 LIBS = -Wall -lpthread -L. -g -rdynamic -ldl
 LIBS += $(CURL_LIBS)
@@ -579,6 +573,7 @@ LIBS += $(GTK_LIBS)
 LIBS += $(WEBKIT2GTK_LIBS)
 LIBS += -L/usr/local/lib -lmimetic
 LIBS += $(ICU_LIBS)
+LIBS += $(XML2_LIBS)
 
 # The core library compiles and embeds the mbedtls library.
 # On Debian this gives a lintian error:
