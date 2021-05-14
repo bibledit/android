@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2021 Aranggi Toar.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,17 +17,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 
-#ifndef INCLUDED_LOCALE_TRANSLATE_H
-#define INCLUDED_LOCALE_TRANSLATE_H
+#ifndef INCLUDED_OPTIONS_TO_SELECT_H
+#define INCLUDED_OPTIONS_TO_SELECT_H
 
 
 #include <config/libraries.h>
 
 
-extern vector <string> locale_translate_obfuscation_search;
-extern vector <string> locale_translate_obfuscation_replace;
-//void check_user_localization_preference (void * webserver_request);
-string translate (string english);
+class Options_To_Select
+{
+public:
+  static string add_selection (string text, string value, string html);
+  static string mark_selected (string value, string html);
+};
 
 
 #endif

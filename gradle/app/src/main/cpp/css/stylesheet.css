@@ -366,6 +366,10 @@ div[contenteditable=true],
   padding: 2px 7px;
   color: white;
   outline: 0;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  cursor: pointer;
 }
 
 .button:hover,
@@ -470,6 +474,7 @@ input#cancel,
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
+  flex-wrap: wrap;
   -webkit-box-pack: space-evenly;
   -webkit-justify-content: space-evenly;
   -ms-flex-pack: space-evenly;
@@ -483,6 +488,13 @@ input#cancel,
 
 #topbar a {
   color: #171717;
+}
+
+.light-menu-tabs a,
+.dark-menu-tabs a {
+  position: relative;
+  -moz-appearance: button;
+  appearance: button;
 }
 
 #topbar > span {
@@ -552,6 +564,36 @@ input#cancel,
   background: 0;
 }
 
+#versepickerwrapper.light-menu-tabs span,
+#versepickerwrapper.light-menu-tabs a,
+#versepickerwrapper.dark-menu-tabs span,
+#versepickerwrapper.dark-menu-tabs a {
+  height: 100%;
+}
+
+#versepickerwrapper.light-menu-tabs #applychapter,
+#versepickerwrapper.light-menu-tabs #applyverse,
+#versepickerwrapper.light-menu-tabs #applybook span,
+#versepickerwrapper.light-menu-tabs #applychapter a,
+#versepickerwrapper.light-menu-tabs #applyverse a,
+#versepickerwrapper.light-menu-tabs #applybook a,
+#versepickerwrapper.dark-menu-tabs #applychapter,
+#versepickerwrapper.dark-menu-tabs #applyverse,
+#versepickerwrapper.dark-menu-tabs #applybook span,
+#versepickerwrapper.dark-menu-tabs #applychapter a,
+#versepickerwrapper.dark-menu-tabs #applyverse a,
+#versepickerwrapper.dark-menu-tabs #applybook a {
+  width: auto !important;
+  height: auto !important;
+}
+
+#versepickerwrapper.light-menu-tabs,
+#versepickerwrapper.dark-menu-tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 /* II. a. GLOBAL STYLING: Workspace Page */
 
 #topbar .fadeout {
@@ -579,16 +621,19 @@ input#cancel,
 
 #versepickerwrapper {
   page-break-before: always;
-  white-space: unset;
-  overflow: unset;
-  -o-text-overflow: unset;
-  text-overflow: unset;
+  white-space: unset !important;
+  overflow: unset !important;
+  -o-text-overflow: unset !important;
+  text-overflow: unset !important;
   max-width: 87.5vw;
-  padding: 0 1em;
 }
 
 #versepickerwrapper span {
-  margin: 0 2px;
+  margin: 0;
+}
+
+#versepickerwrapper span a {
+  padding: 0 .2em;
 }
 
 #applybook {
@@ -685,11 +730,13 @@ input#cancel,
 
 /* II. c. GLOBAL STYLING: Preference page */
 
-#themepicker {
+#themepicker,
+.settings-container select {
   font: normal 16px "Montserrat Regular", sans-serif;
   color: #171717;
   outline: 0;
-  width: 135px;
+  width: fit-content;
+  height: 1.75em;
 }
 
 #themepicker:focus, 
@@ -706,6 +753,46 @@ input#cancel,
 #themepicker option[value="2"] {
   background-color: #171717;
   color: #5e92b4 !important;
+}
+
+.setting-input {
+  width: 2.25em !important;
+  height: 1.5em;
+  font: normal 1em "Montserrat Regular", sans-serif;
+}
+
+.settings-container {
+  position: relative;
+}
+
+.tooltip::before {
+  display: inline-block;
+  content: "※";
+  width: 1em;
+  height: 1em;
+  cursor: context-menu;
+  opacity: 0.7;
+  vertical-align: super;
+  font-size: .8em;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
+}
+
+.tooltip-text {
+  pointer-events: none;
+  display: none;
+  position: absolute;
+  border-radius: 3px;
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #171717;
+}
+
+.tooltip:hover + .tooltip-text {
+  display: block !important;
+  z-index: 1 !important;
 }
 
 /* END OF GLOBAL STYLING */
@@ -751,7 +838,7 @@ input#cancel,
 .light-menu-tabs {
   background: linear-gradient(-35deg, #124568, #144f76, #175985, #196394) !important;
   color: #fff !important;
-  filter: drop-shadow(0 0 10px #999);
+  /* filter: drop-shadow(0 0 10px #999); */
 }
 
 .light-menu-tabs a,
@@ -880,9 +967,6 @@ input#cancel,
 .menu-basic a {
   border-style: solid;
   text-decoration: none!important;
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
 }
 .menu-advanced span {
   margin-right: 0.2em;

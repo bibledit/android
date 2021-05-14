@@ -59,12 +59,12 @@ void Confirm_Worker::setup (string to,
   xml_document document;
   xml_node node = document.append_child ("p");
   string information;
-#ifdef DEFAULT_BIBLEDIT_CONFIGURATION
-  information = translate ("Please confirm this request by clicking this following link:");
-#endif
-#ifdef HAVE_INDONESIANCLOUDFREE
-  information = "Klik tautan ini untuk menyelesaikan proses pendaftaran dan masuk Bibledit:";
-#endif
+  if (config_logic_default_bibledit_configuration ()) {
+    information = translate ("Please confirm this request by clicking this following link:");
+  }
+  if (config_logic_indonesian_cloud_free ()) {
+    information = "Klik tautan ini untuk menyelesaikan proses pendaftaran dan masuk Bibledit:";
+  }
   node.text ().set (information.c_str());
   node = document.append_child ("p");
   string siteUrl = config_logic_site_url (webserver_request);
@@ -155,7 +155,7 @@ bool Confirm_Worker::handleLink (string & email)
 void Confirm_Worker::informManagers (string email, string body)
 {
   Database_Users database_users;
-  vector <string> users = database_users.getUsers ();
+  vector <string> users = database_users.get_users ();
   for (auto & user : users) {
     int level = database_users.get_level (user);
     if (level >= Filter_Roles::manager ()) {

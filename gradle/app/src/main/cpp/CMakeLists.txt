@@ -472,6 +472,8 @@ add_library( # Sets the name of the library.
         read/load.cpp
         system/indonesianfree.cpp
         manage/accounts.cpp
+        filter/indonesian.cpp
+        dialog/list2.cpp
 
 
         # End Bibledit kernel.
