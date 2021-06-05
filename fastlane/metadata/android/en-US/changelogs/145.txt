@@ -1,0 +1,7 @@
+Entry of workspace width defaults to using percents, not pixels.
+Passage history buttons available in basic mode.
+Html export with footnotes showing on hover.
+Deletes an email that caused a crash while it was being sent.
+Displays better text from StudyLight.
+Better book interpretation for Ctrl-G fast passage switcher.
+Displays footnotes of BibleGateway resources.
