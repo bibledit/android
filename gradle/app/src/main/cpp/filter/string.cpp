@@ -1026,7 +1026,13 @@ string get_checkbox_status (bool enabled)
 string get_disabled (bool disabled)
 {
   if (disabled) return "disabled";
-  return "";
+  return string();
+}
+
+
+string get_reload ()
+{
+  return string("reload");
 }
 
 

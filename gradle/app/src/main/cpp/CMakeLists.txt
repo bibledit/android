@@ -474,6 +474,7 @@ add_library( # Sets the name of the library.
         manage/accounts.cpp
         filter/indonesian.cpp
         dialog/list2.cpp
+        developer/delay.cpp
 
 
         # End Bibledit kernel.
