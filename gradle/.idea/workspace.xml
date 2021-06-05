@@ -13,138 +13,84 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_activity_activity_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_fragment_fragment_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_core_2_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_runtime_2_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_2_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_savedstate_savedstate_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_versionedparcelable_versionedparcelable_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/assets/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/assets/header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/config/config.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/config/config.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/assets/checkbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/assets/checkbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/checks/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/checks/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/accounts.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/accounts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/privileges.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/privileges.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/write.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/write.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/notes/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/notes/actions.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/comparative1edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/comparative1edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/download.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/download.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/organize.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/organize.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/system/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/system/indonesianfree.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/system/indonesianfree.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/workspace/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/workspace/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/access/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/access/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/access/user.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/access/user.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/checkbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/checkbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/changes/modifications.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/changes/modifications.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/checks/run.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/checks/run.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/client/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/client/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/checks/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/checks/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/client/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/client/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/compare/compare.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/compare/compare.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/client/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/client/logic.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/config.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/config.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/globals.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/globals.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/globals.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/globals.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/logic.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/general.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/general.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/ipc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/ipc.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/users.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/users.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/users.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/users.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/maintenance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/maintenance.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/load.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/load.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/update.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/update.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/verse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/verse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/email/send.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/email/send.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/export/html.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/export/html.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/export/web.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/export/web.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/css.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/css.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/css.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/css.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/text.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/text.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/html/header.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/html/header.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/html/text.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/html/text.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/html/text.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/html/text.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/journal/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/journal/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/journal/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/journal/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/library/bibledit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/library/bibledit.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/translate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/translate.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/locale/translate.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/locale/translate.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/accounts.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/accounts.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/accounts.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/accounts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/users.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/users.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/write.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/write.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/create.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/create.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/poll.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/poll.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/public/chapter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/public/chapter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/public/create.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/public/create.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/public/new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/public/new.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/read/load.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/read/load.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/read/verse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/read/verse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative9edit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative9edit.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/download.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/download.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/download.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/download.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/bibles.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/bibles.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/changes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/changes.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/files.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/files.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/notes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/notes.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/settings.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/session/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/session/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/organize.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/organize.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sprint/burndown.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sprint/burndown.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/statistics/statistics.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/statistics/statistics.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/styles/css.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/styles/css.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/setup/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/setup/logic.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tasks/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/tasks/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tasks/run.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/tasks/run.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/timer/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/timer/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/organize.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/organize.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/account.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/account.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +115,6 @@
     <option name="KEY_STORE_PATH" value="$USER_HOME$/scr/androidkey/androidkeystore.jks" />
     <option name="KEY_ALIAS" value="bibledit" />
     <option name="REMEMBER_PASSWORDS" value="true" />
-    <option name="BUILD_TARGET_KEY" value="apk" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -189,7 +134,6 @@
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-04-28T18:22:43.361Z" />
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/app" />
     <property name="ExportApk.BuildVariants" value="release" />
-    <property name="ExportApk.SignV2" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SelectDeploymentTargetsDialog.selectedDevices" value="Pixel_2_API_26" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
@@ -339,6 +283,22 @@
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="749" y="300" key="AndroidProcessChooserDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1619634198790" />
+    <state width="1358" height="227" key="GridCell.Tab.0.bottom" timestamp="1622901513483">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state width="1358" height="227" key="GridCell.Tab.0.bottom/0.25.2560.1415@0.25.2560.1415" timestamp="1622901513483" />
+    <state width="1358" height="227" key="GridCell.Tab.0.center" timestamp="1622901513482">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state width="1358" height="227" key="GridCell.Tab.0.center/0.25.2560.1415@0.25.2560.1415" timestamp="1622901513482" />
+    <state width="1358" height="227" key="GridCell.Tab.0.left" timestamp="1622901513481">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state width="1358" height="227" key="GridCell.Tab.0.left/0.25.2560.1415@0.25.2560.1415" timestamp="1622901513481" />
+    <state width="1358" height="227" key="GridCell.Tab.0.right" timestamp="1622901513483">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state width="1358" height="227" key="GridCell.Tab.0.right/0.25.2560.1415@0.25.2560.1415" timestamp="1622901513483" />
     <state x="690" y="363" key="com.android.tools.idea.run.deployment.ModifyDeviceSetDialog" timestamp="1619634435452">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
