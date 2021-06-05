@@ -12,86 +12,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/assets/checkbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/assets/checkbox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/checks/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/checks/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/privileges.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/privileges.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/write.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/write.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/notes/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/notes/actions.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/personalize/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/comparative1edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/comparative1edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/download.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/download.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/organize.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/organize.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/system/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/system/indonesianfree.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/system/indonesianfree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/workspace/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/workspace/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/checkbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/checkbox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/checks/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/checks/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/client/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/client/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/client/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/client/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/confirm/worker.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/confirm.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/maintenance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/maintenance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/css.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/css.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/css.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/css.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/privileges.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/write.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/write.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/navigation/passage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/notes/actions.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative1edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative9edit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/comparative9edit.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/download.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/download.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/download.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/download.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/organize.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/organize.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/setup/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/setup/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/indonesianfree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/account.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/account.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-    </list>
+    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -283,6 +204,10 @@
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="749" y="300" key="AndroidProcessChooserDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1619634198790" />
+    <state x="574" y="122" key="CommitChangelistDialog2" timestamp="1622902042893">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state x="574" y="122" key="CommitChangelistDialog2/0.25.2560.1415@0.25.2560.1415" timestamp="1622902042893" />
     <state width="1358" height="227" key="GridCell.Tab.0.bottom" timestamp="1622901513483">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
