@@ -1,17 +1,19 @@
 <h3><span id="count"></span> translate("Change Notifications")</h3>
 <!-- #BEGINZONE controlsattop -->
 <br>
-<p>translate("Dismiss the notifications of the changes of the following categories:")</p>
 <!-- #BEGINITERATION matching -->
-<p>* <a href="?matching=##user##&selectedbible=##selectedbible##">##icon## translate ("and") 📖 translate("(if their changes and verses match)")</a></p>
+<p><a href="?matching=##user##&selectedbible=##selectedbible##">translate ("Dismiss the notifications of the changes made by") ##icon## translate ("when they match with changes made by anyone else on the team") 📖.</a></p>
 <!-- #ENDITERATION matching -->
 <!-- #BEGINZONE personal -->
-<p>* <a href="?personal=&selectedbible=##selectedbible##">😊 translate("(all of them)"): ##personalcount##</a></p>
+<p><a href="?personal=&selectedbible=##selectedbible##">translate ("Dismiss the notifications of all changes made by me") 😊: ##personalcount##</a></p>
 <!-- #ENDZONE personal -->
 <!-- #BEGINZONE bible -->
-<p>* <a href="?bible=&selectedbible=##selectedbible##">📖 translate("(all of them)"): ##teamcount##</a></p>
+<p><a href="?bible=&selectedbible=##selectedbible##">translate ("Dismiss the notifications of all changes made by anyone") 📖: ##teamcount##</a></p>
 <!-- #ENDZONE bible -->
-##dismissblock##
+<!-- #BEGINITERATION individual -->
+<p><a href="?dismiss=##user##&selectbible=##selectedbible##">translate ("Dismiss the notifications of the changes made by") ##user##: ##count##</a></p>
+<!-- #ENDITERATION individual -->
+<br>
 <p><a href="?sort=##sortquery##">##sorttext##</a></p>
 <p>
 translate("Select Bible:")
@@ -63,7 +65,9 @@ translate("You can create a new Consultation Note with a query about the change 
 <p>
 translate("This page with change notifications is for you.")
 translate("Your colleagues have their own lists.")
-translate("Changes in the text of the Bibles will be added to the list the next day.")
+translate("Every day it will detect changes in the Bibles.")
+translate("It will then generate new change notifications based on those changes.")
+translate("It will add these new change notifications to the list.")
 </p>
 <br>
 <p>translate("The change notifications fall into several categories:")</p>
@@ -72,22 +76,22 @@ translate("Changes in the text of the Bibles will be added to the list the next 
     <td>😊</td>
     <td>:</td>
     <td>
-      translate("Changes marked with a smiley face are changes made by you.")
+      translate("Those marked with a smiley face are notifications of changes made by you.")
     </td>
   </tr>
   <tr>
     <td>translate ("user")</td>
     <td>:</td>
     <td>
-      translate("Changes marked with the name of a user are changes made by this user.")
+      translate("Those marked with the name of a user are notifications of changes made by this user.")
     </td>
   </tr>
   <tr>
     <td>📖</td>
     <td>:</td>
     <td>
-      translate("Changes marked with a book symbol are the changes in the Bible text.")
-      translate("They have been made either by yourself or by someone else working on this Bible.")
+      translate("Those marked with a book symbol are notifications of changes in the Bible text.")
+      translate("They are the result of the combined edits of all users working on this Bible.")
     </td>
   </tr>
 </table>
@@ -100,17 +104,19 @@ translate("The different categories of change notifications enable you to find o
 </p>
 <!-- #BEGINZONE controlsatbottom -->
 <br>
-<p>translate("Dismiss the notifications of the changes of the following categories:")</p>
 <!-- #BEGINITERATION matching -->
-<p>* <a href="?matching=##user##&selectedbible=##selectedbible##">##icon## translate ("and") 📖 translate("(if their changes and verses match)")</a></p>
+<p><a href="?matching=##user##&selectedbible=##selectedbible##">translate ("Dismiss the notifications of the changes made by") ##icon## translate ("when they match with changes made by anyone else on the team") 📖.</a></p>
 <!-- #ENDITERATION matching -->
 <!-- #BEGINZONE personal -->
-<p>* <a href="?personal=&selectedbible=##selectedbible##">😊 translate("(all of them)"): ##personalcount##</a></p>
+<p><a href="?personal=&selectedbible=##selectedbible##">translate ("Dismiss the notifications of all changes made by me") 😊: ##personalcount##</a></p>
 <!-- #ENDZONE personal -->
 <!-- #BEGINZONE bible -->
-<p>* <a href="?bible=&selectedbible=##selectedbible##">📖 translate("(all of them)"): ##teamcount##</a></p>
+<p><a href="?bible=&selectedbible=##selectedbible##">translate ("Dismiss the notifications of all changes made by anyone") 📖: ##teamcount##</a></p>
 <!-- #ENDZONE bible -->
-##dismissblock##
+<!-- #BEGINITERATION individual -->
+<p><a href="?dismiss=##user##&selectbible=##selectedbible##">translate ("Dismiss the notifications of the changes made by") ##user##: ##count##</a></p>
+<!-- #ENDITERATION individual -->
+<br>
 <p><a href="?sort=##sortquery##">##sorttext##</a></p>
 <!-- #ENDZONE controlsatbottom -->
 <br>

@@ -824,7 +824,6 @@
 /unittests
 /unittests/scripts
 /unittests/scripts/editor1.py
-/unittests/scripts/geckodriver.log
 /unittests/stress
 /unittests/tests
 /unittests/tests/01GEN-0.SFM
@@ -903,7 +902,7 @@
 /unittests/tests/emails/farmerandstork.txt
 /unittests/tests/emails/greenball.png
 /unittests/tests/emails/hareandtoroise.txt
-/unittests/tests/emails/HasenundFrîsche.txt
+/unittests/tests/emails/HasenundFrîsche.txt
 /unittests/tests/emails/m0001.msg
 /unittests/tests/emails/m0001.msg.txt
 /unittests/tests/emails/m0002.msg
