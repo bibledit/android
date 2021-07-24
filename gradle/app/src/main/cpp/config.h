@@ -22,7 +22,7 @@
 /* #undef HAVE_LIBMBEDTLS */
 
 /* Define whether libproc.h is present */
-/* #undef HAVE_LIBPROC */
+#define HAVE_LIBPROC 1
 
 /* Define whether to compile for Linux */
 /* #undef HAVE_LINUX */
