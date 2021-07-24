@@ -14,6 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,21 +184,14 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="505" y="286" key="#PSD" timestamp="1617623983909">
-      <screen x="0" y="25" width="1920" height="1055" />
-    </state>
-    <state x="505" y="286" key="#PSD/0.25.1920.1055@0.25.1920.1055" timestamp="1617623983909" />
     <state x="773" y="253" key="#Plugins" timestamp="1621013797033">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
-    <state x="580" y="195" key="#Plugins/0.25.1920.1055@0.25.1920.1055" timestamp="1617353330115" />
     <state x="773" y="253" key="#Plugins/0.25.2560.1415@0.25.2560.1415" timestamp="1621013797033" />
-    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1621013606494">
+    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1627113268258">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
-    <state x="626" y="273" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.1920.1055@0.25.1920.1055" timestamp="1617352480826" />
-    <state x="668" y="290" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.2048.1127@0.25.2048.1127" timestamp="1614951462868" />
-    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1621013606494" />
+    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1627113268258" />
     <state x="380" y="150" width="1200" height="800" key="AVDManager" timestamp="1619714011457">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
