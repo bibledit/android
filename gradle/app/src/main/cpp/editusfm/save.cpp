@@ -99,6 +99,7 @@ string editusfm_save (void * webserver_request)
               }
               
               // Check on the merge.
+              filter_merge_add_book_chapter (conflicts, book, chapter);
               bible_logic_merge_irregularity_mail ({username}, conflicts);
               
               // If the USFM on disk is different from the USFM that was sent to the editor,
