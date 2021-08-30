@@ -13,57 +13,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/.github/workflows/stale.yml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/.github/workflows/stale.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/bb/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/css/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/developer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/resource/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/resource/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/.github/workflows/stale.yml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/.github/workflows/stale.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/settings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/checks/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/checks/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/classes/merge.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/classes/merge.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config/libraries.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config/libraries.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/css/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/bible.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/developer/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/edit/update.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/edit/update.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/update.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/update.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/merge.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/usfm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/usfm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/exports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/resource/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/resource/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/bibles.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/bibles.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sync/bibles.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sync/bibles.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/timer/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/timer/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[VirtualDevicePath@/Users/teus/.android/avd/Pixel_2_API_26.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/teus/.android/avd/Pixel_2_API_26.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -226,22 +189,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="773" y="253" key="#Plugins" timestamp="1621013797033">
+    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1630167894273">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
-    <state x="773" y="253" key="#Plugins/0.25.2560.1415@0.25.2560.1415" timestamp="1621013797033" />
-    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1627113268258">
-      <screen x="0" y="25" width="2560" height="1415" />
-    </state>
-    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1627113268258" />
-    <state x="380" y="150" width="1200" height="800" key="AVDManager" timestamp="1619714011457">
-      <screen x="0" y="25" width="2560" height="1415" />
-    </state>
-    <state x="380" y="150" width="1200" height="800" key="AVDManager/0.25.2560.1415@0.25.2560.1415" timestamp="1619714011457" />
-    <state x="749" y="300" key="AndroidProcessChooserDialog" timestamp="1619634198790">
-      <screen x="0" y="25" width="2560" height="1415" />
-    </state>
-    <state x="749" y="300" key="AndroidProcessChooserDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1619634198790" />
+    <state x="835" y="358" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1630167894273" />
     <state x="574" y="122" key="CommitChangelistDialog2" timestamp="1622902042893">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
@@ -262,9 +213,5 @@
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state width="1358" height="227" key="GridCell.Tab.0.right/0.25.2560.1415@0.25.2560.1415" timestamp="1622901513483" />
-    <state x="690" y="363" key="com.android.tools.idea.run.deployment.ModifyDeviceSetDialog" timestamp="1619634435452">
-      <screen x="0" y="25" width="2560" height="1415" />
-    </state>
-    <state x="690" y="363" key="com.android.tools.idea.run.deployment.ModifyDeviceSetDialog/0.25.2560.1415@0.25.2560.1415" timestamp="1619634435452" />
   </component>
 </project>
