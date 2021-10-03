@@ -475,6 +475,12 @@ add_library( # Sets the name of the library.
         filter/indonesian.cpp
         dialog/list2.cpp
         developer/delay.cpp
+        database/bibleimages.cpp
+        images/logic.cpp
+        filter/image.cpp
+        images/index.cpp
+        images/fetch.cpp
+        images/view.cpp
 
 
         # End Bibledit kernel.

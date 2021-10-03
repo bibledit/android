@@ -30,6 +30,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <bb/logic.h>
 #include <locale/translate.h>
 #include <developer/logic.h>
+#include <pugixml/pugixml.hpp>
+
+
+using namespace pugi;
 
 
 BookChapterData::BookChapterData (int book_in, int chapter_in, string data_in)
@@ -927,17 +931,18 @@ const char * usfm_marker_vp ()
 //   attribute = "value".
 // Example:
 //   \w gracious|lemma="grace"\w*
-string usfm_remove_word_level_attributes (string usfm)
+string usfm_remove_w_attributes (string usfm)
 {
-  // Check there is a vertical bar at all in the input USFM.
-  // If it's not there, then the function is ready without much ado.
+  // Check for a vertical bar at all in the input USFM.
+  // If it's not there, then there won't be any word-level attributes.
   if (usfm.find ("|") != string::npos) {
 
     // Flag whether a replacement was made.
     bool keep_going = false;
     
-    // In USFM 3.0 there's two character markers that support word level attributes:
-    vector <string> supported_character_markers = { "w", "fig" };
+    // In USFM 3.0 there's two character markers that support word level attributes.
+    // But the \fig is already handled elsewhere.
+    vector <string> supported_character_markers = { "w" };
     for (auto & marker : supported_character_markers) {
 
       // Support multiple replacements.
@@ -976,4 +981,84 @@ string usfm_remove_word_level_attributes (string usfm)
   
   // Done.
   return usfm;
+}
+
+
+// This extracts the attributs for the "fig" markup.
+// It supports USFM 3.x.
+// https://ubsicap.github.io/usfm/characters/index.html#fig-fig
+// That means it is backwards compatible with USFM 1/2:
+// \fig DESC|FILE|SIZE|LOC|COPY|CAP|REF\fig*
+string usfm_extract_fig (string usfm, string & caption, string & alt, string& src, string& size, string& loc, string& copy, string& ref)
+{
+  // The resulting USFM where the \fig markup has been removed from.
+  string usfm_out;
+  
+  // The string passed in the $usfm variable may contain the \fig..\fig* markup.
+  // Or it may omit those.
+  // Handle both cases: Get the USFM fragment within the \fig...\fig* markup.
+  string marker = "fig";
+  
+  // If the opener is there, it means the \fig markup could be there.
+  string opener = usfm_get_opening_usfm (marker);
+  size_t pos1 = usfm.find (opener);
+  if (pos1 != string::npos) {
+    usfm_out.append(usfm.substr(0, pos1));
+    usfm.erase (0, pos1 + opener.length());
+    // Erase the \fig* closing markup.
+    string closer = usfm_get_closing_usfm(marker);
+    size_t pos2 = usfm.find(closer);
+    if (pos2 != string::npos) {
+      usfm_out.append(usfm.substr(pos2 + closer.length()));
+      usfm.erase(pos2);
+    }
+  } else {
+    usfm_out.assign(usfm);
+  }
+  
+  // Split the bit of USFM between the \fig...\fig* markup on the vertical bar.
+  vector<string> bits = filter_string_explode(usfm, '|');
+
+  // Clear the variables that will contain the extracted information.
+  caption.clear();
+  alt.clear();
+  src.clear();
+  size.clear();
+  loc.clear();
+  copy.clear();
+  ref.clear();
+  
+  // Handle a situation that there are 7 bits of information.
+  // That is the situation as used in USFM 1/2.x
+  // \fig DESC|FILE|SIZE|LOC|COPY|CAP|REF\fig*
+  if (bits.size() == 7) {
+    alt = bits[0];
+    src = bits[1];
+    size = bits[2];
+    loc = bits[3];
+    copy = bits[4];
+    caption = bits[5];
+    ref = bits[6];
+  }
+
+  // Handle the situation that there are two bits of information.
+  // This is when there is one vertical bar.
+  // This is the situation of USFM 3.x.
+  // https://ubsicap.github.io/usfm/characters/index.html#fig-fig
+  if (bits.size() == 2) {
+    caption = bits[0];
+    string xml = "<fig " + bits[1] + " ></fig>";
+    xml_document document;
+    document.load_string (xml.c_str(), parse_ws_pcdata_single);
+    xml_node node = document.first_child ();
+    alt = node.attribute ("alt").value ();
+    src = node.attribute ("src").value ();
+    size = node.attribute ("size").value ();
+    loc = node.attribute ("loc").value ();
+    copy = node.attribute ("copy").value ();
+    ref = node.attribute ("ref").value ();
+  }
+
+  // The resulting USFM with the figure markup removed.
+  return usfm_out;
 }

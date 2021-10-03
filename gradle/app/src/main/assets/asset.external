@@ -301,6 +301,9 @@ config/local.chain.pem
 config/userfacingurl.txt
 config/ldap.txt
 config/local.cert.pem
+images/index.html
+images/gitflag
+images/view.html
 jsonxx/jsonxx_test.cc
 jsonxx/LICENSE
 jsonxx/README.md
@@ -369,6 +372,8 @@ user/account.html
 trash/holder
 sqlite/readme.txt
 miniz/readme.txt
+stb/LICENSE
+stb/README.md
 consistency/index.html
 consistency/index.js
 Makefile.am
@@ -662,6 +667,7 @@ help/scrum.html
 help/typesetting.html
 help/methodology.html
 help/typesettinglibreoffice.html
+help/installcloudcentos.html
 help/installandroid.html
 help/installation.html
 help/installosx.html
