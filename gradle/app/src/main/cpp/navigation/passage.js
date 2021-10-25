@@ -95,8 +95,14 @@ function bindClickHandlers () {
   $("#navigateback").on ("click", function (event) {
     navigateBack (event);
   });
+  $("#navigateback").longpress (function (event) {
+    historyBack (event);
+  });
   $("#navigateforward").on ("click", function (event) {
     navigateForward (event);
+  });
+  $("#navigateforward").longpress (function (event) {
+    historyForward (event);
   });
   $("#selectbook").on ("click", function (event) {
     $ (".fadeout").hide ();
@@ -120,8 +126,14 @@ function bindClickHandlers () {
 }
 
 
+
+var navigateBackSkip = false;
+
 function navigateBack (event) {
-  event.preventDefault ();
+  if (navigateBackSkip) {
+    navigateBackSkip = false;
+    return;
+  }
   $.ajax ({
     url: "/navigation/update",
     type: "GET",
@@ -137,8 +149,13 @@ function navigateBack (event) {
 }
 
 
+var navigateForwardSkip = false;
+
 function navigateForward (event) {
-  event.preventDefault ();
+  if (navigateForwardSkip) {
+    navigateForwardSkip = false;
+    return;
+  }
   $.ajax ({
     url: "/navigation/update",
     type: "GET",
@@ -412,3 +429,65 @@ function navigationCallNewPassage () {
     }
   });
 }
+
+
+function historyForward (event) {
+  // After the long press event, if releasing the mouse, it will fire a click event.
+  // Set a flag to not handle the click event.
+  navigateForwardSkip = true;
+  $.ajax ({
+    url: "/navigation/update",
+    type: "GET",
+    data: { bible: navigationBible, historyforward: "" },
+    cache: false,
+    success: function (response) {
+      navigatorContainer.empty ();
+      navigatorContainer.append (response);
+      $("#applyhistory").on ("click", function (event) {
+        applyHistory (event);
+      });
+    },
+  });
+}
+
+
+function historyBack (event) {
+  // After the long press event, if releasing the mouse, it will fire a click event.
+  // Set a flag to not handle the click event.
+  navigateBackSkip = true;
+  $.ajax ({
+    url: "/navigation/update",
+    type: "GET",
+    data: { bible: navigationBible, historyback: "" },
+    cache: false,
+    success: function (response) {
+      navigatorContainer.empty ();
+      navigatorContainer.append (response);
+      $("#applyhistory").on ("click", function (event) {
+        applyHistory (event);
+      });
+    },
+  });
+}
+
+
+function applyHistory (event) {
+  event.preventDefault ();
+  console.log("applyHistory");
+  console.log (event);
+  if (event.target.localName == "a") {
+    $.ajax ({
+      url: "/navigation/update",
+      type: "GET",
+      data: { bible: navigationBible, applyhistory: event.target.id },
+      cache: false,
+      success: function (response) {
+        navigatorContainer.empty ();
+        navigatorContainer.append (response);
+        bindClickHandlers ();
+        navigationPollPassage ();
+      },
+    });
+  }
+}
+

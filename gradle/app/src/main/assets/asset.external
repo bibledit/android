@@ -337,10 +337,12 @@ workspace/settings.html
 read/index.html
 read/index.js
 jquery/jquery.LICENSE.js
+jquery/jquery.longpress.txt
 jquery/jquery.touchSwipe.LICENSE
 jquery/jquery-3.5.1.js
 jquery/jquery-3.5.1.min.js
 jquery/jquery.touchSwipe.min.js
+jquery/jquery.longpress.js
 jquery/jquery.stylesheet.README.md
 jquery/readme.txt
 jquery/jquery.stylesheet.js

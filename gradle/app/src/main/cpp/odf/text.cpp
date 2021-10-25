@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/url.h>
 #include <filter/archive.h>
 #include <filter/image.h>
+#include <filter/usfm.h>
 #include <database/books.h>
 #include <database/config/bible.h>
 #include <database/bibleimages.h>
@@ -307,9 +308,9 @@ void Odf_Text::initialize_styles_xml ()
     childnode.append_attribute ("style:font-pitch") = "variable";
   }
 
-  officeStylesDomNode = rootnode.append_child ("office:styles");
+  office_styles_node = rootnode.append_child ("office:styles");
   {
-    xml_node style_default_style = officeStylesDomNode.append_child ("style:default-style");
+    xml_node style_default_style = office_styles_node.append_child ("style:default-style");
     style_default_style.append_attribute ("style:family") = "graphic";
     xml_node style_paragraph_properties = style_default_style.append_child ("style:paragraph-properties");
     if (style_paragraph_properties) {}
@@ -317,7 +318,7 @@ void Odf_Text::initialize_styles_xml ()
     if (style_text_properties) {}
   }
   {
-    xml_node style_default_style = officeStylesDomNode.append_child ("style:default-style");
+    xml_node style_default_style = office_styles_node.append_child ("style:default-style");
     style_default_style.append_attribute ("style:family") = "paragraph";
     xml_node style_paragraph_properties = style_default_style.append_child ("style:paragraph-properties");
     if (style_paragraph_properties) {}
@@ -325,17 +326,17 @@ void Odf_Text::initialize_styles_xml ()
     if (style_text_properties) {}
   }
   {
-    xml_node style_default_style = officeStylesDomNode.append_child ("style:default-style");
+    xml_node style_default_style = office_styles_node.append_child ("style:default-style");
     style_default_style.append_attribute ("style:family") = "table";
   }
   {
-    xml_node style_style = officeStylesDomNode.append_child ("style:style");
+    xml_node style_style = office_styles_node.append_child ("style:style");
     style_style.append_attribute ("style:name") = styles_logic_standard_sheet ().c_str();
     style_style.append_attribute ("style:family") = "paragraph";
     style_style.append_attribute ("style:class") = "text";
   }
   {
-    xml_node style_style = officeStylesDomNode.append_child ("style:style");
+    xml_node style_style = office_styles_node.append_child ("style:style");
     style_style.append_attribute ("style:name") = "Heading";
     style_style.append_attribute ("style:family") = "paragraph";
     style_style.append_attribute ("style:parent-style-name") = styles_logic_standard_sheet ().c_str();
@@ -349,7 +350,7 @@ void Odf_Text::initialize_styles_xml ()
     }
   }
   {
-    xml_node style_style = officeStylesDomNode.append_child ("style:style");
+    xml_node style_style = office_styles_node.append_child ("style:style");
     style_style.append_attribute ("style:name") = "Text_20_body";
     style_style.append_attribute ("style:display-name") = "Text body";
     style_style.append_attribute ("style:family") = "paragraph";
@@ -362,14 +363,14 @@ void Odf_Text::initialize_styles_xml ()
     }
   }
   {
-    xml_node style_style = officeStylesDomNode.append_child ("style:style");
+    xml_node style_style = office_styles_node.append_child ("style:style");
     style_style.append_attribute ("style:name") = "Header";
     style_style.append_attribute ("style:family") = "paragraph";
     style_style.append_attribute ("style:parent-style-name") = styles_logic_standard_sheet ().c_str();
     style_style.append_attribute ("style:class") = "extra";
   }
   {
-    xml_node style_style = officeStylesDomNode.append_child ("style:style");
+    xml_node style_style = office_styles_node.append_child ("style:style");
     style_style.append_attribute ("style:name") = "Header_20_left";
     style_style.append_attribute ("style:display-name") = "Header left";
     style_style.append_attribute ("style:family") = "paragraph";
@@ -565,7 +566,7 @@ void Odf_Text::initialize_styles_xml ()
 }
 
 
-void Odf_Text::newParagraph (string style)
+void Odf_Text::new_paragraph (string style)
 {
   current_text_p_node = office_text_node.append_child ("text:p");
   current_text_p_node_style_name = current_text_p_node.append_attribute ("text:style-name") = style.c_str();
@@ -577,32 +578,33 @@ void Odf_Text::newParagraph (string style)
 
 // This function adds text to the current paragraph.
 // $text: The text to add.
-void Odf_Text::addText (string text)
+void Odf_Text::add_text (string text)
 {
   // Bail out if there's no text.
   if (text.empty()) return;
 
   // Ensure a paragraph has started.
-  if (!current_text_p_node_opened) newParagraph ();
+  if (!current_text_p_node_opened) new_paragraph ();
   
   // Temporal styles array should have at least one style for the code below to work.
+  // So ensure it has at least one style.
   vector <string> styles (currentTextStyle.begin (), currentTextStyle.end ());
-  if (styles.empty()) styles.push_back ("");
+  if (styles.empty()) styles.push_back (string());
   
   // Write a text span element, nesting the second and later ones.
-  xml_node domElement = current_text_p_node;
+  xml_node dom_node = current_text_p_node;
   for (string style : styles) {
-    xml_node textSpanDomElement = domElement.append_child ("text:span");
+    xml_node text_span_node = dom_node.append_child ("text:span");
     if (!style.empty ()) {
-      textSpanDomElement.append_attribute ("text:style-name") = convertStyleName (style).c_str();
+      text_span_node.append_attribute ("text:style-name") = convert_style_name (style).c_str();
     }
-    domElement = textSpanDomElement;
+    dom_node = text_span_node;
   }
   // It used to escape the special XML characters.
   // Ecaping e.g. the apostrophy (') would lead to the following fragment in the .odt file:
   // &apos;
-  // So it no longer escaped the special XML characters.
-  domElement.text ().set (text.c_str());
+  // So it no longer escapes the special XML characters.
+  dom_node.text ().set (text.c_str());
 
   // Update public paragraph text.
   current_paragraph_content += text;
@@ -611,7 +613,7 @@ void Odf_Text::addText (string text)
 
 // This creates a heading with contents styled "Heading 1".
 // $text: Contents.
-void Odf_Text::newHeading1 (string text, bool hide)
+void Odf_Text::new_heading1 (string text, bool hide)
 {
   newNamedHeading ("Heading 1", text, hide);
 }
@@ -625,7 +627,7 @@ void Odf_Text::createPageBreakStyle ()
   // <style:paragraph-properties fo:break-after="page" fo:line-height="0.05cm" fo:margin-bottom="0cm" fo:margin-top="0cm"/>
   // <style:text-properties fo:font-size="2pt" style:font-size-asian="2pt" style:font-size-complex="2pt"/>
   // </style:style>
-  xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
+  xml_node styleDomElement = office_styles_node.append_child ("style:style");
   styleDomElement.append_attribute ("style:name") = "Page_20_Break";
   styleDomElement.append_attribute ("style:display-name") = "Page Break";
   styleDomElement.append_attribute ("style:family") = "paragraph";
@@ -646,7 +648,7 @@ void Odf_Text::createPageBreakStyle ()
 // This applies a page break.
 void Odf_Text::newPageBreak ()
 {
-  newParagraph ("Page_20_Break");
+  new_paragraph ("Page_20_Break");
   // Always clear the paragraph-opened-flag,
   // because we don't want subsequent text to be added to this page break,
   // since it would be nearly invisible, and thus text would mysteriously get lost.
@@ -660,8 +662,23 @@ void Odf_Text::newPageBreak ()
 // $name: the name of the style, e.g. 'p'.
 // $dropcaps: If 0, there are no drop caps.
 //            If greater than 0, it the number of characters in drop caps style.
-void Odf_Text::createParagraphStyle (string name, string fontname, float fontsize, int italic, int bold, int underline, int smallcaps, int alignment, float spacebefore, float spaceafter, float leftmargin, float rightmargin, float firstlineindent, bool keepWithNext, int dropcaps)
+void Odf_Text::create_paragraph_style (string name,
+                                       string fontname,
+                                       float fontsize,
+                                       int italic, int bold, int underline, int smallcaps,
+                                       int alignment,
+                                       float spacebefore, float spaceafter,
+                                       float leftmargin, float rightmargin,
+                                       float firstlineindent,
+                                       bool keepWithNext,
+                                       int dropcaps)
 {
+  // Whether to align verse numbers in poetry to the left of the margin,
+  // and if so, whether this is one of the defined poetry styles.
+  bool is_poetry_q_style = false;
+  if (Database_Config_Bible::getOdtPoetryVersesLeft (bible))
+    is_poetry_q_style = usfm_is_standard_q_poetry (name);
+  
   // It looks like this in styles.xml:
   // <style:style style:display-name="p_c1" style:family="paragraph" style:name="p_c1">
   //   <style:paragraph-properties fo:margin-bottom="0mm" fo:margin-left="0mm" fo:margin-right="0mm" fo:margin-top="0mm" fo:text-align="justify" fo:text-indent="0mm"/>
@@ -669,92 +686,110 @@ void Odf_Text::createParagraphStyle (string name, string fontname, float fontsiz
   //   <style:paragraph-properties>
   //   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
   // </style:style>
-  xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
-  styleDomElement.append_attribute ("style:name") = convertStyleName (name).c_str();
-  styleDomElement.append_attribute ("style:display-name") = name.c_str();
-  styleDomElement.append_attribute ("style:family") = "paragraph";
+  xml_node style_style_node = office_styles_node.append_child ("style:style");
+  style_style_node.append_attribute ("style:name") = convert_style_name (name).c_str();
+  style_style_node.append_attribute ("style:display-name") = name.c_str();
+  style_style_node.append_attribute ("style:family") = "paragraph";
 
-  xml_node styleParagraphPropertiesDomElement = styleDomElement.append_child ("style:paragraph-properties");
+  xml_node style_paragraph_properties_node = style_style_node.append_child ("style:paragraph-properties");
 
-  xml_node styleTextPropertiesDomElement = styleDomElement.append_child ("style:text-properties");
+  xml_node style_text_properties_node = style_style_node.append_child ("style:text-properties");
 
-  styleParagraphPropertiesDomElement.append_attribute ("style:font-name") = fontname.c_str();
+  style_paragraph_properties_node.append_attribute ("style:font-name") = fontname.c_str();
   fontname.insert (0, "'");
   fontname.append ("'");
-  styleTextPropertiesDomElement.append_attribute ("fo:font-family") = fontname.c_str();
+  style_text_properties_node.append_attribute ("fo:font-family") = fontname.c_str();
 
   string sfontsize = convert_to_string (fontsize) + "pt";
-  styleTextPropertiesDomElement.append_attribute ("fo:font-size") = sfontsize.c_str();
-  styleTextPropertiesDomElement.append_attribute ("style:font-size-asian") = sfontsize.c_str();
-  styleTextPropertiesDomElement.append_attribute ("style:font-size-complex") = sfontsize.c_str();
+  style_text_properties_node.append_attribute ("fo:font-size") = sfontsize.c_str();
+  style_text_properties_node.append_attribute ("style:font-size-asian") = sfontsize.c_str();
+  style_text_properties_node.append_attribute ("style:font-size-complex") = sfontsize.c_str();
 
   // Italics, bold, underline, small caps can be either ooitOff or ooitOn for a paragraph.
   if (italic != ooitOff) {
-    styleTextPropertiesDomElement.append_attribute ("fo:font-style") = "italic";
-    styleTextPropertiesDomElement.append_attribute ("style:font-style-asian") = "italic";
-    styleTextPropertiesDomElement.append_attribute ("style:font-style-complex") = "italic";
+    style_text_properties_node.append_attribute ("fo:font-style") = "italic";
+    style_text_properties_node.append_attribute ("style:font-style-asian") = "italic";
+    style_text_properties_node.append_attribute ("style:font-style-complex") = "italic";
   }
   if (bold != ooitOff) {
-    styleTextPropertiesDomElement.append_attribute ("fo:font-weight") = "bold";
-    styleTextPropertiesDomElement.append_attribute ("style:font-weight-asian") = "bold";
-    styleTextPropertiesDomElement.append_attribute ("style:font-weight-complex") = "bold";
+    style_text_properties_node.append_attribute ("fo:font-weight") = "bold";
+    style_text_properties_node.append_attribute ("style:font-weight-asian") = "bold";
+    style_text_properties_node.append_attribute ("style:font-weight-complex") = "bold";
   }
   if (underline != ooitOff) {
-    styleTextPropertiesDomElement.append_attribute ("style:text-underline-style") = "solid";
-    styleTextPropertiesDomElement.append_attribute ("style:text-underline-width") = "auto";
-    styleTextPropertiesDomElement.append_attribute ("style:text-underline-color") = "font-color";
+    style_text_properties_node.append_attribute ("style:text-underline-style") = "solid";
+    style_text_properties_node.append_attribute ("style:text-underline-width") = "auto";
+    style_text_properties_node.append_attribute ("style:text-underline-color") = "font-color";
   }
   if (smallcaps != ooitOff) {
-    styleTextPropertiesDomElement.append_attribute ("fo:font-variant") = "small-caps";
+    style_text_properties_node.append_attribute ("fo:font-variant") = "small-caps";
   }
 
   // Text alignment can be: AlignmentLeft, AlignmentCenter, AlignmentRight, AlignmentJustify.
-  string alignmenttext = "";
+  string alignmenttext;
   switch (alignment) {
     case AlignmentLeft:    alignmenttext = "start"; break;
     case AlignmentCenter:  alignmenttext = "center"; break;
     case AlignmentRight:   alignmenttext = "end"; break;
     case AlignmentJustify: alignmenttext = "justify"; break;
   }
-  styleParagraphPropertiesDomElement.append_attribute ("fo:text-align") = alignmenttext.c_str();
-  styleParagraphPropertiesDomElement.append_attribute ("style:justify-single-word") = "false";
+  style_paragraph_properties_node.append_attribute ("fo:text-align") = alignmenttext.c_str();
+  style_paragraph_properties_node.append_attribute ("style:justify-single-word") = "false";
 
-  // Paragraph measurements; given in mm.
-  string sspacebefore = convert_to_string (spacebefore) + "mm";
-  styleParagraphPropertiesDomElement.append_attribute ("fo:margin-top") = sspacebefore.c_str();
-  string sspaceafter = convert_to_string (spaceafter) + "mm";
-  styleParagraphPropertiesDomElement.append_attribute ("fo:margin-bottom") = sspaceafter.c_str();
-  string sleftmargin = convert_to_string (leftmargin) + "mm";
-  styleParagraphPropertiesDomElement.append_attribute ("fo:margin-left") = sleftmargin.c_str();
-  string srightmargin = convert_to_string (rightmargin) + "mm";
-  styleParagraphPropertiesDomElement.append_attribute ("fo:margin-right") = srightmargin.c_str();
-  string sfirstlineindent = convert_to_string (firstlineindent) + "mm";
-  styleParagraphPropertiesDomElement.append_attribute ("fo:text-indent") = sfirstlineindent.c_str();
+  // Deal with the paragraph dimensions.
+  // The values are given in millimeters.
+  // First the top and bottom margins.
+  string space_before_mm = convert_to_string (spacebefore) + "mm";
+  style_paragraph_properties_node.append_attribute ("fo:margin-top") = space_before_mm.c_str();
+  string space_after_mm = convert_to_string (spaceafter) + "mm";
+  style_paragraph_properties_node.append_attribute ("fo:margin-bottom") = space_after_mm.c_str();
+  string left_margin_mm = convert_to_string (leftmargin) + "mm";
+  style_paragraph_properties_node.append_attribute ("fo:margin-left") = left_margin_mm.c_str();
+  string right_margin_mm = convert_to_string (rightmargin) + "mm";
+  style_paragraph_properties_node.append_attribute ("fo:margin-right") = right_margin_mm.c_str();
+  // In a normal paragraph the first line indent is as given in the stylesheet.
+  // In a poetry paragraph the first line indent is the negative left margin.
+  // The goal is that the left is at a 0 left margin,
+  // and that the verse is aligned at the very left of the column.
+  // (And then a tab puts the text at the desired first line indent space.)
+  int millimeters = firstlineindent;
+  if (is_poetry_q_style) millimeters = 0 - leftmargin;
+  string first_lineindent_mm = convert_to_string (millimeters) + "mm";
+  style_paragraph_properties_node.append_attribute ("fo:text-indent") = first_lineindent_mm.c_str();
 
   if (keepWithNext) {
-    styleParagraphPropertiesDomElement.append_attribute ("fo:keep-together") = "always";
-    styleParagraphPropertiesDomElement.append_attribute ("fo:keep-with-next") = "always";
+    style_paragraph_properties_node.append_attribute ("fo:keep-together") = "always";
+    style_paragraph_properties_node.append_attribute ("fo:keep-with-next") = "always";
   }
 
   if (dropcaps > 0) {
     // E.g.: <style:drop-cap style:lines="2" style:length="2" style:distance="0.15cm"/>
     string length = convert_to_string (dropcaps);
-    xml_node styleDropCapDomElement = styleParagraphPropertiesDomElement.append_child ("style:drop-cap");
-    styleDropCapDomElement.append_attribute ("style:lines") = "2";
-    styleDropCapDomElement.append_attribute ("style:length") = length.c_str();
-    styleDropCapDomElement.append_attribute ("style:distance") = "0.15cm";
+    xml_node style_drop_cap_node = style_paragraph_properties_node.append_child ("style:drop-cap");
+    style_drop_cap_node.append_attribute ("style:lines") = "2";
+    style_drop_cap_node.append_attribute ("style:length") = length.c_str();
+    style_drop_cap_node.append_attribute ("style:distance") = "0.15cm";
+  }
+  
+  // For poetry styles like q, q1, and so on,
+  // there's an additional definition of the tab settings.
+  if (is_poetry_q_style) {
+    xml_node style_tab_stops = style_paragraph_properties_node.append_child("style:tab-stops");
+    xml_node style_tab_stop = style_tab_stops.append_child("style:tab-stop");
+    string tab_stop = convert_to_string(firstlineindent) + "mm";
+    style_tab_stop.append_attribute("style:position") = tab_stop.c_str();
   }
 }
 
 
 // This updates the style name of the current paragraph.
 // $name: the name of the style, e.g. 'p'.
-void Odf_Text::updateCurrentParagraphStyle (string name)
+void Odf_Text::update_current_paragraph_style (string name)
 {
-  if (!current_text_p_node_opened) newParagraph ();
+  if (!current_text_p_node_opened) new_paragraph ();
   current_text_p_node.remove_attribute (current_text_p_node_style_name);
   current_text_p_node_style_name = current_text_p_node.append_attribute ("text:style-name");
-  current_text_p_node_style_name = convertStyleName (name).c_str();
+  current_text_p_node_style_name = convert_style_name (name).c_str();
 }
 
 
@@ -762,7 +797,7 @@ void Odf_Text::updateCurrentParagraphStyle (string name)
 // $style: the object with the style variables.
 // $note: Whether this refers to notes.
 // $embed: boolean: Whether nest $style in an existing character style.
-void Odf_Text::openTextStyle (Database_Styles_Item style, bool note, bool embed)
+void Odf_Text::open_text_style (Database_Styles_Item style, bool note, bool embed)
 {
   string marker = style.marker;
   if (find (createdStyles.begin(), createdStyles.end(), marker) == createdStyles.end()) {
@@ -779,8 +814,8 @@ void Odf_Text::openTextStyle (Database_Styles_Item style, bool note, bool embed)
     // <style:style style:name="T1" style:family="text">
     // <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
     // </style:style>
-    xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
-    styleDomElement.append_attribute ("style:name") = convertStyleName (marker).c_str();
+    xml_node styleDomElement = office_styles_node.append_child ("style:style");
+    styleDomElement.append_attribute ("style:name") = convert_style_name (marker).c_str();
     styleDomElement.append_attribute ("style:display-name") = marker.c_str();
     styleDomElement.append_attribute ("style:family") = "text";
 
@@ -865,7 +900,7 @@ void Odf_Text::placeTextInFrame (string text, string style, float fontsize, int 
 
   // The frame goes in an existing paragraph (text:p) element, just like a 'text:span' element.
   // Ensure that a paragraph is open.
-  if (!current_text_p_node_opened) newParagraph ();
+  if (!current_text_p_node_opened) new_paragraph ();
 
   // The frame looks like this, in content.xml:
   // <draw:frame draw:style-name="fr1" draw:name="frame1" text:anchor-type="paragraph" svg:y="0cm" fo:min-width="0.34cm" draw:z-index="0">
@@ -886,7 +921,7 @@ void Odf_Text::placeTextInFrame (string text, string style, float fontsize, int 
   drawTextBoxDomElement.append_attribute ("fo:min-height") = "0.34cm";
 
   xml_node textPDomElement = drawTextBoxDomElement.append_child ("text:p");
-  textPDomElement.append_attribute ("text:style-name") = convertStyleName (style).c_str();
+  textPDomElement.append_attribute ("text:style-name") = convert_style_name (style).c_str();
   textPDomElement.text().set( escape_special_xml_characters (text).c_str());
 
   // File styles.xml contains the appropriate styles for this frame and text box and paragraph.
@@ -900,8 +935,8 @@ void Odf_Text::placeTextInFrame (string text, string style, float fontsize, int 
       //   <style:paragraph-properties fo:text-align="justify" style:justify-single-word="false"/>
       //   <style:text-properties fo:font-size="24pt" fo:font-weight="bold" style:font-size-asian="24pt" style:font-weight-asian="bold" style:font-size-complex="24pt" style:font-weight-complex="bold"/>
       // </style:style>
-      xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
-      styleDomElement.append_attribute ("style:name") = convertStyleName (style).c_str();
+      xml_node styleDomElement = office_styles_node.append_child ("style:style");
+      styleDomElement.append_attribute ("style:name") = convert_style_name (style).c_str();
       styleDomElement.append_attribute ("style:family") = "paragraph";
   
       xml_node styleParagraphPropertiesDomElement = styleDomElement.append_child ("style:paragraph-properties");
@@ -931,7 +966,7 @@ void Odf_Text::placeTextInFrame (string text, string style, float fontsize, int 
       //   <style:background-image/>
       //   </style:graphic-properties>
       // </style:style>
-      xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
+      xml_node styleDomElement = office_styles_node.append_child ("style:style");
       styleDomElement.append_attribute ("style:name") = "chapterframe";
       styleDomElement.append_attribute ("style:family") = "graphic";
   
@@ -963,7 +998,7 @@ void Odf_Text::createSuperscriptStyle ()
   // <style:style style:name="superscript" style:family="text">
   //   <style:text-properties style:text-position="super 58%"/>
   // </style:style>
-  xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
+  xml_node styleDomElement = office_styles_node.append_child ("style:style");
   styleDomElement.append_attribute ("style:name") = "superscript";
   styleDomElement.append_attribute ("style:family") = "text";
 
@@ -985,7 +1020,7 @@ void Odf_Text::createSuperscriptStyle ()
 void Odf_Text::addNote (string caller, string style, bool endnote)
 {
   // Ensure that a paragraph is open, so that the note can be added to it.
-  if (!current_text_p_node_opened) newParagraph ();
+  if (!current_text_p_node_opened) new_paragraph ();
 
   xml_node textNoteDomElement = current_text_p_node.append_child ("text:note");
   textNoteDomElement.append_attribute ("text:id") = convert_to_string ("ftn" + convert_to_string (noteCount)).c_str();
@@ -1006,7 +1041,7 @@ void Odf_Text::addNote (string caller, string style, bool endnote)
   xml_node textNoteBodyDomElement = textNoteDomElement.append_child ("text:note-body");
 
   noteTextPDomElement = textNoteBodyDomElement.append_child ("text:p");
-  noteTextPDomElement.append_attribute ("text:style-name") = convertStyleName (style).c_str();
+  noteTextPDomElement.append_attribute ("text:style-name") = convert_style_name (style).c_str();
 
   closeTextStyle (true, false);
 }
@@ -1031,7 +1066,7 @@ void Odf_Text::addNoteText (string text)
   for (string style : styles) {
     xml_node textSpanDomElement = domElement.append_child ("text:span");
     if (!style.empty()) {
-      textSpanDomElement.append_attribute ("text:style-name") = convertStyleName (style).c_str();
+      textSpanDomElement.append_attribute ("text:style-name") = convert_style_name (style).c_str();
     }
     domElement = textSpanDomElement;
   }
@@ -1055,7 +1090,7 @@ void Odf_Text::newNamedHeading (string style, string text, bool hide)
   // Heading looks like this in content.xml:
   // <text:h text:style-name="Heading_20_1" text:outline-level="1">Text</text:h>
   xml_node textHDomElement = office_text_node.append_child ("text:h");
-  textHDomElement.append_attribute ("text:style-name") = convertStyleName (style).c_str();
+  textHDomElement.append_attribute ("text:style-name") = convert_style_name (style).c_str();
   textHDomElement.append_attribute ("text:outline-level") = "1";
   textHDomElement.text().set(escape_special_xml_characters (text).c_str());
 
@@ -1065,8 +1100,8 @@ void Odf_Text::newNamedHeading (string style, string text, bool hide)
   // </style:style>
   // Create the style if it does not yet exist.
   if (find (createdStyles.begin(), createdStyles.end (), style) == createdStyles.end()) {
-    xml_node styleDomElement = officeStylesDomNode.append_child ("style:style");
-    styleDomElement.append_attribute ("style:name") = convertStyleName (style).c_str();
+    xml_node styleDomElement = office_styles_node.append_child ("style:style");
+    styleDomElement.append_attribute ("style:name") = convert_style_name (style).c_str();
     styleDomElement.append_attribute ("style:display-name") = style.c_str();
     styleDomElement.append_attribute ("style:family") = "paragraph";
     styleDomElement.append_attribute ("style:parent-style-name") = "Heading";
@@ -1099,7 +1134,7 @@ void Odf_Text::newNamedHeading (string style, string text, bool hide)
 // E.g. 'Heading 1' becomes 'Heading_20_1'
 // $style: Input
 // It returns the converted style name.
-string Odf_Text::convertStyleName (string style)
+string Odf_Text::convert_style_name (string style)
 {
   style = filter_string_str_replace (" ", "_20_", style);
   return style;
@@ -1221,4 +1256,20 @@ void Odf_Text::add_image (string alt, string src, string caption)
   current_text_p_node_opened = false;
   current_paragraph_style.clear ();
   current_paragraph_content.clear ();
+}
+
+
+// This function adds a tab to the current paragraph.
+void Odf_Text::add_tab ()
+{
+  // Ensure a paragraph has started.
+  if (!current_text_p_node_opened) new_paragraph ();
+  
+  // Write a text tab element.
+  xml_node dom_node = current_text_p_node;
+  //xml_node text_tab_node =
+  dom_node.append_child ("text:tab");
+
+  // Update public paragraph text.
+  current_paragraph_content += "\t";
 }
