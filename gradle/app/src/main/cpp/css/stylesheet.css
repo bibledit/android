@@ -1254,9 +1254,17 @@ table.interlinear.rtl {
 
 #navigateforward {
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  -khtml-user-select: none; /* Todo */
+  user-select: none;
 }
 #navigateback {
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  -khtml-user-select: none; /* Todo */
+  user-select: none;
 }
 #navigateforward:hover {
   text-decoration: underline;
