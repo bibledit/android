@@ -10,8 +10,8 @@ android {
         // 2019: Apps on Google Play will be required to target API level 28 or higher.
         // 2020: Apps on Google Play will be required to target API level 29 or higher.
         targetSdkVersion 30
-        versionCode 149
-        versionName "5.0.961"
+        versionCode 150
+        versionName "5.0.963"
         externalNativeBuild {
             cmake {
                 cppFlags ""
@@ -40,5 +40,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
 }
