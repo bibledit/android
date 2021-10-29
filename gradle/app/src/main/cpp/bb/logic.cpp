@@ -524,15 +524,22 @@ void bible_logic_merge_irregularity_mail (vector <string> users, vector <Merge_C
 }
 
 
-void bible_logic_unsafe_save_mail (const string & message, const string & explanation, const string & user, const string & usfm)
+void bible_logic_unsafe_save_mail (string subject, const string & explanation,
+                                   const string & user,
+                                   const string & usfm,
+                                   int book, int chapter)
 {
-  if (message.empty ()) return;
-  
+  if (subject.empty ()) return;
+
+  // Add the passage to the subject for extra clarity.
+  // https://github.com/bibledit/cloud/issues/676
+  subject.append (" | " + filter_passage_display (book, chapter, ""));
+
   // Create the body of the email.
   xml_document document;
   xml_node node;
   node = document.append_child ("h3");
-  node.text ().set (message.c_str());
+  node.text ().set (subject.c_str());
   
   // Add some information for the user.
   node = document.append_child ("p");
@@ -551,7 +558,7 @@ void bible_logic_unsafe_save_mail (const string & message, const string & explan
   string html = output.str ();
   
   // Schedule the mail for sending to the user.
-  email_schedule (user, message, html);
+  email_schedule (user, subject, html);
 }
 
 
@@ -589,9 +596,10 @@ void bible_logic_client_receive_merge_mail (const string & bible, int book, int 
   // No differences found: Done.
   if (client_diff.empty ()) return;
   
-  string location = bible + " " + filter_passage_display (book, chapter, "");
-  string subject = "Saved Bible text was merged " + location;
-  
+  // Add the passage to the subject.
+  string subject = "Saved Bible text was merged";
+  subject.append (" | " + filter_passage_display (book, chapter, ""));
+
   // Create the body of the email.
   xml_document document;
   xml_node node;
@@ -612,7 +620,7 @@ void bible_logic_client_receive_merge_mail (const string & bible, int book, int 
   information.append (translate ("You may want to check the result of the merge, whether it is correct."));
   node.text ().set (information.c_str());
   node = document.append_child ("p");
-  location = bible + " " + filter_passage_display (book, chapter, "") +  ".";
+  string location = bible + " " + filter_passage_display (book, chapter, "") +  ".";
   node.text ().set (location.c_str ());
 
   for (unsigned int i = 0; i < client_diff.size(); i++) {
@@ -665,8 +673,9 @@ void bible_logic_client_mail_pending_bible_updates (string user)
         if (newusfm == oldusfm) continue;
         if (newusfm.empty ()) continue;
 
-        string location = bible + " " + filter_passage_display (book, chapter, "");
-        string subject = "Discarded text update " + location;
+        // Add the passage to the subject.
+        string subject = "Discarded text update";
+        subject.append (" | " + filter_passage_display (book, chapter, ""));
         
         // Create the body of the email.
         xml_document document;
@@ -688,6 +697,7 @@ void bible_logic_client_mail_pending_bible_updates (string user)
         
         // Add the passage.
         node = document.append_child ("p");
+        string location = bible + " " + filter_passage_display (book, chapter, "") +  ".";
         node.text ().set (location.c_str ());
         
         // Add the text.
@@ -708,7 +718,8 @@ void bible_logic_client_mail_pending_bible_updates (string user)
 }
 
 
-void bible_logic_client_no_write_access_mail (const string & bible, int book, int chapter, const string & user,
+void bible_logic_client_no_write_access_mail (const string & bible, int book, int chapter,
+                                              const string & user,
                                               const string & oldusfm, const string & newusfm)
 {
   // No difference: Done.
@@ -733,8 +744,10 @@ void bible_logic_client_no_write_access_mail (const string & bible, int book, in
   // No differences found: Done.
   if (client_new_diff.empty ()) return;
   
+  // Add the passage to the subject.
   string subject = "No write access while sending Bible text";
-  
+  subject.append (" | " + filter_passage_display (book, chapter, ""));
+
   // Create the body of the email.
   xml_document document;
   xml_node node;
@@ -802,8 +815,10 @@ void bible_logic_recent_save_email (const string & bible, int book, int chapter,
   // No differences found: Done.
   if (new_verses.empty ()) return;
 
+  // Add the passage to the subject.
   string subject = translate ("Check whether Bible text was saved");
-  
+  subject.append (" | " + filter_passage_display (book, chapter, ""));
+
   // Create the body of the email.
   xml_document document;
   xml_node node;
@@ -877,7 +892,9 @@ void bible_logic_optional_merge_irregularity_email (const string & bible, int bo
   // But if the merged edited USFM differs from the original edited USFM,
   // more checks need to be done to be sure that the user's edits made it.
 
+  // Add the passage to the subject.
   string subject = translate ("Check whether Bible text was saved");
+  subject.append (" | " + filter_passage_display (book, chapter, ""));
 
   // Create the body of the email.
   xml_document document;
