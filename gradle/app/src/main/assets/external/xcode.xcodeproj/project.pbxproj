@@ -3,13 +3,45 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		CA10382925279F940021AF25 /* html2format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA10382725279F940021AF25 /* html2format.cpp */; };
 		CA10382C2527A4010021AF25 /* html2format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA10382A2527A4010021AF25 /* html2format.cpp */; };
 		CA47750F260FC720001F50DD /* accounts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA47750E260FC720001F50DD /* accounts.cpp */; };
+		CA77112627523B94003ADD67 /* index.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAECA50525EED7B500650B41 /* index.cpp */; };
+		CA77112727523C07003ADD67 /* verse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAECA50425EED7B500650B41 /* verse.cpp */; };
+		CA77112827523C15003ADD67 /* update.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CADD5A392630A3F5003AAB27 /* update.cpp */; };
+		CA77112927523C21003ADD67 /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAD8B11626E4E18C00639404 /* view.cpp */; };
+		CA77112A27523C2C003ADD67 /* style.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0019625699DC400BCA329 /* style.cpp */; };
+		CA77112B27523C35003ADD67 /* fetch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAAAB4B326EBE803000C8254 /* fetch.cpp */; };
+		CA77112C27523C49003ADD67 /* index.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF4325337938004D6E06 /* index.cpp */; };
+		CA77112D27523C49003ADD67 /* index.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CABDBAD526E3E00200BE27F8 /* index.cpp */; };
+		CA77112E27523C49003ADD67 /* index.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA001A12569B59A00BCA329 /* index.cpp */; };
+		CA77112F27523C58003ADD67 /* load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF3625337938004D6E06 /* load.cpp */; };
+		CA77113027523C58003ADD67 /* load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAECA50225EED7B500650B41 /* load.cpp */; };
+		CA77113127523D8B003ADD67 /* delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA314CD22662298D00EF8CE3 /* delay.cpp */; };
+		CA77113227523D8B003ADD67 /* list2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6BEA0326456C08009A0416 /* list2.cpp */; };
+		CA77113327523D8B003ADD67 /* logic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF2D25337938004D6E06 /* logic.cpp */; };
+		CA77113427523D8B003ADD67 /* save.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF2C25337938004D6E06 /* save.cpp */; };
+		CA77113527523D8B003ADD67 /* update.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF3525337938004D6E06 /* update.cpp */; };
+		CA77113627523D8B003ADD67 /* verse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA60BF4225337938004D6E06 /* verse.cpp */; };
+		CA77113727523D8B003ADD67 /* id.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA001932569986E00BCA329 /* id.cpp */; };
+		CA77113827523D8B003ADD67 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6A12CD26F782C600CDB5DB /* image.cpp */; };
+		CA77113927523D8B003ADD67 /* indonesian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAECA50D25F24D0900650B41 /* indonesian.cpp */; };
+		CA77113C27523D8B003ADD67 /* logic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAAAB4B626ECE062000C8254 /* logic.cpp */; };
+		CA77113D27523D8B003ADD67 /* comparative9edit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAD55EAF260140360021FED0 /* comparative9edit.cpp */; };
+		CA77113E27523D8B003ADD67 /* comparative1edit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAD55EB0260140370021FED0 /* comparative1edit.cpp */; };
+		CA77113F27523D8B003ADD67 /* divider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAECA50825EFDE1E00650B41 /* divider.cpp */; };
+		CA77114027523D8B003ADD67 /* confirm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA1B741A25F54DC90030846D /* confirm.cpp */; };
+		CA77114127523D8B003ADD67 /* indonesianfree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA47B2CB25E9282B001370A4 /* indonesianfree.cpp */; };
+		CA77114227523D8B003ADD67 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6F68B3257CDF21008D51F5 /* text.cpp */; };
+		CA77114327524235003ADD67 /* abbottsmith.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA323FA25FBC70A00F5A99E /* abbottsmith.cpp */; };
+		CA77114427524240003ADD67 /* bibleimages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CABDBAD726E3F82000BE27F8 /* bibleimages.cpp */; };
+		CA77114627524B8B003ADD67 /* libicui18n.67.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CA77114527524B8B003ADD67 /* libicui18n.67.1.dylib */; };
+		CA77114827524BC8003ADD67 /* libicuuc.67.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CA77114727524BC8003ADD67 /* libicuuc.67.1.dylib */; };
+		CA77114A27524BFF003ADD67 /* libicudata.67.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CA77114927524BFF003ADD67 /* libicudata.67.1.dylib */; };
 		CAAA5DBA256555E5003249CA /* paratext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAAA5DB9256555E5003249CA /* paratext.cpp */; };
 		CADE454624F174DF003165BB /* bible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CADE36FE24F1737A003165BB /* bible.cpp */; };
 		CADE454724F174DF003165BB /* logic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CADE36FF24F1737A003165BB /* logic.cpp */; };
@@ -528,21 +560,7 @@
 		CADE475724F1786C003165BB /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CADE475624F1786C003165BB /* libxml2.tbd */; };
 		CADE475A24F17CF0003165BB /* libmimetic.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CADE475924F17CF0003165BB /* libmimetic.0.dylib */; };
 		CADE475C24F17D04003165BB /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CADE475B24F17D04003165BB /* libcurl.dylib */; };
-		CADE475E24F1996D003165BB /* server in CopyFiles */ = {isa = PBXBuildFile; fileRef = CA18ADBF24F169DA00FF603C /* server */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		CA18ADBD24F169DA00FF603C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "/tmp/bibledit-dev";
-			dstSubfolderSpec = 0;
-			files = (
-				CADE475E24F1996D003165BB /* server in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CA05A59826878ACA000D0737 /* gbs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gbs.cpp; sourceTree = "<group>"; };
@@ -564,6 +582,8 @@
 		CA47B2CB25E9282B001370A4 /* indonesianfree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = indonesianfree.cpp; sourceTree = "<group>"; };
 		CA47B2CC25E9282B001370A4 /* indonesianfree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = indonesianfree.h; sourceTree = "<group>"; };
 		CA47B2CD25E9282B001370A4 /* indonesianfree.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = indonesianfree.html; sourceTree = "<group>"; };
+		CA4A54212742E621009A0343 /* easyenglishbible.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = easyenglishbible.h; sourceTree = "<group>"; };
+		CA4A54222742E621009A0343 /* easyenglishbible.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = easyenglishbible.cpp; sourceTree = "<group>"; };
 		CA60BF2925337938004D6E06 /* index.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = index.h; sourceTree = "<group>"; };
 		CA60BF2B25337938004D6E06 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		CA60BF2C25337938004D6E06 /* save.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = save.cpp; sourceTree = "<group>"; };
@@ -588,6 +608,9 @@
 		CA6BEA0426456C08009A0416 /* list2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list2.h; sourceTree = "<group>"; };
 		CA6F68B3257CDF21008D51F5 /* text.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		CA6F68B4257CDF21008D51F5 /* text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
+		CA77114527524B8B003ADD67 /* libicui18n.67.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicui18n.67.1.dylib; path = ../../../../opt/local/lib/libicui18n.67.1.dylib; sourceTree = "<group>"; };
+		CA77114727524BC8003ADD67 /* libicuuc.67.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicuuc.67.1.dylib; path = ../../../../opt/local/lib/libicuuc.67.1.dylib; sourceTree = "<group>"; };
+		CA77114927524BFF003ADD67 /* libicudata.67.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicudata.67.1.dylib; path = ../../../../opt/local/lib/libicudata.67.1.dylib; sourceTree = "<group>"; };
 		CA772E29262F58580097D5C7 /* studylight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = studylight.cpp; sourceTree = "<group>"; };
 		CA772E2A262F58580097D5C7 /* studylight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = studylight.h; sourceTree = "<group>"; };
 		CAA001932569986E00BCA329 /* id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = id.cpp; sourceTree = "<group>"; };
@@ -2213,8 +2236,6 @@
 		CADE430C24F174BD003165BB /* users.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = users.h; sourceTree = "<group>"; };
 		CADE430F24F174BD003165BB /* merge_1_server.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_1_server.usfm; sourceTree = "<group>"; };
 		CADE431024F174BD003165BB /* onlinebible1.exp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.exports; path = onlinebible1.exp; sourceTree = "<group>"; };
-		CADE431124F174BD003165BB /* editone05suffix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone05suffix2.html; sourceTree = "<group>"; };
-		CADE431224F174BD003165BB /* editone02suffix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone02suffix1.html; sourceTree = "<group>"; };
 		CADE431324F174BD003165BB /* editone01.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone01.usfm; sourceTree = "<group>"; };
 		CADE431424F174BD003165BB /* editone06verse4prefix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse4prefix.html; sourceTree = "<group>"; };
 		CADE431524F174BD003165BB /* editone06verse0prefix.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone06verse0prefix.usfm; sourceTree = "<group>"; };
@@ -2235,11 +2256,6 @@
 		CADE432424F174BD003165BB /* Genesis-1-1-18.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Genesis-1-1-18.gif"; sourceTree = "<group>"; };
 		CADE432524F174BD003165BB /* merge_2_base.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_2_base.usfm; sourceTree = "<group>"; };
 		CADE432624F174BD003165BB /* editone06verse1prefix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse1prefix.html; sourceTree = "<group>"; };
-		CADE432724F174BD003165BB /* editone02prefix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone02prefix1.html; sourceTree = "<group>"; };
-		CADE432824F174BD003165BB /* editone05prefix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone05prefix2.html; sourceTree = "<group>"; };
-		CADE432924F174BD003165BB /* editone03suffix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone03suffix2.html; sourceTree = "<group>"; };
-		CADE432A24F174BD003165BB /* editone04suffix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone04suffix1.html; sourceTree = "<group>"; };
-		CADE432B24F174BD003165BB /* editone01prefix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone01prefix1.html; sourceTree = "<group>"; };
 		CADE432C24F174BD003165BB /* editone06verse2prefix.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone06verse2prefix.usfm; sourceTree = "<group>"; };
 		CADE432D24F174BD003165BB /* ShonaNumbers23.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = ShonaNumbers23.usfm; sourceTree = "<group>"; };
 		CADE432E24F174BD003165BB /* editone06verse3edit.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse3edit.html; sourceTree = "<group>"; };
@@ -2380,16 +2396,10 @@
 		CADE43B624F174BE003165BB /* exports.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = exports.css; sourceTree = "<group>"; };
 		CADE43B724F174BE003165BB /* editone06verse3prefix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse3prefix.html; sourceTree = "<group>"; };
 		CADE43B824F174BE003165BB /* chapters_new.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = chapters_new.usfm; sourceTree = "<group>"; };
-		CADE43B924F174BE003165BB /* editone04prefix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone04prefix1.html; sourceTree = "<group>"; };
-		CADE43BA24F174BE003165BB /* editone03prefix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone03prefix2.html; sourceTree = "<group>"; };
-		CADE43BB24F174BE003165BB /* editone01suffix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone01suffix1.html; sourceTree = "<group>"; };
 		CADE43BC24F174BE003165BB /* merge_3_base.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_3_base.usfm; sourceTree = "<group>"; };
 		CADE43BD24F174BE003165BB /* merge_2_server.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_2_server.usfm; sourceTree = "<group>"; };
 		CADE43BE24F174BE003165BB /* usfm01.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = usfm01.usfm; sourceTree = "<group>"; };
 		CADE43BF24F174BE003165BB /* 01GEN-50.SFM */ = {isa = PBXFileReference; lastKnownFileType = text; path = "01GEN-50.SFM"; sourceTree = "<group>"; };
-		CADE43C024F174BE003165BB /* editone04prefix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone04prefix2.html; sourceTree = "<group>"; };
-		CADE43C124F174BE003165BB /* editone03prefix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone03prefix1.html; sourceTree = "<group>"; };
-		CADE43C224F174BE003165BB /* editone01suffix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone01suffix2.html; sourceTree = "<group>"; };
 		CADE43C324F174BE003165BB /* editone06verse3suffix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse3suffix.html; sourceTree = "<group>"; };
 		CADE43C424F174BE003165BB /* merge_2_modification.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_2_modification.usfm; sourceTree = "<group>"; };
 		CADE43C524F174BE003165BB /* editone01.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone01.html; sourceTree = "<group>"; };
@@ -2400,10 +2410,7 @@
 		CADE43CA24F174BE003165BB /* merge_3_modification.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_3_modification.usfm; sourceTree = "<group>"; };
 		CADE43CB24F174BE003165BB /* editone06verse1prefix.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone06verse1prefix.usfm; sourceTree = "<group>"; };
 		CADE43CC24F174BE003165BB /* basic.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = basic.css; sourceTree = "<group>"; };
-		CADE43CD24F174BE003165BB /* editone03suffix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone03suffix1.html; sourceTree = "<group>"; };
-		CADE43CE24F174BE003165BB /* editone04suffix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone04suffix2.html; sourceTree = "<group>"; };
 		CADE43CF24F174BE003165BB /* biblehub-john-1-1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "biblehub-john-1-1.html"; sourceTree = "<group>"; };
-		CADE43D024F174BE003165BB /* editone01prefix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone01prefix2.html; sourceTree = "<group>"; };
 		CADE43D124F174BE003165BB /* verses_old.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = verses_old.txt; sourceTree = "<group>"; };
 		CADE43D224F174BE003165BB /* editone06verse4edit.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone06verse4edit.usfm; sourceTree = "<group>"; };
 		CADE43D324F174BE003165BB /* 01GEN-0.SFM */ = {isa = PBXFileReference; lastKnownFileType = text; path = "01GEN-0.SFM"; sourceTree = "<group>"; };
@@ -2411,8 +2418,6 @@
 		CADE43D524F174BE003165BB /* editone06verse1suffix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse1suffix.html; sourceTree = "<group>"; };
 		CADE43D624F174BE003165BB /* editone03.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone03.usfm; sourceTree = "<group>"; };
 		CADE43D724F174BE003165BB /* merge_3_server.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = merge_3_server.usfm; sourceTree = "<group>"; };
-		CADE43D824F174BE003165BB /* editone02prefix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone02prefix2.html; sourceTree = "<group>"; };
-		CADE43D924F174BE003165BB /* editone05prefix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone05prefix1.html; sourceTree = "<group>"; };
 		CADE43DA24F174BE003165BB /* changed_verses.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = changed_verses.html; sourceTree = "<group>"; };
 		CADE43DB24F174BE003165BB /* editone06verse2prefix.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse2prefix.html; sourceTree = "<group>"; };
 		CADE43DC24F174BE003165BB /* 01GEN.SFM */ = {isa = PBXFileReference; lastKnownFileType = text; path = 01GEN.SFM; sourceTree = "<group>"; };
@@ -2433,8 +2438,6 @@
 		CADE43EB24F174BE003165BB /* editone06verse0suffix.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = editone06verse0suffix.usfm; sourceTree = "<group>"; };
 		CADE43EC24F174BE003165BB /* editone06verse0edit.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse0edit.html; sourceTree = "<group>"; };
 		CADE43ED24F174BE003165BB /* editone06verse1edit.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone06verse1edit.html; sourceTree = "<group>"; };
-		CADE43EE24F174BE003165BB /* editone05suffix1.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone05suffix1.html; sourceTree = "<group>"; };
-		CADE43EF24F174BE003165BB /* editone02suffix2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editone02suffix2.html; sourceTree = "<group>"; };
 		CADE43F024F174BE003165BB /* 08-Ruth.usfm */ = {isa = PBXFileReference; lastKnownFileType = text; path = "08-Ruth.usfm"; sourceTree = "<group>"; };
 		CADE43F124F174BE003165BB /* versification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = versification.h; sourceTree = "<group>"; };
 		CADE43F224F174BE003165BB /* localization.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = localization.cpp; sourceTree = "<group>"; };
@@ -2622,6 +2625,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA77114A27524BFF003ADD67 /* libicudata.67.1.dylib in Frameworks */,
+				CA77114827524BC8003ADD67 /* libicuuc.67.1.dylib in Frameworks */,
+				CA77114627524B8B003ADD67 /* libicui18n.67.1.dylib in Frameworks */,
 				CADE475C24F17D04003165BB /* libcurl.dylib in Frameworks */,
 				CADE475A24F17CF0003165BB /* libmimetic.0.dylib in Frameworks */,
 				CADE475724F1786C003165BB /* libxml2.tbd in Frameworks */,
@@ -5446,6 +5452,8 @@
 				CADE440624F174BE003165BB /* dev.h */,
 				CADE44C624F174BF003165BB /* diff.cpp */,
 				CADE441C24F174BE003165BB /* diff.h */,
+				CA4A54222742E621009A0343 /* easyenglishbible.cpp */,
+				CA4A54212742E621009A0343 /* easyenglishbible.h */,
 				CADE44BE24F174BF003165BB /* editone.cpp */,
 				CADE444124F174BE003165BB /* editone.h */,
 				CADE442224F174BE003165BB /* etcbc4.cpp */,
@@ -5618,28 +5626,8 @@
 				CADE43AE24F174BE003165BB /* diff.txt */,
 				CADE43C524F174BE003165BB /* editone01.html */,
 				CADE431324F174BD003165BB /* editone01.usfm */,
-				CADE432B24F174BD003165BB /* editone01prefix1.html */,
-				CADE43D024F174BE003165BB /* editone01prefix2.html */,
-				CADE43BB24F174BE003165BB /* editone01suffix1.html */,
-				CADE43C224F174BE003165BB /* editone01suffix2.html */,
-				CADE432724F174BD003165BB /* editone02prefix1.html */,
-				CADE43D824F174BE003165BB /* editone02prefix2.html */,
-				CADE431224F174BD003165BB /* editone02suffix1.html */,
-				CADE43EF24F174BE003165BB /* editone02suffix2.html */,
 				CADE43AD24F174BE003165BB /* editone03.html */,
 				CADE43D624F174BE003165BB /* editone03.usfm */,
-				CADE43C124F174BE003165BB /* editone03prefix1.html */,
-				CADE43BA24F174BE003165BB /* editone03prefix2.html */,
-				CADE43CD24F174BE003165BB /* editone03suffix1.html */,
-				CADE432924F174BD003165BB /* editone03suffix2.html */,
-				CADE43B924F174BE003165BB /* editone04prefix1.html */,
-				CADE43C024F174BE003165BB /* editone04prefix2.html */,
-				CADE432A24F174BD003165BB /* editone04suffix1.html */,
-				CADE43CE24F174BE003165BB /* editone04suffix2.html */,
-				CADE43D924F174BE003165BB /* editone05prefix1.html */,
-				CADE432824F174BD003165BB /* editone05prefix2.html */,
-				CADE43EE24F174BE003165BB /* editone05suffix1.html */,
-				CADE431124F174BD003165BB /* editone05suffix2.html */,
 				CADE43B024F174BE003165BB /* editone06.usfm */,
 				CADE43EC24F174BE003165BB /* editone06verse0edit.html */,
 				CADE43B324F174BE003165BB /* editone06verse0edit.usfm */,
@@ -5949,6 +5937,9 @@
 		CADE475524F1786C003165BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CA77114927524BFF003ADD67 /* libicudata.67.1.dylib */,
+				CA77114727524BC8003ADD67 /* libicuuc.67.1.dylib */,
+				CA77114527524B8B003ADD67 /* libicui18n.67.1.dylib */,
 				CADE475B24F17D04003165BB /* libcurl.dylib */,
 				CADE475924F17CF0003165BB /* libmimetic.0.dylib */,
 				CADE475624F1786C003165BB /* libxml2.tbd */,
@@ -5980,7 +5971,6 @@
 			buildPhases = (
 				CA18ADBB24F169DA00FF603C /* Sources */,
 				CA18ADBC24F169DA00FF603C /* Frameworks */,
-				CA18ADBD24F169DA00FF603C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -5997,6 +5987,7 @@
 		CA18ADB724F169DA00FF603C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = Bibledit;
 				TargetAttributes = {
@@ -6028,6 +6019,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA77114427524240003ADD67 /* bibleimages.cpp in Sources */,
+				CA77114327524235003ADD67 /* abbottsmith.cpp in Sources */,
+				CA77113127523D8B003ADD67 /* delay.cpp in Sources */,
+				CA77113227523D8B003ADD67 /* list2.cpp in Sources */,
+				CA77113327523D8B003ADD67 /* logic.cpp in Sources */,
+				CA77113427523D8B003ADD67 /* save.cpp in Sources */,
+				CA77113527523D8B003ADD67 /* update.cpp in Sources */,
+				CA77113627523D8B003ADD67 /* verse.cpp in Sources */,
+				CA77113727523D8B003ADD67 /* id.cpp in Sources */,
+				CA77113827523D8B003ADD67 /* image.cpp in Sources */,
+				CA77113927523D8B003ADD67 /* indonesian.cpp in Sources */,
+				CA77113C27523D8B003ADD67 /* logic.cpp in Sources */,
+				CA77113D27523D8B003ADD67 /* comparative9edit.cpp in Sources */,
+				CA77113E27523D8B003ADD67 /* comparative1edit.cpp in Sources */,
+				CA77113F27523D8B003ADD67 /* divider.cpp in Sources */,
+				CA77114027523D8B003ADD67 /* confirm.cpp in Sources */,
+				CA77114127523D8B003ADD67 /* indonesianfree.cpp in Sources */,
+				CA77114227523D8B003ADD67 /* text.cpp in Sources */,
+				CA77112F27523C58003ADD67 /* load.cpp in Sources */,
+				CA77113027523C58003ADD67 /* load.cpp in Sources */,
+				CA77112C27523C49003ADD67 /* index.cpp in Sources */,
+				CA77112D27523C49003ADD67 /* index.cpp in Sources */,
+				CA77112E27523C49003ADD67 /* index.cpp in Sources */,
+				CA77112B27523C35003ADD67 /* fetch.cpp in Sources */,
+				CA77112A27523C2C003ADD67 /* style.cpp in Sources */,
+				CA77112927523C21003ADD67 /* view.cpp in Sources */,
+				CA77112827523C15003ADD67 /* update.cpp in Sources */,
+				CA77112727523C07003ADD67 /* verse.cpp in Sources */,
+				CA77112627523B94003ADD67 /* index.cpp in Sources */,
 				CADE475124F17537003165BB /* sqlite3.c in Sources */,
 				CADE475224F17537003165BB /* utf8proc.c in Sources */,
 				CADE475424F17537003165BB /* io.c in Sources */,
@@ -6603,7 +6623,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -6656,7 +6676,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -6674,10 +6694,12 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					.,
 					/opt/local/include,
+					/usr/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
+					/usr/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"SYSTEM_HEADER_SEARCH_PATHS[arch=*]" = "";
@@ -6695,6 +6717,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
+					/usr/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"SYSTEM_HEADER_SEARCH_PATHS[arch=*]" = "";

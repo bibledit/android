@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.bibledit.android",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 153,
+      "versionName": "5.0.968",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

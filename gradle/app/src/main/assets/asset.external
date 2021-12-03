@@ -308,6 +308,7 @@ jsonxx/jsonxx_test.cc
 jsonxx/LICENSE
 jsonxx/README.md
 xcode.xcodeproj/project.pbxproj
+xcode.xcodeproj/xcuserdata/teus.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
 xcode.xcodeproj/xcuserdata/teus.xcuserdatad/xcschemes/xcschememanagement.plist
 xcode.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 xcode.xcodeproj/project.xcworkspace/xcuserdata/teus.xcuserdatad/IDEFindNavigatorScopes.plist

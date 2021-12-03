@@ -300,7 +300,7 @@ vector <int> usfm_offset_to_versenumber (string usfm, unsigned int offset)
   unsigned int totalOffset = 0;
   vector <string> lines = filter_string_explode (usfm, '\n');
   for (unsigned int i = 0; i < lines.size(); i++) {
-    int length = unicode_string_length (lines [i]);
+    size_t length = unicode_string_length (lines [i]);
     totalOffset += length;
     if (totalOffset >= offset) {
       return usfm_linenumber_to_versenumber (usfm, i);
@@ -329,7 +329,7 @@ int usfm_versenumber_to_offset (string usfm, int verse)
     // Add 1 for new line.
     totalOffset += 1;
   }
-  return unicode_string_length (usfm);
+  return static_cast<int>(unicode_string_length (usfm));
 }
 
 
@@ -627,9 +627,9 @@ string usfm_get_closing_usfm (string text, bool embedded)
 string usfm_save_is_safe (void * webserver_request, string oldtext, string newtext, bool chapter, string & explanation)
 {
   // Two texts are equal: safe.
-  if (newtext == oldtext) return "";
+  if (newtext == oldtext) return string();
 
-  Webserver_Request * request = (Webserver_Request *) webserver_request;
+  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
 
   const char * explanation1 = "The text was not saved for safety reasons.";
   const char * explanation2 = "Make fewer changes at a time and wait till the editor has saved the text. Or relax the restriction in the editing settings. See menu Settings - Preferences.";
@@ -649,11 +649,11 @@ string usfm_save_is_safe (void * webserver_request, string oldtext, string newte
   } else {
     if (oldtext.length () < 10) allowed_percentage = 100;
   }
-  
+
   // When the new text is longer than the old text, it means the user is typing extra text in the verse.
   // Allow that in all cases.
   if (newtext.length() > oldtext.length()) allowed_percentage = 100;
-  
+
   // The length of the new text should not differ more than a set percentage from the old text.
   float existingLength = oldtext.length();
   float newLength = newtext.length ();
@@ -709,7 +709,7 @@ string usfm_save_is_safe (void * webserver_request, string oldtext, string newte
 string usfm_safely_store_chapter (void * webserver_request,
                                   string bible, int book, int chapter, string usfm, string & explanation)
 {
-  Webserver_Request * request = (Webserver_Request *) webserver_request;
+  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   
   // Existing chapter contents.
   string existing = request->database_bibles()->getChapter (bible, book, chapter);
@@ -744,7 +744,7 @@ string usfm_safely_store_verse (void * webserver_request,
                                 string bible, int book, int chapter, int verse, string usfm,
                                 string & explanation, bool quill)
 {
-  Webserver_Request * request = (Webserver_Request *) webserver_request;
+  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   
   usfm = filter_string_trim (usfm);
 

@@ -676,8 +676,9 @@ void Odf_Text::create_paragraph_style (string name,
   // Whether to align verse numbers in poetry to the left of the margin,
   // and if so, whether this is one of the defined poetry styles.
   bool is_poetry_q_style = false;
-  if (Database_Config_Bible::getOdtPoetryVersesLeft (bible))
+  if (Database_Config_Bible::getOdtPoetryVersesLeft (bible)) {
     is_poetry_q_style = usfm_is_standard_q_poetry (name);
+  }
   
   // It looks like this in styles.xml:
   // <style:style style:display-name="p_c1" style:family="paragraph" style:name="p_c1">
@@ -773,11 +774,21 @@ void Odf_Text::create_paragraph_style (string name,
   
   // For poetry styles like q, q1, and so on,
   // there's an additional definition of the tab settings.
+  // Later there were more tab stops added,
+  // each tab stop slightly deeper than the previous one.
+  // The reason for adding more tab stops is this:
+  // The chapter number at times is wider than the first tab stop,
+  // pushing the indent of the first line too deep.
+  // See issue https://github.com/bibledit/cloud/issues/671
   if (is_poetry_q_style) {
     xml_node style_tab_stops = style_paragraph_properties_node.append_child("style:tab-stops");
-    xml_node style_tab_stop = style_tab_stops.append_child("style:tab-stop");
-    string tab_stop = convert_to_string(firstlineindent) + "mm";
-    style_tab_stop.append_attribute("style:position") = tab_stop.c_str();
+    int tab_indent = firstlineindent;
+    for (int i = 0; i < 10; i++) {
+      xml_node style_tab_stop = style_tab_stops.append_child("style:tab-stop");
+      string tab_stop = convert_to_string(tab_indent) + "mm";
+      style_tab_stop.append_attribute("style:position") = tab_stop.c_str();
+      tab_indent++;
+    }
   }
 }
 
@@ -1266,9 +1277,7 @@ void Odf_Text::add_tab ()
   if (!current_text_p_node_opened) new_paragraph ();
   
   // Write a text tab element.
-  xml_node dom_node = current_text_p_node;
-  //xml_node text_tab_node =
-  dom_node.append_child ("text:tab");
+  current_text_p_node.append_child ("text:tab");
 
   // Update public paragraph text.
   current_paragraph_content += "\t";
