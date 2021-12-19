@@ -14,7 +14,7 @@ android {
         versionName "5.0.968"
         externalNativeBuild {
             cmake {
-                cppFlags ""
+                cppFlags "-std=c++14"
             }
         }
         ndk {
