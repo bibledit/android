@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ void tmp_tmp ()
 {
   Database_Logs::log ("Removing expired temporal files", Filter_Roles::manager ());
   int expired = filter_date_seconds_since_epoch () - (3600 * 24 * 3);
-  string directory = filter_url_create_root_path (filter_url_temp_dir ());
+  string directory = filter_url_create_root_path ({filter_url_temp_dir ()});
   vector <string> names = filter_url_scandir (directory);
   for (auto & name : names) {
     if (name.find ("tmp.") == 0) continue;
-    string filename = filter_url_create_path (directory, name);
+    string filename = filter_url_create_path ({directory, name});
     int mtime = filter_url_file_modification_time (filename);
     if (mtime < expired) {
       filter_url_rmdir (filename);

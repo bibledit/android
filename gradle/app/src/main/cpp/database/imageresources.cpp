@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,19 +32,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 string Database_ImageResources::mainFolder ()
 {
-  return filter_url_create_root_path (database_logic_databases (), "imageresources");
+  return filter_url_create_root_path ({database_logic_databases (), "imageresources"});
 }
 
 
 string Database_ImageResources::resourceFolder (const string& name)
 {
-  return filter_url_create_path (mainFolder (), name);
+  return filter_url_create_path ({mainFolder (), name});
 }
 
 
 string Database_ImageResources::imagePath (string name, string image)
 {
-  return filter_url_create_path (resourceFolder (name), image);
+  return filter_url_create_path ({resourceFolder (name), image});
 }
 
 
@@ -56,7 +56,7 @@ string Database_ImageResources::databaseFile ()
 
 sqlite3 * Database_ImageResources::connect (string name)
 {
-  string path = filter_url_create_path (resourceFolder (name), databaseFile ());
+  string path = filter_url_create_path ({resourceFolder (name), databaseFile ()});
   return database_sqlite_connect (path);
 }
 
@@ -120,7 +120,7 @@ string Database_ImageResources::store (string name, string file)
   string path;
   bool exists = false;
   do {
-    path = filter_url_create_path (folder, image);
+    path = filter_url_create_path ({folder, image});
     exists = file_or_dir_exists (path);
     if (exists) image = filter_string_str_replace (".", "0.", image);
   } while (exists);

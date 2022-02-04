@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -68,13 +68,13 @@ void Database_BibleImages::erase (string image)
 
 string Database_BibleImages::folder ()
 {
-  return filter_url_create_root_path ("images");
+  return filter_url_create_root_path ({"images"});
 }
 
 
 string Database_BibleImages::path (string image)
 {
-  return filter_url_create_path (folder (), image);
+  return filter_url_create_path ({folder (), image});
 }
 
 

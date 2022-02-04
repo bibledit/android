@@ -294,8 +294,8 @@ notifit/notifit.js
 notifit/README.md
 notifit/tests.html
 notifit/notifit.min.js
-utf8/utf8cpp.html
-utf8/ReleaseNotes
+utf8/README.md
+utf8/readme.txt
 config/config.txt
 config/local.chain.pem
 config/userfacingurl.txt
@@ -463,7 +463,6 @@ styles/sheetm.html
 styles/view.html
 styles/indexm.html
 system/index.html
-system/indonesianfree.html
 livetest/livetest.sh
 livetest/paths.sh
 livetest/initialize.sh

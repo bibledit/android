@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ void developer_logic_log_network_write ()
     }
     log_network_cache.clear ();
     log_network_mutex.unlock ();
-    string path = filter_url_create_root_path (filter_url_temp_dir(), "log-network.csv");
-    if (!file_or_dir_exists(path)) {
+    string path = filter_url_create_root_path ({filter_url_temp_dir(), "log-network.csv"});
+    if (!file_or_dir_exists (path)) {
       filter_url_file_put_contents_append (path, "date,IPaddress,URL,query,username\n");
     }
     filter_url_file_put_contents_append (path, lines);
@@ -103,7 +103,7 @@ void developer_logic_import_changes ()
   string home_path = ".";
   char * home = getenv ("HOME");
   if (home) home_path = home;
-  string file_path = filter_url_create_path (home_path, "Desktop", "changes.usfm");
+  string file_path = filter_url_create_path ({home_path, "Desktop", "changes.usfm"});
   string bible = "test";
   Database_Logs::log ("Import changes from " + file_path + " into Bible " + bible);
   Database_Bibles database_bibles;

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,6 +78,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <unordered_map>
 #include <codecvt>
 #include <memory>
+#include <filesystem>
 
 
 // Headers dependencies.

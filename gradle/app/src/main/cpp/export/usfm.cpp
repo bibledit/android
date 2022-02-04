@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -43,9 +43,9 @@ void export_usfm (string bible, bool log)
   // Root USFM directory, plus info file.
   string usfmDirectory = Export_Logic::USFMdirectory (bible, 2);
   if (!file_or_dir_exists (usfmDirectory)) filter_url_mkdir (usfmDirectory);
-  string infopath = filter_url_create_root_path ("export", "usfm.html");
+  string infopath = filter_url_create_root_path ({"export", "usfm.html"});
   string infocontents = filter_url_file_get_contents (infopath);
-  infopath = filter_url_create_path (usfmDirectory, "readme.html");
+  infopath = filter_url_create_path ({usfmDirectory, "readme.html"});
   filter_url_file_put_contents (infopath, infocontents);
   
   
@@ -84,7 +84,7 @@ void export_usfm (string bible, bool log)
     
     // Save the USFM of this book to a file with a localized name.
     string base_book_filename = Export_Logic::baseBookFileName (book);
-    string path = filter_url_create_path (usfmDirectoryFull, base_book_filename + ".usfm");
+    string path = filter_url_create_path ({usfmDirectoryFull, base_book_filename + ".usfm"});
     filter_url_file_put_contents (path, bookUsfmDataFull);
 
     
@@ -98,7 +98,7 @@ void export_usfm (string bible, bool log)
   
   // Base name of the zip file.
   string zipfile = Export_Logic::baseBookFileName (0) + ".zip";
-  string zippath = filter_url_create_path (usfmDirectoryFull, zipfile);
+  string zippath = filter_url_create_path ({usfmDirectoryFull, zipfile});
   
   
   // Compress USFM files into one zip file.
@@ -114,13 +114,13 @@ void export_usfm (string bible, bool log)
     // It uses the external zip binary.
     vector <string> files = filter_url_scandir (usfmDirectoryFull);
     for (auto file : files) {
-      if (file != zipfile) filter_url_unlink (filter_url_create_path (usfmDirectoryFull, file));
+      if (file != zipfile) filter_url_unlink (filter_url_create_path ({usfmDirectoryFull, file}));
     }
     string password = Database_Config_Bible::getExportPassword (bible);
     string output, error;
     filter_shell_run (usfmDirectoryFull, "zip", {"-P", password, "bible.zip", zipfile}, &output, &error);
     filter_url_unlink (zippath);
-    filter_url_rename (filter_url_create_path (usfmDirectoryFull, "bible.zip"), zippath);
+    filter_url_rename (filter_url_create_path ({usfmDirectoryFull, "bible.zip"}), zippath);
   }
   
   

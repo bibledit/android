@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ void export_web_book (string bible, int book, bool log)
     if (Fonts_Logic::fontExists (font)) {
       string fontpath = Fonts_Logic::getFontPath (font);
       string contents = filter_url_file_get_contents (fontpath);
-      fontpath = filter_url_create_path (directory, font);
+      fontpath = filter_url_create_path ({directory, font});
       filter_url_file_put_contents (fontpath, contents);
     }
   }
@@ -78,8 +78,8 @@ void export_web_book (string bible, int book, bool log)
   Html_Header htmlHeader = Html_Header (&html_text_rich_book_index);
   htmlHeader.searchBackLink (backLinkPath + filter_url_html_file_name_bible ("", book), translate("Go back to") + " " + bibleBookText);
   htmlHeader.create ({
-    make_pair (bible, filter_url_html_file_name_bible ()),
-    make_pair (translate (Database_Books::getEnglishFromId (book)), filter_url_html_file_name_bible ())
+    pair (bible, filter_url_html_file_name_bible ()),
+    pair (translate (Database_Books::getEnglishFromId (book)), filter_url_html_file_name_bible ())
   });
   html_text_rich_book_index.new_paragraph ("navigationbar");
   html_text_rich_book_index.add_text ("|");
@@ -112,22 +112,22 @@ void export_web_book (string bible, int book, bool log)
     Html_Header htmlHeader = Html_Header (filter_text_chapter.html_text_linked);
     htmlHeader.searchBackLink (backLinkPath + filter_url_html_file_name_bible ("", book, chapter), translate("Go back to") + " " + bibleBookText + " " + convert_to_string (chapter));
     vector <pair <string, string> > breadcrumbs_navigator;
-    breadcrumbs_navigator.push_back (make_pair (bible, filter_url_html_file_name_bible ()));
-    breadcrumbs_navigator.push_back (make_pair (translate (Database_Books::getEnglishFromId (book)), filter_url_html_file_name_bible ()));
+    breadcrumbs_navigator.push_back (pair (bible, filter_url_html_file_name_bible ()));
+    breadcrumbs_navigator.push_back (pair (translate (Database_Books::getEnglishFromId (book)), filter_url_html_file_name_bible ()));
     if (!is_first_chapter) {
-      breadcrumbs_navigator.push_back (make_pair ("«", filter_url_html_file_name_bible ("", book, chapter - 1)));
+      breadcrumbs_navigator.push_back (pair ("«", filter_url_html_file_name_bible ("", book, chapter - 1)));
     }
-    breadcrumbs_navigator.push_back (make_pair (convert_to_string (chapter), filter_url_html_file_name_bible ("", book)));
+    breadcrumbs_navigator.push_back (pair (convert_to_string (chapter), filter_url_html_file_name_bible ("", book)));
     if (!is_last_chapter) {
-      breadcrumbs_navigator.push_back (make_pair ("»", filter_url_html_file_name_bible ("", book, chapter + 1)));
+      breadcrumbs_navigator.push_back (pair ("»", filter_url_html_file_name_bible ("", book, chapter + 1)));
     }
     // Optionally add a link for giving feedback by email.
     if (!feedback_email.empty ()) {
-      breadcrumbs_navigator.push_back (make_pair ("|", ""));
+      breadcrumbs_navigator.push_back (pair ("|", ""));
       string subject = translate ("Comment on") + " " + bible + " " + Database_Books::getEnglishFromId (book) + " " + convert_to_string (chapter);
       subject = filter_string_str_replace (" ", "%20", subject);
       string link = "mailto:" + feedback_email + "?Subject=" + subject;
-      breadcrumbs_navigator.push_back (make_pair (translate ("Feedback"), link));
+      breadcrumbs_navigator.push_back (pair (translate ("Feedback"), link));
     }
     htmlHeader.create (breadcrumbs_navigator);
     
@@ -141,7 +141,7 @@ void export_web_book (string bible, int book, bool log)
     // Save any images that were included.
     for (auto src : filter_text_chapter.image_sources) {
       string contents = database_bibleimages.get(src);
-      string filename = filter_url_create_path (directory, src);
+      string filename = filter_url_create_path ({directory, src});
       filter_url_file_put_contents(filename, contents);
     }
   }
@@ -167,9 +167,9 @@ void export_web_index (string bible, bool log)
   
   
   // Filenames for the web file and stylesheet.
-  string indexFile = filter_url_create_path (directory, "index.html");
-  string index00 = filter_url_create_path (directory, "00_index.html");
-  string filecss = filter_url_create_path (directory, "stylesheet.css");
+  string indexFile = filter_url_create_path ({directory, "index.html"});
+  string index00 = filter_url_create_path ({directory, "00_index.html"});
+  string filecss = filter_url_create_path ({directory, "stylesheet.css"});
   
   
   Database_Bibles database_bibles;
@@ -191,7 +191,7 @@ void export_web_index (string bible, bool log)
   // On top are the breadcrumbs, starting with a clickable Bible name.
   Html_Header htmlHeader = Html_Header (&html_text_rich_bible_index);
   htmlHeader.searchBackLink (backLinkPath + filter_url_html_file_name_bible (), translate("Go back to Bible"));
-  htmlHeader.create ({ make_pair (bible, filter_url_html_file_name_bible ())});
+  htmlHeader.create ({ pair (bible, filter_url_html_file_name_bible ())});
   
   
   // Prepare for the list of books in de html index file.
@@ -214,9 +214,9 @@ void export_web_index (string bible, bool log)
   
   
   // Lens image supporting search.
-  string lenspath = filter_url_create_root_path ("webbb", "lens.png");
+  string lenspath = filter_url_create_root_path ({"webbb", "lens.png"});
   string contents = filter_url_file_get_contents (lenspath);
-  lenspath = filter_url_create_path (directory, "lens.png");
+  lenspath = filter_url_create_path ({directory, "lens.png"});
   filter_url_file_put_contents (lenspath, contents);
 
   

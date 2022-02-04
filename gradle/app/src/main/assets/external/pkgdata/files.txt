@@ -305,7 +305,6 @@
 /html
 /i18n
 /i18n/i18n.sh
-/.idea
 /images
 /images/gitflag
 /images/index.html
@@ -850,7 +849,6 @@
 /sync
 /system
 /system/index.html
-/system/indonesianfree.html
 /tasks
 /tasks/holder
 /tbsx
@@ -1110,8 +1108,7 @@
 /utf8
 /utf8proc
 /utf8proc/LICENSE
-/utf8/ReleaseNotes
-/utf8/utf8cpp.html
+/utf8/readme.txt
 /valgrind
 /versification
 /versification/Catholic1.txt

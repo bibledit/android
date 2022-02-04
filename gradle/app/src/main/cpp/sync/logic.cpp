@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -331,7 +331,7 @@ int Sync_Logic::files_get_directory_checksum (string directory)
 // It does a recursive scan for the files.
 vector <string> Sync_Logic::files_get_files (string directory)
 {
-  directory = filter_url_create_root_path (directory);
+  directory = filter_url_create_root_path ({directory});
   vector <string> result;
   vector <string> paths;
   filter_url_recursive_scandir (directory, paths);
@@ -351,7 +351,7 @@ vector <string> Sync_Logic::files_get_files (string directory)
 // This returns the checksum of a $file in $directory.
 int Sync_Logic::files_get_file_checksum (string directory, string file)
 {
-  string path = filter_url_create_root_path (directory, file);
+  string path = filter_url_create_root_path ({directory, file});
   int checksum = filter_url_filesize (path);
   return checksum;
 }

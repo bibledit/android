@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ string filter_archive_zip_folder (string folder)
 // Returns the path to the compressed archive it created.
 string filter_archive_zip_folder_shell_internal (string folder)
 {
-  if (!file_or_dir_exists (folder)) return "";
+  if (!file_or_dir_exists (folder)) return string();
   string zippedfile = filter_url_tempfile () + ".zip";
 #ifdef HAVE_CLOUD
   string logfile = filter_url_tempfile () + ".log";
@@ -119,7 +119,7 @@ string filter_archive_unzip (string file)
 
 // Uncompresses a zip archive identified by $file.
 // Returns the path to the folder it created.
-string filter_archive_unzip_shell_internal (string file)
+string filter_archive_unzip_shell_internal ([[maybe_unused]] string file)
 {
   string folder = filter_url_tempfile ();
 #ifdef HAVE_CLOUD
@@ -128,14 +128,8 @@ string filter_archive_unzip_shell_internal (string file)
   string logfile = filter_url_tempfile () + ".log";
   file = filter_url_escape_shell_argument (file);
   string command = "unzip -o -d " + folder + " " + file + " > " + logfile + " 2>&1";
-  int return_var;
-#ifdef HAVE_IOS
-  // Crashes on iOS.
-  return_var = 1;
-#else
   // Run the command.
-  return_var = system (command.c_str());
-#endif
+  int return_var = system (command.c_str());
   if (return_var != 0) {
     filter_url_rmdir (folder);
     folder.clear();
@@ -144,11 +138,9 @@ string filter_archive_unzip_shell_internal (string file)
   } else {
     // Set free permissions after unzipping.
     command = "chmod -R 0777 " + folder;
-    int result = system (command.c_str ());
-    (void) result;
+    [[maybe_unused]] int result = system (command.c_str ());
   }
 #endif
-  (void) file;
   return folder;
 }
 
@@ -183,7 +175,7 @@ string filter_archive_unzip_miniz_internal (string zipfile)
       status = mz_zip_reader_file_stat (&zip_archive, i, &file_stat);
       if (status) {
 
-        string filename = filter_url_create_path (folder, file_stat.m_filename);
+        string filename = filter_url_create_path ({folder, file_stat.m_filename});
         // The miniz library returns Unix directory separators above.
         // So in case of Windows, convert them to Windows ones.
         string fixed_filename = filter_url_update_directory_separator_if_windows (filename);
@@ -378,7 +370,7 @@ string filter_archive_microtar_pack (string tarpath, string directory, vector <s
   // Iterate over the files.
   for (auto file : files) {
     // Full path.
-    string path = filter_url_create_path (directory, file);
+    string path = filter_url_create_path ({directory, file});
     // Skip directories.
     if (filter_url_is_dir (path)) continue;
     // Read the file's data.
@@ -439,11 +431,11 @@ string filter_archive_microtar_unpack (string tarball, string directory)
     // If the file contains a directory, ensure that directory exists.
     string dirname = filter_url_dirname (file);
     if (dirname != ".") {
-      dirname = filter_url_create_path (directory, dirname);
+      dirname = filter_url_create_path ({directory, dirname});
       if (!file_or_dir_exists (dirname)) filter_url_mkdir (dirname);
     }
     // Write the file's data.
-    filter_url_file_put_contents (filter_url_create_path (directory, file), data);
+    filter_url_file_put_contents (filter_url_create_path ({directory, file}), data);
   }
   
   // Close archive.

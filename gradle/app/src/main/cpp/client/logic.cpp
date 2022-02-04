@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -189,7 +189,7 @@ string client_logic_link_to_cloud (string path, string linktext)
 // Path to the file in the client files area that contains a list of USFM resources on the server.
 string client_logic_usfm_resources_path ()
 {
-  return filter_url_create_root_path (database_logic_databases (), "client", "usfm_resources.txt");
+  return filter_url_create_root_path ({database_logic_databases (), "client", "usfm_resources.txt"});
 }
 
 
@@ -227,7 +227,7 @@ string client_logic_get_username ()
 
 string client_logic_no_cache_resources_path ()
 {
-  return filter_url_create_root_path (database_logic_databases (), "client", "no_cache_resources.txt");
+  return filter_url_create_root_path ({database_logic_databases (), "client", "no_cache_resources.txt"});
 }
 
 

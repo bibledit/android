@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -259,7 +259,8 @@ void Database_Privileges::getBibleBook (string username, string bible, int book,
 }
 
 
-void Database_Privileges::getBible (string username, string bible, bool & read, bool & write)
+// Returns a tuple with <read, write> whether the $username has access to the given $bible.
+tuple <bool, bool> Database_Privileges::getBible (string username, string bible)
 {
   SqliteDatabase sql (database ());
   sql.add ("SELECT write FROM bibles WHERE username =");
@@ -268,7 +269,7 @@ void Database_Privileges::getBible (string username, string bible, bool & read, 
   sql.add (bible);
   sql.add (";");
   vector <string> result = sql.query () ["write"];
-  read = (!result.empty());
+  bool read = (!result.empty());
   sql.clear ();
   sql.add ("SELECT write FROM bibles WHERE username =");
   sql.add (username);
@@ -276,7 +277,8 @@ void Database_Privileges::getBible (string username, string bible, bool & read, 
   sql.add (bible);
   sql.add ("AND write;");
   result = sql.query () ["write"];
-  write = (!result.empty());
+  bool write = (!result.empty());
+  return make_tuple(read, write);
 }
 
 
@@ -427,7 +429,7 @@ const char * Database_Privileges::off ()
 
 string database_privileges_directory (const string & user)
 {
-  return filter_url_create_path (database_logic_databases (), "clients", user);
+  return filter_url_create_path ({database_logic_databases (), "clients", user});
 }
 
 
@@ -439,7 +441,7 @@ string database_privileges_file ()
 
 string database_privileges_client_path (const string & user)
 {
-  return filter_url_create_root_path (database_privileges_directory (user), database_privileges_file ());
+  return filter_url_create_root_path ({database_privileges_directory (user), database_privileges_file ()});
 }
 
 

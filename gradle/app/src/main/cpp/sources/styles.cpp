@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ void sources_styles_parse ()
 {
 
   // Read the C++ source files with the default style definitions.
-  string cpp_path = filter_url_create_root_path ("database", "styles.cpp");
+  string cpp_path = filter_url_create_root_path ({"database", "styles.cpp"});
   string contents = filter_url_file_get_contents (cpp_path);
   string cpp_start = "style_record styles_table [] =";
   string cpp_end = "};";
@@ -215,7 +215,7 @@ void sources_styles_parse ()
   }
   
   // Read the default stylesheet for Paratext projects.
-  string path = filter_url_create_root_path ("sources", "usfm.sty");
+  string path = filter_url_create_root_path ({"sources", "usfm.sty"});
   contents = filter_url_file_get_contents (path);
   vector <string> paratext_lines = filter_string_explode (contents, '\n');
   

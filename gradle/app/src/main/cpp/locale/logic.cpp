@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -77,14 +77,14 @@ string locale_logic_date_time (int seconds)
 // Return the available localizations.
 map <string, string> locale_logic_localizations ()
 {
-  string directory = filter_url_create_root_path ("locale");
+  string directory = filter_url_create_root_path ({"locale"});
   vector <string> files = filter_url_scandir (directory);
-  map <string, string> localizations = {make_pair ("", english ())};
+  map <string, string> localizations = {pair ("", english ())};
   for (auto file : files) {
     string suffix = filter_url_get_extension (file);
     if (suffix == "po") {
       string basename = filter_string_str_replace ("." + suffix, "", file);
-      string path = filter_url_create_path (directory, file);
+      string path = filter_url_create_path ({directory, file});
       string contents = filter_url_file_get_contents (path);
       string language = translate ("Unknown");
       vector <string> lines = filter_string_explode (contents, '\n');
@@ -95,7 +95,7 @@ map <string, string> locale_logic_localizations ()
           language = line;
         }
       }
-      localizations.insert (make_pair (basename, language));
+      localizations.insert (pair (basename, language));
     }
   }
   return localizations;
@@ -274,7 +274,7 @@ bool locale_logic_obfuscate_compare_internal (const string& a, const string& b)
 void locale_logic_obfuscate_initialize ()
 {
   // Load the contents of the obfuscation configuration file
-  string filename = filter_url_create_root_path ("obfuscate", "texts.txt");
+  string filename = filter_url_create_root_path ({"obfuscate", "texts.txt"});
   string contents = filter_url_file_get_contents (filename);
   vector <string> lines = filter_string_explode (contents, '\n');
   

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <database/bibles.h>
 #include <database/books.h>
 #include <database/state.h>
+#include <resource/logic.h>
 #include <filter/url.h>
 #include <filter/string.h>
 #include <filter/date.h>
@@ -34,25 +35,95 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 string Database_Bibles::mainFolder ()
 {
-  return filter_url_create_root_path ("bibles");
+  return filter_url_create_root_path ({"bibles"});
 }
 
 
 string Database_Bibles::bibleFolder (string bible)
 {
-  return filter_url_create_path (mainFolder (), bible);
+  return filter_url_create_path ({mainFolder (), bible});
 }
 
 
 string Database_Bibles::bookFolder (string bible, int book)
 {
-  return filter_url_create_path (bibleFolder (bible), convert_to_string (book));
+  return filter_url_create_path ({bibleFolder (bible), convert_to_string (book)});
 }
 
 
 string Database_Bibles::chapterFolder (string bible, int book, int chapter)
 {
-  return filter_url_create_path (bookFolder (bible, book), convert_to_string (chapter));
+  return filter_url_create_path ({bookFolder (bible, book), convert_to_string (chapter)});
+}
+
+
+// Indonesian Cloud Free
+// The root path for the Bibledit formatted TSI USFM directory tree.
+// It mimics Bibledit's native filesystem database directory structure.
+string Database_Bibles::icfURL ()
+{
+  return "https://alkitabkita.info/pengolah-usfm-tsi-untuk-bibledit/usfm-hasil/";
+}
+
+
+// Indonesian Cloud Free
+// The directory name of the Bibledit formatted TSI USFM.
+string Database_Bibles::icfBibleName ()
+{
+  return "AlkitabKita";
+}
+
+
+// Indonesian Cloud Free
+// The book indexes of the Bibledit formatted TSI USFM.
+vector <string> Database_Bibles::icfBooks ()
+{
+  // Taken from an index file of the Bibledit formatted TSI USFM directory.
+  string url = icfURL () + icfBibleName () + "/index";
+
+  // The fetched HTML is a string of indexes separated by commas.
+  string error;
+  string html = resource_logic_web_or_cache_get(url, error);
+  vector <string> books;
+  string delimiter = ",";
+
+  // Find each comma from the original fetched HTML string,
+  // push back the number before the comma into a vector,
+  // then erase that number and comma from the original fetched HTML string.
+  size_t pos = 0;
+  while ((pos = html.find(delimiter)) != std::string::npos) {
+    books.push_back (html.substr(0, pos));
+    html.erase(0, pos + delimiter.length());
+  }
+
+  // Push back the last Bible book index.
+  books.push_back (filter_string_trim (html));
+
+  return books;
+}
+
+
+// Indonesian Cloud Free
+// The chapter indexes of a chosen book of the Bibledit formatted TSI USFM.
+vector <string> Database_Bibles::icfChapters (int book)
+{
+  // Taken from an index file of the chosen book from the Bibledit formatted
+  // TSI USFM directory.
+  string url = icfURL () + icfBibleName () + "/" + convert_to_string(book) + "/index";
+
+  string error;
+  // The fetched HTML is a string of chapter count of the chosen book.
+  string html = resource_logic_web_or_cache_get(url, error);
+
+  vector <string> chapters;
+
+  // Iterate pushing back the iterated index until its equal to the fetched
+  // chapter count.
+  for (int i = 0; i < convert_to_int (html); i++) {
+    chapters.push_back (convert_to_string(i));
+  }
+
+  return chapters;
 }
 
 
@@ -60,6 +131,12 @@ string Database_Bibles::chapterFolder (string bible, int book, int chapter)
 vector <string> Database_Bibles::getBibles ()
 {
   vector <string> bibles = filter_url_scandir (mainFolder ());
+  // Indonesian Cloud Free
+  // Return only "AlkitabKita".
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    bibles.clear ();
+    bibles.push_back (icfBibleName ());
+  }
   return bibles;
 }
 
@@ -103,7 +180,7 @@ void Database_Bibles::storeChapter (string name, int book, int chapter_number, s
   // Increase the chapter identifier, and store the chapter data.
   int id = getChapterId (name, book, chapter_number);
   id++;
-  string file = filter_url_create_path (folder, convert_to_string (id));
+  string file = filter_url_create_path ({folder, convert_to_string (id)});
   filter_url_file_put_contents (file, chapter_text);
 
   // Update search fields.
@@ -126,6 +203,9 @@ vector <int> Database_Bibles::getBooks (string bible)
   string folder = bibleFolder (bible);
   vector <int> books;
   vector <string> files = filter_url_scandir (folder);
+  // Indonesian Cloud Free
+  // Read the books for TSI from the external database.
+  if (config_logic_indonesian_cloud_free_simple ()) files = icfBooks ();
   for (string book : files) {
     if (filter_string_is_numeric (book)) books.push_back (convert_to_int (book));
   }
@@ -157,6 +237,9 @@ vector <int> Database_Bibles::getChapters (string bible, int book)
   string folder = bookFolder (bible, book);
   vector <int> chapters;
   vector <string> files = filter_url_scandir (folder);
+  // Indonesian Cloud Free
+  // Read the chapters for TSI from the external database.
+  if (config_logic_indonesian_cloud_free_simple ()) files = icfChapters (book);
   for (string file : files) {
     if (filter_string_is_numeric (file)) chapters.push_back (convert_to_int (file));
   }
@@ -176,11 +259,21 @@ void Database_Bibles::deleteChapter (string bible, int book, int chapter)
 // Gets the chapter data as a string.
 string Database_Bibles::getChapter (string bible, int book, int chapter)
 {
+  // Indonesian Cloud Free
+  // Read the chapter data for TSI from the external database.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    string filename = "100000001";
+    string url = icfURL () + icfBibleName() + "/" + convert_to_string (book) +  "/" + convert_to_string (chapter) + "/" + filename;
+    string error;
+    string html = resource_logic_web_or_cache_get (url, error);
+    return html;
+  }
+  // Read the chapter data from the database.
   string folder = chapterFolder (bible, book, chapter);
   vector <string> files = filter_url_scandir (folder);
   if (!files.empty ()) {
     string file = files [files.size () - 1];
-    string data = filter_url_file_get_contents (filter_url_create_path (folder, file));
+    string data = filter_url_file_get_contents (filter_url_create_path ({folder, file}));
     // Remove trailing new line.
     data = filter_string_trim (data);
     return data;
@@ -209,7 +302,7 @@ int Database_Bibles::getChapterAge (string bible, int book, int chapter)
   vector <string> files = filter_url_scandir (folder);
   if (!files.empty ()) {
     string file = files [files.size() - 1];
-    string path = filter_url_create_path (folder, file);
+    string path = filter_url_create_path ({folder, file});
     int time = filter_url_file_modification_time (path);
     int now = filter_date_seconds_since_epoch ();
     return now - time;
@@ -234,7 +327,7 @@ void Database_Bibles::optimize ()
         // it is removed now, effectually reverting the chapter to an earlier version.
         vector <string> files2;
         for (string file : files) {
-          string path = filter_url_create_path (folder, file);
+          string path = filter_url_create_path ({folder, file});
           if (filter_url_filesize (path) == 0) {
             filter_url_unlink (path);
             Database_State::setExport (bible, 0, Export_Logic::export_needed);
@@ -248,7 +341,7 @@ void Database_Bibles::optimize ()
         if (!files2.empty()) files2.pop_back ();
         // Remove the remaining files. These are the older versions.
         for (string file : files2) {
-          string path = filter_url_create_path (folder, file);
+          string path = filter_url_create_path ({folder, file});
           filter_url_unlink (path);
         }
       }

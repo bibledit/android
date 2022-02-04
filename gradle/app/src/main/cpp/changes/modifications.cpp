@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -180,7 +180,6 @@ void changes_modifications ()
           
           // Get the sets of identifiers for that chapter, and set some variables.
           vector <Database_Modifications_Id> IdSets = database_modifications.getUserIdentifiers (user, bible, book, chapter);
-          //int referenceOldId = 0;
           int referenceNewId = 0;
           int newId = 0;
           int lastNewId = 0;
@@ -194,7 +193,6 @@ void changes_modifications ()
             
             if (restart) {
               changes_process_identifiers (&request, user, recipients, bible, book, chapter, referenceNewId, newId, email, change_count, modification_time_total, modification_time_count);
-              //referenceOldId = oldId;
               referenceNewId = newId;
               lastNewId = newId;
               restart = false;
@@ -248,7 +246,7 @@ void changes_modifications ()
     vector <string> changeNotificationUsers;
     vector <string> users = request.database_users ()->get_users ();
     for (auto user : users) {
-      if (access_bible_read (&request, bible, user)) {
+      if (AccessBible::Read (&request, bible, user)) {
         if (request.database_config_user()->getUserGenerateChangeNotifications (user)) {
           changeNotificationUsers.push_back (user);
         }
@@ -275,7 +273,7 @@ void changes_modifications ()
     timepath.append (filter_string_fill (convert_to_string (filter_date_numerical_minute (seconds)), 2, '0'));
     timepath.append (":");
     timepath.append (filter_string_fill (convert_to_string (filter_date_numerical_second (seconds)), 2, '0'));
-    string directory = filter_url_create_root_path ("revisions", bible, timepath);
+    string directory = filter_url_create_root_path ({"revisions", bible, timepath});
     filter_url_mkdir (directory);
     
     
@@ -284,8 +282,8 @@ void changes_modifications ()
     
     
     // Create online page with changed verses.
-    string versesoutputfile = filter_url_create_path (directory, "changed_verses.html");
-    filter_diff_run_file (filter_url_create_path (directory, "verses_old.txt"), filter_url_create_path (directory, "verses_new.txt"), versesoutputfile);
+    string versesoutputfile = filter_url_create_path ({directory, "changed_verses.html"});
+    filter_diff_run_file (filter_url_create_path ({directory, "verses_old.txt"}), filter_url_create_path ({directory, "verses_new.txt"}), versesoutputfile);
     
     
     // Storage for body of the email with the changes.
@@ -359,6 +357,8 @@ void changes_modifications ()
       // Split large emails up into parts.
       // The size of the parts has been found by checking the maximum size that the emailer will send,
       // then each part should remain well below that maximum size.
+      // The size was reduced even more later on:
+      // https://github.com/bibledit/cloud/issues/727
       vector <string> bodies;
       int counter = 0;
       string body;
@@ -367,7 +367,7 @@ void changes_modifications ()
         body.append (line);
         body.append ("</div>\n");
         counter++;
-        if (counter >= 200) {
+        if (counter >= 150) {
           bodies.push_back (body);
           body.clear ();
           counter = 0;
@@ -382,7 +382,7 @@ void changes_modifications ()
         vector <string> users = request.database_users ()->get_users ();
         for (auto & user : users) {
           if (request.database_config_user()->getUserBibleChangesNotification (user)) {
-            if (access_bible_read (&request, bible, user)) {
+            if (AccessBible::Read (&request, bible, user)) {
               if (!client_logic_client_enabled ()) {
                 email_schedule (user, subject, bodies[b]);
               }
@@ -402,11 +402,11 @@ void changes_modifications ()
 
   
   // Remove expired downloadable revisions.
-  string directory = filter_url_create_root_path ("revisions");
+  string directory = filter_url_create_root_path ({"revisions"});
   int now = filter_date_seconds_since_epoch ();
   bibles = filter_url_scandir (directory);
   for (auto &bible : bibles) {
-    string folder = filter_url_create_path (directory, bible);
+    string folder = filter_url_create_path ({directory, bible});
     int time = filter_url_file_modification_time (folder);
     int days = (now - time) / 86400;
     if (days > 31) {
@@ -414,7 +414,7 @@ void changes_modifications ()
     } else {
       vector <string> revisions = filter_url_scandir (folder);
       for (auto & revision : revisions) {
-        string path = filter_url_create_path (folder, revision);
+        string path = filter_url_create_path ({folder, revision});
         int time = filter_url_file_modification_time (path);
         int days = (now - time) / 86400;
         if (days > 31) {

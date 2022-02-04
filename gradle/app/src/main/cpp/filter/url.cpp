@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,63 +46,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 mbedtls_entropy_context filter_url_mbed_tls_entropy;
 mbedtls_ctr_drbg_context filter_url_mbed_tls_ctr_drbg;
 mbedtls_x509_crt filter_url_mbed_tls_cacert;
-
-
-vector <string> filter_url_scandir_internal (string folder)
-{
-  vector <string> files;
-  
-#ifdef HAVE_WINDOWS
-  
-  if (!folder.empty()) {
-    if (folder[folder.size() - 1] == '\\') {
-      folder = folder.substr(0, folder.size() - 1);
-    }
-    folder.append("\\*");
-    wstring wfolder = string2wstring(folder);
-    WIN32_FIND_DATA fdata;
-    HANDLE hFind = FindFirstFileW(wfolder.c_str(), &fdata);
-    if (hFind != INVALID_HANDLE_VALUE) {
-      do {
-        wstring wfilename(fdata.cFileName);
-        string name = wstring2string (wfilename);
-        if (name.substr(0, 1) != ".") {
-          files.push_back(name);
-        }
-      } while (FindNextFileW(hFind, &fdata) != 0);
-    }
-    FindClose(hFind);
-  }
-  
-#else
-  
-  DIR * dir = opendir (folder.c_str());
-  if (dir) {
-    struct dirent * direntry;
-    while ((direntry = readdir (dir)) != NULL) {
-      string name = direntry->d_name;
-      // Exclude short-hand directory names.
-      if (name == ".") continue;
-      if (name == "..") continue;
-      // Exclude developer temporal files.
-      if (name == ".deps") continue;
-      if (name == ".dirstamp") continue;
-      // Exclude macOS files.
-      if (name == ".DS_Store") continue;
-      // Store the name.
-      files.push_back (name);
-    }
-    closedir (dir);
-  }
-  sort (files.begin(), files.end());
-  
-#endif
-  
-  // Remove . and ..
-  files = filter_string_array_diff (files, {".", ".."});
-  
-  return files;
-}
 
 
 // Gets the base URL of current Bibledit installation.
@@ -162,29 +105,23 @@ void redirect_browser (void * webserver_request, string path)
 }
 
 
-// C++ replacement for the dirname function, see http://linux.die.net/man/3/dirname.
-// The BSD dirname is not thread-safe, see the implementation notes on $ man 3 dirname.
-string filter_url_dirname_internal (string url, const char * separator)
-{
-  if (!url.empty ()) {
-    if (url.find_last_of (separator) == url.length () - 1) {
-      // Remove trailing slash.
-      url = url.substr (0, url.length () - 1);
-    }
-    size_t pos = url.find_last_of (separator);
-    if (pos != string::npos) url = url.substr (0, pos);
-    else url = "";
-  }
-  if (url.empty ()) url = ".";
-  return url;
-}
-
-
-// Dirname routine for the operating system.
-// It uses the defined slash as the separator.
+// Dirname routine for the filesystem.
+// It uses the automatically defined separator as the directory separator.
 string filter_url_dirname (string url)
 {
-  return filter_url_dirname_internal (url, DIRECTORY_SEPARATOR);
+  // Remove possible trailing path slash.
+  if (!url.empty ()) {
+    const char separator = filesystem::path::preferred_separator;
+    if (url.find_last_of (separator) == url.length () - 1) {
+      url = url.substr (0, url.length () - 1);
+    }
+  }
+  // Standard library call for getting parent path.
+  url = filesystem::path(url).parent_path().string();
+  // The . is important in a few cases rather than an empty string.
+  if (url.empty ()) url = ".";
+  // Done.
+  return url;
 }
 
 
@@ -192,31 +129,37 @@ string filter_url_dirname (string url)
 // It uses the forward slash as the separator.
 string filter_url_dirname_web (string url)
 {
-  return filter_url_dirname_internal (url, "/");
-}
-
-
-// C++ replacement for the basename function, see http://linux.die.net/man/3/basename.
-// The BSD basename is not thread-safe, see the warnings in $ man 3 basename.
-string filter_url_basename_internal (string url, const char * separator)
-{
+  const char * separator = "/";
   if (!url.empty ()) {
+    // Remove trailing slash.
     if (url.find_last_of (separator) == url.length () - 1) {
-      // Remove trailing slash.
       url = url.substr (0, url.length () - 1);
     }
+    // Get dirname or empty string.
     size_t pos = url.find_last_of (separator);
-    if (pos != string::npos) url = url.substr (pos + 1);
+    if (pos != string::npos) url = url.substr (0, pos);
+    else url.clear();
   }
+  // Done.
   return url;
 }
 
 
-// Basename routine for the operating system.
-// It uses the defined slash as the separator.
+// Basename routine for the filesystem.
+// It uses the automatically defined separator as the directory separator.
 string filter_url_basename (string url)
 {
-  return filter_url_basename_internal (url, DIRECTORY_SEPARATOR);
+  // Remove possible trailing path slash.
+  if (!url.empty ()) {
+    const char separator = filesystem::path::preferred_separator;
+    if (url.find_last_of (separator) == url.length () - 1) {
+      url = url.substr (0, url.length () - 1);
+    }
+  }
+  // Standard library call for getting base name path.
+  url = filesystem::path(url).filename().string();
+  // Done.
+  return url;
 }
 
 
@@ -224,96 +167,101 @@ string filter_url_basename (string url)
 // It uses the forward slash as the separator.
 string filter_url_basename_web (string url)
 {
-  return filter_url_basename_internal (url, "/");
+  if (!url.empty ()) {
+    // Remove trailing slash.
+    const char * separator = "/";
+    if (url.find_last_of (separator) == url.length () - 1) {
+      url = url.substr (0, url.length () - 1);
+    }
+    // Keep last element: the base name.
+    size_t pos = url.find_last_of (separator);
+    if (pos != string::npos) url = url.substr (pos + 1);
+  }
+  // Done.
+  return url;
 }
 
 
 void filter_url_unlink (string filename)
 {
-#ifdef HAVE_WINDOWS
-  wstring wfilename = string2wstring (filename);
-  _wunlink (wfilename.c_str ());
-#else
-  unlink (filename.c_str ());
-#endif
+  try {
+    filesystem::path path (filename);
+    filesystem::remove (path);
+  } catch (...) { }
 }
 
 
 void filter_url_rename (const string& oldfilename, const string& newfilename)
 {
-#ifdef HAVE_WINDOWS
-  wstring woldfilename = string2wstring (oldfilename);
-  wstring wnewfilename = string2wstring (newfilename);
-  _wrename (woldfilename.c_str (), wnewfilename.c_str ());
-#else
-  rename (oldfilename.c_str (), newfilename.c_str ());
-#endif
+  try {
+    filesystem::path oldpath (oldfilename);
+    filesystem::path newpath (newfilename);
+    filesystem::rename(oldpath, newpath);
+  } catch (...) { }
 }
 
 
-// Creates a file path out of the components.
-string filter_url_create_path (string part1, string part2, string part3, string part4, string part5, string part6)
+// Creates a file path out of the parts.
+string filter_url_create_path (const vector<string>& parts)
 {
-  string path (part1);
-  if (part2.length()) path += DIRECTORY_SEPARATOR + part2;
-  if (part3.length()) path += DIRECTORY_SEPARATOR + part3;
-  if (part4.length()) path += DIRECTORY_SEPARATOR + part4;
-  if (part5.length()) path += DIRECTORY_SEPARATOR + part5;
-  if (part6.length()) path += DIRECTORY_SEPARATOR + part6;
-  return path;
+  // Empty path.
+  filesystem::path path;
+  for (size_t i = 0; i < parts.size(); i++) {
+    if (i == 0) path += parts[i]; // Append the part without directory separator.
+    else path /= parts[i]; // Append the directory separator and then the part.
+  }
+  // Done.
+  return path.string();
 }
 
 
-// Creates a file path out of the variable list of components, relative to the server's document root.
-string filter_url_create_root_path (string part1, string part2, string part3, string part4, string part5)
+// Creates a file path out of the variable list of components,
+// relative to the server's document root.
+string filter_url_create_root_path (const vector<string>& parts)
 {
-  string path = config_globals_document_root;
-  if (part1.length()) path += DIRECTORY_SEPARATOR + part1;
-  if (part2.length()) path += DIRECTORY_SEPARATOR + part2;
-  if (part3.length()) path += DIRECTORY_SEPARATOR + part3;
-  if (part4.length()) path += DIRECTORY_SEPARATOR + part4;
-  if (part5.length()) path += DIRECTORY_SEPARATOR + part5;
-  return path;
-}
+  // Construct path from the document root.
+  filesystem::path path (config_globals_document_root);
+  // Add the bits.
+  for (size_t i = 0; i < parts.size(); i++) {
+    string part = parts[i];
+    // At times a path is created from a URL.
+    // The URL likely starts with a slash, like this: /css/mouse.css
+    // When creating a path out of that, the path will become this: /css/mouse.css
+    // Such a path does not exist.
+    // The path that is wanted is something like this:
+    // /home/foo/bar/bibledit/css/mouse.css
+    // So remove that starting slash.
+    if (!part.empty()) if (part[0] == '/') part = part.erase(0, 1);
+    // Add the part, with a preceding path separator.
+    path /= part;
+  }
+  // Done.
+  return path.string();
 
-
-// If $path contains the global document root,
-// then this function removes it, and returns the result.
-string filter_url_remove_root_path (string path)
-{
-  size_t pos = path.find (config_globals_document_root);
-  if (pos != string::npos) path.erase (0, config_globals_document_root.length ());
-  if (!path.empty ()) if (path.substr (0, 1) == DIRECTORY_SEPARATOR) path.erase (0, 1);
-  return path;
 }
 
 
 // Gets the file / url extension, e.g. /home/joe/file.txt returns "txt".
 string filter_url_get_extension (string url)
 {
+  std::filesystem::path path (url);
   string extension;
-  size_t pos = url.find_last_of (".");
-  if (pos != string::npos) {
-    extension = url.substr (pos + 1);
+  if (path.has_extension()) {
+    // Get the extension with the dot, e.g. ".txt".
+    extension = path.extension().string();
+    // Wanted is the extension without the dot, e.g. "txt".
+    extension.erase (0, 1);
   }
   return extension;
 }
 
 
-// Returns true if the file at $url exists.
+// Returns true if the file or directory at $url exists.
 bool file_or_dir_exists (string url)
 {
-#ifdef HAVE_WINDOWS
-  // Function '_wstat' works with wide characters.
-  wstring wurl = string2wstring(url);
-  struct _stat buffer;
-  int result = _wstat (wurl.c_str (), &buffer);
-  return (result == 0);
-#else
-  // The 'stat' function works as expected on Linux.
-  struct stat buffer;
-  return (stat (url.c_str(), &buffer) == 0);
-#endif
+  filesystem::path path (url);
+  bool exists = filesystem::exists (path);
+  return exists;
 }
 
 
@@ -321,77 +269,32 @@ bool file_or_dir_exists (string url)
 // Creates parents where needed.
 void filter_url_mkdir (string directory)
 {
-  int status;
-#ifdef HAVE_WINDOWS
-  wstring wdirectory = string2wstring(directory);
-  status = _wmkdir (wdirectory.c_str());
-#else
-  status = mkdir (directory.c_str(), 0777);
-#endif
-  if (status != 0) {
-    vector <string> paths;
-    paths.push_back (directory);
-    directory = filter_url_dirname (directory);
-    while (directory.length () > 2) {
-      paths.push_back (directory);
-      directory = filter_url_dirname (directory);
-    }
-    reverse (paths.begin (), paths.end ());
-    for (unsigned int i = 0; i < paths.size (); i++) {
-#ifdef HAVE_WINDOWS
-      wstring wpathsi = string2wstring(paths[i]);
-      _wmkdir (wpathsi.c_str ());
-#else
-      mkdir (paths[i].c_str (), 0777);
-#endif
-    }
-  }
+  try {
+    std::filesystem::path path (directory);
+    std::filesystem::create_directories(path);
+  } catch (...) { }
 }
 
 
 // Removes directory recursively.
 void filter_url_rmdir (string directory)
 {
-  vector <string> files = filter_url_scandir_internal (directory);
-  for (auto path : files) {
-    path = filter_url_create_path (directory, path);
-    if (filter_url_is_dir(path)) {
-      filter_url_rmdir(path);
-    }
-#ifdef HAVE_WINDOWS
-	// Remove directory.
-	wstring wpath = string2wstring(path);
-	_wrmdir(wpath.c_str());
-	// Remove file.
-	filter_url_unlink(path);
-#else
-	// On Linux remove the directory or the file.
-    remove(path.c_str());
-#endif
-  }
-#ifdef HAVE_WINDOWS
-  wstring wdirectory = string2wstring(directory);
-  _wrmdir(wdirectory.c_str());
-  filter_url_unlink(directory);
-#else
-  remove(directory.c_str());
-#endif
+  try {
+    filesystem::path path (directory);
+    filesystem::remove_all(path);
+  } catch (...) { }
 }
 
 
 // Returns true is $path points to a directory.
 bool filter_url_is_dir (string path)
 {
-#ifdef HAVE_WINDOWS
-  // Function '_wstat', on Windows, works with wide characters.
-  wstring wpath = string2wstring (path);
-  struct _stat sb;
-  _wstat (wpath.c_str (), &sb);
-#else
-  struct stat sb;
-  stat (path.c_str (), &sb);
-#endif
-  return (sb.st_mode & S_IFMT) == S_IFDIR;
+  bool is_dir = false;
+  try {
+    filesystem::path p (path);
+    is_dir = filesystem::is_directory(p);
+  } catch (...) { }
+  return is_dir;
 }
 
 
@@ -409,19 +312,15 @@ bool filter_url_get_write_permission (string path)
 
 void filter_url_set_write_permission (string path)
 {
-#ifdef HAVE_WINDOWS
-  wstring wpath = string2wstring (path);
-  _wchmod (wpath.c_str (), _S_IREAD | _S_IWRITE);
-#else
-  chmod (path.c_str (), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH);
-#endif
+  filesystem::path p (path);
+  filesystem::permissions(p, filesystem::perms::owner_all | filesystem::perms::group_all | filesystem::perms::others_all);
 }
 
 
-// C++ rough equivalent for PHP's file_get_contents.
+// Get and returns the contents of $filename.
 string filter_url_file_get_contents(string filename)
 {
-  if (!file_or_dir_exists(filename)) return string();
+  if (!file_or_dir_exists (filename)) return string();
   try {
 #ifdef HAVE_WINDOWS
     wstring wfilename = string2wstring(filename);
@@ -442,7 +341,7 @@ string filter_url_file_get_contents(string filename)
 }
 
 
-// C++ rough equivalent for PHP's file_put_contents.
+// Puts the $contents into $filename.
 void filter_url_file_put_contents (string filename, string contents)
 {
   try {
@@ -510,8 +409,8 @@ void filter_url_dir_cp (const string & input, const string & output)
   // Check on all files in the input directory.
   vector <string> files = filter_url_scandir (input);
   for (auto & file : files) {
-    string input_path = filter_url_create_path (input, file);
-    string output_path = filter_url_create_path (output, file);
+    string input_path = filter_url_create_path ({input, file});
+    string output_path = filter_url_create_path ({output, file});
     if (filter_url_is_dir (input_path)) {
       // Create output directory.
       filter_url_mkdir (output_path);
@@ -525,26 +424,44 @@ void filter_url_dir_cp (const string & input, const string & output)
 }
 
 
-// A C++ equivalent for PHP's filesize function.
+// Returns the size of the file at $filename.
 int filter_url_filesize (string filename)
 {
-#ifdef HAVE_WINDOWS
-  wstring wfilename = string2wstring (filename);
-  struct _stat buf;
-  int rc = _wstat (wfilename.c_str (), &buf);
-#else
-  struct stat buf;
-  int rc = stat (filename.c_str (), &buf);
-#endif
-  return rc == 0 ? (int)(buf.st_size) : 0;
+  uintmax_t filesize = 0;
+  try {
+    filesystem::path p (filename);
+    filesize = filesystem::file_size(p);
+  } catch (...) { }
+  return static_cast<int>(filesize);
 }
 
 
 // Scans the directory for files it contains.
 vector <string> filter_url_scandir (string folder)
 {
-  vector <string> files = filter_url_scandir_internal (folder);
-  files = filter_string_array_diff (files, {"gitflag"});
+  vector <string> files;
+  try {
+    filesystem::path dir_path (folder);
+    for (auto const & directory_entry : filesystem::directory_iterator {dir_path})
+    {
+      // The full path.
+      filesystem::path entry_path = directory_entry.path();
+      // Get the path as relative to the directory.
+      filesystem::path relative_path = filesystem::relative(entry_path, dir_path);
+      // Get the name of the relative path.
+      string name = relative_path.string();
+      // Exclude developer temporal files.
+      if (name == ".deps") continue;
+      if (name == ".dirstamp") continue;
+      // Exclude macOS files.
+      if (name == ".DS_Store") continue;
+      // Exclude non-interesting files.
+      if (name == "gitflag") continue;
+      // Store the name.
+      files.push_back (name);
+    }
+  } catch (...) { }
+  sort (files.begin(), files.end());
   return files;
 }
 
@@ -554,7 +471,7 @@ void filter_url_recursive_scandir (string folder, vector <string> & paths)
 {
   vector <string> files = filter_url_scandir (folder);
   for (auto & file : files) {
-    string path = filter_url_create_path (folder, file);
+    string path = filter_url_create_path ({folder, file});
     paths.push_back (path);
     if (filter_url_is_dir (path)) {
       filter_url_recursive_scandir (path, paths);
@@ -607,9 +524,9 @@ string filter_url_tempfile (const char * directory)
 {
   string filename = convert_to_string (filter_date_seconds_since_epoch ()) + convert_to_string (filter_date_numerical_microseconds ()) + convert_to_string (filter_string_rand (10000000, 99999999));
   if (directory) {
-    filename = filter_url_create_path (directory, filename);
+    filename = filter_url_create_path ({directory, filename});
   } else {
-    filename = filter_url_create_root_path (filter_url_temp_dir (), filename);
+    filename = filter_url_create_root_path ({filter_url_temp_dir (), filename});
   }
   return filename;
 }
@@ -688,13 +605,12 @@ size_t filter_url_curl_write_function (void *ptr, size_t size, size_t count, voi
 // Sends a http GET request to the $url.
 // It returns the response from the server.
 // It writes any error to $error.
-string filter_url_http_get (string url, string& error, bool check_certificate)
+string filter_url_http_get (string url, string& error, [[maybe_unused]] bool check_certificate)
 {
   string response;
 #ifdef HAVE_CLIENT
   response = filter_url_http_request_mbed (url, error, {}, "", check_certificate);
 #else
-  (void) check_certificate;
   CURL *curl = curl_easy_init ();
   if (curl) {
     curl_easy_setopt (curl, CURLOPT_URL, url.c_str());
@@ -729,14 +645,12 @@ string filter_url_http_get (string url, string& error, bool check_certificate)
 // It posts the $values.
 // It returns the response from the server.
 // It writes any error to $error.
-string filter_url_http_post (string url, map <string, string> values, string& error, bool burst, bool check_certificate)
+string filter_url_http_post (string url, map <string, string> values, string& error, [[maybe_unused]] bool burst, [[maybe_unused]] bool check_certificate)
 {
   string response;
 #ifdef HAVE_CLIENT
-  (void) burst;
   response = filter_url_http_request_mbed (url, error, values, "", check_certificate);
 #else
-  (void) check_certificate;
   // Get a curl handle.
   CURL *curl = curl_easy_init ();
   if (curl) {
@@ -787,14 +701,14 @@ string filter_url_http_post (string url, map <string, string> values, string& er
 // It uploads $filename.
 // It returns the response from the server.
 // It writes any error to $error.
-string filter_url_http_upload (string url, map <string, string> values, string filename, string& error)
+string filter_url_http_upload ([[maybe_unused]] string url,
+                               [[maybe_unused]] map <string, string> values,
+                               [[maybe_unused]] string filename,
+                               string& error)
 {
   string response;
 
 #ifdef HAVE_CLIENT
-  (void) url;
-  (void) values;
-  (void) filename;
   error = "Not implemented in client configuration";
 #else
 
@@ -913,12 +827,12 @@ string filter_url_http_response_code_text (int code)
 
 
 // Downloads the file at $url, and stores it at $filename.
-void filter_url_download_file (string url, string filename, string& error, bool check_certificate)
+void filter_url_download_file (string url, string filename, string& error,
+                               [[maybe_unused]] bool check_certificate)
 {
 #ifdef HAVE_CLIENT
   filter_url_http_request_mbed (url, error, {}, filename, check_certificate);
 #else
-  (void) check_certificate;
   CURL *curl = curl_easy_init ();
   if (curl) {
     curl_easy_setopt (curl, CURLOPT_URL, url.c_str());
@@ -1534,7 +1448,7 @@ void filter_url_ssl_tls_initialize ()
   filter_url_display_mbed_tls_error (ret, NULL, false);
   // Wait until the trusted root certificates exist.
   // This is necessary as there's cases that the data is still being installed at this point.
-  string path = filter_url_create_root_path ("filter", "cas.crt");
+  string path = filter_url_create_root_path ({"filter", "cas.crt"});
   while (!file_or_dir_exists (path)) this_thread::sleep_for (chrono::milliseconds (100));
   // Read the trusted root certificates.
   ret = mbedtls_x509_crt_parse_file (&filter_url_mbed_tls_cacert, path.c_str ());

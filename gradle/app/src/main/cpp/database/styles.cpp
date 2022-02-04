@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -457,19 +457,19 @@ bool Database_Styles::hasWriteAccess (string user, string sheet)
 
 string Database_Styles::databasefolder ()
 {
-  return filter_url_create_root_path (database_logic_databases (), "styles");
+  return filter_url_create_root_path ({database_logic_databases (), "styles"});
 }
 
 
 string Database_Styles::sheetfolder (string sheet)
 {
-  return filter_url_create_path (databasefolder (), sheet);
+  return filter_url_create_path ({databasefolder (), sheet});
 }
 
 
 string Database_Styles::stylefile (string sheet, string marker)
 {
-  return filter_url_create_path (sheetfolder (sheet), marker);
+  return filter_url_create_path ({sheetfolder (sheet), marker});
 }
 
 

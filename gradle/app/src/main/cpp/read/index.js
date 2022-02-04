@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 var quill = undefined;
 var Delta = Quill.import ("delta");
-var verseReaderUniqueID = Math.floor (Math.random() * 100'000'000);
+var verseReaderUniqueID = Math.floor (Math.random() * 100000000);
 
 
 $ (document).ready (function ()
@@ -125,6 +125,7 @@ function navigationNewPassage ()
 function readchooseEditorLoadVerse ()
 {
   if ((readchooseNavigationBook != readchooseBook) || (readchooseNavigationChapter != readchooseChapter) || (readchooseNavigationVerse != readchooseVerse) ) {
+    publicFeedbackLoadNotesInRead ();
     readchooseBible = navigationBible;
     readchooseBook = readchooseNavigationBook;
     readchooseChapter = readchooseNavigationChapter;
@@ -230,8 +231,10 @@ function readchooseEditorLoadNonEditable ()
 
 function readchooseEditorStatus (text)
 {
-  $ ("#onestatus").empty ();
-  $ ("#onestatus").append (text);
+  if (document.body.contains(document.getElementById("onestatus"))) {
+    $ ("#onestatus").empty ();
+    $ ("#onestatus").append (text);
+  }
 }
 
 
@@ -445,3 +448,24 @@ function readverseCoordinatingTimeout ()
 }
 
 
+//
+//
+// Indonesian Cloud Free
+// Section for handling public feedbacks.
+//
+//
+
+
+function publicFeedbackLoadNotesInRead ()
+{
+  $.ajax ({
+    url: "/public/notes",
+    type: "GET",
+    data: { bible: readchooseBible, book: readchooseBook, chapter: readchooseChapter },
+    success: function (response) {
+      console.log(response);
+      $ ("#publicnotesinread").empty ();
+      $ ("#publicnotesinread").append (response);
+    },
+  });
+}

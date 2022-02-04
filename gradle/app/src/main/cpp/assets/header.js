@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,14 +56,16 @@ $ (document).ready (function () {
     // so that it can be called from other JavaScript files.
     // (2) By emptying the actual topbar.
     document.querySelectorAll('a').forEach((element) => {
-      element.href = topbarRemovalQueryAddition (element.href);
+      if (element.id !== "public-feedback") {
+        element.href = topbarRemovalQueryAddition (element.href);
+      }
     })
     document.querySelectorAll('form').forEach((element) => {
       element.action = topbarRemovalQueryAddition (element.action);
     })
     $ ('#topbar').empty ();
   };
-  if (typeof (fadingMenuDelay) != 'undefined' && fadingMenuDelay != 0) {
+  if (typeof (fadingMenuDelay) != 'undefined' && fadingMenuDelay != 0 && fadingMenuDelay !== 'false') {
     $ (".fadeout").delay (parseInt (fadingMenuDelay)).hide (2000);
   };
 

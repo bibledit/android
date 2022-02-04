@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <consistency/index.h>
 #include <database/config/general.h>
 #include <database/userresources.h>
+#include <database/cache.h>
 #include <developer/index.h>
 #include <edit/index.h>
 #include <edit/index.h>
@@ -92,7 +93,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <bb/logic.h>
 #include <ldap/logic.h>
 #include <jsonxx/jsonxx.h>
-#include <system/indonesianfree.h>
 #include <read/index.h>
 #include <filter/css.h>
 #include <resource/comparative9edit.h>
@@ -183,6 +183,7 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
   // Deal with a situation the user has access to the workspaces.
   if (workspace_index_acl (webserver_request)) {
     string label = translate ("Workspace");
+    if (config_logic_indonesian_cloud_free_simple ()) label = "Belajar";
     string tooltip;
     menu_logic_workspace_category (webserver_request, &tooltip);
     html.push_back (menu_logic_create_item (workspace_index_url (), label, true, tooltip, ""));
@@ -194,33 +195,64 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
   string color = Filter_Css::theme_picker (current_theme_index[0], current_theme_index[1]);
 
   if (!menu_logic_translate_category (webserver_request, &menutooltip).empty ()) {
-    html.push_back (menu_logic_create_item (menu_logic_translate_menu (), menu_logic_translate_text (), false, menutooltip, color));
-    tooltipbits.push_back (menu_logic_translate_text ());
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      html.push_back("");
+    }
+
+    if ((config_logic_default_bibledit_configuration () || config_logic_indonesian_cloud_free ()) && !(config_logic_indonesian_cloud_free_simple ())) {
+      html.push_back (menu_logic_create_item (menu_logic_translate_menu (), menu_logic_translate_text (), false, menutooltip, color));
+      tooltipbits.push_back (menu_logic_translate_text ());
+    }
   }
   
   if (!menu_logic_search_category (webserver_request, &menutooltip).empty ()) {
-    html.push_back (menu_logic_create_item (menu_logic_search_menu (), menu_logic_search_text (), false, menutooltip, color));
-    tooltipbits.push_back (menu_logic_search_text ());
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      html.push_back("");
+    }
+
+    if ((config_logic_default_bibledit_configuration () || config_logic_indonesian_cloud_free ()) && !(config_logic_indonesian_cloud_free_simple ())) {
+      html.push_back (menu_logic_create_item (menu_logic_search_menu (), menu_logic_search_text (), false, menutooltip, color));
+      tooltipbits.push_back (menu_logic_search_text ());
+    }
   }
 
   if (!menu_logic_tools_category (webserver_request, &menutooltip).empty ()) {
-    html.push_back (menu_logic_create_item (menu_logic_tools_menu (), menu_logic_tools_text (), false, menutooltip, color));
-    tooltipbits.push_back (menu_logic_tools_text ());
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      html.push_back("");
+    }
+
+    if ((config_logic_default_bibledit_configuration () || config_logic_indonesian_cloud_free ()) && !(config_logic_indonesian_cloud_free_simple ())) {
+      html.push_back (menu_logic_create_item (menu_logic_tools_menu (), menu_logic_tools_text (), false, menutooltip, color));
+      tooltipbits.push_back (menu_logic_tools_text ());
+    }
   }
 
   if (!menu_logic_settings_category (webserver_request, &menutooltip).empty ()) {
-    html.push_back (menu_logic_create_item (menu_logic_settings_menu (), menu_logic_settings_text (), false, menutooltip, color));
-    tooltipbits.push_back (menu_logic_settings_text ());
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      html.push_back (menu_logic_create_item (personalize_index_url (), "Pengaturan", true, "", color));
+    }
+
+
+    if ((config_logic_default_bibledit_configuration () || config_logic_indonesian_cloud_free ()) && !(config_logic_indonesian_cloud_free_simple ())) {
+      html.push_back (menu_logic_create_item (menu_logic_settings_menu (), menu_logic_settings_text (), false, menutooltip, color));
+      tooltipbits.push_back (menu_logic_settings_text ());
+    }
   }
   
   if (!menu_logic_help_category (webserver_request).empty ()) {
-    html.push_back (menu_logic_create_item ("help/index", menu_logic_help_text (), true, menu_logic_help_text (), color));
-    tooltipbits.push_back (menu_logic_help_text ());
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      html.push_back("");
+    }
+
+    if ((config_logic_default_bibledit_configuration () || config_logic_indonesian_cloud_free ()) && !(config_logic_indonesian_cloud_free_simple ())) {
+      html.push_back (menu_logic_create_item ("help/index", menu_logic_help_text (), true, menu_logic_help_text (), color));
+      tooltipbits.push_back (menu_logic_help_text ());
+    }
   }
 
-  // When a user is not logged in, or a guest,
+#ifdef HAVE_CLOUD
+  // When a user is not logged in, or if a guest is logged in,
   // put the public feedback into the main menu, rather than in a sub menu.
-#ifndef HAVE_CLIENT
   if (menu_logic_public_or_guest (webserver_request)) {
     if (!public_logic_bibles (webserver_request).empty ()) {
       html.push_back (menu_logic_create_item (public_index_url (), menu_logic_public_feedback_text (), true, "", ""));
@@ -300,20 +332,16 @@ string menu_logic_basic_categories (void * webserver_request)
   }
   
   if (personalize_index_acl (webserver_request)) {
-    if (config_logic_default_bibledit_configuration ()) {
-      html.push_back (menu_logic_create_item (personalize_index_url (), "⋮", true, "", color));
-    }
-    if (config_logic_indonesian_cloud_free ()) {
-      html.push_back (menu_logic_create_item (system_indonesianfree_url (), "⋮", true, "", color));
-    }
+    html.push_back (menu_logic_create_item (personalize_index_url (), "⋮", true, "", color));
   }
 
   // When a user is not logged in, or a guest,
   // put the public feedback into the main menu, rather than in a sub menu.
   // This is the default configuration.
   bool public_feedback_possible = true;
-  // In the Indonesian free Cloud, there's no public feedback possible,
+  // In the Indonesian Cloud Free, there's no public feedback possible,
   // since the aim is to keep things easy to understand for beginners.
+  // Except when it's the Indonesian Cloud Free Simple.
   if (config_logic_indonesian_cloud_free ()) {
     public_feedback_possible = false;
   }
@@ -360,7 +388,19 @@ string menu_logic_workspace_category (void * webserver_request, string * tooltip
   // The user's role should be sufficiently high.
   if (workspace_organize_acl (webserver_request)) {
     Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
+
     string activeWorkspace = request->database_config_user()->getActiveWorkspace ();
+
+    // Indonesian Cloud Free
+    // The same method explained in ./ipc/focus.cpp line 37 to 44.
+    if (config_logic_indonesian_cloud_free_simple ()) {
+      string filename = request->remote_address;
+      if (filename.find("::ffff:") != string::npos) filename.erase(0,7).append("_aw");
+      if (database_filebased_cache_exists (filename)) {
+        activeWorkspace = database_filebased_cache_get (filename);
+      }
+    }
+
     vector <string> workspaces = workspace_get_names (webserver_request);
     for (size_t i = 0; i < workspaces.size(); i++) {
       string item = menu_logic_create_item (workspace_index_url () + "?bench=" + convert_to_string (i), workspaces[i], true, "", "");
@@ -381,7 +421,7 @@ string menu_logic_workspace_category (void * webserver_request, string * tooltip
 
 string menu_logic_translate_category (void * webserver_request, string * tooltip)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
+  [[maybe_unused]] Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
 
   vector <string> html;
   vector <string> labels;
@@ -444,7 +484,6 @@ string menu_logic_translate_category (void * webserver_request, string * tooltip
     }
   }
 #endif
-  (void) request;
   
   if (!html.empty ()) {
     html.insert (html.begin (), menu_logic_translate_text () + ": ");
@@ -648,9 +687,9 @@ string menu_logic_tools_category (void * webserver_request, string * tooltip)
 
 string menu_logic_settings_category (void * webserver_request, string * tooltip)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
+  [[maybe_unused]] Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
 
-  bool demo = config_logic_demo_enabled ();
+  [[maybe_unused]] bool demo = config_logic_demo_enabled ();
   
   // The labels that may end up in the menu.
   string bibles = menu_logic_bible_manage_text ();
@@ -892,9 +931,6 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
     }
 
   }
-
-  (void) request;
-  (void) demo;
   
   if (!html.empty ()) {
     string user = request->session_logic ()->currentUser ();
@@ -906,7 +942,7 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
 }
 
 
-string menu_logic_settings_resources_category (void * webserver_request)
+string menu_logic_settings_resources_category ([[maybe_unused]] void * webserver_request)
 {
   vector <string> html;
   
@@ -957,9 +993,6 @@ string menu_logic_settings_resources_category (void * webserver_request)
     html.push_back (menu_logic_create_item (resource_comparative9edit_url (), translate ("Comparative"), true, "", ""));
   }
 #endif
-
-
-  (void) webserver_request;
   
   if (!html.empty ()) {
     html.insert (html.begin (), menu_logic_resources_text () + ": ");

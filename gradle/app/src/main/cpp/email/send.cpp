@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <filter/md5.h>
 #include <filter/date.h>
-#ifndef HAVE_CLIENT
+#ifdef HAVE_CLOUD
 #include <curl/curl.h>
 #endif
 #include <config/globals.h>
@@ -70,9 +70,9 @@ void email_send ()
 
     // In the Cloud, if this username was not found, it could be that the email was addressed to a non-user,
     // and that the To: address was actually contained in the username.
-    if (email == "") {
+    if (email.empty()) {
       email = username;
-      username = "";
+      username.clear();
     }
     
     // In the Cloud, if the email address validates, ok, else remove this mail from the queue and log the action.
@@ -170,7 +170,11 @@ static size_t payload_source (void *ptr, size_t size, size_t nmemb, void *userp)
 // Sends the email as specified by the parameters.
 // If all went well, it returns an empty string.
 // In case of failure, it returns the error message.
-string email_send (string to_mail, string to_name, string subject, string body, bool verbose)
+string email_send ([[maybe_unused]] string to_mail,
+                   string to_name,
+                   string subject,
+                   string body,
+                   [[maybe_unused]] bool verbose)
 {
   // Truncate huge emails because libcurl crashes on it.
   size_t length = body.length ();
@@ -186,9 +190,6 @@ string email_send (string to_mail, string to_name, string subject, string body, 
   if (!client_logic_client_enabled ()) {
     return "";
   }
-  
-  (void) verbose;
-  (void) to_mail;
 
   Webserver_Request request;
   Sync_Logic sync_logic = Sync_Logic (&request);
@@ -273,8 +274,10 @@ string email_send (string to_mail, string to_name, string subject, string body, 
 
   curl = curl_easy_init();
   /* Set username and password */
-  curl_easy_setopt(curl, CURLOPT_USERNAME, Database_Config_General::getMailSendUsername().c_str());
-  curl_easy_setopt(curl, CURLOPT_PASSWORD, Database_Config_General::getMailSendPassword().c_str());
+  string username = Database_Config_General::getMailSendUsername();
+  string password = Database_Config_General::getMailSendPassword();
+  curl_easy_setopt(curl, CURLOPT_USERNAME, username.c_str());
+  curl_easy_setopt(curl, CURLOPT_PASSWORD, password.c_str());
 
   /* This is the URL for your mailserver. Note the use of port 587 here,
    * instead of the normal SMTP port (25). Port 587 is commonly used for

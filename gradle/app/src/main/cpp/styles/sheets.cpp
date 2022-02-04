@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ string Styles_Sheets::get_location (string sheet, bool editor)
   else path = "basic";
   path.append (sheet);
   path.append (".css");
-  path = filter_url_create_root_path ("dyncss", path);
+  path = filter_url_create_root_path ({"dyncss", path});
   return path;
 }
 

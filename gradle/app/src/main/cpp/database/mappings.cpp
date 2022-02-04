@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ void Database_Mappings::create2 ()
 // Import the default mappings that come with Bibledit.
 void Database_Mappings::defaults ()
 {
-  string folder = filter_url_create_root_path ("mapping");
+  string folder = filter_url_create_root_path ({"mapping"});
   vector <string> files = filter_url_scandir (folder);
   for (auto & file : files) {
     string name (file);
@@ -89,7 +89,7 @@ void Database_Mappings::defaults ()
     if (extension != "txt") continue;
     name = name.substr (0, strlen (name.c_str()) - 4);
     name = filter_string_str_replace ("_", " ", name);
-    string path = filter_url_create_path (folder, file);
+    string path = filter_url_create_path ({folder, file});
     string data = filter_url_file_get_contents (path);
     import (name, data);
   }

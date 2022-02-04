@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -159,16 +159,16 @@ void demo_clean_data ()
   
   // Set the site language to "Default"
   Database_Config_General::setSiteLanguage ("");
-  
-  
+
+
   // Ensure the default users are there.
   map <string, int> users = {
-    make_pair ("guest", Filter_Roles::guest ()),
-    make_pair ("member", Filter_Roles::member ()),
-    make_pair ("consultant", Filter_Roles::consultant ()),
-    make_pair ("translator", Filter_Roles::translator ()),
-    make_pair ("manager", Filter_Roles::manager ()),
-    make_pair (session_admin_credentials (), Filter_Roles::admin ())
+    pair ("guest", Filter_Roles::guest ()),
+    pair ("member", Filter_Roles::member ()),
+    pair ("consultant", Filter_Roles::consultant ()),
+    pair ("translator", Filter_Roles::translator ()),
+    pair ("manager", Filter_Roles::manager ()),
+    pair (session_admin_credentials (), Filter_Roles::admin ())
   };
   for (auto & element : users) {
     if (!request.database_users ()->usernameExists (element.first)) {
@@ -179,19 +179,34 @@ void demo_clean_data ()
   
   
   // Create / update sample Bible.
-  demo_create_sample_bible ();
-  
-  
+  if (config_logic_default_bibledit_configuration ()) {
+    demo_create_sample_bible ();
+  }
+
+
   // Create sample notes.
-  demo_create_sample_notes (&request);
-  
+  if (config_logic_default_bibledit_configuration ()) {
+    demo_create_sample_notes (&request);
+  }
+
   
   // Create samples for the workspaces.
-  demo_create_sample_workspaces (&request);
+  if (config_logic_default_bibledit_configuration ()) {
+    demo_create_sample_workspaces (&request);
+  }
   
   
   // Set navigator to John 3:16.
-  Ipc_Focus::set (&request, 43, 3, 16);
+  if (config_logic_default_bibledit_configuration ()) {
+    Ipc_Focus::set (&request, 43, 3, 16);
+  }
+
+
+  // Indonesian Cloud Free
+  // Set navigator to John 1:1.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    Ipc_Focus::set (&request, 43, 1, 1);
+  }
   
   
   // Set and/or trim resources to display.
@@ -253,10 +268,11 @@ void demo_create_sample_bible ()
     // * and the file needs an update.
     size_t pos = file.find(demo_sample_bible_name());
     if (pos == string::npos) {
-      file = filter_string_str_replace("Sample", demo_sample_bible_name(), file);
+      string filename = "Sample";
+      file = filter_string_str_replace(filename, demo_sample_bible_name(), file);
     }
     // Proceed with the path.
-    file = filter_url_create_root_path (file);
+    file = filter_url_create_root_path ({file});
     string path = filter_url_dirname (file);
     if (!file_or_dir_exists (path)) filter_url_mkdir (path);
     filter_url_file_put_contents (file, data);
@@ -280,14 +296,14 @@ void demo_prepare_sample_bible ()
   // Create a new sample Bible.
   database_bibles.createBible (demo_sample_bible_name ());
   // Location of the source USFM files for the sample Bible.
-  string directory = filter_url_create_root_path ("demo");
+  string directory = filter_url_create_root_path ({"demo"});
   vector <string> files = filter_url_scandir (directory);
   for (auto file : files) {
     // Process only USFM files, skipping others.
     if (filter_url_get_extension (file) == "usfm") {
       cout << file << endl;
       // Read the USFM and clean it up.
-      file = filter_url_create_path (directory, file);
+      file = filter_url_create_path ({directory, file});
       string usfm = filter_url_file_get_contents (file);
       usfm = filter_string_collapse_whitespace (usfm);
       // Import the USFM into the sample Bible.
@@ -331,11 +347,10 @@ void demo_prepare_sample_bible ()
   search_logic_delete_bible (demo_sample_bible_name ());
   // Clean up the remaining artifacts that were created along the way.
 #ifdef HAVE_CLOUD
-  int result;
+  [[maybe_unused]] int result;
   result = system ("find . -path '*logbook/15*' -delete");
   result = system ("find . -name state.sqlite -delete");
   result = system ("find . -name 'Sample.*' -delete");
-  (void) result;
 #endif
 }
 
@@ -380,9 +395,9 @@ void demo_create_sample_workspaces (void * webserver_request)
     widths [i] = width;
   }
   map <int, string> row_heights = {
-    make_pair (0, "90%"),
-    make_pair (1, ""),
-    make_pair (2, "")
+    pair (0, "90%"),
+    pair (1, ""),
+    pair (2, "")
   };
   
   request->database_config_user()->setActiveWorkspace ("USFM");
@@ -403,16 +418,62 @@ void demo_create_sample_workspaces (void * webserver_request)
 vector <string> demo_logic_default_resources ()
 {
   vector <string> resources;
-  // Add a few resources that are also safe in an obfuscated version.
-  resources = {
-    demo_sample_bible_name (),
-    resource_logic_violet_divider ()
-  };
-  // For demo purposes, add some more resources to show-case some of the capabilities.
-  if (config_logic_demo_enabled ()) {
-    resources.push_back (resource_external_biblehub_interlinear_name ());
-    resources.push_back (resource_external_net_bible_name ());
-    resources.push_back (SBLGNT_NAME);
+  if (config_logic_default_bibledit_configuration ()) {
+    // Add a few resources that are also safe in an obfuscated version.
+    resources = {
+      demo_sample_bible_name (),
+      resource_logic_violet_divider ()
+    };
+    // For demo purposes, add some more resources to show-case some of the capabilities.
+    if (config_logic_demo_enabled ()) {
+      resources.push_back (resource_external_biblehub_interlinear_name ());
+      resources.push_back (resource_external_net_bible_name ());
+      resources.push_back (SBLGNT_NAME);
+    }
+  }
+  // Add specific resources for Indonesian Cloud Free Simple/Demo version.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    resources.clear ();
+    resources = {
+      "AlkitabKita",
+      resource_logic_orange_divider (),
+      // Hebrew original language resources.
+      resource_external_biblehub_interlinear_name (),
+      HEBREW_ETCBC4_NAME,
+      OSHB_NAME,
+      resource_logic_orange_divider (),
+      // Greek original language resources.
+      // BYZ 2018 - not yet available
+      SBLGNT_NAME,
+      resource_logic_orange_divider (),
+      // Literal translations resources.
+      "MILT2008",
+      "TB1974",
+      "KitabSuciInjil2011",
+      "AYT Maret2021",
+      "ESV2001",
+      KJV_LEXICON_NAME,
+      // World English Bible - not yet available
+      resource_logic_orange_divider (),
+      // Modified literal translations resources.
+      "NET Bible",
+      // New International Version - not yet available
+      // Expanded Bible - not yet available
+      // Amplified Bible - not yet available
+      // Worldwide English New Testament - not yet available
+      // Dynamic equivalence translations resources.
+      // Good News Translation - not yet available
+      "BIS1985",
+      "TMV1987",
+      "NLT1996",
+      // Contemporary English Version - not yet available
+      // God's Word for the Nations - not yet available
+      "FreeBibleVersion2021",
+      // Parafrase translations resources.
+      // J.B. Phillips NT - not yet available
+      // The Living Bible - not yet available
+      "FAYH1989"
+    };
   }
   // Done.
   return resources;

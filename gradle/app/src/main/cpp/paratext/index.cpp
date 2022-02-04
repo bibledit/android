@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -124,7 +124,7 @@ string paratext_index (void * webserver_request)
   
   // Paratext Project.
   string paratext_project = Database_Config_Bible::getParatextProject (bible);
-  if (!file_or_dir_exists (filter_url_create_path (paratext_folder, paratext_project))) paratext_project.clear ();
+  if (!file_or_dir_exists (filter_url_create_path ({paratext_folder, paratext_project}))) paratext_project.clear ();
   
   if (request->query.count ("paratextproject")) {
     string project = request->query["paratextproject"];

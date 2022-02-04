@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,25 +54,23 @@ bool journal_index_acl (void * webserver_request)
 }
 
 
-string render_journal_entry (string filename, int userlevel)
+string render_journal_entry (string filename, [[maybe_unused]] int userlevel)
 {
   // Sample filename: "146495380700927147".
   // The first 10 characters are the number of seconds past the Unix epoch,
   // followed by the number of microseconds within the current second.
 
   // Get the contents of the file.
-  string path = filter_url_create_path (Database_Logs::folder (), filename);
+  string path = filter_url_create_path ({Database_Logs::folder (), filename});
   string entry = filter_url_file_get_contents (path);
   
   // Deal with the user-level of the entry.
-  int entryLevel = convert_to_int (entry);
+  [[maybe_unused]] int entryLevel = convert_to_int (entry);
   // Cloud: Only render journal entries of a sufficiently high level.
   // Client: Render journal entries of any level.
 #ifndef HAVE_CLIENT
-  if (entryLevel > userlevel) return "";
+  if (entryLevel > userlevel) return string();
 #endif
-  (void) userlevel;
-  (void) entryLevel;
   // Remove the user's level.
   entry.erase (0, 2);
   
@@ -134,7 +132,7 @@ string journal_index (void * webserver_request)
   if (!expansion.empty ()) {
     // Get file path.
     expansion = filter_url_basename_web (expansion);
-    string path = filter_url_create_path (Database_Logs::folder (), expansion);
+    string path = filter_url_create_path ({Database_Logs::folder (), expansion});
     // Get contents of the record.
     expansion = filter_url_file_get_contents (path);
     // Remove the user's level.

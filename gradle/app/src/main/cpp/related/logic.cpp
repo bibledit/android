@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,9 +109,9 @@ vector <Passage> related_logic_get_verses (const vector <Passage> & input)
     xml_document parallel_document;
     xml_document quotation_document;
     if (is_ot || is_nt) {
-      string path = filter_url_create_root_path ("related", "parallel-passages-" + booktype + ".xml");
+      string path = filter_url_create_root_path ({"related", "parallel-passages-" + booktype + ".xml"});
       parallel_document.load_file (path.c_str());
-      path = filter_url_create_root_path ("related", "ot-quotations-in-nt.xml");
+      path = filter_url_create_root_path ({"related", "ot-quotations-in-nt.xml"});
       quotation_document.load_file (path.c_str());
     }
 

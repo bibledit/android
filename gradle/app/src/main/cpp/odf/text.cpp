@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,12 +49,12 @@ Odf_Text::Odf_Text (string bible_in)
   image_counter = 0;
 
   // Unpack the .odt template.
-  string templateOdf = filter_url_create_root_path ("odf", "template.odt");
+  string templateOdf = filter_url_create_root_path ({"odf", "template.odt"});
   unpackedOdtFolder = filter_archive_unzip (templateOdf);
-  filter_url_rmdir (filter_url_create_path (unpackedOdtFolder, "Configurations2"));
+  filter_url_rmdir (filter_url_create_path ({unpackedOdtFolder, "Configurations2"}));
   // Create the Pictures folder.
   // pictures_folder = filter_url_create_path (unpackedOdtFolder, "Pictures");
-  //filter_url_mkdir(pictures_folder);
+  //filter_url_mkdir (pictures_folder);
   
   initialize_content_xml ();
   initialize_styles_xml ();
@@ -1158,14 +1158,14 @@ void Odf_Text::save (string name)
 {
   // Create the content.xml file.
   // No formatting because some white space is processed.
-  string contentXmlPath = filter_url_create_path (unpackedOdtFolder, "content.xml");
+  string contentXmlPath = filter_url_create_path ({unpackedOdtFolder, "content.xml"});
   stringstream contentXml;
   contentDom.print (contentXml, "", format_raw);
   filter_url_file_put_contents (contentXmlPath, contentXml.str ());
 
   // Create the styles.xml file.
   // No formatting because some white space is processed.
-  string stylesXmlPath = filter_url_create_path (unpackedOdtFolder, "styles.xml");
+  string stylesXmlPath = filter_url_create_path ({unpackedOdtFolder, "styles.xml"});
   stringstream stylesXml;
   stylesDom.print (stylesXml, "", format_raw);
   filter_url_file_put_contents (stylesXmlPath, stylesXml.str ());
@@ -1183,10 +1183,8 @@ void Odf_Text::save (string name)
 //     <draw:image xlink:href="../bibleimage2.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:filter-name="&lt;All formats&gt;" draw:mime-type="image/png" />
 //   </draw:frame>
 // </text:p>
-void Odf_Text::add_image (string alt, string src, string caption)
+void Odf_Text::add_image ([[maybe_unused]] string alt, string src, string caption)
 {
-  (void) alt;
-  
   // The parent paragraph for the image has the "p" style.
   const char * style = "p";
   current_text_p_node = office_text_node.append_child ("text:p");
@@ -1199,7 +1197,7 @@ void Odf_Text::add_image (string alt, string src, string caption)
   int image_width_pixels = 0, image_height_pixels = 0;
   {
     Database_BibleImages database_bibleimages;
-    string path = filter_url_create_root_path (filter_url_temp_dir (), "image_contents");
+    string path = filter_url_create_root_path ({filter_url_temp_dir (), "image_contents"});
     string contents = database_bibleimages.get(src);
     filter_url_file_put_contents(path, contents);
     filter_image_get_sizes (path, image_width_pixels, image_height_pixels);

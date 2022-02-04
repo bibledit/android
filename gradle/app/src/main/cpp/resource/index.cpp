@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -65,6 +65,14 @@ string resource_index (void * webserver_request)
   
   
   vector <string> resources = request->database_config_user()->getActiveResources ();
+
+
+  // Indonesian Cloud Free
+  // Always set the default selection of resources for Indonesian Cloud Free
+  // Simple/Demo version.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    resources = demo_logic_default_resources ();
+  }
   
   
   // If no resources are displayed, set a default selection of them.
@@ -106,6 +114,10 @@ string resource_index (void * webserver_request)
     // In that type of Cloud, all resources for all users are one and the same setting.
     int level = request->session_logic()->currentLevel();
     can_organize_active_resources = (level >= Filter_Roles::manager());
+  }
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    // In the Indonesian Cloud Free Simple version, the organize zone is not enabled.
+    can_organize_active_resources = false;
   }
   if (can_organize_active_resources) view.enable_zone("organize");
   

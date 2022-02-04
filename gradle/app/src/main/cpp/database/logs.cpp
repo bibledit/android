@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ void Database_Logs::log (string description, int level)
   // Save this logbook entry to a filename with seconds and microseconds.
   string seconds = convert_to_string (filter_date_seconds_since_epoch ());
   string time = seconds + filter_string_fill (convert_to_string (filter_date_numerical_microseconds ()), 8, '0');
-  string file = filter_url_create_path (folder (), time);
+  string file = filter_url_create_path ({folder (), time});
   // The microseconds granularity depends on the platform.
   // On Windows it is lower than on Linux.
   // There may be the rare case of more than one entry per file.
@@ -108,7 +108,7 @@ void Database_Logs::rotate ()
   
   bool filtered_entries = false;
   for (unsigned int i = 0; i < files.size(); i++) {
-    string path = filter_url_create_path (directory, files [i]);
+    string path = filter_url_create_path ({directory, files [i]});
 
     // Limit the number of journal entries.
     if ((int)i < limitfilecount) {
@@ -178,7 +178,7 @@ void Database_Logs::clear ()
   string directory = folder ();
   vector <string> files = filter_url_scandir (directory);
   for (auto file : files) {
-    filter_url_unlink (filter_url_create_path (directory, file));
+    filter_url_unlink (filter_url_create_path ({directory, file}));
   }
   log ("The journal was cleared");
 }
@@ -187,5 +187,5 @@ void Database_Logs::clear ()
 // The folder where to store the records.
 string Database_Logs::folder ()
 {
-  return filter_url_create_root_path ("logbook");
+  return filter_url_create_root_path ({"logbook"});
 }

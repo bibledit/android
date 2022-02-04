@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ map <string, string> database_config_general_cache;
 
 string Database_Config_General::file (const char * key)
 {
-  return filter_url_create_root_path (database_logic_databases (), "config", "general", key);
+  return filter_url_create_root_path ({database_logic_databases (), "config", "general", key});
 }
 
 
@@ -278,6 +278,11 @@ const char * general_site_language_key ()
 }
 string Database_Config_General::getSiteLanguage ()
 {
+  // Indonesian Cloud Free
+  // The default language for the interface will be Indonesian.
+  if (config_logic_indonesian_cloud_free ()) {
+    return getValue (general_site_language_key (), "id");
+  }
   // The default site language is an empty string.
   // It means not to localize the interface.
   // Since the default messages are all in English,

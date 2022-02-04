@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ string resource_image (void * webserver_request)
   if (request->post.count ("upload")) {
     string folder = filter_url_tempfile ();
     filter_url_mkdir (folder);
-    string file =  filter_url_create_path (folder, request->post ["filename"]);
+    string file =  filter_url_create_path ({folder, request->post ["filename"]});
     string data = request->post ["data"];
     if (!data.empty ()) {
       filter_url_file_put_contents (file, data);

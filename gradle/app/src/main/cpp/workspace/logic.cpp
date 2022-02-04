@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
 #include <sync/logic.h>
 #include <locale/translate.h>
 #include <database/logs.h>
+#include <database/cache.h>
+#include <read/index.h>
 
 
 vector <string> workspace_get_default_names ()
@@ -40,6 +42,13 @@ vector <string> workspace_get_default_names ()
   // Any of the names below should not contain commas,
   // because the sorting mechanism takes the comma as a separator,
   // so if commas are in a name, the sorting no longer works.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    return {
+      "Baca",
+      "Teliti",
+      "Baca dan Teliti"
+    };
+  };
   return {
     translate ("Editor and Resources"),
     translate ("Editor and Notes"),
@@ -83,6 +92,31 @@ map <int, string> workspace_get_default_urls (int id)
       urls [3] = search_index_url ();
       break;
   }
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    urls [2] = "";
+    urls [3] = "";
+    urls [4] = "";
+    urls [5] = "";
+    switch (id) {
+    case 1:
+      urls [0] = read_index_url ();
+      break;
+    case 2:
+      urls [0] = resource_index_url ();
+      urls [1] = "";
+      break;
+    case 3:
+      urls [0] = read_index_url ();
+      urls [1] = resource_index_url ();
+      break;
+    default:
+      urls [0] = read_index_url ();
+      urls [1] = "";
+      urls [2] = "";
+      urls [3] = "";
+      break;
+    }
+  }
   return urls;
 }
 
@@ -120,6 +154,28 @@ map <int, string> workspace_get_default_widths (int id)
       widths [3] = "1";
       break;
   }
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    switch (id) {
+      case 1:
+        widths [0] = "1";
+        break;
+      case 2:
+        widths [0] = "1";
+        widths [1] = "0";
+        break;
+      case 3:
+        widths [0] = "1";
+        widths [1] = "1";
+        widths [2] = "0";
+        break;
+      default:
+        widths [0] = "1";
+        widths [1] = "0";
+        widths [2] = "0";
+        widths [3] = "0";
+        break;
+    }
+  }
   return widths;
 }
 
@@ -144,6 +200,18 @@ map <int, string> workspace_get_default_heights (int id)
     default:
       heights [0] = "1";
       break;
+  }
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    switch (id) {
+      case 1:
+        heights [1] = "0";
+        break;
+      case 2:
+      case 3:
+      default:
+        heights [0] = "1";
+        break;
+    }
   }
   return heights;
 }
@@ -174,7 +242,18 @@ void workspace_create_defaults (void * webserver_request)
 string workspace_get_active_name (void * webserver_request)
 {
   Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
+
   string workspace = request->database_config_user()->getActiveWorkspace ();
+
+  // Indonesian Cloud Free
+  // The same method explained in ./ipc/focus.cpp line 37 to 44.
+  // Get data from file based database cache.
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    string filename = request->remote_address;
+    if (filename.find("::ffff:") != string::npos) filename.erase(0,7).append("_aw");
+    workspace = database_filebased_cache_get (filename);
+  }
+
   if (workspace.empty ()) {
     workspace = workspace_get_default_name ();
   }
@@ -267,7 +346,7 @@ void workspace_set_heights (void * webserver_request, const map <int, string> & 
 
 void workspace_set_entire_width (void * webserver_request, string value)
 {
-  map <int, string> values = {make_pair (0, value)};
+  map <int, string> values = {pair (0, value)};
   workspace_set_values (webserver_request, ENTIREWIDTH, values);
 }
 
@@ -500,7 +579,10 @@ void workspace_copy (void * webserver_request, string source, string destination
 
 
 // Store updated workspace settings for sending to the cloud.
-void workspace_cache_for_cloud (void * webserver_request, bool urls, bool widths, bool heights)
+void workspace_cache_for_cloud ([[maybe_unused]] void * webserver_request,
+                                [[maybe_unused]] bool urls,
+                                [[maybe_unused]] bool widths,
+                                [[maybe_unused]] bool heights)
 {
 #ifdef HAVE_CLIENT
   // For a client, store the setting for sending to the server.
@@ -511,11 +593,6 @@ void workspace_cache_for_cloud (void * webserver_request, bool urls, bool widths
     request->database_config_user()->addUpdatedSetting (Sync_Logic::settings_send_workspace_widths);
   if (heights)
     request->database_config_user()->addUpdatedSetting (Sync_Logic::settings_send_workspace_heights);
-#else
-  (void) webserver_request;
-  (void) urls;
-  (void) widths;
-  (void) heights;
 #endif
 }
 

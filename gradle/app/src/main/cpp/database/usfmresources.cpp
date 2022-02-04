@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,25 +30,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 string Database_UsfmResources::mainFolder ()
 {
-  return filter_url_create_root_path (database_logic_databases (), "usfmresources");
+  return filter_url_create_root_path ({database_logic_databases (), "usfmresources"});
 }
 
 
 string Database_UsfmResources::resourceFolder (const string& name)
 {
-  return filter_url_create_path (mainFolder (), name);
+  return filter_url_create_path ({mainFolder (), name});
 }
 
 
 string Database_UsfmResources::bookFolder (const string& name, int book)
 {
-  return filter_url_create_path (resourceFolder (name), convert_to_string (book));
+  return filter_url_create_path ({resourceFolder (name), convert_to_string (book)});
 }
 
 
 string Database_UsfmResources::chapterFile (const string& name, int book, int chapter)
 {
-  return filter_url_create_path (bookFolder (name, book), convert_to_string (chapter));
+  return filter_url_create_path ({bookFolder (name, book), convert_to_string (chapter)});
 }
 
 

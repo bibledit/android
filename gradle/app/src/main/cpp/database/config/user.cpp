@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,13 +50,13 @@ map <string, string> database_config_user_cache;
 
 string Database_Config_User::file (string user)
 {
-  return filter_url_create_root_path (database_logic_databases (), "config", "user", user);
+  return filter_url_create_root_path ({database_logic_databases (), "config", "user", user});
 }
 
 
 string Database_Config_User::file (string user, const char * key)
 {
-  return filter_url_create_path (file (user), key);
+  return filter_url_create_path ({file (user), key});
 }
 
 
@@ -1118,6 +1118,9 @@ const char * current_theme_style_key ()
 }
 int Database_Config_User::getCurrentTheme ()
 {
+  // Indonesian Cloud Free
+  // Set the "Light" theme as the default theme.
+  if (config_logic_indonesian_cloud_free ()) return getIValue (current_theme_style_key (), 1);
   return getIValue (current_theme_style_key (), 0);
 }
 void Database_Config_User::setCurrentTheme (int index)

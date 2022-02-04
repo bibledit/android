@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 string Database_NoteAssignment::path (string user)
 {
-  return filter_url_create_root_path (database_logic_databases (), "client", "noteassignment_" + user + ".txt");
+  return filter_url_create_root_path ({database_logic_databases (), "client", "noteassignment_" + user + ".txt"});
 }
 
 

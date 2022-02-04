@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,11 +38,11 @@
 
 void export_esword (string bible, bool log)
 {
-  string directory = filter_url_create_path (Export_Logic::bibleDirectory (bible), "esword");
+  string directory = filter_url_create_path ({Export_Logic::bibleDirectory (bible), "esword"});
   if (!file_or_dir_exists (directory)) filter_url_mkdir (directory);
   
   
-  string filename = filter_url_create_path (directory, "bible.bblx");
+  string filename = filter_url_create_path ({directory, "bible.bblx"});
 
   
   if (file_or_dir_exists (filename)) filter_url_unlink (filename);

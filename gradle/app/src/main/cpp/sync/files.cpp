@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ string sync_files (void * webserver_request)
     // This triggers the correct mime type.
     request->get = "file.download";
     // Return the file's contents.
-    string path = filter_url_create_root_path (directory, file);
+    string path = filter_url_create_root_path ({directory, file});
     return filter_url_file_get_contents (path);
   }
   

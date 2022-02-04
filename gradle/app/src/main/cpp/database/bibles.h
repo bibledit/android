@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,9 +39,13 @@ public:
   void optimize ();
 private:
   string mainFolder ();
+  string icfURL ();
+  string icfBibleName ();
 public:
   string bibleFolder (string bible);
 private:
   string bookFolder (string bible, int book);
+  vector <string> icfBooks ();
   string chapterFolder (string bible, int book, int chapter);
+  vector <string> icfChapters (int book);
 };

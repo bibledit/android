@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 
 #include <public/new.h>
+#include <filter/url.h>
 #include <filter/roles.h>
 #include <filter/string.h>
 #include <filter/usfm.h>
@@ -29,6 +30,7 @@
 #include <assets/header.h>
 #include <assets/page.h>
 #include <locale/translate.h>
+#include <read/index.h>
 
 
 string public_new_url ()
@@ -71,6 +73,17 @@ string public_new (void * webserver_request)
   header.setStylesheet ();
   page = header.run ();
   Assets_View view;
+
+
+  string cancellation_url = "index";
+
+  if (config_logic_indonesian_cloud_free_simple ()) {
+    cancellation_url = get_base_url (request) + read_index_url ();
+  }
+
+  view.set_variable ("cancellation_url", cancellation_url);
+
+
   page += view.render ("public", "new");
   page += Assets_Page::footer ();
   return page;

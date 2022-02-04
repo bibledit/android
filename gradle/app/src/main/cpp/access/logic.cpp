@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,6 +41,11 @@ bool access_logic_privilege_view_resources (void * webserver_request, string use
 
 int access_logic_view_notes_role ()
 {
+  // Indonesian Cloud Free
+  // The normal user of the Individual version doesn't have access to notes.
+  if (config_logic_indonesian_cloud_free_individual ()) {
+    return Filter_Roles::translator ();
+  }
   return Filter_Roles::consultant ();
 }
 

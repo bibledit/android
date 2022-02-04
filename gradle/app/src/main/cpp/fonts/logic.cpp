@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 string Fonts_Logic::folder ()
 {
-  return filter_url_create_root_path ("fonts");
+  return filter_url_create_root_path ({"fonts"});
 }
 
 
@@ -48,7 +48,7 @@ vector <string> Fonts_Logic::getFonts ()
 
 bool Fonts_Logic::fontExists (string font)
 {
-  string path = filter_url_create_path (folder (), font);
+  string path = filter_url_create_path ({folder (), font});
   return file_or_dir_exists (path);
 }
 
@@ -56,14 +56,14 @@ bool Fonts_Logic::fontExists (string font)
 string Fonts_Logic::getFontPath (string font)
 {
   // Case of no font.
-  if (font == "") return "";
+  if (font == string()) return string();
   
   // Case when the font exists within Bibledit.
   if (fontExists (font)) {
-    return filter_url_create_path ("", "fonts", font);
+    return filter_url_create_path ({"fonts", font});
   }
   
-  // Case when the font is avaiable from the browser independent of Bibledit.
+  // Case when the font is available from the browser independent of Bibledit.
   if (filter_url_basename (font) == font) {
     return font;
   }
@@ -75,7 +75,7 @@ string Fonts_Logic::getFontPath (string font)
 
 void Fonts_Logic::erase (string font)
 {
-  string path = filter_url_create_path (folder (), font);
+  string path = filter_url_create_path ({folder (), font});
   filter_url_unlink (path);
 }
 

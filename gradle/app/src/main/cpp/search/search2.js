@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ $(document).ready (function () {
   $ ("#searchbutton").on ("click", function (event) {
     startSearch ();
   });
-  identifier = Math.floor ((Math.random () * 1'000'000) + 1'000'000);
+  identifier = Math.floor ((Math.random () * 1000000) + 1000000);
 });
 
 

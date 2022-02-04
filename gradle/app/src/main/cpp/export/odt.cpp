@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,16 +40,16 @@
 void export_odt_book (string bible, int book, bool log)
 {
   // Create folders for the OpenDocument export.
-  string directory = filter_url_create_path (Export_Logic::bibleDirectory (bible), "opendocument");
+  string directory = filter_url_create_path ({Export_Logic::bibleDirectory (bible), "opendocument"});
   if (!file_or_dir_exists (directory)) filter_url_mkdir (directory);
   
   
   // Filenames for the various types of OpenDocument files.
   string basename = Export_Logic::baseBookFileName (book);
-  string standardFilename = filter_url_create_path (directory, basename + "_standard.odt");
-  string textOnlyFilename = filter_url_create_path (directory, basename + "_text_only.odt");
-  string textAndCitationsFilename = filter_url_create_path (directory, basename + "_text_and_note_citations.odt");
-  string notesFilename = filter_url_create_path (directory, basename + "_notes.odt");
+  string standardFilename = filter_url_create_path ({directory, basename + "_standard.odt"});
+  string textOnlyFilename = filter_url_create_path ({directory, basename + "_text_only.odt"});
+  string textAndCitationsFilename = filter_url_create_path ({directory, basename + "_text_and_note_citations.odt"});
+  string notesFilename = filter_url_create_path ({directory, basename + "_notes.odt"});
 
   
   Database_Bibles database_bibles;
@@ -105,7 +105,7 @@ void export_odt_book (string bible, int book, bool log)
   filter_text.odf_text_notes->save (notesFilename);
   for (auto src : filter_text.image_sources) {
     string contents = database_bibleimages.get(src);
-    string path = filter_url_create_path (directory, src);
+    string path = filter_url_create_path ({directory, src});
     filter_url_file_put_contents(path, contents);
   }
 

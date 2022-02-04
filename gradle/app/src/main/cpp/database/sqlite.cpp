@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ sqlite3 * database_sqlite_connect_file (string filename)
 string database_sqlite_file (string database)
 {
   if (filter_url_dirname (database) == ".") {
-    return filter_url_create_root_path (database_logic_databases (), database + database_sqlite_suffix ());
+    return filter_url_create_root_path ({database_logic_databases (), database + database_sqlite_suffix ()});
   }
   return database;
 }

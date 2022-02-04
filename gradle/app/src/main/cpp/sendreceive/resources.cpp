@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ void sendreceive_resources ()
         if (error.empty ()) {
           // At this stage the file size is known, plus the fragment of the path in the Cloud.
           // Check whether the file is already available on the client, fully downloaded.
-          string client_path = filter_url_create_root_path (filter_url_urldecode (response));
+          string client_path = filter_url_create_root_path ({filter_url_urldecode (response)});
           int client_size = filter_url_filesize (client_path);
           if (server_size != client_size) {
             // Download it.

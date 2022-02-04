@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2021 Teus Benschop.
+ Copyright (©) 2003-2022 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -377,14 +377,14 @@ void filter_diff_produce_verse_level (string bible, string directory)
     }
   }
   
-  filter_url_file_put_contents (filter_url_create_path (directory, "verses_old.usfm"), filter_string_implode (old_vs_usfm, "\n"));
-  filter_url_file_put_contents (filter_url_create_path (directory, "verses_new.usfm"), filter_string_implode (new_vs_usfm, "\n"));
+  filter_url_file_put_contents (filter_url_create_path ({directory, "verses_old.usfm"}), filter_string_implode (old_vs_usfm, "\n"));
+  filter_url_file_put_contents (filter_url_create_path ({directory, "verses_new.usfm"}), filter_string_implode (new_vs_usfm, "\n"));
   filter_text_old.run (stylesheet);
   filter_text_new.run (stylesheet);
-  filter_text_old.html_text_standard->save (filter_url_create_path (directory, "verses_old.html"));
-  filter_text_new.html_text_standard->save (filter_url_create_path (directory, "verses_new.html"));
-  filter_text_old.text_text->save (filter_url_create_path (directory, "verses_old.txt"));
-  filter_text_new.text_text->save (filter_url_create_path (directory, "verses_new.txt"));
+  filter_text_old.html_text_standard->save (filter_url_create_path ({directory, "verses_old.html"}));
+  filter_text_new.html_text_standard->save (filter_url_create_path ({directory, "verses_new.html"}));
+  filter_text_old.text_text->save (filter_url_create_path ({directory, "verses_old.txt"}));
+  filter_text_new.text_text->save (filter_url_create_path ({directory, "verses_new.txt"}));
 }
 
 

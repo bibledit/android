@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2021 Teus Benschop.
+Copyright (©) 2003-2022 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ void Assets_Header::setFadingMenu (string html)
 // Add one breadcrumb $item with $text.
 void Assets_Header::addBreadCrumb (string item, string text)
 {
-  breadcrumbs.push_back (make_pair (item, text));
+  breadcrumbs.push_back (pair (item, text));
 }
 
 
@@ -250,13 +250,14 @@ string Assets_Header::run ()
       view->enable_zone ("fading_menu");
       view->set_variable ("fadingmenu", fadingmenu);
       string delay = convert_to_string (request->database_config_user ()->getWorkspaceMenuFadeoutDelay ()) + "000";
+      if (config_logic_indonesian_cloud_free_simple ()) delay = "false";
       view->set_variable ("fadingmenudelay", delay);
       fadingmenu.clear ();
     }
 
     if (displayNavigator) {
       view->enable_zone ("display_navigator");
-      // string bible = access_bible_clamp (request, request->database_config_user()->getBible ());
+      // string bible = AccessBible::Clamp (request, request->database_config_user()->getBible ());
       // The clamping above does not work for public feedback as it would reset the Bible always.
       string bible = request->database_config_user()->getBible ();
       view->set_variable ("navigation_code", Navigation_Passage::code (bible));
