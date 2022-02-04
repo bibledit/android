@@ -470,7 +470,6 @@ add_library( # Sets the name of the library.
         session/confirm.cpp
         read/verse.cpp
         read/load.cpp
-        system/indonesianfree.cpp
         manage/accounts.cpp
         filter/indonesian.cpp
         dialog/list2.cpp
@@ -506,6 +505,7 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
         bibledit
+        libstdc++fs
 
         # Links the target library to the log library
         # included in the NDK.
