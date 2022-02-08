@@ -14,7 +14,26 @@
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/assets/header.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/assets/header.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/cache.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/cache.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/cache.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/cache.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/demo/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/demo/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/index/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/index/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/index/listing.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/index/listing.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/ipc/focus.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/ipc/focus.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/menu/logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/codec_chain.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/codec_chain.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/qp.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/qp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/personalize/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/index.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/workspace/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/workspace/logic.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +58,6 @@
     <option name="KEY_STORE_PATH" value="$USER_HOME$/scr/androidkey/androidkeystore.jks" />
     <option name="KEY_ALIAS" value="bibledit" />
     <option name="REMEMBER_PASSWORDS" value="true" />
-    <option name="BUILD_TARGET_KEY" value="apk" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
