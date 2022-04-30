@@ -480,6 +480,7 @@ add_library( # Sets the name of the library.
         images/index.cpp
         images/fetch.cpp
         images/view.cpp
+        filter/note.cpp
 
 
         # End Bibledit kernel.

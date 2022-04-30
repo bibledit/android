@@ -99,6 +99,13 @@ mapping/French_Louise_Segond.txt
 mapping/Dutch_Traditional.txt
 mapping/Russian_Orthodox.txt
 mapping/Spanish.txt
+coloris/LICENSE
+coloris/coloris.css
+coloris/coloris.min.css
+coloris/README.md
+coloris/coloris.min.js
+coloris/examples.html
+coloris/coloris.js
 sword/dev.txt
 sword/mods.d/globals.conf
 sword/locales.d/mt-utf8.conf
@@ -462,6 +469,7 @@ dtl/Lcs.hpp
 styles/sheetm.html
 styles/view.html
 styles/indexm.html
+styles/view.js
 system/index.html
 livetest/livetest.sh
 livetest/paths.sh
