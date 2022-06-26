@@ -17,32 +17,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 
-#include <filter/indonesian.h>
-#include <database/logs.h>
-#include <database/books.h>
-#include <database/bibles.h>
-#include <search/logic.h>
-#include <book/create.h>
-#include <locale/translate.h>
+#pragma once
 
+namespace tasks::enums {
 
-namespace filter::indonesian {
-
-string ourtranslation ()
-{
-  return "AlkitabKita";
-}
-
-
-string mytranslation (const string & user)
-{
-  string name = "Terjemahanku";
-  if (!user.empty()) {
-    name.append (" ");
-    name.append (user);
-  }
-  return name;
-}
-
+enum class paratext_sync {
+  none,
+  bi_directional,
+  bibledit_to_paratext,
+  paratext_to_bibledit
+};
 
 }
+
