@@ -13,76 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cursoradapter_cursoradapter_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_customview_customview_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_drawerlayout_drawerlayout_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_interpolator_interpolator_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_livedata_2_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_vectordrawable_vectordrawable_animated_1_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/asset.external" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/asset.external" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/installios.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/installios.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/microtar/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/microtar/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/pkgdata/files.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/sendreceive/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/tbsx/specs_html_622595c2542694fe.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/tbsx/specs_html_74141d66e02c8b0c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/tbsx/specs_html_768dd1f5292670ef.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/tbsx/specs_html_85ad3e9582aca4e.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/tbsx/specs_html_f86d168cc11a0987.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/user/notifications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bootstrap/bootstrap.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/changes/modifications.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/changes/modifications.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/config/user.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/database/stylesdata.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/database/stylesdata.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editone2/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editone2/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/indonesian.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/indonesian.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/indonesian.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/indonesian.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/text.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/text.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/installios.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/installios.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/index/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/index/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/microtar/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/microtar/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/microtar/microtar.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/microtar/microtar.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/microtar/microtar.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/microtar/microtar.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/qp.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/mimetic098/codec/qp.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/paratext/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/pkgdata/files.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/read/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/sendreceive/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/session/signup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/styles/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/styles/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/styles/logic.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/styles/logic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/system/logic.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tasks/run.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/tasks/run.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tbsx/specs_html_622595c2542694fe.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tbsx/specs_html_74141d66e02c8b0c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tbsx/specs_html_768dd1f5292670ef.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tbsx/specs_html_85ad3e9582aca4e.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/tbsx/specs_html_f86d168cc11a0987.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/user/notifications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/xcode.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
