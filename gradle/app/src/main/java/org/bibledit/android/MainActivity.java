@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity
 
     WebView webview = null;
     TabHost tabhost = null;
-    int resumecounter = 0;
     String webAppUrl = "";
     Timer timer;
     TimerTask timerTask;
@@ -61,15 +60,15 @@ public class MainActivity extends AppCompatActivity
     String previousTabsState;
     String lastTabUrl;
     String lastTabIdentifier;
-    String previousDisableSelectionPopup = "false";
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == FILECHOOSER_RESULTCODE) {
             if (myUploadMessage == null) return;
             Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
-            myUploadMessage.onReceiveValue (result);
+            myUploadMessage.onReceiveValue(result);
             myUploadMessage = null;
         }
     }
