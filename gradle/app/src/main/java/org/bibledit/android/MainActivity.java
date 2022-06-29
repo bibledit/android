@@ -527,7 +527,8 @@ public class MainActivity extends AppCompatActivity
                 intent.setType("*/*");
                 MainActivity.this.startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILECHOOSER_RESULTCODE);
             }
-            public void openFileChooser( ValueCallback uploadMsg, String acceptType) {
+            public void openFileChooser( ValueCallback uploadMsg,
+                                         String acceptType) {
                 myUploadMessage = uploadMsg;
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -632,7 +633,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void WebViewLoadURL (WebView webview, String url)
+    private void WebViewLoadURL (WebView webview,
+                                 String url)
     {
         webview.loadUrl (url);
     }
@@ -672,7 +674,7 @@ public class MainActivity extends AppCompatActivity
         webview.getSettings().setJavaScriptEnabled (true);
         if (zoom) {
         }
-        // No build-in zoom controls,
+        // No built-in zoom controls,
         // because these may cover clickable links,
         // which then can't be clicked anymore.
         // https://github.com/bibledit/cloud/issues/321
