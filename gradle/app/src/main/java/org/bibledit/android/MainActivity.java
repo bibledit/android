@@ -1,11 +1,16 @@
 package org.bibledit.android;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity
     String previousSyncState;
     private ValueCallback<Uri> myUploadMessage;
     private final static int FILECHOOSER_RESULTCODE = 1;
+    private final static int LOCATION_PERMISSION_REQUEST_CODE = 2; // Todo
+    private final static int REQUEST_CHECK_SETTINGS = 3; // Todo
     String previousTabsState;
     String lastTabUrl;
     String lastTabIdentifier;
@@ -78,6 +85,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Handle permissions right at the start of the app.
+        checkPermissions();
 
         // Get the free port number found by the library.
         String port = GetNetworkPort ();
@@ -714,6 +724,61 @@ public class MainActivity extends AppCompatActivity
             }
         });
         return webview;
+    }
+
+    // Register the permissions callback,
+    // which handles the user's response to the system permissions dialog.
+    // Save the return value, an instance of ActivityResultLauncher, as an instance variable.
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                }
+            });
+
+    private boolean checkPermissions() // Todo
+    {
+        // https://developer.android.com/training/permissions/requesting
+
+        // Determine whether the app was already granted the permission.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+        {
+            // Indicate to the caller that the requested permissions were already granted.
+            return true;
+        }
+
+        // Check whether the user should be informed about the reason for requesting this permission.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
+            // Show an educational UI to the user.
+            // In this UI, describe why the feature, which the user wants to enable,
+            // needs a particular permission.
+            // But for the permission to write to the external storage,
+            // Bibledit does not show this UI.
+        }
+
+        // Request the permission.
+        // Users will see a system permission dialog,
+        // where they can choose whether to grant this permission to the app.
+        // Traditionally, you manage a request code yourself as part of the permission request
+        // and include this request code in your permission callback logic.
+        // Another option is to use the RequestPermission contract,
+        // included in an AndroidX library,
+        // where you allow the system to manage the permission request code for you.
+        // Because using the RequestPermission contract simplifies your logic,
+        // it's recommended that you use it when possible.
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        // Indicate to the caller that the permission was not granted (yet).
+        // But the dialog for requesting permisions will be visible to the user now.
+        return false;
     }
 
 
