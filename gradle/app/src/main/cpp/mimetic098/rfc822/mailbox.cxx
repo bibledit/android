@@ -1,9 +1,23 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
 
     $Id: mailbox.cxx,v 1.3 2008-10-07 11:06:27 tat Exp $
  ***************************************************************************/
+
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+
 #include <mimetic098/rfc822/mailbox.h>
 #include <mimetic098/strutils.h>
 
@@ -85,10 +99,10 @@ void Mailbox::set(const string& input)
                 else
                     m_mailbox.assign(input, x+1, endoff - x);
                 m_label.assign(input, 0 , x);
-                for(int t = (int)m_label.length()-1; t > 0; --t)
+                for(int t2 = (int)m_label.length()-1; t2 > 0; --t2)
                 {
-                    if(m_label[t] == ' ')
-                        m_label.erase(t, 1);
+                    if(m_label[t2] == ' ')
+                        m_label.erase(t2, 1);
                     else
                         break;
                 }

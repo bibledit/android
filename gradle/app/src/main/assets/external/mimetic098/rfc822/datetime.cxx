@@ -1,3 +1,14 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
@@ -6,6 +17,10 @@
  ***************************************************************************/
 #include <iomanip>
 #include <sstream>
+
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+
 #include <mimetic098/rfc822/datetime.h>
 #include <mimetic098/strutils.h>
 #include <mimetic098/tokenizer.h>

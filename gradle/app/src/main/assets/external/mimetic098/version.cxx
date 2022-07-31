@@ -1,3 +1,14 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
@@ -5,6 +16,9 @@
     $Id: version.cxx,v 1.4 2008-10-07 11:06:26 tat Exp $
  ***************************************************************************/
 #include <iostream>
+
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+
 #include <mimetic098/libconfig.h>
 #include <mimetic098/version.h>
 #include <mimetic098/utils.h>

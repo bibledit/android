@@ -1,9 +1,24 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
 
     $Id: body.cxx,v 1.3 2008-10-07 11:06:25 tat Exp $
  ***************************************************************************/
+
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
 
 #include <mimetic098/mimeentity.h>
 #include <mimetic098/body.h>

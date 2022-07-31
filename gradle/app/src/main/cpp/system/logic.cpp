@@ -159,16 +159,16 @@ void system_logic_import_bibles_file (string tarball)
     
     // Get details about the USFM to import.
     string stylesheet = styles_logic_standard_sheet ();
-    vector <BookChapterData> book_chapter_text = usfm_import (data, stylesheet);
-    for (auto & data : book_chapter_text) {
-      if (data.book > 0) {
+    vector <filter::usfm::BookChapterData> book_chapter_text = filter::usfm::usfm_import (data, stylesheet);
+    for (auto & book_chapter_data : book_chapter_text) {
+      if (book_chapter_data.m_book > 0) {
         // Store the data and log it.
         // This does not trigger the client to send it to the Cloud.
         // Reason is that the Cloud is authoritative,
         // so importing outdated Bibles would not affect the authoritative copy in the Cloud.
-        database_bibles.storeChapter (bible, data.book, data.chapter, data.data);
-        string bookname = Database_Books::getEnglishFromId (data.book);
-        Database_Logs::log ("Imported " + bible + " " + bookname + " " + convert_to_string (data.chapter));
+        database_bibles.storeChapter (bible, book_chapter_data.m_book, book_chapter_data.m_chapter, book_chapter_data.m_data);
+        string bookname = Database_Books::getEnglishFromId (book_chapter_data.m_book);
+        Database_Logs::log ("Imported " + bible + " " + bookname + " " + convert_to_string (book_chapter_data.m_chapter));
       } else {
         // Import error.
         Database_Logs::log ("Could not import this file: " + file);
@@ -342,7 +342,7 @@ void system_logic_produce_resources_file (int jobid)
 
   
   // Progress bar data: How many tarballs to create.
-  size_t tarball_count = 1 + single_resources.size ();
+  int tarball_count = static_cast<int>(1 + single_resources.size ());
   int tarball_counter = 0;
 
   
@@ -362,11 +362,11 @@ void system_logic_produce_resources_file (int jobid)
   for (auto element : single_resources) {
     tarball_counter++;
     string resource_name = element.first;
-    vector <string> resources = element.second;
+    vector <string> v_resources = element.second;
     database_jobs.set_percentage (jobid, 100 * tarball_counter / tarball_count);
     database_jobs.set_progress (jobid, resource_name);
-    string tarball = filter_url_create_root_path ({system_logic_resources_file_name (resource_name)});
-    string error = filter_archive_microtar_pack (tarball, directory, resources);
+    string resource_tarball = filter_url_create_root_path ({system_logic_resources_file_name (resource_name)});
+    error += filter_archive_microtar_pack (resource_tarball, directory, v_resources);
   }
   
   
@@ -592,7 +592,7 @@ void system_logic_indonesian_free_expiration ()
   Database_Confirm database_confirm;
   vector <int> ids = database_confirm.get_ids();
   for (auto id : ids) {
-    string username = database_confirm.get_username(id);
+    string username = database_confirm.get_username(static_cast<unsigned int>(id));
     string bible = filter::indonesian::mytranslation (username);
     valid_indonesian_bibles.push_back(bible);
   }

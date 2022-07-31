@@ -587,10 +587,19 @@ generate_SOURCES = \
 
 generate_LDADD = libbibledit.a
 
-AM_CFLAGS = -Wall -Wextra -pedantic -g
+AM_CFLAGS = -g
 AM_CFLAGS += $(OPENSSL_CFLAGS)
 
-AM_CXXFLAGS = -Wall -Wextra -pedantic -fno-var-tracking -g
+AM_CXXFLAGS = -fno-var-tracking -g
+if COMPILERWARNINGS
+AM_CFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic
+AM_CXXFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic -Wshadow -Warray-bounds -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdelete-non-virtual-dtor -Weffc++
+if COMPILERGCC
+AM_CXXFLAGS += -Wcatch-value=2 -Wconditionally-supported -Wduplicated-branches -Wduplicated-cond
+endif
+endif
+if COMPILERCLANG
+endif
 AM_CXXFLAGS += $(CURL_CFLAGS)
 AM_CXXFLAGS += $(OPENSSL_CFLAGS)
 AM_CXXFLAGS += $(GTK_CFLAGS)

@@ -206,6 +206,7 @@ obfuscate/readme.txt
 obfuscate/sample.txt
 developer/index.html
 developer/index.js
+developer/warnings.sh
 databases/clients/gitflag
 databases/localization_en_GB.sqlite
 databases/sblgnt.sqlite

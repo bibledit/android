@@ -22,7 +22,10 @@
 #include <database/etcbc4.h>
 #include <filter/string.h>
 #include <filter/url.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
 #include <pugixml/pugixml.hpp>
+#pragma GCC diagnostic pop
 
 
 using namespace pugi;
@@ -77,9 +80,9 @@ void sources_etcbc4_download ()
     "Maleachi"
   };
 
-  for (unsigned int bk = 0; bk < books.size (); bk++) {
+  for (size_t bk = 0; bk < books.size (); bk++) {
 
-    int book = bk + 1;
+    int book = static_cast<int>(bk + 1);
     string bookname = books[bk];
 
     bool book_done = false;

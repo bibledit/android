@@ -23,7 +23,10 @@
 #include <database/sqlite.h>
 #include <filter/string.h>
 #include <filter/url.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
 #include <pugixml/pugixml.hpp>
+#pragma GCC diagnostic pop
 
 
 using namespace pugi;
@@ -93,28 +96,28 @@ void sources_kjv_parse_loop (xml_node element,
     sources_kjv_store (book, chapter, verse, "", english);
   } else if (element_name == "inscription") {
     for (xml_node child : element.children ()) {
-      string lemma;
-      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, lemma);
+      string tmp_lemma;
+      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, tmp_lemma);
     }
   } else if (element_name == "q") {
     for (xml_node child : element.children ()) {
-      string lemma;
-      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, lemma);
+      string tmp_lemma;
+      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, tmp_lemma);
     }
   } else if (element_name == "divineName") {
     for (xml_node child : element.children ()) {
-      string lemma;
-      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, lemma);
+      string tmp_lemma;
+      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, tmp_lemma);
     }
   } else if (element_name == "title") {
     for (xml_node child : element.children ()) {
-      string lemma;
-      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, lemma);
+      string tmp_lemma;
+      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, tmp_lemma);
     }
   } else if (element_name == "foreign") {
     for (xml_node child : element.children ()) {
-      string lemma;
-      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, lemma);
+      string tmp_lemma;
+      sources_kjv_parse_loop (child, book, chapter, verse, within_verse, tmp_lemma);
     }
   } else {
     if (within_verse) {
@@ -148,7 +151,6 @@ void sources_kjv_parse ()
           book++;
           Database_Logs::log ("Book " + convert_to_string (book));
           chapter = 0;
-          verse = 0;
           for (xml_node chapter_element : divbook.children ()) {
             if (strcmp (chapter_element.name (), "chapter") == 0) {
               chapter++;

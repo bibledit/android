@@ -1,3 +1,6 @@
+
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Weffc++"
 /**
  * pugixml parser - version 1.7
  * --------------------------------------------------------
@@ -98,6 +101,9 @@
 #	pragma diag_suppress=178 // function was declared but never referenced
 #	pragma diag_suppress=237 // controlling expression is constant
 #endif
+
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wstring-conversion"
 
 // Inlining controls
 #if defined(_MSC_VER) && _MSC_VER >= 1300

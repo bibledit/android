@@ -64,15 +64,15 @@ void changes_process_identifiers (Webserver_Request * request,
     string old_chapter_usfm = old_chapter_text.oldtext;
     Database_Modifications_Text new_chapter_text = database_modifications.getUserChapter (user, bible, book, chapter, newId);
     string new_chapter_usfm = new_chapter_text.newtext;
-    vector <int> old_verse_numbers = usfm_get_verse_numbers (old_chapter_usfm);
-    vector <int> new_verse_numbers = usfm_get_verse_numbers (new_chapter_usfm);
+    vector <int> old_verse_numbers = filter::usfm::get_verse_numbers (old_chapter_usfm);
+    vector <int> new_verse_numbers = filter::usfm::get_verse_numbers (new_chapter_usfm);
     vector <int> verses = old_verse_numbers;
     verses.insert (verses.end (), new_verse_numbers.begin (), new_verse_numbers.end ());
     verses = array_unique (verses);
     sort (verses.begin(), verses.end());
     for (auto verse : verses) {
-      string old_verse_usfm = usfm_get_verse_text (old_chapter_usfm, verse);
-      string new_verse_usfm = usfm_get_verse_text (new_chapter_usfm, verse);
+      string old_verse_usfm = filter::usfm::get_verse_text (old_chapter_usfm, verse);
+      string new_verse_usfm = filter::usfm::get_verse_text (new_chapter_usfm, verse);
       if (old_verse_usfm != new_verse_usfm) {
         Filter_Text filter_text_old = Filter_Text (bible);
         Filter_Text filter_text_new = Filter_Text (bible);
@@ -118,7 +118,7 @@ void changes_process_identifiers (Webserver_Request * request,
         // Statistics: Count yet another change made by this hard-working user!
         change_count++;
         int timestamp = database_modifications.getUserTimestamp (user, bible, book, chapter, newId);
-        time_total += timestamp;
+        time_total += static_cast<float>(timestamp);
         time_count++;
       }
     }
@@ -158,7 +158,7 @@ void changes_modifications ()
 
   // Storage for the statistics.
   map <string, int> user_change_statistics;
-  float modification_time_total = 0;
+  float modification_time_total = 0.0f;
   int modification_time_count = 0;
 
   // There is a setting per user indicating which Bible(s) a user
@@ -271,8 +271,8 @@ void changes_modifications ()
     
     
     vector <string> changeNotificationUsers;
-    vector <string> users = request.database_users ()->get_users ();
-    for (auto user : users) {
+    vector <string> all_users = request.database_users ()->get_users ();
+    for (auto user : all_users) {
       if (AccessBible::Read (&request, bible, user)) {
         if (request.database_config_user()->getUserGenerateChangeNotifications (user)) {
           // The recipient may have set which Bibles to get the change notifications for.
@@ -280,8 +280,8 @@ void changes_modifications ()
           // container [user] = list of bibles.
           bool receive {true};
           try {
-            const vector <string> & bibles = notification_bibles_per_user.at(user);
-            receive = in_array(bible, bibles);
+            const vector <string> & user_bibles = notification_bibles_per_user.at(user);
+            receive = in_array(bible, user_bibles);
           } catch (...) {}
           if (receive) {
             changeNotificationUsers.push_back (user);
@@ -289,7 +289,7 @@ void changes_modifications ()
         }
       }
     }
-    users.clear ();
+    all_users.clear ();
     
     
     // The number of changes processed so far for this Bible.
@@ -335,15 +335,15 @@ void changes_modifications ()
         Database_Logs::log ("Change notifications: " + bible + " " + filter_passage_display (book, chapter, ""), Filter_Roles::translator ());
         string old_chapter_usfm = database_modifications.getTeamDiff (bible, book, chapter);
         string new_chapter_usfm = request.database_bibles()->getChapter (bible, book, chapter);
-        vector <int> old_verse_numbers = usfm_get_verse_numbers (old_chapter_usfm);
-        vector <int> new_verse_numbers = usfm_get_verse_numbers (new_chapter_usfm);
+        vector <int> old_verse_numbers = filter::usfm::get_verse_numbers (old_chapter_usfm);
+        vector <int> new_verse_numbers = filter::usfm::get_verse_numbers (new_chapter_usfm);
         vector <int> verses = old_verse_numbers;
         verses.insert (verses.end (), new_verse_numbers.begin (), new_verse_numbers.end ());
         verses = array_unique (verses);
         sort (verses.begin (), verses.end());
         for (auto verse : verses) {
-          string old_verse_usfm = usfm_get_verse_text (old_chapter_usfm, verse);
-          string new_verse_usfm = usfm_get_verse_text (new_chapter_usfm, verse);
+          string old_verse_usfm = filter::usfm::get_verse_text (old_chapter_usfm, verse);
+          string new_verse_usfm = filter::usfm::get_verse_text (new_chapter_usfm, verse);
           if (old_verse_usfm != new_verse_usfm) {
             processedChangesCount++;
             // In case of too many change notifications, processing them would take too much time, so take a few shortcuts.
@@ -416,8 +416,8 @@ void changes_modifications ()
         if (bodies.size () > 1) {
           subject.append (" (" + convert_to_string (b + 1) + "/" + convert_to_string (bodies.size ()) + ")");
         }
-        vector <string> users = request.database_users ()->get_users ();
-        for (auto & user : users) {
+        vector <string> all_users_2 = request.database_users ()->get_users ();
+        for (auto & user : all_users_2) {
           if (request.database_config_user()->getUserBibleChangesNotification (user)) {
             if (AccessBible::Read (&request, bible, user)) {
               if (!client_logic_client_enabled ()) {
@@ -452,9 +452,9 @@ void changes_modifications ()
       vector <string> revisions = filter_url_scandir (folder);
       for (auto & revision : revisions) {
         string path = filter_url_create_path ({folder, revision});
-        int time = filter_url_file_modification_time (path);
-        int days = (now - time) / 86400;
-        if (days > 31) {
+        int time2 = filter_url_file_modification_time (path);
+        int days2 = (now - time2) / 86400;
+        if (days2 > 31) {
           filter_url_rmdir (path);
           Database_Logs::log ("Removing expired downloadable revision notification: " + bible + " " + revision, Filter_Roles::translator ());
         }
@@ -482,7 +482,7 @@ void changes_modifications ()
   // Store the statistics in the database.
   if (modification_time_count) {
     // Take average timestamp of all timestamps.
-    int timestamp = round (modification_time_total / modification_time_count);
+    int timestamp = static_cast <int> (round (modification_time_total / static_cast<float>(modification_time_count)));
     for (auto & element : user_change_statistics) {
       // Store dated change statistics per user.
       string user = element.first;

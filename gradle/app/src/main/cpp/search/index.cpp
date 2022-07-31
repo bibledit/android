@@ -29,6 +29,7 @@
 #include <search/logic.h>
 #include <menu/logic.h>
 #include <access/bible.h>
+#include <dialog/list2.h>
 
 
 string search_index_url ()
@@ -65,13 +66,13 @@ string search_index (void * webserver_request)
 
     // Get the Bible and passage for this identifier.
     Passage passage = Passage::decode (id);
-    string bible = passage.bible;
-    int book = passage.book;
-    int chapter = passage.chapter;
-    string verse = passage.verse;
+    string bible2 = passage.m_bible;
+    int book = passage.m_book;
+    int chapter = passage.m_chapter;
+    string verse = passage.m_verse;
     
     // Get the plain text.
-    string text = search_logic_get_bible_verse_text (bible, book, chapter, convert_to_int (verse));
+    string text = search_logic_get_bible_verse_text (bible2, book, chapter, convert_to_int (verse));
     
     // Format it.
     string link = filter_passage_link_for_opening_editor_at (book, chapter, verse);
@@ -94,6 +95,15 @@ string search_index (void * webserver_request)
     }
     return output;
   }
+  
+  
+  // Set the user chosen Bible as the current Bible.
+  if (request->post.count ("bibleselect")) {
+    string bibleselect = request->post ["bibleselect"];
+    request->database_config_user ()->setBible (bibleselect);
+    return string();
+  }
+
 
   
   string page;
@@ -104,6 +114,14 @@ string search_index (void * webserver_request)
   
   Assets_View view;
   
+  {
+    string bible_html;
+    vector <string> accessible_bibles = AccessBible::Bibles (request);
+    for (auto selectable_bible : accessible_bibles) {
+      bible_html = Options_To_Select::add_selection (selectable_bible, selectable_bible, bible_html);
+    }
+    view.set_variable ("bibleoptags", Options_To_Select::mark_selected (bible, bible_html));
+  }
   view.set_variable ("bible", bible);
   
   string script = "var searchBible = \"" + bible + "\";";

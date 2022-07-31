@@ -1,3 +1,14 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
@@ -56,18 +67,13 @@ const Field& Rfc822Header::field(const std::string& name) const
 
 Field& Rfc822Header::field(const std::string& name)
 {
-    iterator it;
-    it = find_if(begin(),end(), find_by_name(name));
-    if(it != end())
-        return *it;
-    else {
-        Field f;
-        iterator it;
-        it = insert(end(), f);
-        it->name(name);
-        it->m_pValue = new StringFieldValue;
-        return *it;
-    }
+  iterator it = find_if(begin(),end(), find_by_name(name));
+  if (it != end()) return *it;
+  Field f;
+  it = insert(end(), f);
+  it->name(name);
+  it->m_pValue = new StringFieldValue;
+  return *it;
 }
 
 // Sender:

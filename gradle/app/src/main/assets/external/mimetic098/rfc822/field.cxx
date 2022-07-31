@@ -1,9 +1,23 @@
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /***************************************************************************
     copyright            : (C) 2002-2008 by Stefano Barbato
     email                : stefano@codesink.org
 
     $Id: field.cxx,v 1.7 2009-02-27 15:56:34 tat Exp $
  ***************************************************************************/
+
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+
 #include <mimetic098/rfc822/field.h>
 #include <mimetic098/strutils.h>
 #include <mimetic098/utils.h>

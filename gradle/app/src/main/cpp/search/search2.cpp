@@ -33,6 +33,7 @@
 #include <ipc/focus.h>
 #include <search/logic.h>
 #include <menu/logic.h>
+#include <dialog/list2.h>
 
 
 string search_search2_url ()
@@ -73,31 +74,31 @@ string search_search2 (void * webserver_request)
     
     
     // Retrieve the search parameters from the volatile database.
-    string query = Database_Volatile::getValue (identifier, "query");
+    string query2 = Database_Volatile::getValue (identifier, "query");
     //bool casesensitive = convert_to_bool (Database_Volatile::getValue (identifier, "casesensitive"));
     bool plaintext = convert_to_bool (Database_Volatile::getValue (identifier, "plaintext"));
     
     
     // Get the Bible and passage for this identifier.
     Passage details = Passage::decode (hit);
-    string bible = details.bible;
-    int book = details.book;
-    int chapter = details.chapter;
-    string verse = details.verse;
+    string bible2 = details.m_bible;
+    int book = details.m_book;
+    int chapter = details.m_chapter;
+    string verse = details.m_verse;
     
     
     // Get the plain text or USFM.
     string text;
     if (plaintext) {
-      text = search_logic_get_bible_verse_text (bible, book, chapter, convert_to_int (verse));
+      text = search_logic_get_bible_verse_text (bible2, book, chapter, convert_to_int (verse));
     } else {
-      text = search_logic_get_bible_verse_usfm (bible, book, chapter, convert_to_int (verse));
+      text = search_logic_get_bible_verse_usfm (bible2, book, chapter, convert_to_int (verse));
     }
     
     
     // Format it.
     string link = filter_passage_link_for_opening_editor_at (book, chapter, verse);
-    text =  filter_string_markup_words ({query}, text);
+    text =  filter_string_markup_words ({query2}, text);
     string output = "<div>" + link + " " + text + "</div>";
     
     
@@ -144,7 +145,7 @@ string search_search2 (void * webserver_request)
       int book = Ipc_Focus::getBook (request);
       vector <Passage> bookpassages;
       for (auto & passage : passages) {
-        if (book == passage.book) {
+        if (book == passage.m_book) {
           bookpassages.push_back (passage);
         }
       }
@@ -158,7 +159,7 @@ string search_search2 (void * webserver_request)
     if (otbooks || ntbooks) {
       vector <Passage> bookpassages;
       for (auto & passage : passages) {
-        string type = Database_Books::getType (passage.book);
+        string type = Database_Books::getType (passage.m_book);
         if (otbooks) if (type != "ot") continue;
         if (ntbooks) if (type != "nt") continue;
         bookpassages.push_back (passage);
@@ -198,7 +199,14 @@ string search_search2 (void * webserver_request)
     // Output results.
     return output;
   }
+
   
+  // Set the user chosen Bible as the current Bible.
+  if (request->post.count ("bibleselect")) {
+    string bibleselect = request->post ["bibleselect"];
+    request->database_config_user ()->setBible (bibleselect);
+    return string();
+  }
   
   // Build the advanced search page.
   string page;
@@ -207,6 +215,14 @@ string search_search2 (void * webserver_request)
   header.addBreadCrumb (menu_logic_search_menu (), menu_logic_search_text ());
   page = header.run ();
   Assets_View view;
+  {
+    string bible_html;
+    vector <string> accessible_bibles = AccessBible::Bibles (request);
+    for (auto selectable_bible : accessible_bibles) {
+      bible_html = Options_To_Select::add_selection (selectable_bible, selectable_bible, bible_html);
+    }
+    view.set_variable ("bibleoptags", Options_To_Select::mark_selected (bible, bible_html));
+  }
   view.set_variable ("bible", bible);
   string script = "var searchBible = \"" + bible + "\";";
   view.set_variable ("script", script);
