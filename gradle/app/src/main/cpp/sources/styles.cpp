@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <sources/styles.h>
 #include <filter/string.h>
 #include <filter/url.h>
+using namespace std;
 
 
 string sources_style_parse_create_c_comment (string key)
@@ -277,7 +278,7 @@ void sources_styles_parse ()
       paratext_line.erase (0, backslash_leftmargin.length());
       string inches = filter_string_trim (paratext_line);
       int value = static_cast<int>(round (254 * convert_to_float (inches)));
-      float millimeters = (float) value / 10;
+      float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [leftmargin_key] = convert_to_string (millimeters);
       continue;
     }
@@ -287,7 +288,7 @@ void sources_styles_parse ()
       paratext_line.erase (0, backslash_rightmargin.length());
       string inches = filter_string_trim (paratext_line);
       int value = static_cast<int>(round (254 * convert_to_float (inches)));
-      float millimeters = (float) value / 10;
+      float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [rightmargin_key] = convert_to_string (millimeters);
       continue;
     }
@@ -297,7 +298,7 @@ void sources_styles_parse ()
       paratext_line.erase (0, backslash_firstlineindent.length());
       string inches = filter_string_trim (paratext_line);
       int value = static_cast<int>(round (254 * convert_to_float (inches)));
-      float millimeters = (float) value / 10;
+      float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [firstlineindent_key] = convert_to_string (millimeters);
       continue;
     }

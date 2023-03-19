@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,22 @@
 #include <filter/url.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wsuggest-override"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#ifndef HAVE_PUGIXML
 #include <pugixml/pugixml.hpp>
+#endif
+#ifdef HAVE_PUGIXML
+#include <pugixml.hpp>
+#endif
 #pragma GCC diagnostic pop
-
-
+using namespace std;
 using namespace pugi;
+
+
+// Declarations local functions.
+void sources_kjv_store (int book, int chapter, int verse, string lemma, string english);
+void sources_kjv_parse_loop (xml_node element, int & book, int & chapter, int & verse, bool & within_verse, string & lemma);
 
 
 void sources_kjv_store (int book, int chapter, int verse, string lemma, string english)

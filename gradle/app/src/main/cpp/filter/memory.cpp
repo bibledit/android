@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2022 Teus Benschop.
+Copyright (©) 2003-2023 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,8 +24,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <mach/mach.h>
 #endif
 #ifdef HAVE_EXECINFO
-//#include <execinfo.h>
+#include <execinfo.h>
 #endif
+using namespace std;
 
 
 // Returns the memory available as a percentage of the total system memory.
@@ -81,7 +82,7 @@ int filter_memory_percentage_available ()
 
 
 // Returns how many bytes of memory the app currently uses.
-uint64_t filter_memory_total_usage ()
+uint64_t filter_memory_total_usage () 
 {
 #ifdef HAVE_MACH_MACH
   // macOS.
@@ -103,13 +104,13 @@ void filter_memory_print_back_trace ()
 #ifdef HAVE_EXECINFO
   // https://stackoverflow.com/questions/3899870/print-call-stack-in-c-or-c
   // To add linker flag -rdynamic is essential.
-//  char **strings;
-//  void *array[1024];
-//  int size = backtrace(array, 1024);
-//  strings = backtrace_symbols(array, size);
-//  for (int i = 0; i < size; i++)
-//    cout << strings[i] << endl;
-//  puts("");
-//  free(strings);
+  char **strings;
+  void *array[1024];
+  int size = backtrace(array, 1024);
+  strings = backtrace_symbols(array, size);
+  for (int i = 0; i < size; i++)
+    cout << strings[i] << endl;
+  puts("");
+  free(strings);
 #endif
 }

@@ -8,7 +8,6 @@
 #define HAVE_CXX17 1
 
 /* Define whether execinfo.h is present */
-#define HAVE_EXECINFO 1
 
 /* Define whether ICU is available */
 
@@ -34,6 +33,8 @@
 
 /* Define whether pthread.h is present */
 #define HAVE_PTHREAD 1
+
+/* Define whether pugixml is available */
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -64,6 +65,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+/* Define whether utf8proc is available */
+
 /* Define whether to compile on Windows */
 /* #undef HAVE_WINDOWS */
 
@@ -83,7 +86,7 @@
 #define PACKAGE_PREFIX_DIR "NONE"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "bibledit 5.0.984"
+#define PACKAGE_STRING "bibledit 5.0.996"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "bibledit"
@@ -92,7 +95,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "5.0.984"
+#define PACKAGE_VERSION "5.0.996"
 
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
@@ -100,7 +103,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "5.0.984"
+#define VERSION "5.0.996"
 
 /* Define whether to compile on Windows */
 /* #undef WIN32 */

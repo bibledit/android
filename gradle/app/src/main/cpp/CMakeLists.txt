@@ -481,7 +481,10 @@ add_library( # Sets the name of the library.
         images/fetch.cpp
         images/view.cpp
         filter/note.cpp
-
+        filter/google.cpp
+        resource/translated1edit.cpp
+        resource/translated9edit.cpp
+        system/googletranslate.cpp
 
         # End Bibledit kernel.
         )

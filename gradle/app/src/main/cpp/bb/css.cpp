@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 #include <fonts/logic.h>
 #include <menu/logic.h>
 #include <bb/manage.h>
+using namespace std;
 
 
 string bible_css_url ()
@@ -50,17 +51,17 @@ string bible_css (void * webserver_request)
 {
   Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   
-  string page;
+  string page {};
   
   Assets_Header header = Assets_Header (translate("Font and text direction"), request);
-  header.addBreadCrumb (menu_logic_settings_menu (), menu_logic_settings_text ());
-  header.addBreadCrumb (bible_manage_url (), menu_logic_bible_manage_text ());
+  header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
+  header.add_bread_crumb (bible_manage_url (), menu_logic_bible_manage_text ());
   page = header.run ();
   
-  Assets_View view;
+  Assets_View view {};
   
   // The name of the Bible.
-  string bible = AccessBible::Clamp (request, request->query ["bible"]);
+  string bible = access_bible::clamp (request, request->query ["bible"]);
   view.set_variable ("bible", escape_special_xml_characters (bible));
   
   // Data submission.
@@ -94,7 +95,7 @@ string bible_css (void * webserver_request)
     if (letterspacing > 3) letterspacing = 3;
     Database_Config_Bible::setLetterSpacing (bible, static_cast<int>(10 * letterspacing));
     
-    page += Assets_Page::success ("The information was saved.");
+    page += assets_page::success ("The information was saved.");
     
   }
 
@@ -134,7 +135,7 @@ string bible_css (void * webserver_request)
 
   page += view.render ("bb", "css");
   
-  page += Assets_Page::footer ();
+  page += assets_page::footer ();
   
   return page;
 }

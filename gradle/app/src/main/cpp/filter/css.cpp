@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <config/globals.h>
 #include <webserver/request.h>
 #include <styles/logic.h>
+using namespace std;
 
 
 string Filter_Css::directionUnspecified (int value)
@@ -72,43 +73,43 @@ int Filter_Css::directionValue (string direction)
 
 string Filter_Css::writingModeUnspecified (int value)
 {
-  value = (int) (value / 10);
+  value = value / 10;
   value = value % 10;
   if (value == 0) return "checked";
-  else return "";
+  else return string();
 }
 
 
 string Filter_Css::writingModeTopBottomLeftRight (int value)
 {
-  value = (int) (value / 10);
+  value = value / 10;
   value = value % 10;
   if (value == 1) return "checked";
-  else return "";
+  else return string();
 }
 
 
 string Filter_Css::writingModeTopBottomRightLeft (int value)
 {
-  value = (int) (value / 10);
+  value = value / 10;
   value = value % 10;
   if (value == 2) return "checked";
-  else return "";
+  else return string();
 }
 
 
 string Filter_Css::writingModeBottomTopLeftRight (int value)
 {
-  value = (int) (value / 10);
+  value = value / 10;
   value = value % 10;
   if (value == 3) return "checked";
-  else return "";
+  else return string();
 }
 
 
 string Filter_Css::writingModeBottomTopRightLeft (int value)
 {
-  value = (int) (value / 10);
+  value = (value / 10);
   value = value % 10;
   if (value == 4) return "checked";
   else return "";
@@ -201,7 +202,7 @@ string Filter_Css::get_css (string class_, string font, int directionvalue, int 
     css.push_back (line);
   }
   
-  int mode = (int) (directionvalue / 10);
+  int mode = directionvalue / 10;
   mode = mode % 10;
   
   if (mode > 0) {

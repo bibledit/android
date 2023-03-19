@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
 #include <bb/logic.h>
 #include <config/globals.h>
 #include <workspace/logic.h>
+using namespace std;
 
 
 string edit_index_url ()
@@ -51,7 +52,7 @@ string edit_index_url ()
 bool edit_index_acl (void * webserver_request)
 {
   if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ())) return true;
-  auto [ read, write ] = AccessBible::Any (webserver_request);
+  auto [ read, write ] = access_bible::any (webserver_request);
   return write;
 }
 
@@ -94,11 +95,11 @@ string edit_index (void * webserver_request)
   
   
   Assets_Header header = Assets_Header (translate("Edit"), request);
-  header.setNavigator ();
-  header.setEditorStylesheet ();
-  if (touch) header.jQueryTouchOn ();
-  header.notifItOn ();
-  header.addBreadCrumb (menu_logic_translate_menu (), menu_logic_translate_text ());
+  header.set_navigator ();
+  header.set_editor_stylesheet ();
+  if (touch) header.jquery_touch_on ();
+  header.notify_it_on ();
+  header.add_bread_crumb (menu_logic_translate_menu (), menu_logic_translate_text ());
   page = header.run ();
   
   
@@ -108,10 +109,10 @@ string edit_index (void * webserver_request)
   // Active Bible, and check access.
   // Or if the user have used query to preset the active Bible, get the preset Bible.
   // Set the chosen Bible on the option HTML tag.
-  string bible = AccessBible::Clamp (request, request->database_config_user()->getBible ());
-  if (request->query.count ("bible")) bible = AccessBible::Clamp (request, request->query ["bible"]);
+  string bible = access_bible::clamp (request, request->database_config_user()->getBible ());
+  if (request->query.count ("bible")) bible = access_bible::clamp (request, request->query ["bible"]);
   string bible_html;
-  vector <string> bibles = AccessBible::Bibles (request);
+  vector <string> bibles = access_bible::bibles (request);
   for (auto selectable_bible : bibles) {
     bible_html = Options_To_Select::add_selection (selectable_bible, selectable_bible, bible_html);
   }
@@ -135,7 +136,7 @@ string edit_index (void * webserver_request)
   "var editorChapterVerseUpdatedLoaded = '" + locale_logic_text_reload () + "';\n"
   "var verticalCaretPosition = " + convert_to_string (verticalCaretPosition) + ";\n"
   "var verseSeparator = '" + Database_Config_General::getNotesVerseSeparator () + "';\n";
-  config_logic_swipe_enabled (webserver_request, script);
+  config::logic::swipe_enabled (webserver_request, script);
   view.set_variable ("script", script);
   
   
@@ -160,15 +161,12 @@ string edit_index (void * webserver_request)
  
   // In basic mode the editor has no controls and fewer indicators.
   // In basic mode, the user can just edit text, and cannot style it.
-  bool basic_mode = config_logic_basic_mode (webserver_request);
+  bool basic_mode = config::logic::basic_mode (webserver_request);
   if (!basic_mode) view.enable_zone ("advancedmode");
   
   
   // Whether to enable fast Bible editor switching.
   if (!basic_mode && request->database_config_user ()->getFastEditorSwitchingAvailable ()) {
-    view.enable_zone ("fastswitcheditor");
-  }
-  if (config_logic_indonesian_cloud_free ()) {
     view.enable_zone ("fastswitcheditor");
   }
 
@@ -182,7 +180,7 @@ string edit_index (void * webserver_request)
   page += view.render ("edit", "index");
   
   
-  page += Assets_Page::footer ();
+  page += assets_page::footer ();
   
   
   return page;

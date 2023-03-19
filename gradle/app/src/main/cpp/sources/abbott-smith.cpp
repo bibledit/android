@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,15 @@
 #include <filter/passage.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wsuggest-override"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#ifndef HAVE_PUGIXML
 #include <pugixml/pugixml.hpp>
-#pragma GCC diagnostic pop
+#endif
+#ifdef HAVE_PUGIXML
+#include <pugixml.hpp>
+#endif
 #ifdef HAVE_ICU
 #include <unicode/ustdio.h>
 #include <unicode/normlzr.h>
@@ -32,15 +39,15 @@
 #include <unicode/unistr.h>
 #include <unicode/translit.h>
 #endif
-
-
+#pragma GCC diagnostic pop
+using namespace std;
 using namespace pugi;
 #ifdef HAVE_ICU
 using namespace icu;
 #endif
 
 
-int entry_element_count = 0;
+int entry_element_count {0};
 
 
 void sources_abbott_smith_parse_entry_element (Database_AbbottSmith * database_abbottsmith,

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <database/morphgnt.h>
 #include <filter/string.h>
 #include <filter/url.h>
+using namespace std;
 
 
 void sources_morphgnt_parse ()
@@ -32,8 +33,8 @@ void sources_morphgnt_parse ()
 
   vector <string> files;
   DIR * dir = opendir ("sources/morphgnt");
-  struct dirent * direntry;
-  while ((direntry = readdir (dir)) != NULL) {
+  dirent * direntry;
+  while ((direntry = readdir (dir)) != nullptr) {
     string name = direntry->d_name;
     if (name.find ("morphgnt.txt") == string::npos) continue;
     files.push_back (name);

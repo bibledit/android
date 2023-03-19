@@ -448,6 +448,8 @@ libbibledit_a_SOURCES = \
   database/abbottsmith.cpp \
   resource/comparative9edit.cpp \
   resource/comparative1edit.cpp \
+  resource/translated9edit.cpp \
+  resource/translated1edit.cpp \
   developer/delay.cpp \
   images/index.cpp \
   images/view.cpp \
@@ -482,7 +484,36 @@ libbibledit_a_SOURCES = \
   mimetic098/os/utils.cxx \
   mimetic098/os/file_iterator.cxx \
   mimetic098/os/mmfile.cxx \
-  mimetic098/codec/base64.cxx
+  mimetic098/codec/base64.cxx \
+  system/googletranslate.cpp \
+  filter/google.cpp \
+  i18n/logic.cpp \
+  tidy/access.c \
+  tidy/alloc.c \
+  tidy/attrdict.c \
+  tidy/attrs.c \
+  tidy/buffio.c \
+  tidy/charsets.c \
+  tidy/clean.c \
+  tidy/config.c \
+  tidy/entities.c \
+  tidy/fileio.c \
+  tidy/gdoc.c \
+  tidy/istack.c \
+  tidy/language.c \
+  tidy/lexer.c \
+  tidy/mappedio.c \
+  tidy/message.c \
+  tidy/messageobj.c \
+  tidy/parser.c \
+  tidy/pprint.c \
+  tidy/sprtf.c \
+  tidy/streamio.c \
+  tidy/tagask.c \
+  tidy/tags.c \
+  tidy/tidylib.c \
+  tidy/tmbstr.c \
+  tidy/utf8.c
 
 bin_PROGRAMS = server unittest generate
 
@@ -592,10 +623,10 @@ AM_CFLAGS += $(OPENSSL_CFLAGS)
 
 AM_CXXFLAGS = -fno-var-tracking -g
 if COMPILERWARNINGS
-AM_CFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic
-AM_CXXFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic -Wshadow -Warray-bounds -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdelete-non-virtual-dtor -Weffc++ -Wextra-semi -Wfloat-equal -Wformat=2 -Wformat-overflow=2 -Winline -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wmissing-noreturn
+AM_CFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic -Wno-pragmas
+AM_CXXFLAGS += -Wall -Wno-unknown-pragmas -Wextra -pedantic -Wshadow -Warray-bounds -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdelete-non-virtual-dtor -Weffc++ -Wextra-semi -Wfloat-equal -Wformat=2 -Wmissing-include-dirs -Wmissing-noreturn -Wnull-dereference -Wold-style-cast -Woverloaded-virtual  -Wredundant-decls -Wsign-promo -Wsuggest-override -Wswitch-default -Wswitch-enum -Wundef -Wuninitialized -Wunused-but-set-parameter -Wunused-macros -Wunused-parameter -Wvla -Wzero-as-null-pointer-constant -Wmismatched-tags
 if COMPILERGCC
-AM_CXXFLAGS += -Wcatch-value=2 -Wconditionally-supported -Wduplicated-branches -Wduplicated-cond
+AM_CXXFLAGS += -Wcatch-value=2 -Wconditionally-supported -Wduplicated-branches -Wduplicated-cond -Wformat-overflow=2 -Wlogical-op -Wnoexcept -Wno-non-template-friend -Wrestrict -Wstrict-null-sentinel -Wuseless-cast -Wcomma-subscript -Wredundant-tags -Wvolatile
 endif
 endif
 if COMPILERCLANG
@@ -606,6 +637,10 @@ AM_CXXFLAGS += $(GTK_CFLAGS)
 AM_CXXFLAGS += $(WEBKIT2GTK_CFLAGS)
 AM_CXXFLAGS += $(ICU_CFLAGS)
 AM_CXXFLAGS += $(XML2_CFLAGS)
+AM_CXXFLAGS += $(UTF8PROC_CFLAGS)
+AM_CXXFLAGS += $(GUMBO_CFLAGS)
+# AM_CXXFLAGS += $(TIDY_CFLAGS) -I/usr/include/tidy
+AM_CXXFLAGS += $(PUGIXML_CFLAGS)
 
 LIBS = -Wall -lpthread -L. -g -rdynamic -ldl
 LIBS += $(CURL_LIBS)
@@ -614,6 +649,10 @@ LIBS += $(GTK_LIBS)
 LIBS += $(WEBKIT2GTK_LIBS)
 LIBS += $(ICU_LIBS)
 LIBS += $(XML2_LIBS)
+LIBS += $(UTF8PROC_LIBS)
+LIBS += $(GUMBO_LIBS)
+# LIBS += $(TIDY_LIBS)
+LIBS += $(PUGIXML_LIBS)
 
 # The core library compiles and embeds the mbedtls library.
 # On Debian this gives a lintian error:

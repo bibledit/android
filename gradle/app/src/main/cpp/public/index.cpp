@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2022 Teus Benschop.
+ Copyright (©) 2003-2023 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #include <fonts/logic.h>
 #include <database/config/bible.h>
 #include <styles/css.h>
+using namespace std;
 
 
 string public_index_url ()
@@ -92,8 +93,8 @@ string public_index (void * webserver_request)
   
   string page;
   Assets_Header header = Assets_Header (translate ("Public feedback"), request);
-  header.setNavigator ();
-  header.setStylesheet ();
+  header.set_navigator ();
+  header.set_stylesheet ();
   page = header.run ();
   Assets_View view;
   
@@ -130,6 +131,6 @@ string public_index (void * webserver_request)
   view.set_variable ("exports_css", css);
   
   page += view.render ("public", "index");
-  page += Assets_Page::footer ();
+  page += assets_page::footer ();
   return page;
 }
