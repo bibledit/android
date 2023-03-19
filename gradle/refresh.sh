@@ -138,6 +138,15 @@ sed -i. '/HAVE_MACH_MACH/d' config.h
 echo No libicu.
 sed -i. '/HAVE_ICU/d' config.h
 
+echo No libutf8proc.
+sed -i. '/HAVE_UTF8PROC/d' config.h
+
+echo No pugixml library.
+sed -i. '/HAVE_PUGIXML/d' config.h
+
+echo No execinfo.h.
+sed -i. '/HAVE_EXECINFO/d' config.h
+
 popd
 
 
