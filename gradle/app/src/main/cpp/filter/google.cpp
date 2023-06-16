@@ -74,7 +74,9 @@ string google_access_token {};
 tuple <bool, string> print_store_access_token ()
 {
   // Set the path to the JSON key in the environment for gcloud to use.
+#ifdef HAVE_CLOUD
   setenv("GOOGLE_APPLICATION_CREDENTIALS", config::logic::google_translate_json_key_path ().c_str(), 1);
+#endif
   // Print the access token.
   string command {"gcloud auth application-default print-access-token"};
   string out_err;
@@ -83,7 +85,7 @@ tuple <bool, string> print_store_access_token ()
   bool success = (result == 0);
   // Store the token if it was received, else clear it.
   // Trim the token to remove any new line it likely contains.
-  if (success) google_access_token = filter_string_trim(out_err);
+  if (success) google_access_token = filter::strings::trim(out_err);
   else google_access_token.clear();
   // Done.
   return { success, out_err };

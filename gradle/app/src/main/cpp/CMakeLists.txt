@@ -471,7 +471,6 @@ add_library( # Sets the name of the library.
         read/verse.cpp
         read/load.cpp
         manage/accounts.cpp
-        filter/indonesian.cpp
         dialog/list2.cpp
         developer/delay.cpp
         database/bibleimages.cpp

@@ -69,11 +69,11 @@ void sources_abbott_smith_parse_entry_element (Database_AbbottSmith * database_a
   //</entry>
 
   // Get the lemma, and the Strong's number, and the raw XML of the entry's contents.
-  string lemma = filter_string_trim (node.attribute ("lemma").value ());
+  string lemma = filter::strings::trim (node.attribute ("lemma").value ());
 #ifdef HAVE_ICU
-  lemma = icu_string_normalize (lemma, true, true);
+  lemma = filter::strings::icu_string_normalize (lemma, true, true);
 #endif
-  string strong = filter_string_trim (node.attribute ("strong").value ());
+  string strong = filter::strings::trim (node.attribute ("strong").value ());
   stringstream ss;
   for (xml_node child : node.children()) child.print(ss, "", format_raw);
   string contents = ss.str ();
@@ -86,7 +86,7 @@ void sources_abbott_smith_parse_entry_element (Database_AbbottSmith * database_a
   // It means that a Strong's number is added to the lemma.
   // Such a Strong's number should be parsed too, and put at its proper place in the database.
   // And the lemma should be remove from its attached Strong's number.
-  vector <string> strongs = filter_string_explode (lemma, '|');
+  vector <string> strongs = filter::strings::explode (lemma, '|');
   if (strongs.size() >= 2) {
     lemma = strongs[0];
     strongs.erase (strongs.begin());
@@ -96,7 +96,7 @@ void sources_abbott_smith_parse_entry_element (Database_AbbottSmith * database_a
 
   // Store the original lemma, the casefolded lemma, and the Strong's number,
   // together with the entry's raw XML, into the database.
-  string lemma_case_folded = unicode_string_casefold (lemma);
+  string lemma_case_folded = filter::strings::unicode_string_casefold (lemma);
   database_abbottsmith->store (lemma, lemma_case_folded, strong, contents);
   
   // If there's more Strong's numbers in the entry, store those too, but without any lemma.

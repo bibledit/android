@@ -97,7 +97,7 @@ string system_index (void * webserver_request)
 
   // Get values for setting checkboxes.
   string checkbox = request->post ["checkbox"];
-  [[maybe_unused]] bool checked = convert_to_bool (request->post ["checked"]);
+  [[maybe_unused]] bool checked = filter::strings::convert_to_bool (request->post ["checked"]);
 
 
   // The available localizations.
@@ -120,14 +120,14 @@ string system_index (void * webserver_request)
   // Entry of time zone offset in hours.
   if (request->post.count ("timezone")) {
     string input = request->post ["timezone"];
-    input = filter_string_str_replace ("UTC", string(), input);
-    int input_timezone = convert_to_int (input);
+    input = filter::strings::replace ("UTC", string(), input);
+    int input_timezone = filter::strings::convert_to_int (input);
     input_timezone = clip (input_timezone, MINIMUM_TIMEZONE, MAXIMUM_TIMEZONE);
     Database_Config_General::setTimezone (input_timezone);
   }
   // Set the time zone offset in the GUI.
   int timezone_setting = Database_Config_General::getTimezone();
-  view.set_variable ("timezone", convert_to_string (timezone_setting));
+  view.set_variable ("timezone", filter::strings::convert_to_string (timezone_setting));
   // Display the section to set the site's timezone only
   // in case the calling program has not yet set this zone in the library.
   // So for example the app for iOS can set the timezone from the device,
@@ -144,7 +144,7 @@ string system_index (void * webserver_request)
     Database_Config_General::setAuthorInRssFeed (checked);
     return string();
   }
-  view.set_variable ("rssauthor", get_checkbox_status (Database_Config_General::getAuthorInRssFeed ()));
+  view.set_variable ("rssauthor", filter::strings::get_checkbox_status (Database_Config_General::getAuthorInRssFeed ()));
   // The location of the RSS feed.
   view.set_variable ("rssfeed", rss_feed_url ());
   // The Bibles that send their changes to the RSS feed.
@@ -178,8 +178,8 @@ string system_index (void * webserver_request)
     if (producebibles) task = PRODUCEBIBLESTRANSFERFILE;
     if (producenotes) task = PRODUCERENOTESTRANSFERFILE;
     if (produceresources) task = PRODUCERESOURCESTRANSFERFILE;
-    tasks_logic_queue (task, { convert_to_string (jobId) });
-    redirect_browser (request, jobs_index_url () + "?id=" + convert_to_string (jobId));
+    tasks_logic_queue (task, { filter::strings::convert_to_string (jobId) });
+    redirect_browser (request, jobs_index_url () + "?id=" + filter::strings::convert_to_string (jobId));
     return "";
   }
 #endif
@@ -282,11 +282,11 @@ string system_index (void * webserver_request)
     bool font_in_use = false;
     vector <string> bibles = request->database_bibles ()->getBibles ();
     for (auto & bible : bibles) {
-      if (font == Fonts_Logic::get_text_font (bible)) font_in_use = true;
+      if (font == fonts::logic::get_text_font (bible)) font_in_use = true;
     }
     if (!font_in_use) {
       // Only delete a font when it is not in use.
-      Fonts_Logic::erase (font);
+      fonts::logic::erase (font);
     } else {
       error = translate("The font could not be deleted because it is in use");
     }
@@ -304,12 +304,12 @@ string system_index (void * webserver_request)
   
   
   // Assemble the font block html.
-  vector <string> fonts = Fonts_Logic::getFonts ();
+  vector <string> fonts = fonts::logic::get_fonts ();
   stringstream fontsblock;
   for (auto & font : fonts) {
     fontsblock << "<p>";
 #ifndef HAVE_CLIENT
-    fontsblock << "<a href=" << quoted ("?deletefont=" + font) << " title=" << quoted(translate("Delete font")) << ">" << emoji_wastebasket () << "</a>";
+    fontsblock << "<a href=" << quoted ("?deletefont=" + font) << " title=" << quoted(translate("Delete font")) << ">" << filter::strings::emoji_wastebasket () << "</a>";
 #endif
     fontsblock << font;
     fontsblock << "</p>";
@@ -331,7 +331,7 @@ string system_index (void * webserver_request)
     Database_Config_General::setKeepResourcesCacheForLong (checked);
     return "";
   }
-  view.set_variable ("keepcache", get_checkbox_status (Database_Config_General::getKeepResourcesCacheForLong ()));
+  view.set_variable ("keepcache", filter::strings::get_checkbox_status (Database_Config_General::getKeepResourcesCacheForLong ()));
 #endif
 
 
@@ -345,7 +345,7 @@ string system_index (void * webserver_request)
     }
   }
   vector <int> mails = database_mail.getAllMails ();
-  string mailcount = convert_to_string (mails.size());
+  string mailcount = filter::strings::convert_to_string (mails.size());
   view.set_variable ("emailscount", mailcount);
 #endif
 
