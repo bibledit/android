@@ -16,3 +16,7 @@ Here’s a quick list of capabilities that Bibledit provides for Bible translati
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=org.bibledit.android)
+
+Bug tracker: https://github.com/bibledit/cloud/issues
+General discussion: https://groups.google.com/g/bibledit-general
+
