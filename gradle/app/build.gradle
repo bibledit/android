@@ -1,14 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    compileSdk 32
     defaultConfig {
         applicationId "org.bibledit.android"
         minSdkVersion 22
-        // A target SDK version of 24 allows free-form resizing of the app making it feel more natural.
-        // 2018: Apps on Google Play will be required to target API level 26 or higher.
-        // 2019: Apps on Google Play will be required to target API level 28 or higher.
-        // 2020: Apps on Google Play will be required to target API level 29 or higher.
         targetSdkVersion 32
         versionCode 160
         versionName "5.1.002"
