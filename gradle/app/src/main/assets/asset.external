@@ -725,8 +725,6 @@ help/introduction.html
 help/installcloudsourcedebian.html
 help/consistency.html
 help/navigation.html
-mbedtls.old/Makefile
-mbedtls.old/0readme.txt
 tbsx/specs.html
 tbsx/example.txt
 session/login.html
