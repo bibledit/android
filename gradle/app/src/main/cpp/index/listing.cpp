@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ string index_listing_url (string url)
 }
 
 
-bool index_listing_acl (void * webserver_request, string url)
+bool index_listing_acl (Webserver_Request& webserver_request, string url)
 {
   // Bible exports are public.
   if (url.find ("exports") == 0) {
@@ -66,7 +66,7 @@ bool index_listing_acl (void * webserver_request, string url)
 }
 
 
-string index_listing (void * webserver_request, string url)
+string index_listing (Webserver_Request& webserver_request, string url)
 {
   string page;
   page = assets_page::header (translate ("Bibledit"), webserver_request);

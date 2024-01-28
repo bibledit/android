@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -236,7 +236,7 @@ void bible_logic::import_resource (string bible, string resource)
         string html;
         do {
           // Fetch this resource from the server.
-          html = resource_logic_get_verse (&webserver_request, resource, book, chapter, verse);
+          html = resource_logic_get_verse (webserver_request, resource, book, chapter, verse);
           server_is_installing_module = (html == sword_logic_installing_module_text ());
           if (server_is_installing_module) {
             Database_Logs::log (translate ("Waiting while Bibledit Cloud installs the requested SWORD module"));

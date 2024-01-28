@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,15 +29,12 @@ string assets_external_url ()
 }
 
 
-string assets_external (void * webserver_request)
+string assets_external (Webserver_Request& webserver_request)
 {
-  // The request from the client.
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   // Whether a URL was POSTed, that is, whether it was clicked by the user.
-  string href = request->post ["href"];
+  string href = webserver_request.post ["href"];
   if (!href.empty ()) {
-    config_globals_external_url = request->post ["href"];
+    config_globals_external_url = webserver_request.post ["href"];
     return string();
   }
 

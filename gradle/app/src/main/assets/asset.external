@@ -531,6 +531,7 @@ microtar/readme.txt
 consultations/gitflag
 .github/workflows/build.yml
 pkgdata/files.txt
+pkgdata/.!16152!files.txt
 pkgdata/install.sh
 pkgdata/create.sh
 book/books.js

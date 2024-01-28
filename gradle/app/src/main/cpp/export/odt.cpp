@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include <filter/archive.h>
 #include <filter/shell.h>
 #include <filter/usfm.h>
+#include <filter/passage.h>
 #include <locale/translate.h>
 #include <styles/sheets.h>
 using namespace std;

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,15 +40,14 @@ string checks_suppress_url ()
 }
 
 
-bool checks_suppress_acl (void * webserver_request)
+bool checks_suppress_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::translator ());
 }
 
 
-string checks_suppress (void * webserver_request)
+string checks_suppress (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   Database_Check database_check {};
   
   
@@ -57,8 +56,8 @@ string checks_suppress (void * webserver_request)
   Assets_View view {};
   
   
-  if (request->query.count ("release")) {
-    int release = filter::strings::convert_to_int (request->query["release"]);
+  if (webserver_request.query.count ("release")) {
+    int release = filter::strings::convert_to_int (webserver_request.query["release"]);
     database_check.release (release);
     view.set_variable ("success", translate ("The check result is no longer suppressed."));
   }
@@ -67,7 +66,7 @@ string checks_suppress (void * webserver_request)
   // Get the Bibles the user has write-access to.
   vector <string> bibles {};
   {
-    vector <string> all_bibles = request->database_bibles()->get_bibles ();
+    vector <string> all_bibles = webserver_request.database_bibles()->get_bibles ();
     for (const auto & bible : all_bibles) {
       if (access_bible::write (webserver_request, bible)) {
         bibles.push_back (bible);

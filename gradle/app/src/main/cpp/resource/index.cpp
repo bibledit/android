@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -42,22 +42,19 @@ string resource_index_url ()
 }
 
 
-bool resource_index_acl (void * webserver_request)
+bool resource_index_acl (Webserver_Request& webserver_request)
 {
   return access_logic::privilege_view_resources (webserver_request);
 }
 
 
-string resource_index (void * webserver_request)
+string resource_index (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
-  
-  bool touch = request->session_logic ()->touchEnabled ();
+  const bool touch = webserver_request.session_logic ()->touchEnabled ();
 
   
   string page;
-  Assets_Header header = Assets_Header (translate("Resources"), request);
+  Assets_Header header = Assets_Header (translate("Resources"), webserver_request);
   header.set_navigator ();
   header.set_stylesheet ();
   if (touch) header.jquery_touch_on ();
@@ -66,7 +63,7 @@ string resource_index (void * webserver_request)
   Assets_View view;
   
   
-  vector <string> resources = request->database_config_user()->getActiveResources ();
+  vector <string> resources = webserver_request.database_config_user()->getActiveResources ();
 
 
   // If no resources are displayed, set a default selection of them.
@@ -76,7 +73,7 @@ string resource_index (void * webserver_request)
     vector <string> default_resources = Database_Config_General::getDefaultActiveResources ();
     if (default_resources.empty ()) resources = demo_logic_default_resources ();
     else resources = default_resources;
-    request->database_config_user()->setActiveResources (resources);
+    webserver_request.database_config_user()->setActiveResources (resources);
   }
 
   
@@ -98,7 +95,7 @@ string resource_index (void * webserver_request)
   
   
   size_t resource_count = resources.size ();
-  string username = request->session_logic()->currentUser ();
+  string username = webserver_request.session_logic()->currentUser ();
   int window_position = config_globals_resource_window_positions [username];
   string script = "var resourceCount = " + filter::strings::convert_to_string (resource_count) + ";\n"
                   "var resourceWindowPosition = " + filter::strings::convert_to_string (window_position) + ";";

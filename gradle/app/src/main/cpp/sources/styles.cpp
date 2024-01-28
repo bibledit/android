@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ bool sources_style_parse_cpp_element (string & line, string signature)
 {
   signature = sources_style_parse_create_c_comment (signature);
   size_t pos = line.find (signature);
-  if (pos == string::npos) return false;
+  if (pos == std::string::npos) return false;
   line.erase (0, pos + signature.length ());
   line = filter::strings::trim (line);
   if (line [line.size () - 1] == ',') line = line.erase (line.size () - 1);
@@ -67,14 +67,14 @@ void sources_styles_parse ()
   string cpp_start = "style_record styles_table [] =";
   string cpp_end = "};";
   size_t pos = contents.find (cpp_start);
-  if (pos == string::npos) {
-    cout << "Cannot find default styles signature: " << cpp_start << endl;
+  if (pos == std::string::npos) {
+    std::cout << "Cannot find default styles signature: " << cpp_start << std::endl;
     return;
   }
   contents.erase (0, pos + cpp_start.size() + 1);
   pos = contents.find (cpp_end);
-  if (pos == string::npos) {
-    cout << "Cannot find default styles signature: " << cpp_end << endl;
+  if (pos == std::string::npos) {
+    std::cout << "Cannot find default styles signature: " << cpp_end << std::endl;
     return;
   }
   contents.erase (pos);
@@ -260,7 +260,7 @@ void sources_styles_parse ()
     // Check whether the marker in usfm.sty exists in C++.
     if (style_definitions.count (paratext_marker) == 0) {
       if (in_array (paratext_marker, non_existing_markers)) continue;
-      cout << "Marker " << paratext_marker << " exists in usfm.sty but not in Bibledit" << endl;
+      std::cout << "Marker " << paratext_marker << " exists in usfm.sty but not in Bibledit" << std::endl;
       non_existing_markers.push_back (paratext_marker);
       continue;
     }
@@ -404,12 +404,12 @@ void sources_styles_parse ()
   bool updating = false;
   for (auto source_line : source_lines) {
     if (updating) {
-      if (source_line.find (cpp_end) != string::npos) updating = false;
+      if (source_line.find (cpp_end) != std::string::npos) updating = false;
     }
     if (!updating) {
       updated_lines.push_back (source_line);
     }
-    if (source_line.find (cpp_start) != string::npos) {
+    if (source_line.find (cpp_start) != std::string::npos) {
       for (auto line : cpp_lines) {
         updated_lines.push_back (line);
       }
@@ -421,6 +421,6 @@ void sources_styles_parse ()
   contents = filter::strings::implode (updated_lines, "\n");
   filter_url_file_put_contents (cpp_path, contents);
   
-  cout << "Finished parsing style values from the usfm.sty file" << endl;
+  std::cout << "Finished parsing style values from the usfm.sty file" << std::endl;
 
 }

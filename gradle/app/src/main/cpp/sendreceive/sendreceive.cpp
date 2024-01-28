@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   }
   
   
-  Webserver_Request request;
+  Webserver_Request webserver_request;
   bool success = true;
   string error;
   
@@ -84,7 +84,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
 
   
   // Synchronize the Bible from the database to the local git repository.
-  filter_git_sync_bible_to_git (&request, bible, directory);
+  filter_git_sync_bible_to_git (webserver_request, bible, directory);
   
 
   // Log the status of the repository: "git status".
@@ -132,16 +132,16 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
     success = filter_git_pull (directory, pull_messages);
     for (auto & line : pull_messages) {
       logs.push_back (line);
-      if (line.find ("CONFLICT") != string::npos) conflict = true;
-      if (line.find ("MERGE_HEAD") != string::npos) conflict = true;
+      if (line.find ("CONFLICT") != std::string::npos) conflict = true;
+      if (line.find ("MERGE_HEAD") != std::string::npos) conflict = true;
     }
     if (!success || conflict || logs.size () > 1) {
       for (auto & log : logs) {
         if (log.find ("Updating") == 0) continue;
         if (log.find ("Fast-forward") == 0) continue;
-        if (log.find ("file changed") != string::npos) continue;
+        if (log.find ("file changed") != std::string::npos) continue;
         if (log.find ("From ") == 0) continue;
-        if (log.find ("origin/master") != string::npos) continue;
+        if (log.find ("origin/master") != std::string::npos) continue;
         Database_Logs::log (sendreceive_tag () + "receive: " + log, Filter_Roles::translator ());
       }
     }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,17 +59,17 @@ int filter_memory_percentage_available ()
     size_t pos;
     int memtotal = 0;
     pos = meminfo.find ("MemTotal");
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       memtotal = filter::strings::convert_to_int (meminfo.substr (pos + 15));
     }
     int memfree = 0;
     pos = meminfo.find ("MemFree");
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       memfree = filter::strings::convert_to_int (meminfo.substr (pos + 15));
     }
     int cached = 0;
     pos = meminfo.find ("Cached");
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       cached = filter::strings::convert_to_int (meminfo.substr (pos + 15));
     }
     return (memfree + cached) * 100 / memtotal;
@@ -109,7 +109,7 @@ void filter_memory_print_back_trace ()
   int size = backtrace(array, 1024);
   strings = backtrace_symbols(array, size);
   for (int i = 0; i < size; i++)
-    cout << strings[i] << endl;
+    std::cout << strings[i] << std::endl;
   puts("");
   free(strings);
 #endif

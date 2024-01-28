@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ void checks_verses::patterns (const string & bible, int book, int chapter,
     const string text = element.second;
     for (const auto & pattern : patterns) {
       if (pattern.empty ()) continue;
-      if (text.find (pattern) != string::npos) {
+      if (text.find (pattern) != std::string::npos) {
         database_check.recordOutput (bible, book, chapter, verse, translate ("Pattern found in text:") + " " + pattern);
       }
     }

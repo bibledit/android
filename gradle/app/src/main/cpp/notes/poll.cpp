@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,16 +38,15 @@ string notes_poll_url ()
 }
 
 
-bool notes_poll_acl (void * webserver_request)
+bool notes_poll_acl (Webserver_Request& webserver_request)
 {
   return access_logic::privilege_view_notes (webserver_request);
 }
 
 
-string notes_poll (void * webserver_request)
+string notes_poll (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  string action = request->query ["action"];
+  string action = webserver_request.query ["action"];
   if (action == "alive") {
     Ipc_Notes::alive (webserver_request, true, true);
     int identifier = Ipc_Notes::get (webserver_request);

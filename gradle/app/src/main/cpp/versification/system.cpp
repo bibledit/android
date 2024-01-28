@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,16 +40,14 @@ string versification_system_url ()
 }
 
 
-bool versification_system_acl (void * webserver_request)
+bool versification_system_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string versification_system (void * webserver_request)
+string versification_system (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   string page;
   
   Assets_Header header = Assets_Header (translate("Versification system"), webserver_request);
@@ -61,11 +59,11 @@ string versification_system (void * webserver_request)
   
   Database_Versifications database_versifications = Database_Versifications();
 
-  string name = request->query["name"];
+  string name = webserver_request.query["name"];
   view.set_variable ("name", filter::strings::escape_special_xml_characters (name));
 
-  if (request->post.count ("submit")) {
-    string data = request->post["data"];
+  if (webserver_request.post.count ("submit")) {
+    string data = webserver_request.post["data"];
     if (data != "") {
       database_versifications.input (data, name);
     }

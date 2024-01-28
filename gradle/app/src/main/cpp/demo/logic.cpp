@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -112,22 +112,22 @@ void demo_clean_data ()
   Database_Logs::log ("Cleaning up the demo data");
   
   
-  Webserver_Request request {};
+  Webserver_Request webserver_request {};
   
   
   // Set user to the demo credentials (admin).
   // This is the user who is always logged-in in a demo installation.
-  request.session_logic ()->set_username (session_admin_credentials ());
+  webserver_request.session_logic ()->set_username (session_admin_credentials ());
   
   
   // Delete empty stylesheet that may have been there.
-  request.database_styles()->revokeWriteAccess ("", styles_logic_standard_sheet ());
-  request.database_styles()->deleteSheet ("");
+  webserver_request.database_styles()->revokeWriteAccess ("", styles_logic_standard_sheet ());
+  webserver_request.database_styles()->deleteSheet ("");
   styles_sheets_create_all ();
   
   
   // Set both stylesheets to "Standard" for all Bibles.
-  vector <string> bibles = request.database_bibles()->get_bibles ();
+  vector <string> bibles = webserver_request.database_bibles()->get_bibles ();
   for (const auto & bible : bibles) {
     Database_Config_Bible::setExportStylesheet (bible, styles_logic_standard_sheet ());
     Database_Config_Bible::setEditorStylesheet (bible, styles_logic_standard_sheet ());
@@ -152,10 +152,10 @@ void demo_clean_data ()
     pair (session_admin_credentials (), Filter_Roles::admin ())
   };
   for (const auto & element : users) {
-    if (!request.database_users ()->usernameExists (element.first)) {
-      request.database_users ()->add_user(element.first, element.first, element.second, "");
+    if (!webserver_request.database_users ()->usernameExists (element.first)) {
+      webserver_request.database_users ()->add_user(element.first, element.first, element.second, "");
     }
-    request.database_users ()->set_level (element.first, element.second);
+    webserver_request.database_users ()->set_level (element.first, element.second);
   }
   
   
@@ -167,25 +167,25 @@ void demo_clean_data ()
 
   // Create sample notes.
   if (config::logic::default_bibledit_configuration ()) {
-    demo_create_sample_notes (&request);
+    demo_create_sample_notes (webserver_request);
   }
 
 
   // Create samples for the workspaces.
   if (config::logic::default_bibledit_configuration ()) {
-    demo_create_sample_workspaces (&request);
+    demo_create_sample_workspaces (webserver_request);
   }
   
   
   // Set navigator to John 3:16.
   if (config::logic::default_bibledit_configuration ()) {
-    Ipc_Focus::set (&request, 43, 3, 16);
+    Ipc_Focus::set (webserver_request, 43, 3, 16);
   }
 
 
   // Set and/or trim resources to display.
   // Too many resources crash the demo: Limit the amount.
-  vector <string> resources = request.database_config_user()->getActiveResources ();
+  vector <string> resources = webserver_request.database_config_user()->getActiveResources ();
   bool reset_resources {false};
   size_t max_resource {25};
   if (resources.size () > max_resource) reset_resources = true;
@@ -196,12 +196,12 @@ void demo_clean_data ()
   }
   if (reset_resources) {
     resources = demo_logic_default_resources ();
-    request.database_config_user()->setActiveResources (resources);
+    webserver_request.database_config_user()->setActiveResources (resources);
   }
   
   
   // No flipped basic <> advanded mode.
-  request.database_config_user ()->setBasicInterfaceMode (false);
+  webserver_request.database_config_user ()->setBasicInterfaceMode (false);
 }
 
 
@@ -244,7 +244,7 @@ void demo_create_sample_bible ()
     // * it means that Bibledit uses a different name for the Sample Bible,
     // * and the file needs an update.
     size_t pos = file.find(demo_sample_bible_name());
-    if (pos == string::npos) {
+    if (pos == std::string::npos) {
       string filename = "Sample";
       file = filter::strings::replace(filename, demo_sample_bible_name(), file);
     }
@@ -312,7 +312,7 @@ void demo_prepare_sample_bible ()
   files.clear ();
   filter_url_recursive_scandir (directory, files);
   for (const auto & file : files) {
-    if (file.find (demo_sample_bible_name ()) != string::npos) {
+    if (file.find (demo_sample_bible_name ()) != std::string::npos) {
       string data = filter_url_file_get_contents (file);
       Database_Sample::store (file, data);
     }
@@ -332,7 +332,7 @@ void demo_prepare_sample_bible ()
 
 
 // Create sample notes.
-void demo_create_sample_notes (void * webserver_request)
+void demo_create_sample_notes (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   vector <int> identifiers = database_notes.get_identifiers ();
@@ -350,10 +350,8 @@ string demo_workspace ()
 }
 
 
-void demo_create_sample_workspaces (void * webserver_request)
+void demo_create_sample_workspaces (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   map <int, string> urls {};
   map <int, string> widths {};
   for (int i = 0; i < 15; i++) {
@@ -376,18 +374,18 @@ void demo_create_sample_workspaces (void * webserver_request)
     pair (2, "")
   };
   
-  request->database_config_user()->setActiveWorkspace ("USFM");
-  workspace_set_urls (request, urls);
-  workspace_set_widths (request, widths);
-  workspace_set_heights (request, row_heights);
+  webserver_request.database_config_user()->setActiveWorkspace ("USFM");
+  workspace_set_urls (webserver_request, urls);
+  workspace_set_widths (webserver_request, widths);
+  workspace_set_heights (webserver_request, row_heights);
   
   urls[0] = editone2_index_url ();
   urls[1] = resource_index_url ();
   
-  request->database_config_user()->setActiveWorkspace (demo_workspace ());
-  workspace_set_urls (request, urls);
-  workspace_set_widths (request, widths);
-  workspace_set_heights (request, row_heights);
+  webserver_request.database_config_user()->setActiveWorkspace (demo_workspace ());
+  workspace_set_urls (webserver_request, urls);
+  workspace_set_widths (webserver_request, widths);
+  workspace_set_heights (webserver_request, row_heights);
 }
 
 

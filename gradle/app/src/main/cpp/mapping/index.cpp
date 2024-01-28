@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -37,15 +37,14 @@ string mapping_index_url ()
 }
 
 
-bool mapping_index_acl (void * webserver_request)
+bool mapping_index_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string mapping_index (void * webserver_request)
+string mapping_index (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   Database_Mappings database_mappings;
   
   string page;
@@ -59,13 +58,13 @@ string mapping_index (void * webserver_request)
   string success;
 
   // Create new verse mapping.
-  if (request->query.count ("new")) {
+  if (webserver_request.query.count ("new")) {
     Dialog_Entry dialog_entry = Dialog_Entry ("index", translate("Enter a name for the new verse mapping"), "", "new", "");
     page += dialog_entry.run ();
     return page;
   }
-  if (request->post.count ("new")) {
-    string name = request->post ["entry"];
+  if (webserver_request.post.count ("new")) {
+    string name = webserver_request.post ["entry"];
     vector <string> mappings = database_mappings.names ();
     if (find (mappings.begin(), mappings.end(), name) != mappings.end ()) {
       error = translate("This verse mapping already exists");
@@ -75,9 +74,9 @@ string mapping_index (void * webserver_request)
   }
 
   // Delete verse mapping.
-  string name = request->query ["name"];
-  if (request->query.count ("delete")) {
-    string confirm = request->query ["confirm"];
+  string name = webserver_request.query ["name"];
+  if (webserver_request.query.count ("delete")) {
+    string confirm = webserver_request.query ["confirm"];
     if (confirm == "") {
       Dialog_Yes dialog_yes = Dialog_Yes ("index", translate("Would you like to delete this verse mapping?"));
       dialog_yes.add_query ("name", name);
@@ -100,7 +99,7 @@ string mapping_index (void * webserver_request)
     mappingsblock << mapping;
     mappingsblock << " ";
     mappingsblock << "<a href=" << quoted("map?name=" + mapping) << ">[translate(" << quoted("edit") << "]</a>";
-    mappingsblock << "</p>" << endl;
+    mappingsblock << "</p>" << std::endl;
   }
   view.set_variable ("mappingsblock", mappingsblock.str());
   

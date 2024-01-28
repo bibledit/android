@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void sources_hebrewlexicon_parse ()
             definition = filter::strings::convert_xml_character_entities_to_characters (definition);
             vector <string> lines = filter::strings::explode (definition, '\n');
             for (auto & line : lines) {
-              if (line.find ("</status>") != string::npos) line.clear ();
+              if (line.find ("</status>") != std::string::npos) line.clear ();
               line = filter::strings::trim (line);
             }
             definition = filter::strings::implode (lines, "\n");

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -123,8 +123,11 @@ string admin_email ()
 
 
 // Replacement function for missing "stoi" on platforms like Android.
-int my_stoi (const string& str, void * idx, int base)
+int my_stoi (const string& str, void * idx, int base) //Todo
 {
+  {
+    return std::stoi (str, static_cast<size_t *> (idx), base);
+  }
 #ifdef HAVE_STOI
   size_t * index = static_cast<size_t *> (idx);
   return stoi (str, index, base);
@@ -137,16 +140,15 @@ int my_stoi (const string& str, void * idx, int base)
 
 
 // Returns whether the interface is supposed to be in basic mode.
-bool basic_mode (void * webserver_request)
+bool basic_mode (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  bool basic_mode {request->database_config_user ()->getBasicInterfaceMode ()};
+  bool basic_mode {webserver_request.database_config_user ()->getBasicInterfaceMode ()};
   return basic_mode;
 }
 
 
 // This returns the URL of Bibledit Cloud that faces the user.
-string site_url (void * webserver_request)
+string site_url (Webserver_Request& webserver_request)
 {
   // When the administrator has entered a fixed value for the user-facing URL, take that.
   // It overrides everything.
@@ -154,19 +156,16 @@ string site_url (void * webserver_request)
   if (!url.empty ()) return url;
   
   // If a webserver request is passed, take the host from there.
-  // The results is that in a situation where 192.168.2.6 is the same as localhost,
+  // The result is that in a situation where 192.168.2.6 is the same as localhost,
   // user can connect from localhost and also from 192.168.2.6.
   // In the past there was a situation that the admin set up a central server for the whole team on his localhost.
   // Then team members that connected to 192.168.2.6 were forwarded to localhost (which of course failed).
   // This solution deals with that.
-  if (webserver_request) {
-    Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-    if (!request->host.empty ()) {
-      url = get_base_url (request);
-      return url;
-    }
+  if (!webserver_request.host.empty ()) {
+    url = get_base_url (webserver_request);
+    return url;
   }
-  
+
   // No URL found yet.
   // This occurs during scheduled tasks that require the URL to add it to emails sent out.
   // Take the URL stored on login.
@@ -247,13 +246,11 @@ bool enforce_https_client ()
 }
 
 
-void swipe_enabled (void * webserver_request, string & script)
+void swipe_enabled (Webserver_Request& webserver_request, string & script)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   string true_false {"false"};
-  if (request->session_logic ()->touchEnabled ()) {
-    if (request->database_config_user ()->getSwipeActionsAvailable ()) {
+  if (webserver_request.session_logic ()->touchEnabled ()) {
+    if (webserver_request.database_config_user ()->getSwipeActionsAvailable ()) {
       true_false = "true";
     }
   }
@@ -300,6 +297,3 @@ string google_translate_json_key_path ()
 
 
 } // End of namespace.
-
-
-

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,11 +40,10 @@ const char * journal_index_url ()
 }
 
 
-bool journal_index_acl (void * webserver_request)
+bool journal_index_acl ([[maybe_unused]]Webserver_Request& webserver_request)
 {
   // In Client mode, anyone can view the journal.
 #ifdef HAVE_CLIENT
-  (void) webserver_request;
   return true;
 #endif
   // In the Cloud, the role of Consultant or higher can view the journal.
@@ -108,9 +107,9 @@ string render_journal_entry (string filename, [[maybe_unused]] int userlevel)
 
 
 // Deal with AJAX call for a possible new journal entry.
-string journal_index_ajax_next (Webserver_Request * request, string filename)
+string journal_index_ajax_next (Webserver_Request& webserver_request, string filename)
 {
-  int userLevel = request->session_logic()->currentLevel ();
+  int userLevel = webserver_request.session_logic()->currentLevel ();
   string result = Database_Logs::next (filename);
   if (!result.empty()) {
     result = render_journal_entry (result, userLevel);
@@ -120,19 +119,18 @@ string journal_index_ajax_next (Webserver_Request * request, string filename)
 }
 
 
-string journal_index (void * webserver_request)
+string journal_index (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  int userLevel = request->session_logic()->currentLevel ();
+  int userLevel = webserver_request.session_logic()->currentLevel ();
 
   
-  string filename = request->query ["filename"];
+  string filename = webserver_request.query ["filename"];
   if (!filename.empty ()) {
-    return journal_index_ajax_next (request, filename);
+    return journal_index_ajax_next (webserver_request, filename);
   }
   
   
-  string expansion = request->query ["expansion"];
+  string expansion = webserver_request.query ["expansion"];
   if (!expansion.empty ()) {
     // Get file path.
     expansion = filter_url_basename_web (expansion);
@@ -161,13 +159,13 @@ string journal_index (void * webserver_request)
   Assets_View view;
 
 
-  if (request->query.count ("clear")) {
+  if (webserver_request.query.count ("clear")) {
     Database_Logs::clear ();
     // If the logbook has been cleared on a mobile device, and the screen goes off,
     // and then the user activates the screen on the mobile device,
     // the logbook will then again be cleared, because that was the last opened URL.
     // Redirecting the browser to a clean URL fixes this behaviour.
-    redirect_browser (request, journal_index_url ());
+    redirect_browser (webserver_request, journal_index_url ());
     return "";
   }
 

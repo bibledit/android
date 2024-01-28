@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <database/styles.h>
 #include <database/logs.h>
 #include <styles/css.h>
+#include <webserver/request.h>
 using namespace std;
 
 
@@ -60,8 +61,8 @@ void Styles_Sheets::recreate ()
 
 void Styles_Sheets::create (string stylesheet, string path, bool editor, string export_bible)
 {
-  Webserver_Request request {};
-  Styles_Css styles_css = Styles_Css (&request, stylesheet);
+  Webserver_Request webserver_request {};
+  Styles_Css styles_css (webserver_request, stylesheet);
   if (editor) {
     styles_css.editor ();
   }

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -41,27 +41,25 @@ string workspace_settings_url ()
 }
 
 
-bool workspace_settings_acl (void * webserver_request)
+bool workspace_settings_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::consultant ());
 }
 
 
-string workspace_settings (void * webserver_request)
+string workspace_settings (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
+  string name = webserver_request.query ["name"];
+  webserver_request.database_config_user()->setActiveWorkspace (name);
   
-  string name = request->query ["name"];
-  request->database_config_user()->setActiveWorkspace (name);
-  
-  if (request->query.count ("preset")) {
-    int preset = filter::strings::convert_to_int (request->query ["preset"]);
-    workspace_set_urls (request, workspace_get_default_urls (preset));
-    workspace_set_widths (request, workspace_get_default_widths (preset));
-    workspace_set_heights (request, workspace_get_default_heights (preset));
+  if (webserver_request.query.count ("preset")) {
+    int preset = filter::strings::convert_to_int (webserver_request.query ["preset"]);
+    workspace_set_urls (webserver_request, workspace_get_default_urls (preset));
+    workspace_set_widths (webserver_request, workspace_get_default_widths (preset));
+    workspace_set_heights (webserver_request, workspace_get_default_heights (preset));
   }
   
-  if (request->post.count ("save")) {
+  if (webserver_request.post.count ("save")) {
     map <int, string> urls;
     map <int, string> widths;
     map <int, string> row_heights;
@@ -70,46 +68,46 @@ string workspace_settings (void * webserver_request)
     for (int row = 1; row <= 3; row++) {
       for (int column = 1; column <= 5; column++) {
         string key = filter::strings::convert_to_string (row) + filter::strings::convert_to_string (column);
-        urls [to14] = request->post ["url" + key];
-        widths [to14] = request->post ["width" + key];
+        urls [to14] = webserver_request.post ["url" + key];
+        widths [to14] = webserver_request.post ["width" + key];
         to14++;
       }
       string key = filter::strings::convert_to_string (row);
-      row_heights [to2] = request->post ["height" + key];
+      row_heights [to2] = webserver_request.post ["height" + key];
       to2++;
     }
-    workspace_set_urls (request, urls);
-    workspace_set_widths (request, widths);
-    workspace_set_heights (request, row_heights);
+    workspace_set_urls (webserver_request, urls);
+    workspace_set_widths (webserver_request, widths);
+    workspace_set_heights (webserver_request, row_heights);
     // If no "px" or "%" is given, then default to "%".
     // https://github.com/bibledit/cloud/issues/643
-    string workspacewidth = filter::strings::trim(request->post ["workspacewidth"]);\
+    string workspacewidth = filter::strings::trim(webserver_request.post ["workspacewidth"]);\
     if (!workspacewidth.empty()) {
       size_t pos_px = workspacewidth.find ("px");
       size_t pos_pct = workspacewidth.find ("%");
-      if (pos_px == string::npos) {
-        if (pos_pct == string::npos) {
+      if (pos_px == std::string::npos) {
+        if (pos_pct == std::string::npos) {
           workspacewidth.append("%");
         }
       }
     }
-    workspace_set_entire_width (request, workspacewidth);
-    redirect_browser (request, workspace_index_url ());
+    workspace_set_entire_width (webserver_request, workspacewidth);
+    redirect_browser (webserver_request, workspace_index_url ());
     return "";
   }
   
   string page;
   
-  Assets_Header header = Assets_Header (translate("Edit workspace"), request);
+  Assets_Header header = Assets_Header (translate("Edit workspace"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.add_bread_crumb (workspace_organize_url (), menu_logic_workspace_organize_text ());
   page = header.run ();
   
   Assets_View view;
   
-  map <int, string> urls = workspace_get_urls (request, false);
-  map <int, string> widths = workspace_get_widths (request);
-  for (auto & element : urls) {
+  map <int, string> urls = workspace_get_urls (webserver_request, false);
+  map <int, string> widths = workspace_get_widths (webserver_request);
+  for (const auto & element : urls) {
     int key = element.first;
     int row = static_cast<int>(round (key / 5)) + 1;
     int column = key % 5 + 1;
@@ -119,7 +117,7 @@ string workspace_settings (void * webserver_request)
     view.set_variable (variable, widths[key]);
   }
   
-  map <int, string> row_heights = workspace_get_heights (request);
+  map <int, string> row_heights = workspace_get_heights (webserver_request);
   for (auto & element : row_heights) {
     int key = element.first;
     int row = key + 1;
@@ -127,7 +125,7 @@ string workspace_settings (void * webserver_request)
     view.set_variable (variable, row_heights [key]);
   }
 
-  string workspacewidth = workspace_get_entire_width (request);
+  string workspacewidth = workspace_get_entire_width (webserver_request);
   view.set_variable ("workspacewidth", workspacewidth);
   
   view.set_variable ("name", name);

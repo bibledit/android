@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ void checks_french::space_before_after_punctuation (const string & bible, int bo
     {
       string text = element.second;
       size_t pos = text.find (left_guillemet ());
-      while (pos != string::npos) {
+      while (pos != std::string::npos) {
         text.erase (0, pos + left_guillemet ().size ());
         bool space_follows = text.find (" ") == 0;
         bool nbsp_follows = text.find (nbsp) == 0;
@@ -61,7 +61,7 @@ void checks_french::space_before_after_punctuation (const string & bible, int bo
       string text = element.second;
       // The location of this punctuation character.
       size_t pos = filter::strings::unicode_string_strpos (text, punctuation);
-      while (pos != string::npos) {
+      while (pos != std::string::npos) {
         if (pos > 0) {
           string preceding_character = filter::strings::unicode_string_substr (text, pos - 1, 1);
           if (preceding_character == " ") {

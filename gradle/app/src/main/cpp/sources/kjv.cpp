@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ void sources_kjv_store (int book, int chapter, int verse, string lemma, string e
   vector <string> lemmas = filter::strings::explode (lemma, ' ');
   bool output_done = false;
   for (auto & strong : lemmas) {
-    if (strong.find ("strong") == string::npos) continue;
+    if (strong.find ("strong") == std::string::npos) continue;
     if (output_done) {
       // Two separate two identical words.
       database_kjv.store (book, chapter, verse, "", " / ");

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,8 +38,8 @@ void checks_headers::no_punctuation_at_end (const string & bible, int book, int 
     string last_character {};
     if (!heading.empty ()) last_character = heading.substr (heading.size () - 1);
     bool message {false};
-    if (centermarks.find (last_character) != string::npos) message = true;
-    if (endmarks.find (last_character) != string::npos) message = true;
+    if (centermarks.find (last_character) != std::string::npos) message = true;
+    if (endmarks.find (last_character) != std::string::npos) message = true;
     if (message) {
       database_check.recordOutput (bible, book, chapter, verse, translate ("Punctuation at end of heading:") + " " + heading);
     }

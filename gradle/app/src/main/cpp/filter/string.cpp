@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1419,10 +1419,9 @@ std::vector <std::string> search_needles (const std::string& search, const std::
 
 
 // Returns an integer identifier based on the name of the current user.
-int user_identifier (void * webserver_request)
+int user_identifier (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  const std::string username = request->session_logic()->currentUser ();
+  const std::string username = webserver_request.session_logic()->currentUser ();
   const std::string hash = md5 (username).substr (0, 5);
   const int identifier = config::logic::my_stoi (hash, nullptr, 36);
   return identifier;
@@ -2022,7 +2021,7 @@ static std::string pretty_print(GumboNode* node, int lvl, const std::string& ind
   std::string attributes {};
   std::string tagname {get_tag_name(node)};
   std::string key {"|" + tagname + "|"};
-  //bool need_special_handling {special_handling.find(key) != string::npos};
+  //bool need_special_handling {special_handling.find(key) != std::string::npos};
   const bool is_empty_tag {empty_tags.find(key) != std::string::npos};
   const bool no_entity_substitution {no_entity_substitution_tags.find(key) != std::string::npos};
   const bool keep_whitespace {preserve_whitespace_tags.find(key) != std::string::npos};
@@ -2155,11 +2154,11 @@ std::string fix_invalid_html_tidy (std::string html)
   
   if (rc >= 0) {
     if (rc > 0) {
-      //      cerr << "Html tidy diagnostics:" << endl;
-      //      cerr << errbuf.bp << endl;
+      //      std::cerr << "Html tidy diagnostics:" << std::endl;
+      //      std::cerr << errbuf.bp << std::endl;
     }
-    //    cout << "Html tidy result:" << endl;
-    //    cout << output.bp << endl;
+    //    std::cout << "Html tidy result:" << std::endl;
+    //    std::cout << output.bp << std::endl;
     html = std::string (reinterpret_cast<char const*>(output.bp));
   }
   else {

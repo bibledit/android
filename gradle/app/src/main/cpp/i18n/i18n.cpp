@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ string implode (vector <string>& values, string delimiter)
 string str_replace (string search, string replace, string subject)
 {
   size_t offposition = subject.find (search);
-  while (offposition != string::npos) {
+  while (offposition != std::string::npos) {
     subject.replace (offposition, search.length (), replace);
     offposition = subject.find (search, offposition + replace.length ());
   }
@@ -104,7 +104,7 @@ int main ()
   // Read all html files to process.
   string contents = file_get_contents ("i18n.html");
   vector <string> files = explode (contents, '\n');
-  cout << "Processing " << files.size () << " html files" << endl;
+  std::cout << "Processing " << files.size () << " html files" << std::endl;
   
   // Store the translatable strings.
   vector <string> translatables;
@@ -129,7 +129,7 @@ int main ()
     size_t position = contents.find (gettextopen);
     
     // Iterate through the contents till all gettext calls have been dealt with.
-    while ((position != string::npos) && (iterations < 1000)) {
+    while ((position != std::string::npos) && (iterations < 1000)) {
       iterations++;
       
       // Remove the gettext opener.
@@ -137,7 +137,7 @@ int main ()
       
       // Position where the gettext call ends.
       size_t pos = contents.find (gettextclose, position);
-      if (pos != string::npos) {
+      if (pos != std::string::npos) {
         
         // Take the gettext closer out.
         contents.erase (pos, gettextclose.length());

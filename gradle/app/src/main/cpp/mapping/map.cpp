@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,15 +38,14 @@ string mapping_map_url ()
 }
 
 
-bool mapping_map_acl (void * webserver_request)
+bool mapping_map_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string mapping_map (void * webserver_request)
+string mapping_map (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   Database_Mappings database_mappings;
   
   string page;
@@ -60,11 +59,11 @@ string mapping_map (void * webserver_request)
   Assets_View view;
   string success;
   
-  string name = request->query["name"];
+  string name = webserver_request.query["name"];
   view.set_variable ("name", name);
 
-  if (request->post.count ("submit")) {
-    string data = request->post["data"];
+  if (webserver_request.post.count ("submit")) {
+    string data = webserver_request.post["data"];
     database_mappings.import (name, data);
     success = translate("The verse mapping was saved");
   }

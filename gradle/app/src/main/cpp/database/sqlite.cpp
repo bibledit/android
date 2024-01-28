@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -277,7 +277,7 @@ SqliteReader::~SqliteReader ()
 }
 
 
-int SqliteReader::callback (void *userdata, int argc, char **argv, char **column_names)
+int SqliteReader::callback (void *userdata, int argc, char **argv, char **column_names) // Todo
 {
   SqliteReader * sqlite_reader = static_cast<SqliteReader *> (userdata);
   for (int i = 0; i < argc; i++) {

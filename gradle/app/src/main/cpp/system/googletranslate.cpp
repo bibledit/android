@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,16 +38,14 @@ string system_googletranslate_url ()
 }
 
 
-bool system_googletranslate_acl ([[maybe_unused]] void * webserver_request)
+bool system_googletranslate_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string system_googletranslate (void * webserver_request)
+string system_googletranslate (Webserver_Request& webserver_request)
 {
-//  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   string page {};
   string success {};
   string error {};

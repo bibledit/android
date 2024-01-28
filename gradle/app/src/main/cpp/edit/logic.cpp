@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,21 +39,19 @@ string edit2_logic_volatile_key (string bible, int book, int chapter, string edi
 }
 
 
-void storeLoadedUsfm2 (void * webserver_request, string bible, int book, int chapter, string editor, [[maybe_unused]] const char * message)
+void storeLoadedUsfm2 (Webserver_Request& webserver_request, string bible, int book, int chapter, string editor, [[maybe_unused]] const char * message)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
   int userid = filter::strings::user_identifier (webserver_request);
   
   string key = edit2_logic_volatile_key (bible, book, chapter, editor);
   
-  string usfm = request->database_bibles()->get_chapter (bible, book, chapter);
+  string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
   
   Database_Volatile::setValue (userid, key, usfm);
 }
 
 
-string getLoadedUsfm2 (void * webserver_request, string bible, int book, int chapter, string editor)
+string getLoadedUsfm2 (Webserver_Request& webserver_request, string bible, int book, int chapter, string editor)
 {
   int userid = filter::strings::user_identifier (webserver_request);
   

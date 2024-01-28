@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -41,26 +41,23 @@ string resource_sword_url ()
 }
 
 
-bool resource_sword_acl (void * webserver_request)
+bool resource_sword_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::consultant ());
 }
 
 
-string resource_sword (void * webserver_request)
+string resource_sword (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
-  
-  if (request->query.count ("refresh")) {
+  if (webserver_request.query.count ("refresh")) {
     tasks_logic_queue (REFRESHSWORDMODULES);
-    redirect_browser (request, journal_index_url ());
+    redirect_browser (webserver_request, journal_index_url ());
   }
 
   
-  if (request->query.count ("update")) {
+  if (webserver_request.query.count ("update")) {
     tasks_logic_queue (UPDATESWORDMODULES, {});
-    redirect_browser (request, journal_index_url ());
+    redirect_browser (webserver_request, journal_index_url ());
   }
   
   
@@ -75,7 +72,7 @@ string resource_sword (void * webserver_request)
   
   
   string page;
-  Assets_Header header = Assets_Header (translate("Resources"), request);
+  Assets_Header header = Assets_Header (translate("Resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;

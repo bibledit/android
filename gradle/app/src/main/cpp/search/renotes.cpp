@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,11 +47,11 @@ void search_reindex_notes ()
   
   
   // This does not run as a result of a webserver request, so create one.
-  Webserver_Request request;
+  Webserver_Request webserver_request;
 
 
   // Database.
-  Database_Notes database_notes (&request);
+  Database_Notes database_notes (webserver_request);
 
 
   // Set a flag indicating that the notes databases are not available to clients and other parties.

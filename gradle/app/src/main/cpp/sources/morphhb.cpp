@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -55,13 +55,13 @@ void sources_morphhb_parse_unhandled_node (int book, int chapter, int verse, xml
 {
   string passage = filter_passage_display (book, chapter, filter::strings::convert_to_string (verse));
   string text = node.child_value ();
-  cerr << "Unhandled " << node.name () << " at " << passage << ": " << text << endl;
+  std::cerr << "Unhandled " << node.name () << " at " << passage << ": " << text << std::endl;
 }
 
 
 void sources_morphhb_parse ()
 {
-  cout << "Starting" << endl;
+  std::cout << "Starting" << std::endl;
   Database_OsHb database_oshb;
   database_oshb.create ();
 
@@ -110,7 +110,7 @@ void sources_morphhb_parse ()
   for (size_t bk = 0; bk < books.size (); bk++) {
     
     string file = "sources/morphhb/" + books[bk] + ".xml";
-    cout << file << endl;
+    std::cout << file << std::endl;
 
     int book = static_cast<int>(bk + 1);
 
@@ -176,5 +176,5 @@ void sources_morphhb_parse ()
   }
 
   database_oshb.optimize ();
-  cout << "Completed" << endl;
+  std::cout << "Completed" << std::endl;
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ using namespace pugi;
 // Class for creating a html Bible header with breadcrumbs and search box.
 
 
-Html_Header::Html_Header (void * html_text)
+Html_Header::Html_Header (void * html_text) // Todo
 {
   m_html_text = html_text;
 }

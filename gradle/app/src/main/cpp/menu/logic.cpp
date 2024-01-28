@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -176,11 +176,8 @@ string menu_logic_settings_resources_menu ()
 // Returns the html for the main menu categories.
 // Also fills the $tooltip with an appropriate value for this main menu.
 // This function is called for the main page, that is, the home page.
-string menu_logic_main_categories (void * webserver_request, string & tooltip)
+string menu_logic_main_categories (Webserver_Request& webserver_request, string & tooltip)
 {
-  // Create the object from the void pointer.
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
   // The sets of html that is going to form the menu.
   vector <string> html;
   
@@ -199,8 +196,8 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
   }
 
   string menutooltip;
-  int current_theme_index = request->database_config_user ()->getCurrentTheme ();
-  string filename = current_theme_filebased_cache_filename (request->session_identifier);
+  int current_theme_index = webserver_request.database_config_user ()->getCurrentTheme ();
+  string filename = current_theme_filebased_cache_filename (webserver_request.session_identifier);
   string color = Filter_Css::theme_picker (current_theme_index, 1);
 
   if (!menu_logic_translate_category (webserver_request, &menutooltip).empty ()) {
@@ -250,8 +247,8 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
 #endif
 
   // When a user is logged in, and is a guest, put the Logout into the main menu, rather than in a sub menu.
-  if (request->session_logic ()->loggedIn ()) {
-    if (request->session_logic ()->currentLevel () == Filter_Roles::guest ()) {
+  if (webserver_request.session_logic ()->loggedIn ()) {
+    if (webserver_request.session_logic ()->currentLevel () == Filter_Roles::guest ()) {
       if (session_logout_acl (webserver_request)) {
         html.push_back (menu_logic_create_item (session_logout_url (), menu_logic_logout_text (), true, "", ""));
         tooltipbits.push_back (menu_logic_logout_text ());
@@ -261,7 +258,7 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
 
   
   // When not logged in, display Login menu item.
-  if (request->session_logic ()->currentUser ().empty ()) {
+  if (webserver_request.session_logic ()->currentUser ().empty ()) {
     string label = translate ("Login");
     html.push_back (menu_logic_create_item (session_login_url (), label, true, "", ""));
     tooltipbits.push_back (label);
@@ -288,14 +285,12 @@ string menu_logic_main_categories (void * webserver_request, string & tooltip)
  */
 
 
-string menu_logic_basic_categories (void * webserver_request)
+string menu_logic_basic_categories (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
   vector <string> html;
 
-  int current_theme_index = request->database_config_user ()->getCurrentTheme ();
-  string filename = current_theme_filebased_cache_filename (request->session_identifier);
+  int current_theme_index = webserver_request.database_config_user ()->getCurrentTheme ();
+  string filename = current_theme_filebased_cache_filename (webserver_request.session_identifier);
   string color = Filter_Css::theme_picker (current_theme_index, 1);
 
   if (read_index_acl (webserver_request)) {
@@ -311,7 +306,7 @@ string menu_logic_basic_categories (void * webserver_request)
   }
   
   if (changes_changes_acl (webserver_request)) {
-    if (request->database_config_user ()->getMenuChangesInBasicMode ()) {
+    if (webserver_request.database_config_user ()->getMenuChangesInBasicMode ()) {
       html.push_back (menu_logic_create_item (changes_changes_url (), menu_logic_changes_text (), true, "", color));
     }
   }
@@ -339,7 +334,7 @@ string menu_logic_basic_categories (void * webserver_request)
 #endif
 
   // When not logged in, display Login menu item.
-  if (request->session_logic ()->currentUser ().empty ()) {
+  if (webserver_request.session_logic ()->currentUser ().empty ()) {
     html.push_back (menu_logic_create_item (session_login_url (), translate ("Login"), true, "", ""));
   }
 
@@ -347,8 +342,8 @@ string menu_logic_basic_categories (void * webserver_request)
   // put the Logout into the main menu,
   // rather than in a sub menu.
 #ifdef HAVE_CLOUD
-  if (request->session_logic ()->loggedIn ()) {
-    if (request->session_logic ()->currentLevel () == Filter_Roles::guest ()) {
+  if (webserver_request.session_logic ()->loggedIn ()) {
+    if (webserver_request.session_logic ()->currentLevel () == Filter_Roles::guest ()) {
       if (session_logout_acl (webserver_request)) {
         html.push_back (menu_logic_create_item (session_logout_url (), menu_logic_logout_text (), true, "", ""));
       }
@@ -362,7 +357,7 @@ string menu_logic_basic_categories (void * webserver_request)
 
 // Generates html for the workspace main menu.
 // Plus the tooltip for it.
-string menu_logic_workspace_category (void * webserver_request, string * tooltip)
+string menu_logic_workspace_category (Webserver_Request& webserver_request, string * tooltip)
 {
   vector <string> html;
   vector <string> labels;
@@ -370,9 +365,7 @@ string menu_logic_workspace_category (void * webserver_request, string * tooltip
   // Add the available configured workspaces to the menu.
   // The user's role should be sufficiently high.
   if (workspace_organize_acl (webserver_request)) {
-    Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
-    string activeWorkspace = request->database_config_user()->getActiveWorkspace ();
+    string activeWorkspace = webserver_request.database_config_user()->getActiveWorkspace ();
 
     vector <string> workspaces = workspace_get_names (webserver_request);
     for (size_t i = 0; i < workspaces.size(); i++) {
@@ -380,7 +373,7 @@ string menu_logic_workspace_category (void * webserver_request, string * tooltip
       // Adds an active class if it is the current workspace.
       if (workspaces[i] == activeWorkspace) {
         size_t startIndex = item.find(R"("><a)");
-        if (startIndex != string::npos) item.insert (startIndex, " active");
+        if (startIndex != std::string::npos) item.insert (startIndex, " active");
       }
       html.push_back (item);
       labels.push_back (workspaces [i]);
@@ -392,10 +385,8 @@ string menu_logic_workspace_category (void * webserver_request, string * tooltip
 }
 
 
-string menu_logic_translate_category (void * webserver_request, string * tooltip)
+string menu_logic_translate_category (Webserver_Request& webserver_request, string * tooltip)
 {
-  [[maybe_unused]] Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
   vector <string> html;
   vector <string> labels;
   
@@ -448,7 +439,7 @@ string menu_logic_translate_category (void * webserver_request, string * tooltip
   // When a user is logged in, but not a guest,
   // put the public feedback into this sub menu, rather than in the main menu.
 #ifndef HAVE_CLIENT
-  if (!request->session_logic ()->currentUser ().empty ()) {
+  if (!webserver_request.session_logic ()->currentUser ().empty ()) {
     if (!menu_logic_public_or_guest (webserver_request)) {
       if (!public_logic_bibles (webserver_request).empty ()) {
         html.push_back (menu_logic_create_item (public_index_url (), menu_logic_public_feedback_text (), true, "", ""));
@@ -467,7 +458,7 @@ string menu_logic_translate_category (void * webserver_request, string * tooltip
 }
 
 
-string menu_logic_search_category (void * webserver_request, string * tooltip)
+string menu_logic_search_category (Webserver_Request& webserver_request, string * tooltip)
 {
   vector <string> html;
   vector <string> labels;
@@ -535,7 +526,7 @@ string menu_logic_search_category (void * webserver_request, string * tooltip)
 }
 
 
-string menu_logic_tools_category (void * webserver_request, string * tooltip)
+string menu_logic_tools_category (Webserver_Request& webserver_request, string * tooltip)
 {
   // The labels that may end up in the menu.
   string checks = translate ("Checks");
@@ -658,10 +649,8 @@ string menu_logic_tools_category (void * webserver_request, string * tooltip)
 }
 
 
-string menu_logic_settings_category (void * webserver_request, string * tooltip)
+string menu_logic_settings_category (Webserver_Request& webserver_request, string * tooltip)
 {
-  [[maybe_unused]] Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
   [[maybe_unused]] bool demo = config::logic::demo_enabled ();
   
   // The labels that may end up in the menu.
@@ -746,7 +735,7 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
       // Only client can cache resources.
       // The Cloud is always online, with a fast connection, and can easily fetch a resource from the web.
       // Many Cloud instances may run on one server, and if the Cloud were to cache resources,
-      /// it was going to use a huge amount of disk space.
+      // it would be going to use a huge amount of disk space.
       if (resource_cache_acl (webserver_request)) {
         html.push_back (menu_logic_create_item (resource_cache_url (), menu_logic_resources_text (), true, "", ""));
         tiplabels.push_back (menu_logic_resources_text ());
@@ -850,8 +839,8 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
       // Cannot logout in the demo.
       if (!demo) {
         // If logged in, but not as guest, put the Logout menu here.
-        if (request->session_logic ()->loggedIn ()) {
-          if (request->session_logic ()->currentLevel () != Filter_Roles::guest ()) {
+        if (webserver_request.session_logic ()->loggedIn ()) {
+          if (webserver_request.session_logic ()->currentLevel () != Filter_Roles::guest ()) {
             if (session_logout_acl (webserver_request)) {
               html.push_back (menu_logic_create_item (session_logout_url (), menu_logic_logout_text (), true, "", ""));
               tiplabels.push_back (menu_logic_logout_text ());
@@ -883,7 +872,7 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
 #endif
     
     if (label == basic_mode) {
-      if (request->session_logic ()->currentLevel () > Filter_Roles::guest ()) {
+      if (webserver_request.session_logic ()->currentLevel () > Filter_Roles::guest ()) {
         html.push_back (menu_logic_create_item (index_index_url () + filter::strings::convert_to_string ("?mode=basic"), label, true, "", ""));
         tiplabels.push_back (label);
       }
@@ -906,7 +895,7 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
   }
   
   if (!html.empty ()) {
-    string user = request->session_logic ()->currentUser ();
+    string user = webserver_request.session_logic ()->currentUser ();
     html.insert (html.begin (), menu_logic_settings_text () + " (" + user + "): ");
   }
   
@@ -915,7 +904,7 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
 }
 
 
-string menu_logic_settings_resources_category ([[maybe_unused]] void * webserver_request)
+string menu_logic_settings_resources_category ([[maybe_unused]] Webserver_Request& webserver_request)
 {
   vector <string> html;
   
@@ -981,13 +970,11 @@ string menu_logic_settings_resources_category ([[maybe_unused]] void * webserver
 }
 
 
-string menu_logic_help_category (void * webserver_request)
+string menu_logic_help_category (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   vector <string> html;
 
-  if (!request->session_logic ()->currentUser ().empty ()) {
+  if (!webserver_request.session_logic ()->currentUser ().empty ()) {
     html.push_back (menu_logic_create_item ("help/index", translate ("Help and About"), true, "", ""));
   }
 
@@ -1001,11 +988,10 @@ string menu_logic_help_category (void * webserver_request)
 
 // Returns true in case the user is a public user, that is, not logged-in,
 // or when the user has the role of Guest.
-bool menu_logic_public_or_guest (void * webserver_request)
+bool menu_logic_public_or_guest (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  if (request->session_logic ()->currentUser ().empty ()) return true;
-  if (request->session_logic ()->currentLevel () == Filter_Roles::guest ()) return true;
+  if (webserver_request.session_logic ()->currentUser ().empty ()) return true;
+  if (webserver_request.session_logic ()->currentLevel () == Filter_Roles::guest ()) return true;
   return false;
 }
 
@@ -1197,14 +1183,12 @@ string menu_logic_editor_settings_text (bool visual, int selection)
 }
 
 
-bool menu_logic_editor_enabled (void * webserver_request, bool visual, bool chapter)
+bool menu_logic_editor_enabled (Webserver_Request& webserver_request, bool visual, bool chapter)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   // Get the user's preference for the visual or USFM editors.
   int selection = 0;
-  if (visual) selection = request->database_config_user ()->getFastSwitchVisualEditors ();
-  else selection = request->database_config_user ()->getFastSwitchUsfmEditors ();
+  if (visual) selection = webserver_request.database_config_user ()->getFastSwitchVisualEditors ();
+  else selection = webserver_request.database_config_user ()->getFastSwitchUsfmEditors ();
 
   if (visual) {
     // Check whether the visual chapter or verse editor is active.
@@ -1256,7 +1240,7 @@ jsonxx::Object menu_logic_tabbed_mode_add_tab (string url, string label)
 
 
 // This looks at the settings, and then generates JSON, and stores that in the general configuration.
-void menu_logic_tabbed_mode_save_json (void * webserver_request)
+void menu_logic_tabbed_mode_save_json (Webserver_Request& webserver_request)
 {
   string json;
 
@@ -1267,8 +1251,7 @@ void menu_logic_tabbed_mode_save_json (void * webserver_request)
     bool generate_json = Database_Config_General::getMenuInTabbedViewOn ();
     
     // Tabbed view not possible in advanced mode.
-    Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-    if (!request->database_config_user ()->getBasicInterfaceMode ()) {
+    if (!webserver_request.database_config_user ()->getBasicInterfaceMode ()) {
       generate_json = false;
     }
     
@@ -1283,7 +1266,7 @@ void menu_logic_tabbed_mode_save_json (void * webserver_request)
       // Add the consultation notes tab.
       json_array << menu_logic_tabbed_mode_add_tab (notes_index_url (), menu_logic_consultation_notes_text ());
       // Add the change notifications, if enabled.
-      if (request->database_config_user ()->getMenuChangesInBasicMode ()) {
+      if (webserver_request.database_config_user ()->getMenuChangesInBasicMode ()) {
         json_array << menu_logic_tabbed_mode_add_tab (changes_changes_url (), menu_logic_changes_text ());
       }
       // Add the preferences tab.

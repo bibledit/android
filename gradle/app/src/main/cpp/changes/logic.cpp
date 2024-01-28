@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ const char * changes_bible_category ()
 }
 
 
-string changes_interlinks (void * webserver_request, string my_url)
+string changes_interlinks (Webserver_Request& webserver_request, string my_url)
 {
   // Storage the available links.
   vector <string> urls {};

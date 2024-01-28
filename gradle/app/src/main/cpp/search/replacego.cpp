@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -41,27 +41,25 @@ string search_replacego_url ()
 }
 
 
-bool search_replacego_acl (void * webserver_request)
+bool search_replacego_acl (Webserver_Request& webserver_request)
 {
-  if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ())) return true;
+  if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ()))
+    return true;
   auto [ read, write ] = access_bible::any (webserver_request);
   return write;
 }
 
 
-string search_replacego (void * webserver_request)
+string search_replacego (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
-  
   string siteUrl = config::logic::site_url (webserver_request);
   
   
   // Get the action variables from the query.
-  string id = request->query ["id"];
-  string searchfor = request->query ["q"];
-  string replacewith = request->query ["r"];
-  bool casesensitive = (request->query ["c"] == "true");
+  string id = webserver_request.query ["id"];
+  string searchfor = webserver_request.query ["q"];
+  string replacewith = webserver_request.query ["r"];
+  bool casesensitive = (webserver_request.query ["c"] == "true");
   
   
   // Get Bible and passage for this identifier.
@@ -73,12 +71,12 @@ string search_replacego (void * webserver_request)
   
   
   // Check whether the user has write access to the book.
-  string user = request->session_logic ()->currentUser ();
+  string user = webserver_request.session_logic ()->currentUser ();
   bool write = access_bible::book_write (webserver_request, user, bible, book);
 
   
   // Get the old chapter and verse USFM.
-  string old_chapter_usfm = request->database_bibles()->get_chapter (bible, book, chapter);
+  string old_chapter_usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
   string old_verse_usfm = filter::usfm::get_verse_text (old_chapter_usfm, verse);
 
   
@@ -115,7 +113,7 @@ string search_replacego (void * webserver_request)
   // Get the updated chapter USFM as a string.
   string new_chapter_usfm = old_chapter_usfm;
   size_t pos = new_chapter_usfm.find (old_verse_usfm);
-  if (pos != string::npos) {
+  if (pos != std::string::npos) {
     size_t length = old_verse_usfm.length ();
     new_chapter_usfm.erase (pos, length);
     new_chapter_usfm.insert (pos, new_verse_usfm);

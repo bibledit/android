@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ void email_send ()
   config_globals_mail_send_running = true;
 
   // The databases involved.
-  Webserver_Request request;
-  Database_Mail database_mail = Database_Mail (&request);
+  Webserver_Request webserver_request;
+  Database_Mail database_mail (webserver_request);
   Database_Users database_users;
 
   vector <int> mails = database_mail.getMailsToSend ();
@@ -192,8 +192,8 @@ string email_send ([[maybe_unused]] string to_mail,
     return "";
   }
 
-  Webserver_Request request;
-  Sync_Logic sync_logic = Sync_Logic (&request);
+  Webserver_Request webserver_request;
+  Sync_Logic sync_logic (webserver_request);
 
   map <string, string> post;
   post ["n"] = filter::strings::bin2hex (to_name);
@@ -236,7 +236,7 @@ string email_send ([[maybe_unused]] string to_mail,
   payload_text.push_back (payload);
   string site = from_mail;
   size_t pos = site.find ("@");
-  if (pos != string::npos) site = site.substr (pos);
+  if (pos != std::string::npos) site = site.substr (pos);
   payload = "Message-ID: <" + md5 (filter::strings::convert_to_string (filter::strings::rand (0, 1000000))) + site + ">\n";
   payload_text.push_back (payload);
   payload = "Subject: " + subject + "\n";
@@ -364,7 +364,8 @@ string email_send ([[maybe_unused]] string to_mail,
 void email_schedule (string to, string subject, string body, int time)
 {
   // Schedule the mail for sending.
-  Database_Mail database_mail (nullptr);
+  Webserver_Request webserver_request;
+  Database_Mail database_mail (webserver_request);
   database_mail.send (to, subject, body, time);
   // Schedule a task to send the scheduled mail right away.
   tasks_logic_queue (SENDEMAIL);

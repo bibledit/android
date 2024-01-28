@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -136,7 +136,7 @@ unsigned int Database_Confirm::search_id (string subject)
   vector <string> ids = sql.query () ["id"];
   for (string id : ids) {
     size_t pos = subject.find (id);
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       return static_cast<unsigned>(filter::strings::convert_to_int (id));
     }
   }

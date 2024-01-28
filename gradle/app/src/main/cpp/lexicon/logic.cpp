@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ vector <string> lexicon_logic_resource_names ()
 
 
 // Gets the HTMl for displaying the book/chapter/verse of the $lexicon.
-string lexicon_logic_get_html ([[maybe_unused]] void * webserver_request, string lexicon, int book, int chapter, int verse)
+string lexicon_logic_get_html ([[maybe_unused]] Webserver_Request& webserver_request, string lexicon, int book, int chapter, int verse)
 {
   string html;
   
@@ -82,7 +82,7 @@ string lexicon_logic_get_html ([[maybe_unused]] void * webserver_request, string
     stringstream ss;
     if (!rowids.empty ()) {
       string id = "lexicontxt" + prefix;
-      ss << "<div id=" << quoted(id) << ">" << endl;
+      ss << "<div id=" << quoted(id) << ">" << std::endl;
       for (auto rowid : rowids) {
         ss << "<table class='interlinear rtl'>";
         ss << "<tr>";
@@ -113,7 +113,7 @@ string lexicon_logic_get_html ([[maybe_unused]] void * webserver_request, string
     if (!rowids.empty ()) {
       stringstream ss;
       string id = "lexicontxt" + prefix;
-      ss << "<div id=" << quoted(id) << ">" << endl;
+      ss << "<div id=" << quoted(id) << ">" << std::endl;
       for (size_t i = 0; i < rowids.size (); i++) {
         int rowid = rowids[i];
         string english = database_kjv.english (rowid);
@@ -132,7 +132,7 @@ string lexicon_logic_get_html ([[maybe_unused]] void * webserver_request, string
     if (!rowids.empty ()) {
       stringstream ss;
       string id = "lexicontxt" + prefix;
-      ss << "<div id=" << quoted(id) << " class=" << quoted("hebrew") << ">" << endl;
+      ss << "<div id=" << quoted(id) << " class=" << quoted("hebrew") << ">" << std::endl;
       for (size_t i = 0; i < rowids.size (); i++) {
         int rowid = rowids[i];
         string word = database_oshb.word (rowid);
@@ -153,7 +153,7 @@ string lexicon_logic_get_html ([[maybe_unused]] void * webserver_request, string
     if (!rowids.empty ()) {
       stringstream ss;
       string id = "lexicontxt" + prefix;
-      ss << "<div id=" << quoted(id) << " class=" << quoted("greek") << ">" << endl;
+      ss << "<div id=" << quoted(id) << " class=" << quoted("greek") << ">" << std::endl;
       for (size_t i = 0; i < rowids.size (); i++) {
         if (i) ss << " ";
         int rowid = rowids[i];
@@ -363,9 +363,9 @@ string lexicon_logic_render_strongs_definition (string strong)
       line = filter::strings::replace ("</strongs>", "", line);
       // Get the <greek /> line to extract information from it.
       position = line.find ("<greek ");
-      if (position != string::npos) {
+      if (position != std::string::npos) {
         size_t position2 = line.find ("/>", position);
-        if (position2 != string::npos) {
+        if (position2 != std::string::npos) {
           string greek = line.substr (position, position2 - position + 2);
           string xml = greek;
           // Greek in Unicode.
@@ -378,9 +378,9 @@ string lexicon_logic_render_strongs_definition (string strong)
       }
       // Get the <pronunciation /> line to extract information from it.
       position = line.find ("<pronunciation ");
-      if (position != string::npos) {
+      if (position != std::string::npos) {
         size_t position2 = line.find ("/>", position);
-        if (position2 != string::npos) {
+        if (position2 != std::string::npos) {
           string pronunciation = line.substr (position, position2 - position + 2);
           string xml = pronunciation;
           // Greek in strongs.
@@ -396,9 +396,9 @@ string lexicon_logic_render_strongs_definition (string strong)
         string tag = "see";
         if (i) tag = "strongsref";
         position = line.find ("<" + tag + " ");
-        if (position != string::npos) {
+        if (position != std::string::npos) {
           size_t position2 = line.find ("/>", position);
-          if (position2 != string::npos) {
+          if (position2 != std::string::npos) {
             string see_strongsref = line.substr (position, position2 - position + 2);
             string xml = see_strongsref;
             // Strong's reference.

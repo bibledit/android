@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -36,28 +36,26 @@ string search_replacepre2_url ()
 }
 
 
-bool search_replacepre2_acl (void * webserver_request)
+bool search_replacepre2_acl (Webserver_Request& webserver_request)
 {
-  if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ())) return true;
+  if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ()))
+    return true;
   auto [ read, write ] = access_bible::any (webserver_request);
   return write;
 }
 
 
-string search_replacepre2 (void * webserver_request)
+string search_replacepre2 (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
-  
   string siteUrl = config::logic::site_url (webserver_request);
   
   
   // Get search variables from the query.
-  string searchfor = request->query ["q"];
-  string replacewith = request->query ["r"];
-  bool casesensitive = (request->query ["c"] == "true");
-  string id = request->query ["id"];
-  bool searchplain = (request->query ["p"] == "true");
+  string searchfor = webserver_request.query ["q"];
+  string replacewith = webserver_request.query ["r"];
+  bool casesensitive = (webserver_request.query ["c"] == "true");
+  string id = webserver_request.query ["id"];
+  bool searchplain = (webserver_request.query ["p"] == "true");
   
   
   // Get the Bible and passage for this identifier.
@@ -96,7 +94,7 @@ string search_replacepre2 (void * webserver_request)
   
   
   // Check whether the user has write access to the book.
-  string user = request->session_logic ()->currentUser ();
+  string user = webserver_request.session_logic ()->currentUser ();
   bool write = access_bible::book_write (webserver_request, user, bible, book);
 
   

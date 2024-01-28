@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -37,16 +37,14 @@ string versification_index_url ()
 }
 
 
-bool versification_index_acl (void * webserver_request)
+bool versification_index_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string versification_index (void * webserver_request)
+string versification_index (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  
   string page;
   
   Assets_Header header = Assets_Header (translate("Versifications"), webserver_request);
@@ -57,19 +55,19 @@ string versification_index (void * webserver_request)
 
   Database_Versifications database_versifications = Database_Versifications();
 
-  if (request->post.count ("new")) {
-    string name = request->post["entry"];
+  if (webserver_request.post.count ("new")) {
+    string name = webserver_request.post["entry"];
     database_versifications.createSystem (name);
   }
-  if (request->query.count ("new")) {
+  if (webserver_request.query.count ("new")) {
     Dialog_Entry dialog_entry = Dialog_Entry ("index", translate("Please enter the name for the new versification system"), "", "new", "");
     page += dialog_entry.run();
     return page;
   }
 
-  if (request->query.count ("delete")) {
-    string name = request->query ["delete"];
-    string confirm = request->query ["confirm"];
+  if (webserver_request.query.count ("delete")) {
+    string name = webserver_request.query ["delete"];
+    string confirm = webserver_request.query ["confirm"];
     if (confirm == "yes") {
       database_versifications.erase (name);
     } else if (confirm == "cancel") {
@@ -84,7 +82,7 @@ string versification_index (void * webserver_request)
   stringstream systemblock;
   vector <string> systems = database_versifications.getSystems();
   for (auto & system : systems) {
-    systemblock << "<p><a href=" << quoted ("system?name=" + system) << ">" << system << "</a></p>" << endl;
+    systemblock << "<p><a href=" << quoted ("system?name=" + system) << ">" << system << "</a></p>" << std::endl;
   }
   view.set_variable ("systemblock", systemblock.str());
   

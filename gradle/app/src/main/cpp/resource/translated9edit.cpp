@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -54,19 +54,16 @@ string resource_translated9edit_url ()
 }
 
 
-bool resource_translated9edit_acl (void * webserver_request)
+bool resource_translated9edit_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string resource_translated9edit (void * webserver_request)
+string resource_translated9edit (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-
-  
   string page;
-  Assets_Header header = Assets_Header (translate("Translated resources"), request);
+  Assets_Header header = Assets_Header (translate("Translated resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;
@@ -74,18 +71,18 @@ string resource_translated9edit (void * webserver_request)
   
 
   // New translated resource handler.
-  if (request->query.count ("new")) {
+  if (webserver_request.query.count ("new")) {
     Dialog_Entry dialog_entry = Dialog_Entry ("translated9edit", translate("Please enter a name for the new translated resource"), "", "new", "");
     page += dialog_entry.run ();
     return page;
   }
-  if (request->post.count ("new")) {
+  if (webserver_request.post.count ("new")) {
     // The title for the new resource as entered by the user.
     // Clean the title up and ensure it always starts with "Translated ".
     // This word flags the translated resource as being one of that category.
-    string new_resource = request->post ["entry"];
+    string new_resource = webserver_request.post ["entry"];
     size_t pos = new_resource.find (resource_logic_translated_resource ());
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       new_resource.erase (pos, resource_logic_translated_resource ().length());
     }
     new_resource.insert (0, resource_logic_translated_resource ());
@@ -119,9 +116,9 @@ string resource_translated9edit (void * webserver_request)
 
   
   // Delete resource. 
-  string title2remove = request->query ["delete"];
+  string title2remove = webserver_request.query ["delete"];
   if (!title2remove.empty()) {
-    string confirm = request->query ["confirm"];
+    string confirm = webserver_request.query ["confirm"];
     if (confirm.empty()) {
       Dialog_Yes dialog_yes = Dialog_Yes ("translated9edit", translate("Would you like to delete this resource?"));
       dialog_yes.add_query ("delete", title2remove);

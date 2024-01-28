@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,13 +33,13 @@ string manage_index_url ()
 }
 
 
-bool manage_index_acl (void * webserver_request)
+bool manage_index_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::manager ());
 }
 
 
-string manage_index (void * webserver_request)
+string manage_index (Webserver_Request& webserver_request)
 {
   string page;
   Assets_Header header = Assets_Header (translate("Manage"), webserver_request);

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,24 +43,26 @@ string user_notifications_url ()
 }
 
 
-bool user_notifications_acl (void * webserver_request)
+bool user_notifications_acl (Webserver_Request& webserver_request)
 {
   // Consultant has access.
-  if (Filter_Roles::access_control (webserver_request, Filter_Roles::consultant ())) return true;
+  if (Filter_Roles::access_control (webserver_request, Filter_Roles::consultant ()))
+    return true;
   // Whoever can view notes has access.
-  if (access_logic::privilege_view_notes (webserver_request)) return true;
+  if (access_logic::privilege_view_notes (webserver_request))
+    return true;
   // Whoever has access to a Bible has access to this page.
   auto [ read, write ] = access_bible::any (webserver_request);
-  if (read) return true;
+  if (read)
+    return true;
   // No access.
   return false;
 }
 
 
-string user_notifications (void * webserver_request)
+string user_notifications (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
-  Database_Config_User database_config_user = Database_Config_User (webserver_request);
+  Database_Config_User database_config_user (webserver_request);
   Database_NoteAssignment database_noteassignment;
 
   string page;
@@ -71,8 +73,8 @@ string user_notifications (void * webserver_request)
   
   Assets_View view;
 
-  string checkbox = request->post ["checkbox"];
-  bool checked = filter::strings::convert_to_bool (request->post ["checked"]);
+  string checkbox = webserver_request.post ["checkbox"];
+  bool checked = filter::strings::convert_to_bool (webserver_request.post ["checked"]);
 
   if (checkbox == "editednotessubscription") {
     database_config_user.setSubscribeToConsultationNotesEditedByMe (checked);
@@ -140,10 +142,10 @@ string user_notifications (void * webserver_request)
   }
   view.set_variable ("postponenewnotesmails", filter::strings::get_checkbox_status (database_config_user.getPostponeNewNotesMails ()));
 
-  string user = request->session_logic ()->currentUser ();
-  vector <string> all_assignees = database_noteassignment.assignees (user);
+  const string user = webserver_request.session_logic ()->currentUser ();
+  const vector <string> all_assignees = database_noteassignment.assignees (user);
   vector <string> current_assignees = database_config_user.getAutomaticNoteAssignment();
-  for (auto assignee : all_assignees) {
+  for (const auto& assignee : all_assignees) {
     if (checkbox == "autoassign" + assignee) {
       if (checked) {
         current_assignees.push_back (assignee);
@@ -153,7 +155,7 @@ string user_notifications (void * webserver_request)
       database_config_user.setAutomaticNoteAssignment (current_assignees);
     }
   }
-  for (auto assignee : all_assignees) {
+  for (const auto& assignee : all_assignees) {
     map <string, string> values;
     values ["user"] = assignee;
     values ["assign"] = filter::strings::get_checkbox_status (in_array (assignee, current_assignees));
@@ -201,7 +203,7 @@ string user_notifications (void * webserver_request)
   // is limited to those Bibles the user has read access to.
   {
     vector <string> bibles = access_bible::bibles (webserver_request);
-    for (const auto & bible : bibles) {
+    for (const auto& bible : bibles) {
       if (checkbox == "changenotificationbible" + bible) {
         vector <string> currentbibles = database_config_user.getChangeNotificationsBibles();
         if (checked) {
@@ -212,8 +214,8 @@ string user_notifications (void * webserver_request)
         database_config_user.setChangeNotificationsBibles(currentbibles);
       }
     }
-    vector <string> currentbibles = database_config_user.getChangeNotificationsBibles();
-    for (const auto & bible : bibles) {
+    const vector <string> currentbibles = database_config_user.getChangeNotificationsBibles();
+    for (const auto& bible : bibles) {
       map <string, string> values;
       values ["bible"] = bible;
       values ["checked"] = filter::strings::get_checkbox_status (in_array (bible, currentbibles));
@@ -243,8 +245,10 @@ string user_notifications (void * webserver_request)
 
   // The bits accessible to the user depends on the user's privileges.
   auto [ read_bible, write_bible ] = access_bible::any (webserver_request);
-  if (read_bible) view.enable_zone ("readbible");
-  if (write_bible) view.enable_zone ("writebible");
+  if (read_bible)
+    view.enable_zone ("readbible");
+  if (write_bible) 
+    view.enable_zone ("writebible");
   if (Filter_Roles::access_control (webserver_request, Filter_Roles::consultant ()))
     view.enable_zone ("consultant");
   

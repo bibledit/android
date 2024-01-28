@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2023 Teus Benschop.
+Copyright (©) 2003-2024 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ bool Passage::equal (Passage & passage)
 // This method converts the passage of the object into text, like e.g. so:
 // "hexadecimal Bible _1_2_3".
 // First the hexadecimal Bible comes, then the book identifier, then the chapter number, and finally the verse number.
-string Passage::encode ()
+string Passage::encode () const
 {
   string text;
   // The encoded passage can be used as an attribute in the HTML DOM.

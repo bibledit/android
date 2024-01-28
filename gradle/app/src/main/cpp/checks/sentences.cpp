@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -268,7 +268,7 @@ void Checks_Sentences::add_result (string text, int modifier)
   int iterations {5};
   while (iterations) {
     const size_t pos = previousFragment.find (" ");
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
       if ((previousFragment.length () - pos) > 10) {
         previousFragment.erase (0, pos + 1);
       }
@@ -278,7 +278,7 @@ void Checks_Sentences::add_result (string text, int modifier)
   string nextFragment = filter::strings::unicode_string_substr (full_text, static_cast <size_t> (current_position), 25);
   while (nextFragment.length () > 10) {
     const size_t pos = nextFragment.rfind (" ");
-    if (pos == string::npos) nextFragment.erase (nextFragment.length () - 1, 1);
+    if (pos == std::string::npos) nextFragment.erase (nextFragment.length () - 1, 1);
     else nextFragment.erase (pos);
   }
   // Check whether the result can be skipped due to a name being involved.

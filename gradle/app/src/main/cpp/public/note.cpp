@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2023 Teus Benschop.
+ Copyright (©) 2003-2024 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,25 +38,24 @@ string public_note_url ()
 }
 
 
-bool public_note_acl (void * webserver_request)
+bool public_note_acl (Webserver_Request& webserver_request)
 {
   return Filter_Roles::access_control (webserver_request, Filter_Roles::guest ());
 }
 
 
-string public_note (void * webserver_request)
+string public_note (Webserver_Request& webserver_request)
 {
-  Webserver_Request * request = static_cast<Webserver_Request *>(webserver_request);
   Database_Notes database_notes (webserver_request);
   
   
   string page;
-  Assets_Header header = Assets_Header (translate("Note"), request);
+  Assets_Header header = Assets_Header (translate("Note"), webserver_request);
 
   
   // After adding a comment to a note, when doing nothing for several seconds,
   // the browser then returns to the list of public notes.
-  if (request->query.count ("temporal")) {
+  if (webserver_request.query.count ("temporal")) {
     header.refresh (5, "index");
   }
 
@@ -66,7 +65,7 @@ string public_note (void * webserver_request)
   string success;
 
   
-  int id = filter::strings::convert_to_int (request->query ["id"]);
+  int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
   view.set_variable ("id", filter::strings::convert_to_string (id));
   
   
