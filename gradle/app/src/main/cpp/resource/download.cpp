@@ -36,10 +36,9 @@
 #include <menu/logic.h>
 #include <resource/cache.h>
 #include <client/logic.h>
-using namespace std;
 
 
-string resource_download_url ()
+std::string resource_download_url ()
 {
   return "resource/download";
 }
@@ -51,12 +50,12 @@ bool resource_download_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_download (Webserver_Request& webserver_request)
+std::string resource_download (Webserver_Request& webserver_request)
 {
   Database_UsfmResources database_usfmresources;
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Download resource"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.add_bread_crumb (resource_cache_url (), menu_logic_resources_text ());
@@ -64,42 +63,42 @@ string resource_download (Webserver_Request& webserver_request)
   Assets_View view;
 
   
-  string name = webserver_request.query["name"];
+  std::string name = webserver_request.query["name"];
   view.set_variable ("name", name);
 
   
   if (webserver_request.query.count ("clear")) {
     // The client clears the installed resource.
-    Database_Cache::remove (name);
+    database::cache::sql::remove (name);
   }
   
   
   if (webserver_request.query.count ("download")) {
     // Trigger caching the resource.
     // Add the resource to the general configuration to be cached, if it is not already there.
-    vector <string> resources = Database_Config_General::getResourcesToCache ();
+    std::vector <std::string> resources = database::config::general::get_resources_to_cache ();
     if (!in_array (name, resources)) {
       resources.push_back (name);
-      Database_Config_General::setResourcesToCache (resources);
+      database::config::general::set_resources_to_cache (resources);
     }
     tasks_logic_queue (SYNCRESOURCES);
     redirect_browser (webserver_request, journal_index_url ());
-    return "";
+    return std::string();
   }
   
   
   int count = 0;
   if (count == 0) {
-    vector <int> books = database_usfmresources.getBooks (name);
+    std::vector <int> books = database_usfmresources.getBooks (name);
     for (auto book : books) {
-      vector <int> chapters = database_usfmresources.getChapters (name, book);
+      std::vector <int> chapters = database_usfmresources.getChapters (name, book);
       // Rough average of 20 verses per chapter.
       count += static_cast<int>(20 * chapters.size());
     }
   }
   if (count == 0) 
-    count = Database_Cache::count (name);
-  view.set_variable ("count", filter::strings::convert_to_string (count));
+    count = database::cache::sql::count (name);
+  view.set_variable ("count", std::to_string (count));
   
   
   if (resource_logic_can_cache (name)) {

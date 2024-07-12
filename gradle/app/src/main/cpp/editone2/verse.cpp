@@ -23,10 +23,9 @@
 #include <webserver/request.h>
 #include <ipc/focus.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string editone2_verse_url ()
+std::string editone2_verse_url ()
 {
   return "editone2/verse";
 }
@@ -41,10 +40,10 @@ bool editone2_verse_acl (Webserver_Request& webserver_request)
 }
 
 
-string editone2_verse (Webserver_Request& webserver_request)
+std::string editone2_verse (Webserver_Request& webserver_request)
 {
   // Only act if a verse was found
-  string sverse = webserver_request.query ["verse"];
+  std::string sverse = webserver_request.query ["verse"];
   if (!sverse.empty ()) {
     
     
@@ -59,5 +58,5 @@ string editone2_verse (Webserver_Request& webserver_request)
   }
   
   
-  return "";
+  return std::string();
 }

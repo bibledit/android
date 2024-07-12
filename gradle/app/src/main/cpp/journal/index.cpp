@@ -31,7 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <menu/logic.h>
 #include <client/logic.h>
 #include <locale/logic.h>
-using namespace std;
 
 
 const char * journal_index_url ()
@@ -57,28 +56,28 @@ bool journal_index_acl ([[maybe_unused]]Webserver_Request& webserver_request)
 }
 
 
-string render_journal_entry (string filename, [[maybe_unused]] int userlevel)
+std::string render_journal_entry (std::string filename, [[maybe_unused]] int userlevel)
 {
   // Sample filename: "146495380700927147".
   // The first 10 characters are the number of seconds past the Unix epoch,
   // followed by the number of microseconds within the current second.
 
   // Get the contents of the file.
-  string path = filter_url_create_path ({Database_Logs::folder (), filename});
-  string entry = filter_url_file_get_contents (path);
+  std::string path = filter_url_create_path ({Database_Logs::folder (), filename});
+  std::string entry = filter_url_file_get_contents (path);
   
   // Deal with the user-level of the entry.
   [[maybe_unused]] int entryLevel = filter::strings::convert_to_int (entry);
   // Cloud: Only render journal entries of a sufficiently high level.
   // Client: Render journal entries of any level.
 #ifndef HAVE_CLIENT
-  if (entryLevel > userlevel) return string();
+  if (entryLevel > userlevel) return std::string();
 #endif
   // Remove the user's level.
   entry.erase (0, 2);
   
   // Split entry into lines.
-  vector <string> lines = filter::strings::explode (entry, '\n');
+  std::vector <std::string> lines = filter::strings::explode (entry, '\n');
   if (!lines.empty ()) entry = lines [0];
   
   // Sanitize HTML.
@@ -93,9 +92,9 @@ string render_journal_entry (string filename, [[maybe_unused]] int userlevel)
   // Extract the seconds since the Unix epoch from the filename.
   int seconds = filter::strings::convert_to_int (filename.substr (0, 10));
   // Localized date and time stamp.
-  string timestamp = locale_logic_date_time (seconds);
+  std::string timestamp = locale_logic_date_time (seconds);
 
-  string a_open, a_close;
+  std::string a_open, a_close;
   if (limit || lines.size () > 1) {
     a_open = R"(<a href=")" + filename + R"(">)";
     a_close = "</a>";
@@ -107,10 +106,10 @@ string render_journal_entry (string filename, [[maybe_unused]] int userlevel)
 
 
 // Deal with AJAX call for a possible new journal entry.
-string journal_index_ajax_next (Webserver_Request& webserver_request, string filename)
+std::string journal_index_ajax_next (Webserver_Request& webserver_request, std::string filename)
 {
-  int userLevel = webserver_request.session_logic()->currentLevel ();
-  string result = Database_Logs::next (filename);
+  int userLevel = webserver_request.session_logic()->get_level ();
+  std::string result = Database_Logs::next (filename);
   if (!result.empty()) {
     result = render_journal_entry (result, userLevel);
     result.insert (0, filename + "\n");
@@ -119,22 +118,22 @@ string journal_index_ajax_next (Webserver_Request& webserver_request, string fil
 }
 
 
-string journal_index (Webserver_Request& webserver_request)
+std::string journal_index (Webserver_Request& webserver_request)
 {
-  int userLevel = webserver_request.session_logic()->currentLevel ();
+  int userLevel = webserver_request.session_logic()->get_level ();
 
   
-  string filename = webserver_request.query ["filename"];
+  std::string filename = webserver_request.query ["filename"];
   if (!filename.empty ()) {
     return journal_index_ajax_next (webserver_request, filename);
   }
   
   
-  string expansion = webserver_request.query ["expansion"];
+  std::string expansion = webserver_request.query ["expansion"];
   if (!expansion.empty ()) {
     // Get file path.
     expansion = filter_url_basename_web (expansion);
-    string path = filter_url_create_path ({Database_Logs::folder (), expansion});
+    std::string path = filter_url_create_path ({Database_Logs::folder (), expansion});
     // Get contents of the record.
     expansion = filter_url_file_get_contents (path);
     // Remove the user's level.
@@ -153,7 +152,7 @@ string journal_index (Webserver_Request& webserver_request)
   
   Assets_Header header = Assets_Header (translate ("Journal"), webserver_request);
   header.add_bread_crumb (menu_logic_tools_menu (), menu_logic_tools_text ());
-  string page = header.run ();
+  std::string page = header.run ();
 
 
   Assets_View view;
@@ -166,17 +165,17 @@ string journal_index (Webserver_Request& webserver_request)
     // the logbook will then again be cleared, because that was the last opened URL.
     // Redirecting the browser to a clean URL fixes this behaviour.
     redirect_browser (webserver_request, journal_index_url ());
-    return "";
+    return std::string();
   }
 
   
-  string lastfilename;
-  vector <string> records = Database_Logs::get (lastfilename);
+  std::string lastfilename;
+  std::vector <std::string> records = Database_Logs::get (lastfilename);
 
 
-  string lines;
-  for (string record : records) {
-    string rendering = render_journal_entry (record, userLevel);
+  std::string lines;
+  for (std::string record : records) {
+    std::string rendering = render_journal_entry (record, userLevel);
     if (!rendering.empty ()) {
       lines.append (rendering);
     }
@@ -189,8 +188,8 @@ string journal_index (Webserver_Request& webserver_request)
   // It should be passed as a String object in JavaScript.
   // Because when it were passed as an Int, JavaScript would round the value off.
   // And rounding it off often led to double journal entries.
-  stringstream script;
-  script << "var filename = " << quoted(lastfilename) << ";";
+  std::stringstream script;
+  script << "var filename = " << std::quoted(lastfilename) << ";";
   view.set_variable ("script", script.str());
 
 

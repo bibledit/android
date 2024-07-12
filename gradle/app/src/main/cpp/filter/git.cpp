@@ -30,32 +30,31 @@
 #include <bb/logic.h>
 #include <locale/translate.h>
 #include <rss/logic.h>
-using namespace std;
 
 
 #ifdef HAVE_CLOUD
 
 
 // This function returns the directory of the git repository belonging to $object.
-string filter_git_directory (string object)
+std::string filter_git_directory (std::string object)
 {
   return filter_url_create_root_path ({"git", object});
 }
 
 
-void filter_git_check_error (string data)
+void filter_git_check_error (std::string data)
 {
-  vector <string> lines = filter::strings::explode (data, '\n');
+  std::vector <std::string> lines = filter::strings::explode (data, '\n');
   for (auto & line : lines) Database_Logs::log (line);
 }
 
 
 // Runs the equivalent of "git init".
-bool filter_git_init (string directory, bool bare)
+bool filter_git_init (std::string directory, bool bare)
 {
-  vector <string> parameters = {"init"};
+  std::vector <std::string> parameters = {"init"};
   if (bare) parameters.push_back ("--bare");
-  string output, error;
+  std::string output, error;
   int result = filter_shell_run (directory, "git", parameters, &output, &error);
   filter_git_check_error (output);
   filter_git_check_error (error);
@@ -64,26 +63,26 @@ bool filter_git_init (string directory, bool bare)
 
 
 // Internal function that commits a user-generated change to the git repository.
-void filter_git_commit_modification_to_git (string repository, string user, int book, int chapter,
-                                            string & oldusfm, string & newusfm)
+void filter_git_commit_modification_to_git (std::string repository, std::string user, int book, int chapter,
+                                            std::string & oldusfm, std::string & newusfm)
 {
-  string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
-  string bookdir = filter_url_create_path ({repository, bookname});
-  string chapterdir = filter_url_create_path ({bookdir, filter::strings::convert_to_string (chapter)});
+  std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+  std::string bookdir = filter_url_create_path ({repository, bookname});
+  std::string chapterdir = filter_url_create_path ({bookdir, std::to_string (chapter)});
   if (!file_or_dir_exists (chapterdir)) filter_url_mkdir (chapterdir);
-  string datafile = filter_url_create_path ({chapterdir, "data"});
-  string contents = filter_url_file_get_contents (datafile);
+  std::string datafile = filter_url_create_path ({chapterdir, "data"});
+  std::string contents = filter_url_file_get_contents (datafile);
   if (contents != oldusfm) {
     filter_url_file_put_contents (datafile, oldusfm);
-    string error;
+    std::string error;
     filter_git_add_remove_all (repository, error);
-    vector <string> messages;
+    std::vector <std::string> messages;
     filter_git_commit (repository, "", "System-generated to clearly display user modification in next commit", messages, error);
   }
   filter_url_file_put_contents (datafile, newusfm);
-  string error;
+  std::string error;
   filter_git_add_remove_all (repository, error);
-  vector <string> messages;
+  std::vector <std::string> messages;
   filter_git_commit (repository, user, "User modification", messages, error);
 }
 
@@ -91,24 +90,24 @@ void filter_git_commit_modification_to_git (string repository, string user, int 
 // This filter stores the changes made by users on $bible in $repository.
 // This puts commits in the repository, where the author is the user who made the changes.
 // This information in the git repository can then be used for statistical or other purposes.
-void filter_git_sync_modifications_to_git (string bible, string repository)
+void filter_git_sync_modifications_to_git (std::string bible, std::string repository)
 {
   // Go through all the users who saved data to this Bible.
-  vector <string> users = Database_Git::get_users (bible);
+  std::vector <std::string> users = database::git::get_users (bible);
   for (auto & user : users) {
     
     bool iteration_initialized = false;
-    string overall_old_usfm, overall_new_usfm;
+    std::string overall_old_usfm, overall_new_usfm;
     int overall_book = 0, overall_chapter = 0;
     
     // Go through all the rowids for the user and the Bible.
-    vector <int> rowids = Database_Git::get_rowids (user, bible);
+    std::vector <int> rowids = database::git::get_rowids (user, bible);
     for (auto rowid : rowids) {
 
-      string s;
-      string oldusfm, newusfm;
+      std::string s;
+      std::string oldusfm, newusfm;
       int book, chapter;
-      Database_Git::get_chapter (rowid, s, s, book, chapter, oldusfm, newusfm);
+      database::git::get_chapter (rowid, s, s, book, chapter, oldusfm, newusfm);
       
       if (iteration_initialized) {
         // Look at the sequences of old and new USFM, and join the matching changes together,
@@ -132,7 +131,7 @@ void filter_git_sync_modifications_to_git (string bible, string repository)
       }
 
       // This record has been processed.
-      Database_Git::erase_rowid (rowid);
+      database::git::erase_rowid (rowid);
 
     }
     
@@ -152,29 +151,29 @@ void filter_git_sync_modifications_to_git (string bible, string repository)
 // The $git is a git repository, and may contain other data as well.
 // The filter focuses on reading the data in the git repository, and only writes to it if necessary,
 // This speeds up the filter.
-void filter_git_sync_bible_to_git (Webserver_Request& webserver_request, string bible, string repository)
+void filter_git_sync_bible_to_git (Webserver_Request& webserver_request, std::string bible, std::string repository)
 {
   // First stage.
   // Read the chapters in the git repository,
   // and check if they occur in the database.
   // If a chapter is not in the database, remove it from the repository.
-  vector <int> books = webserver_request.database_bibles()->get_books (bible);
-  vector <string> bookfiles = filter_url_scandir (repository);
+  std::vector <int> books = database::bibles::get_books (bible);
+  std::vector <std::string> bookfiles = filter_url_scandir (repository);
   for (auto & bookname : bookfiles) {
-    string path = filter_url_create_path ({repository, bookname});
+    std::string path = filter_url_create_path ({repository, bookname});
     if (filter_url_is_dir (path)) {
       int book = static_cast<int>(database::books::get_id_from_english (bookname));
       if (book) {
         if (in_array (book, books)) {
           // Book exists in the database: Check the chapters.
-          vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
-          vector <string> chapterfiles = filter_url_scandir (filter_url_create_path ({repository, bookname}));
+          std::vector <int> chapters = database::bibles::get_chapters (bible, book);
+          std::vector <std::string> chapterfiles = filter_url_scandir (filter_url_create_path ({repository, bookname}));
           for (auto & chaptername : chapterfiles) {
-            string chapter_path = filter_url_create_path ({repository, bookname, chaptername});
+            std::string chapter_path = filter_url_create_path ({repository, bookname, chaptername});
             if (filter_url_is_dir (chapter_path)) {
               if (filter::strings::is_numeric (chaptername)) {
                 int chapter = filter::strings::convert_to_int (chaptername);
-                string filename = filter_url_create_path ({repository, bookname, chaptername, "data"});
+                std::string filename = filter_url_create_path ({repository, bookname, chaptername, "data"});
                 if (file_or_dir_exists (filename)) {
                   if (!in_array (chapter, chapters)) {
                     // Chapter does not exist in the database.
@@ -196,18 +195,18 @@ void filter_git_sync_bible_to_git (Webserver_Request& webserver_request, string 
   // Read the books / chapters from the database,
   // and check if they occur in the repository, and the data matches.
   // If necessary, save the chapter to the repository.
-  books = webserver_request.database_bibles()->get_books (bible);
+  books = database::bibles::get_books (bible);
   for (auto & book : books) {
-    string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
-    string bookdir = filter_url_create_path ({repository, bookname});
+    std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+    std::string bookdir = filter_url_create_path ({repository, bookname});
     if (!file_or_dir_exists (bookdir)) filter_url_mkdir (bookdir);
-    vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
+    std::vector <int> chapters = database::bibles::get_chapters (bible, book);
     for (auto & chapter : chapters) {
-      string chapterdir = filter_url_create_path ({bookdir, filter::strings::convert_to_string (chapter)});
+      std::string chapterdir = filter_url_create_path ({bookdir, std::to_string (chapter)});
       if (!file_or_dir_exists (chapterdir)) filter_url_mkdir (chapterdir);
-      string datafile = filter_url_create_path ({chapterdir, "data"});
-      string contents = filter_url_file_get_contents (datafile);
-      string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+      std::string datafile = filter_url_create_path ({chapterdir, "data"});
+      std::string contents = filter_url_file_get_contents (datafile);
+      std::string usfm = database::bibles::get_chapter (bible, book, chapter);
       if (contents != usfm) filter_url_file_put_contents (datafile, usfm);
     }
   }
@@ -220,35 +219,35 @@ void filter_git_sync_bible_to_git (Webserver_Request& webserver_request, string 
 // The filter focuses on reading the data in the git repository and the database,
 // and only writes to the database if necessary,
 // This speeds up the filter.
-void filter_git_sync_git_to_bible (Webserver_Request& webserver_request, string repository, string bible)
+void filter_git_sync_git_to_bible (Webserver_Request& webserver_request, std::string repository, std::string bible)
 {
   // Stage one:
   // Read the chapters in the git repository,
   // and check that they occur in the database.
   // If any does not occur, add the chapter to the database.
   // This stage does not check the contents of the chapters.
-  vector <string> bookfiles = filter_url_scandir (repository);
+  std::vector <std::string> bookfiles = filter_url_scandir (repository);
   for (auto & bookname : bookfiles) {
-    string bookpath = filter_url_create_path ({repository, bookname});
+    std::string bookpath = filter_url_create_path ({repository, bookname});
     if (filter_url_is_dir (bookpath)) {
       int book = static_cast<int>(database::books::get_id_from_english (bookname));
       if (book) {
         // Check the chapters.
-        vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
-        vector <string> chapterfiles = filter_url_scandir (bookpath);
+        std::vector <int> chapters = database::bibles::get_chapters (bible, book);
+        std::vector <std::string> chapterfiles = filter_url_scandir (bookpath);
         for (auto & chapterfile : chapterfiles) {
-          string chapterpath = filter_url_create_path ({bookpath, chapterfile});
+          std::string chapterpath = filter_url_create_path ({bookpath, chapterfile});
           if (filter_url_is_dir (chapterpath)) {
             if (filter::strings::is_numeric (chapterfile)) {
               int chapter = filter::strings::convert_to_int (chapterfile);
-              string filename = filter_url_create_path ({chapterpath, "data"});
+              std::string filename = filter_url_create_path ({chapterpath, "data"});
               if (file_or_dir_exists (filename)) {
                 if (!in_array (chapter, chapters)) {
                   // Chapter does not exist in the database: Add it.
-                  string usfm = filter_url_file_get_contents (filename);
+                  std::string usfm = filter_url_file_get_contents (filename);
                   bible_logic::store_chapter (bible, book, chapter, usfm);
                   // Log it.
-                  string message = translate("A translator added chapter") + " " + bible + " " + bookname + " " + chapterfile;
+                  std::string message = translate("A translator added chapter") + " " + bible + " " + bookname + " " + chapterfile;
                   Database_Logs::log (message);
                 }
               }
@@ -267,26 +266,26 @@ void filter_git_sync_git_to_bible (Webserver_Request& webserver_request, string 
   // If a chapter matches, check that the contents of the data in the git
   // folder and the contents in the database match.
   // If necessary, update the data in the database.
-  vector <int> books = webserver_request.database_bibles()->get_books (bible);
+  std::vector <int> books = database::bibles::get_books (bible);
   for (auto & book : books) {
-    string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
-    string bookdir = filter_url_create_path ({repository, bookname});
+    std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+    std::string bookdir = filter_url_create_path ({repository, bookname});
     if (file_or_dir_exists (bookdir)) {
-      vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
+      std::vector <int> chapters = database::bibles::get_chapters (bible, book);
       for (auto & chapter : chapters) {
-        string chapterdir = filter_url_create_path ({bookdir, filter::strings::convert_to_string (chapter)});
+        std::string chapterdir = filter_url_create_path ({bookdir, std::to_string (chapter)});
         if (file_or_dir_exists (chapterdir)) {
-          string datafile = filter_url_create_path ({chapterdir, "data"});
-          string contents = filter_url_file_get_contents (datafile);
-          string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+          std::string datafile = filter_url_create_path ({chapterdir, "data"});
+          std::string contents = filter_url_file_get_contents (datafile);
+          std::string usfm = database::bibles::get_chapter (bible, book, chapter);
           if (contents != usfm) {
             bible_logic::store_chapter (bible, book, chapter, contents);
-            Database_Logs::log (translate("A translator updated chapter") + " " + bible + " " + bookname + " " + filter::strings::convert_to_string (chapter));
+            Database_Logs::log (translate("A translator updated chapter") + " " + bible + " " + bookname + " " + std::to_string (chapter));
             rss_logic_schedule_update ("collaborator", bible, book, chapter, usfm, contents);
           }
         } else {
           bible_logic::delete_chapter (bible, book, chapter);
-          Database_Logs::log (translate("A translator deleted chapter") + " " + bible + " " + bookname + " " + filter::strings::convert_to_string (chapter));
+          Database_Logs::log (translate("A translator deleted chapter") + " " + bible + " " + bookname + " " + std::to_string (chapter));
         }
       }
     } else {
@@ -297,7 +296,7 @@ void filter_git_sync_git_to_bible (Webserver_Request& webserver_request, string 
 }
 
 
-string filter_git_disabled ()
+std::string filter_git_disabled ()
 {
   return "Git has been disabled on iOS and Android, and can be enabled on Linux, Windows and macOS";
 }
@@ -306,18 +305,17 @@ string filter_git_disabled ()
 // This filter takes one chapter of the Bible data as it is stored in the $git folder,
 // and puts this information into Bibledit's database.
 // The $git is a git repository, and may contain other data as well.
-void filter_git_sync_git_chapter_to_bible (string repository, string bible, int book, int chapter)
+void filter_git_sync_git_chapter_to_bible (std::string repository, std::string bible, int book, int chapter)
 {
   // Filename for the chapter.
-  string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
-  string filename = filter_url_create_path ({repository, bookname, filter::strings::convert_to_string (chapter), "data"});
+  std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+  std::string filename = filter_url_create_path ({repository, bookname, std::to_string (chapter), "data"});
   
   if (file_or_dir_exists (filename)) {
     
     // Store chapter in database and log it.
-    Database_Bibles database_bibles;
-    string existing_usfm = database_bibles.get_chapter (bible, book, chapter);
-    string usfm = filter_url_file_get_contents (filename);
+    std::string existing_usfm = database::bibles::get_chapter (bible, book, chapter);
+    std::string usfm = filter_url_file_get_contents (filename);
     bible_logic::log_change (bible, book, chapter, usfm, "collaborator", "Chapter updated from git repository", false);
     bible_logic::store_chapter (bible, book, chapter, usfm);
     rss_logic_schedule_update ("collaborator", bible, book, chapter, existing_usfm, usfm);
@@ -326,16 +324,16 @@ void filter_git_sync_git_chapter_to_bible (string repository, string bible, int 
     
     // Delete chapter from database.
     bible_logic::delete_chapter (bible, book, chapter);
-    Database_Logs::log (translate("A collaborator deleted chapter") + " " + bible + " " + bookname + " " + filter::strings::convert_to_string (chapter));
+    Database_Logs::log (translate("A collaborator deleted chapter") + " " + bible + " " + bookname + " " + std::to_string (chapter));
     
   }
 }
 
 
 // Returns true if the git repository at "url" is online.
-bool filter_git_remote_read (string url, string & error)
+bool filter_git_remote_read (std::string url, std::string & error)
 {
-  string output;
+  std::string output;
   int result = filter_shell_run ("", "git", {"ls-remote", url}, &output, &error);
   filter_git_check_error (output);
   filter_git_check_error (error);
@@ -343,12 +341,12 @@ bool filter_git_remote_read (string url, string & error)
 }
 
 
-bool filter_git_remote_clone (string url, string path, [[maybe_unused]] int jobid, string & error)
+bool filter_git_remote_clone (std::string url, std::string path, [[maybe_unused]] int jobid, std::string & error)
 {
   // Clear a possible existing git repository directory.
   filter_url_rmdir (path);
 
-  string output;
+  std::string output;
   int result = filter_shell_run ("", "git", {"clone", url, path}, &output, &error);
   filter_git_check_error (output);
   filter_git_check_error (error);
@@ -357,9 +355,9 @@ bool filter_git_remote_clone (string url, string path, [[maybe_unused]] int jobi
 }
 
 
-bool filter_git_add_remove_all (string repository, string & error)
+bool filter_git_add_remove_all (std::string repository, std::string & error)
 {
-  string output;
+  std::string output;
   int result = filter_shell_run (repository, "git", {"add", "--all", "."}, &output, &error);
   filter_git_check_error (output);
   filter_git_check_error (error);
@@ -368,14 +366,14 @@ bool filter_git_add_remove_all (string repository, string & error)
 
 
 // This function runs "git commit" through the shell.
-bool filter_git_commit (string repository, string user, string message,
-                        vector <string> & messages, string & error)
+bool filter_git_commit (std::string repository, std::string user, std::string message,
+                        std::vector <std::string> & messages, std::string & error)
 {
   user = filter_git_user (user);
-  string email = filter_git_email (user);
-  stringstream author;
-  author << "--author=" << quoted(user + " <" + email + ">");
-  string out, err;
+  std::string email = filter_git_email (user);
+  std::stringstream author;
+  author << "--author=" << std::quoted(user + " <" + email + ">");
+  std::string out, err;
   int result = filter_shell_run (repository, "git",
                                 {"commit",
                                  author.str(),
@@ -388,7 +386,7 @@ bool filter_git_commit (string repository, string user, string message,
   error = err;
   filter_git_check_error (error);
   messages = filter::strings::explode (out, '\n');
-  vector <string> lines = filter::strings::explode (err, '\n');
+  std::vector <std::string> lines = filter::strings::explode (err, '\n');
   messages.insert (messages.end(), lines.begin(), lines.end());
   
   // In case of Your branch is up-to-date with 'origin/master'. nothing to commit, working directory clean,
@@ -399,23 +397,23 @@ bool filter_git_commit (string repository, string user, string message,
 }
 
 
-void filter_git_config_set_bool (string repository, string name, bool value)
+void filter_git_config_set_bool (std::string repository, std::string name, bool value)
 {
-  string svalue = value ? "true" : "false";
+  std::string svalue = value ? "true" : "false";
   filter_git_config_set_string (repository, name, svalue);
 }
 
 
-void filter_git_config_set_int (string repository, string name, int value)
+void filter_git_config_set_int (std::string repository, std::string name, int value)
 {
-  string svalue = filter::strings::convert_to_string (value);
+  std::string svalue = std::to_string (value);
   filter_git_config_set_string (repository, name, svalue);
 }
 
 
-void filter_git_config_set_string (string repository, string name, string value)
+void filter_git_config_set_string (std::string repository, std::string name, std::string value)
 {
-  string output, error;
+  std::string output, error;
   filter_shell_run (repository, "git", {"config", name, value}, &output, &error);
 }
 
@@ -423,7 +421,7 @@ void filter_git_config_set_string (string repository, string name, string value)
 // This filter takes a $line of the output of the git pull command.
 // It tries to interpret it to find a passage that would have been updated.
 // If a valid book and chapter are found, it returns them.
-Passage filter_git_get_passage (string line)
+Passage filter_git_get_passage (std::string line)
 {
   // Sample lines for git pull:
 
@@ -448,16 +446,16 @@ Passage filter_git_get_passage (string line)
   // no changes added to commit (use "git add" and/or "git commit -a")
   
   Passage passage;
-  vector <string> bits = filter::strings::explode (line, '/');
+  std::vector <std::string> bits = filter::strings::explode (line, '/');
   if (bits.size () == 3) {
     size_t pos = bits [0].find (":");
     if (pos != std::string::npos) bits [0].erase (0, pos + 1);
-    string bookname = filter::strings::trim (bits [0]);
+    std::string bookname = filter::strings::trim (bits [0]);
     int book = static_cast<int>(database::books::get_id_from_english (bookname));
     if (book) {
       if (filter::strings::is_numeric (bits [1])) {
         int chapter = filter::strings::convert_to_int (bits [1]);
-        string data = bits [2];
+        std::string data = bits [2];
         if (data.find ("data") != std::string::npos) {
           passage.m_book = book;
           passage.m_chapter = chapter;
@@ -473,11 +471,11 @@ Passage filter_git_get_passage (string line)
 // Repository: "repository".
 // If $porcelain is given, it adds the --porcelain flag.
 // All changed files will be returned.
-vector <string> filter_git_status (string repository, bool porcelain)
+std::vector <std::string> filter_git_status (std::string repository, bool porcelain)
 {
-  vector <string> paths;
-  string output, error;
-  vector <string> parameters = {"status"};
+  std::vector <std::string> paths;
+  std::string output, error;
+  std::vector <std::string> parameters = {"status"};
   if (porcelain) parameters.push_back("--porcelain");
   filter_shell_run (repository, "git", parameters, &output, &error);
   filter_git_check_error (error);
@@ -488,14 +486,14 @@ vector <string> filter_git_status (string repository, bool porcelain)
 
 // Runs "git pull" and returns true if it ran fine.
 // It puts the messages in container "messages".
-bool filter_git_pull (string repository, vector <string> & messages)
+bool filter_git_pull (std::string repository, std::vector <std::string> & messages)
 {
-  string out, err;
+  std::string out, err;
   int result = filter_shell_run (repository, "git", {"pull"}, &out, &err);
   out = filter::strings::trim (out);
   err = filter::strings::trim (err);
   messages = filter::strings::explode (out, '\n');
-  vector <string> lines = filter::strings::explode (err, '\n');
+  std::vector <std::string> lines = filter::strings::explode (err, '\n');
   messages.insert (messages.end(), lines.begin(), lines.end());
   return (result == 0);
 }
@@ -503,16 +501,16 @@ bool filter_git_pull (string repository, vector <string> & messages)
 
 // Runs "git pull" and returns true if it ran fine.
 // It puts the push messages in container "messages".
-bool filter_git_push (string repository, vector <string> & messages, bool all)
+bool filter_git_push (std::string repository, std::vector <std::string> & messages, bool all)
 {
-  string out, err;
-  vector <string> parameters = {"push"};
+  std::string out, err;
+  std::vector <std::string> parameters = {"push"};
   if (all) parameters.push_back ("--all");
   int result = filter_shell_run (repository, "git", parameters, &out, &err);
   out = filter::strings::trim (out);
   err = filter::strings::trim (err);
   messages = filter::strings::explode (out, '\n');
-  vector <string> lines = filter::strings::explode (err, '\n');
+  std::vector <std::string> lines = filter::strings::explode (err, '\n');
   messages.insert (messages.end(), lines.begin(), lines.end());
   return (result == 0);
 }
@@ -522,15 +520,15 @@ bool filter_git_push (string repository, vector <string> & messages, bool all)
 // It fills "paths" with the paths to the files with the resolved merge conflicts.
 // It fills "error" with any error that git generates.
 // It returns true on success, that is, no errors occurred.
-bool filter_git_resolve_conflicts (string repository, vector <string> & paths, string & error)
+bool filter_git_resolve_conflicts (std::string repository, std::vector <std::string> & paths, std::string & error)
 {
   int result = 0;
   paths.clear();
 
   // Get the unmerged paths.
   // Use the --porcelain parameter for a better API for scripting.
-  vector <string> unmerged_paths;
-  vector <string> lines = filter_git_status (repository, true);
+  std::vector <std::string> unmerged_paths;
+  std::vector <std::string> lines = filter_git_status (repository, true);
   for (auto line : lines) {
     size_t pos = line.find ("UU ");
     if (pos != std::string::npos) {
@@ -543,21 +541,21 @@ bool filter_git_resolve_conflicts (string repository, vector <string> & paths, s
   // Deal with each unmerged path.
   for (auto & unmerged_path : unmerged_paths) {
     
-    string common_ancestor;
+    std::string common_ancestor;
     filter_shell_run (repository, "git", {"show", ":1:" + unmerged_path}, &common_ancestor, &error);
 
-    string head_version;
+    std::string head_version;
     filter_shell_run (repository, "git", {"show", ":2:" + unmerged_path}, &head_version, &error);
 
-    string merge_head_version;
+    std::string merge_head_version;
     filter_shell_run (repository, "git", {"show", ":3:" + unmerged_path}, &merge_head_version, &error);
 
-    string mergeBase (common_ancestor);
-    string userData (head_version);
-    string serverData (merge_head_version);
+    std::string mergeBase (common_ancestor);
+    std::string userData (head_version);
+    std::string serverData (merge_head_version);
     
-    vector <Merge_Conflict> conflicts;
-    string mergedData = filter_merge_run (mergeBase, userData, serverData, true, conflicts);
+    std::vector <Merge_Conflict> conflicts;
+    std::string mergedData = filter_merge_run (mergeBase, userData, serverData, true, conflicts);
     mergedData = filter::strings::trim (mergedData);
     filter_url_file_put_contents (filter_url_create_path ({repository, unmerged_path}), mergedData);
     
@@ -565,8 +563,8 @@ bool filter_git_resolve_conflicts (string repository, vector <string> & paths, s
   }
 
   if (!unmerged_paths.empty ()) {
-    vector <string> messages;
-    string error2;
+    std::vector <std::string> messages;
+    std::string error2;
     filter_git_commit (repository, "", translate ("Bibledit fixed merge conflicts"), messages, error2);
   }
   
@@ -576,22 +574,22 @@ bool filter_git_resolve_conflicts (string repository, vector <string> & paths, s
 
 
 // Configure the $repository: Make certain settings.
-void filter_git_config (string repository)
+void filter_git_config (std::string repository)
 {
   // At times there's a stale index.lock file that prevents any collaboration.
   // This is to be removed.
-  string index_lock = filter_url_create_path ({repository, ".git", "index.lock"});
+  std::string index_lock = filter_url_create_path ({repository, ".git", "index.lock"});
   if (file_or_dir_exists (index_lock)) {
     Database_Logs::log ("Cleaning out index lock " + index_lock);
     filter_url_unlink (index_lock);
   }
 
   // On some machines the mail name and address are not set properly; therefore these are set here.
-  string user = Database_Config_General::getSiteMailName ();
+  std::string user = database::config::general::get_site_mail_name ();
   if (user.empty ()) user = "Bibledit";
   filter_git_config_set_string (repository, "user.name", user);
   
-  string mail = Database_Config_General::getSiteMailAddress ();
+  std::string mail = database::config::general::get_site_mail_address ();
   if (mail.empty ()) mail = "bibledit@bibledit.org";
   filter_git_config_set_string (repository, "user.email", mail);
 
@@ -610,10 +608,10 @@ void filter_git_config (string repository)
 
 
 // This checks $user, and optionally set it, to be sure it always returns a username.
-string filter_git_user (string user)
+std::string filter_git_user (std::string user)
 {
   if (user.empty ()) {
-    user = Database_Config_General::getSiteMailName ();
+    user = database::config::general::get_site_mail_name ();
   }
   if (user.empty ()) {
     user = "Bibledit Cloud";
@@ -625,12 +623,12 @@ string filter_git_user (string user)
 // This takes the email address that belongs to $user,
 // and optionally sets the email address to a valid value,
 // and returns that email address.
-string filter_git_email (string user)
+std::string filter_git_email (std::string user)
 {
   Database_Users database_users;
-  string email = database_users.get_email (user);
+  std::string email = database_users.get_email (user);
   if (email.empty ()) {
-    email = Database_Config_General::getSiteMailAddress ();
+    email = database::config::general::get_site_mail_address ();
   }
   if (email.empty ()) {
     email = "bibledit@bibledit.org";

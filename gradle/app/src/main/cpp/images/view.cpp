@@ -32,10 +32,9 @@
 #include <journal/logic.h>
 #include <menu/logic.h>
 #include <database/bibleimages.h>
-using namespace std;
 
 
-string images_view_url ()
+std::string images_view_url ()
 {
   return "images/view";
 }
@@ -47,17 +46,17 @@ bool images_view_acl (Webserver_Request& webserver_request)
 }
 
 
-string images_view (Webserver_Request& webserver_request)
+std::string images_view (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Bible image"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.add_bread_crumb (images_view_url (), menu_logic_images_index_text ());
   page = header.run ();
   Assets_View view;
-  string error, success;
+  std::string error, success;
   
-  string image = webserver_request.query ["image"];
+  std::string image = webserver_request.query ["image"];
 
   view.set_variable ("image", image);
   view.set_variable ("success", success);

@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <database/logs.h>
 #include <database/config/general.h>
 #include <public/index.h>
+#include <config/logic.h>
+#include <config/logic.h>
 
 
 const char * public_login_url ()
@@ -39,6 +41,7 @@ const char * public_login_url ()
 
 bool public_login_acl (Webserver_Request& webserver_request)
 {
+  if (config::logic::create_no_accounts()) return false;
   return Filter_Roles::access_control (webserver_request, Filter_Roles::guest ());
 }
 
@@ -114,18 +117,18 @@ std::string public_login (Webserver_Request& webserver_request)
       // For public login, the password is taken to be the same as the username.
       if (webserver_request.session_logic()->attempt_login (name, name, touch_enabled)) {
         // Log the login.
-        Database_Logs::log ("User " + webserver_request.session_logic()->currentUser () + " logged in");
+        Database_Logs::log ("User " + webserver_request.session_logic ()->get_username () + " logged in");
       } else {
         // Add a new user and login.
         webserver_request.database_users ()->add_user(name, name, Filter_Roles::guest (), email);
         webserver_request.session_logic()->attempt_login (name, name, touch_enabled);
-        Database_Logs::log ("Public account created for user " + webserver_request.session_logic()->currentUser () + " with email " + email);
+        Database_Logs::log ("Public account created for user " + webserver_request.session_logic ()->get_username () + " with email " + email);
       }
     }
   }
 
 
-  if (webserver_request.session_logic ()->loggedIn ()) {
+  if (webserver_request.session_logic ()->get_logged_in ()) {
     redirect_browser (webserver_request, public_index_url ());
     return std::string();
   }

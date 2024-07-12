@@ -34,7 +34,6 @@ bool demo_enabled ();
 std::string admin_username ();
 std::string admin_password ();
 std::string admin_email ();
-int my_stoi (const std::string& str, void * idx = nullptr, int base = 10);
 bool basic_mode (Webserver_Request& webserver_request);
 std::string site_url (Webserver_Request& webserver_request);
 std::string manual_user_facing_url ();
@@ -43,9 +42,10 @@ std::string server_certificate_path (const bool force);
 std::string authorities_certificates_path (const bool force);
 bool enforce_https_browser ();
 bool enforce_https_client ();
-void swipe_enabled (Webserver_Request& webserver_request, std::string & script);
+void swipe_enabled (Webserver_Request& webserver_request, std::string& script);
 bool indonesian_member_cloud ();
 bool default_bibledit_configuration ();
 std::string google_translate_json_key_path ();
+bool create_no_accounts();
 
 } // End of namespace.

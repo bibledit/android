@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <filter/date.h>
 #include <database/sqlite.h>
-using namespace std;
 
 
 // Database resilience: It contains statistical and non-essential data.
@@ -42,15 +41,15 @@ void Database_Statistics::create ()
 
 void Database_Statistics::optimize ()
 {
-  bool healthy_database = database_sqlite_healthy (name ());
+  bool healthy_database = database::sqlite::healthy (name ());
   if (!healthy_database) {
-    filter_url_unlink (database_sqlite_file (name ()));
+    filter_url_unlink (database::sqlite::get_file (name ()));
     create ();
   }
 }
 
 
-void Database_Statistics::store_changes (int timestamp, string user, int count)
+void Database_Statistics::store_changes (int timestamp, std::string user, int count)
 {
   SqliteDatabase sql = SqliteDatabase (name ());
   sql.add ("INSERT INTO changes VALUES (");
@@ -65,21 +64,21 @@ void Database_Statistics::store_changes (int timestamp, string user, int count)
 
 
 // Fetches the distinct users who have been active within the last 365 days.
-vector <string> Database_Statistics::get_users ()
+std::vector <std::string> Database_Statistics::get_users ()
 {
   SqliteDatabase sql = SqliteDatabase (name ());
   sql.add ("SELECT DISTINCT user FROM changes WHERE timestamp >=");
   sql.add (year_ago ());
   sql.add ("ORDER BY user;");
-  vector <string> users = sql.query () ["user"];
+  std::vector <std::string> users = sql.query () ["user"];
   return users;
 }
 
 
 // Fetches the change statistics from the database for $user for no more than a year ago.
-vector <pair <int, int>> Database_Statistics::get_changes (string user)
+std::vector <std::pair <int, int>> Database_Statistics::get_changes (std::string user)
 {
-  vector <pair <int, int>> changes;
+  std::vector <std::pair <int, int>> changes;
   SqliteDatabase sql = SqliteDatabase (name ());
   sql.add ("SELECT timestamp, count FROM changes WHERE timestamp >=");
   sql.add (year_ago ());
@@ -89,12 +88,12 @@ vector <pair <int, int>> Database_Statistics::get_changes (string user)
     sql.add (user);
   }
   sql.add ("ORDER BY timestamp DESC;");
-  vector <string> timestamps = sql.query () ["timestamp"];
-  vector <string> counts = sql.query () ["count"];
+  std::vector <std::string> timestamps = sql.query () ["timestamp"];
+  std::vector <std::string> counts = sql.query () ["count"];
   for (size_t i = 0; i < timestamps.size (); i++) {
     int timestamp = filter::strings::convert_to_int (timestamps[i]);
     int count = filter::strings::convert_to_int (counts[i]);
-    changes.push_back (pair (timestamp, count));
+    changes.push_back (std::pair (timestamp, count));
   }
   return changes;
 }

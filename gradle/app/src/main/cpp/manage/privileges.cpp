@@ -31,10 +31,9 @@
 #include <access/logic.h>
 #include <menu/logic.h>
 #include <manage/users.h>
-using namespace std;
 
 
-string manage_privileges_url ()
+std::string manage_privileges_url ()
 {
   return "manage/privileges";
 }
@@ -46,9 +45,9 @@ bool manage_privileges_acl (Webserver_Request& webserver_request)
 }
 
 
-string manage_privileges (Webserver_Request& webserver_request)
+std::string manage_privileges (Webserver_Request& webserver_request)
 {
-  string page {};
+  std::string page {};
   Assets_Header header = Assets_Header (translate("Read/write"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.add_bread_crumb (manage_users_url (), menu_logic_manage_users_text ());
@@ -57,7 +56,7 @@ string manage_privileges (Webserver_Request& webserver_request)
 
   
   // Get the user and his/her level.
-  string user {webserver_request.query["user"]};
+  std::string user {webserver_request.query["user"]};
   if (user.empty()) user = webserver_request.post["val1"];
   view.set_variable ("user", user);
   int level {0};
@@ -65,11 +64,11 @@ string manage_privileges (Webserver_Request& webserver_request)
 
 
   // Usernames for setting default new user privilege.
-  set <string> defusers = access_logic::default_privilege_usernames ();
+  std::set <std::string> defusers = access_logic::default_privilege_usernames ();
 
   
   bool privileges_updated {false};
-  string checkbox {webserver_request.post ["checkbox"]};
+  std::string checkbox {webserver_request.post ["checkbox"]};
   bool checked {filter::strings::convert_to_bool (webserver_request.post ["checked"])};
   bool state {false};
   

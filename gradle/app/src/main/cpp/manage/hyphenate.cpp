@@ -28,16 +28,12 @@
 #include <database/privileges.h>
 #include <database/config/bible.h>
 #include <webserver/request.h>
-using namespace std;
 
 
-void manage_hyphenate (string bible, string user)
+void manage_hyphenate (std::string bible, std::string user)
 {
-  Database_Bibles database_bibles;
-
-
-  string inputBible (bible);
-  string outputBible = inputBible + "-hyphenated";
+  std::string inputBible (bible);
+  std::string outputBible = inputBible + "-hyphenated";
   
   
   Database_Logs::log ("Reading Bible " + inputBible + ", adding soft hyphens, putting it into Bible " + outputBible);
@@ -45,29 +41,29 @@ void manage_hyphenate (string bible, string user)
   
   // Get the two sets of characters as arrays.
   // The /u switch treats the text as UTF8 Unicode.
-  vector <string> firstset;
-  string s_firstset = Database_Config_Bible::getHyphenationFirstSet (inputBible);
+  std::vector <std::string> firstset;
+  std::string s_firstset = database::config::bible::get_hyphenation_first_set (inputBible);
   size_t length = filter::strings::unicode_string_length (s_firstset);
   for (size_t i = 0; i < length; i++) {
-    string s = filter::strings::unicode_string_substr (s_firstset, i, 1);
+    std::string s = filter::strings::unicode_string_substr (s_firstset, i, 1);
     if (s == " ") continue;
     firstset.push_back (s);
   }
-  vector <string> secondset;
-  string s_secondset = Database_Config_Bible::getHyphenationSecondSet (inputBible);
+  std::vector <std::string> secondset;
+  std::string s_secondset = database::config::bible::get_hyphenation_second_set (inputBible);
   length = filter::strings::unicode_string_length (s_secondset);
   for (size_t i = 0; i < length; i++) {
-    string s = filter::strings::unicode_string_substr (s_secondset, i, 1);
+    std::string s = filter::strings::unicode_string_substr (s_secondset, i, 1);
     if (s == " ") continue;
     secondset.push_back (s);
   }
  
   
   // Delete and (re)create the hyphenated Bible.
-  database_bibles.delete_bible (outputBible);
+  database::bibles::delete_bible (outputBible);
   DatabasePrivileges::remove_bible (outputBible);
-  Database_Config_Bible::remove (outputBible);
-  database_bibles.create_bible (outputBible);
+  database::config::bible::remove (outputBible);
+  database::bibles::create_bible (outputBible);
   Webserver_Request webserver_request;
   if (!access_bible::write (webserver_request, outputBible, user)) {
     // Only grant access if the user does not yet have it.
@@ -78,14 +74,14 @@ void manage_hyphenate (string bible, string user)
   
   
   // Go through the input Bible's books and chapters.
-  vector <int> books = database_bibles.get_books (inputBible);
+  std::vector <int> books = database::bibles::get_books (inputBible);
   for (auto book : books) {
     Database_Logs::log (database::books::get_english_from_id (static_cast<book_id>(book)));
-    vector <int> chapters = database_bibles.get_chapters (inputBible, book);
+    std::vector <int> chapters = database::bibles::get_chapters (inputBible, book);
     for (auto chapter : chapters) {
-      string data = database_bibles.get_chapter (inputBible, book, chapter);
+      std::string data = database::bibles::get_chapter (inputBible, book, chapter);
       data = hyphenate_at_transition (firstset, secondset, data);
-      database_bibles.store_chapter (outputBible, book, chapter, data);
+      database::bibles::store_chapter (outputBible, book, chapter, data);
     }
   }
 
@@ -104,7 +100,7 @@ void manage_hyphenate (string bible, string user)
  * $text: A string of text to operate on.
  * Returns: The hyphenated text.
  */
-string hyphenate_at_transition (vector <string>& firstset, vector <string>& secondset, string text)
+std::string hyphenate_at_transition (std::vector <std::string>& firstset, std::vector <std::string>& secondset, std::string text)
 {
   // Verify the input.
   if (firstset.empty ()) return text;
@@ -112,14 +108,14 @@ string hyphenate_at_transition (vector <string>& firstset, vector <string>& seco
   if (text.empty ()) return text;
   
   // Split the text up into lines and go through each one.
-  vector <string> lines = filter::strings::explode (text, '\n');
-  for (string & line : lines) {
+  std::vector <std::string> lines = filter::strings::explode (text, '\n');
+  for (std::string & line : lines) {
     
     // Split the line up into an array of UTF8 Unicode characters.
-    vector <string> characters;
+    std::vector <std::string> characters;
     size_t length = filter::strings::unicode_string_length (line);
     for (size_t i = 0; i < length; i++) {
-      string s = filter::strings::unicode_string_substr (line, i, 1);
+      std::string s = filter::strings::unicode_string_substr (line, i, 1);
       characters.push_back (s);
     }
     
@@ -131,7 +127,7 @@ string hyphenate_at_transition (vector <string>& firstset, vector <string>& seco
     // Process each character.
     for (unsigned int i = 0; i < characters.size (); i++) {
       
-      string character = characters [i];
+      std::string character = characters [i];
       
       // Skip USFM marker.
       if (character == "\\") isUsfm = true;
@@ -173,7 +169,7 @@ string hyphenate_at_transition (vector <string>& firstset, vector <string>& seco
  * in the vector of characters.
  * Returns: true or false.
  */
-bool hyphenate_is_near_white_space (const vector <string> & characters, int offset)
+bool hyphenate_is_near_white_space (const std::vector <std::string> & characters, int offset)
 {
   // The constant for the nearness to the start of the word.
   int start = offset - 2;

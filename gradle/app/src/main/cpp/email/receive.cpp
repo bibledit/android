@@ -26,17 +26,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <filter/mail.h>
 #include <config/globals.h>
-#include <confirm/worker.h>
 #include <notes/logic.h>
 #include <filter/url.h>
-using namespace std;
 
 
 void email_receive ()
 {
 #ifdef HAVE_CLOUD
   // Bail out when the mail storage host has not been defined, rather than giving an error message.
-  if (Database_Config_General::getMailStorageHost () == "") return;
+  if (database::config::general::get_mail_storage_host () == "") return;
   
   // One email receiver runs at a time.
   if (config_globals_mail_receive_running) return;
@@ -45,30 +43,27 @@ void email_receive ()
   // without clearin this flag.
   
   // Email count.
-  string error;
+  std::string error;
   int emailcount = email_receive_count (error);
   // Messages start at number 1 instead of 0.
   for (int i = 1; i <= emailcount; i++) {
 
     Webserver_Request webserver_request;
-    Confirm_Worker confirm_worker = (webserver_request);
     Notes_Logic notes_logic (webserver_request);
     
     error.clear ();
-    string message = email_receive_message (error);
+    std::string message = email_receive_message (error);
     if (error.empty ()) {
   
       // Extract "from" and subject, and clean body.
-      string from;
-      string subject;
-      string body;
+      std::string from;
+      std::string subject;
+      std::string body;
       filter_mail_dissect (message, from, subject, body);
   
       Database_Logs::log ("Processing email from " + from + " with subject " + subject);
 
-      if (confirm_worker.handleEmail (from, subject, body)) {
-      }
-      else if (notes_logic.handleEmailComment (from, subject, body)) {
+      if (notes_logic.handleEmailComment (from, subject, body)) {
       }
       else if (notes_logic.handleEmailNew (from, subject, body)) {
       }
@@ -112,22 +107,22 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, cstring *s)
 }
 
 
-string url ()
+std::string url ()
 {
-  string url;
+  std::string url;
   const char * pop3s = "POP3S";
-  if (Database_Config_General::getMailStorageProtocol() == pop3s) url.append (pop3s);
+  if (database::config::general::get_mail_storage_protocol() == pop3s) url.append (pop3s);
   else url.append ("pop3");
   url.append ("://");
-  url.append (Database_Config_General::getMailStorageHost ());
+  url.append (database::config::general::get_mail_storage_host ());
   url.append (":");
-  url.append (Database_Config_General::getMailStoragePort ());
+  url.append (database::config::general::get_mail_storage_port ());
   return url;
 }
 
 
 // Returns how many emails are waiting in the mail storage host's POP3 email inbox.
-int email_receive_count (string& error, bool verbose)
+int email_receive_count (std::string& error, bool verbose)
 {
 #ifdef HAVE_CLIENT
   error = "Not implemented with embedded http library";
@@ -144,8 +139,8 @@ int email_receive_count (string& error, bool verbose)
 
   curl = curl_easy_init ();
 
-  curl_easy_setopt (curl, CURLOPT_USERNAME, Database_Config_General::getMailStorageUsername ().c_str());
-  curl_easy_setopt (curl, CURLOPT_PASSWORD, Database_Config_General::getMailStoragePassword ().c_str());
+  curl_easy_setopt (curl, CURLOPT_USERNAME, database::config::general::get_mail_storage_username ().c_str());
+  curl_easy_setopt (curl, CURLOPT_PASSWORD, database::config::general::get_mail_storage_password ().c_str());
 
   curl_easy_setopt (curl, CURLOPT_URL, url ().c_str());
 
@@ -173,7 +168,7 @@ int email_receive_count (string& error, bool verbose)
   
   if (res == CURLE_OK) {
     if (s.ptr) {
-      string response = s.ptr;
+      std::string response = s.ptr;
       response = filter::strings::trim (response);
       mailcount = static_cast<int>(filter::strings::explode (response, '\n').size());
     }
@@ -190,11 +185,11 @@ int email_receive_count (string& error, bool verbose)
 }
 
 
-string email_receive_message (string& error)
+std::string email_receive_message (std::string& error)
 {
 #ifdef HAVE_CLIENT
   error = "Not implemented with embedded http library";
-  return "";
+  return std::string();
 #endif
   
 #ifdef HAVE_CLOUD
@@ -206,10 +201,10 @@ string email_receive_message (string& error)
 
   curl = curl_easy_init ();
 
-  curl_easy_setopt (curl, CURLOPT_USERNAME, Database_Config_General::getMailStorageUsername ().c_str());
-  curl_easy_setopt (curl, CURLOPT_PASSWORD, Database_Config_General::getMailStoragePassword ().c_str());
+  curl_easy_setopt (curl, CURLOPT_USERNAME, database::config::general::get_mail_storage_username ().c_str());
+  curl_easy_setopt (curl, CURLOPT_PASSWORD, database::config::general::get_mail_storage_password ().c_str());
 
-  string message_url = url () + "/1";
+  std::string message_url = url () + "/1";
   curl_easy_setopt (curl, CURLOPT_URL, message_url.c_str());
 
   curl_easy_setopt (curl, CURLOPT_USE_SSL, static_cast<long>(CURLUSESSL_ALL));
@@ -227,7 +222,7 @@ string email_receive_message (string& error)
   
   res = curl_easy_perform (curl);
 
-  string body {};
+  std::string body {};
   
   if (res == CURLE_OK) {
     if (s.ptr) body = s.ptr;

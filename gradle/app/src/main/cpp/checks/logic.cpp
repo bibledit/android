@@ -21,21 +21,19 @@
 #include <database/bibles.h>
 #include <database/config/bible.h>
 #include <tasks/logic.h>
-using namespace std;
 
 
 void checks_logic_start_all ()
 {
-  Database_Bibles database_bibles {};
-  const vector <string> & bibles = database_bibles.get_bibles ();
-  for (const auto & bible : bibles) {
-    bool enabled = Database_Config_Bible::getDailyChecksEnabled (bible);
+  const std::vector <std::string>& bibles = database::bibles::get_bibles ();
+  for (const auto& bible : bibles) {
+    const bool enabled = database::config::bible::get_daily_checks_enabled (bible);
     if (enabled) checks_logic_start (bible);
   }
 }
 
 
-void checks_logic_start (const string & bible)
+void checks_logic_start (const std::string& bible)
 {
   tasks_logic_queue (CHECKBIBLE, {bible});
 }

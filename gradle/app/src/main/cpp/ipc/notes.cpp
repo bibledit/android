@@ -22,7 +22,6 @@
 #include <filter/usfm.h>
 #include <database/navigation.h>
 #include <webserver/request.h>
-using namespace std;
 
 
 // Deals with the consultation notes stuff.
@@ -30,8 +29,8 @@ using namespace std;
 
 void Ipc_Notes::open (Webserver_Request& webserver_request, int identifier)
 {
-  string user = webserver_request.session_logic()->currentUser ();
-  webserver_request.database_ipc()->storeMessage (user, "", "opennote", filter::strings::convert_to_string (identifier));
+  const std::string& user = webserver_request.session_logic ()->get_username ();
+  webserver_request.database_ipc()->storeMessage (user, "", "opennote", std::to_string (identifier));
 }
 
 
@@ -58,7 +57,7 @@ void Ipc_Notes::erase (Webserver_Request& webserver_request)
 // If $set is false, it returns the alive status.
 bool Ipc_Notes::alive (Webserver_Request& webserver_request, bool set, bool alive)
 {
-  string user = webserver_request.session_logic()->currentUser ();
+  const std::string& user = webserver_request.session_logic ()->get_username ();
   if (set) {
     webserver_request.database_ipc()->storeMessage (user, "", "notesalive", filter::strings::convert_to_string (alive));
   } else {

@@ -56,7 +56,7 @@ bool editusfm_index_acl (Webserver_Request& webserver_request)
 
 std::string editusfm_index (Webserver_Request& webserver_request)
 {
-  const bool touch = webserver_request.session_logic ()->touchEnabled ();
+  const bool touch = webserver_request.session_logic ()->get_touch_enabled ();
 
   
   if (webserver_request.query.count ("switchbook") && webserver_request.query.count ("switchchapter")) {
@@ -111,12 +111,12 @@ std::string editusfm_index (Webserver_Request& webserver_request)
   
   const int verticalCaretPosition = webserver_request.database_config_user ()->getVerticalCaretPosition ();
   std::stringstream ss{};
-  ss << "var usfmEditorChapterLoaded = " << quoted(locale_logic_text_loaded ()) << ";" << std::endl;
-  ss << "var usfmEditorWillSave = " << quoted(locale_logic_text_will_save ()) << ";" << std::endl;
-  ss << "var usfmEditorChapterSaving = " << quoted(locale_logic_text_saving ()) << ";" << std::endl;
-  ss << "var usfmEditorChapterSaved = " << quoted(locale_logic_text_saved ()) << ";" << std::endl;
-  ss << "var usfmEditorChapterRetrying = " << quoted(locale_logic_text_retrying ()) << ";" << std::endl;
-  ss << "var usfmEditorVerseUpdatedLoaded = " << quoted(locale_logic_text_reload ()) << ";" << std::endl;
+  ss << "var usfmEditorChapterLoaded = " << std::quoted(locale_logic_text_loaded ()) << ";" << std::endl;
+  ss << "var usfmEditorWillSave = " << std::quoted(locale_logic_text_will_save ()) << ";" << std::endl;
+  ss << "var usfmEditorChapterSaving = " << std::quoted(locale_logic_text_saving ()) << ";" << std::endl;
+  ss << "var usfmEditorChapterSaved = " << std::quoted(locale_logic_text_saved ()) << ";" << std::endl;
+  ss << "var usfmEditorChapterRetrying = " << std::quoted(locale_logic_text_retrying ()) << ";" << std::endl;
+  ss << "var usfmEditorVerseUpdatedLoaded = " << std::quoted(locale_logic_text_reload ()) << ";" << std::endl;
   ss << "var usfmEditorWriteAccess = true;" << std::endl;
   ss << "var verticalCaretPosition = " << verticalCaretPosition << ";" << std::endl;
   std::string script = ss.str();
@@ -127,9 +127,9 @@ std::string editusfm_index (Webserver_Request& webserver_request)
   const std::string cls = Filter_Css::getClass (bible);
   const std::string font = fonts::logic::get_text_font (bible);
   const int current_theme_index = webserver_request.database_config_user ()->getCurrentTheme ();
-  const int direction = Database_Config_Bible::getTextDirection (bible);
-  const int lineheight = Database_Config_Bible::getLineHeight (bible);
-  const int letterspacing = Database_Config_Bible::getLetterSpacing (bible);
+  const int direction = database::config::bible::get_text_direction (bible);
+  const int lineheight = database::config::bible::get_line_height (bible);
+  const int letterspacing = database::config::bible::get_letter_spacing (bible);
   view.set_variable ("editor_theme_color", Filter_Css::theme_picker (current_theme_index, 2));
   view.set_variable ("active_editor_theme_color", Filter_Css::theme_picker (current_theme_index, 3));
   view.set_variable ("custom_class", cls);
@@ -140,11 +140,15 @@ std::string editusfm_index (Webserver_Request& webserver_request)
   if (webserver_request.database_config_user ()->getFastEditorSwitchingAvailable ()) {
     view.enable_zone ("fastswitcheditor");
   }
+  
+  // Whether to enable spell check in the editor.
+  view.set_variable ("spellcheck", filter::strings::convert_to_true_false(webserver_request.database_config_user ()->get_enable_spell_check()));
+  
 
-  page += view.render ("editusfm", "index");
+  page.append (view.render ("editusfm", "index"));
   
   
-  page += assets_page::footer ();
+  page.append (assets_page::footer ());
   
   
   return page;

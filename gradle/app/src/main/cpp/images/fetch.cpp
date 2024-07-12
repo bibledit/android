@@ -23,10 +23,9 @@
 #include <filter/url.h>
 #include <webserver/request.h>
 #include <database/bibleimages.h>
-using namespace std;
 
 
-string images_fetch_url ()
+std::string images_fetch_url ()
 {
   return "images/fetch";
 }
@@ -38,16 +37,15 @@ bool images_fetch_acl (Webserver_Request& webserver_request)
 }
 
 
-string images_fetch (Webserver_Request& webserver_request)
+std::string images_fetch (Webserver_Request& webserver_request)
 {
   // Image name.
-  string image = webserver_request.query ["image"];
+  std::string image = webserver_request.query ["image"];
 
   // Set the HTTP GET parameter to the image name,
   // so the server will return the appropriate Mime type for this image.
   webserver_request.get = image;
 
   // Return the raw image data for sending off to the browser.
-  Database_BibleImages database_bibleimages;
-  return database_bibleimages.get (image);
+  return database::bible_images::get (image);
 }

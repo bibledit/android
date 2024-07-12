@@ -43,10 +43,9 @@
 #include <resource/logic.h>
 #include <resource/organize.h>
 #include <sync/logic.h>
-using namespace std;
 
 
-string resource_divider_url ()
+std::string resource_divider_url ()
 {
   return "resource/divider";
 }
@@ -58,9 +57,9 @@ bool resource_divider_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_divider (Webserver_Request& webserver_request)
+std::string resource_divider (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Rich Divider"), webserver_request);
   header.add_bread_crumb (menu_logic_translate_menu (), menu_logic_translate_text ());
@@ -69,8 +68,8 @@ string resource_divider (Webserver_Request& webserver_request)
   Assets_View view;
 
 
-  int userid = filter::strings::user_identifier (webserver_request);
-  string key = "rich divider";
+  const int userid = filter::strings::user_identifier (webserver_request);
+  const std::string key = "rich divider";
 
 
   // For administrator level default resource management purposes.
@@ -90,14 +89,14 @@ string resource_divider (Webserver_Request& webserver_request)
   if (webserver_request.query.count ("background2")) clean_divider = false;
   if (webserver_request.post.count ("entry")) clean_divider = false;
   if (webserver_request.query.count ("add")) clean_divider = false;
-  if (clean_divider) Database_Volatile::setValue (userid, key, resource_logic_rich_divider());
+  if (clean_divider) database::volatile_::set_value (userid, key, resource_logic_rich_divider());
  
 
-  string divider = Database_Volatile::getValue (userid, key);
-  string title;
-  string link;
-  string foreground;
-  string background;
+  std::string divider = database::volatile_::get_value (userid, key);
+  std::string title;
+  std::string link;
+  std::string foreground;
+  std::string background;
   if (!resource_logic_parse_rich_divider (divider, title, link, foreground, background)) {
     title = "Divider title";
     link = "https://bibledit.org";
@@ -145,7 +144,7 @@ string resource_divider (Webserver_Request& webserver_request)
     return page;
   }
   if (webserver_request.query.count ("foreground2")) {
-    string color = webserver_request.query["color"];
+    std::string color = webserver_request.query["color"];
     if (!color.empty()) {
       foreground = color;
       if (foreground.find ("#") == std::string::npos) foreground.insert (0, "#");
@@ -164,7 +163,7 @@ string resource_divider (Webserver_Request& webserver_request)
     return page;
   }
   if (webserver_request.query.count ("background2")) {
-    string color = webserver_request.query["color"];
+    std::string color = webserver_request.query["color"];
     if (!color.empty()) {
       background = color;
       if (background.find ("#") == std::string::npos) background.insert (0, "#");
@@ -177,20 +176,20 @@ string resource_divider (Webserver_Request& webserver_request)
   // Get and optionally save the new divider.
   divider = resource_logic_assemble_rich_divider (title, link, foreground, background);
   if (divider_edited) {
-    Database_Volatile::setValue (userid, key, divider);
+    database::volatile_::set_value (userid, key, divider);
   }
 
   
   // Add it to the existing resources.
   if (webserver_request.query.count ("add")) {
-    vector <string> resources = webserver_request.database_config_user()->getActiveResources ();
-    if (is_def) resources = Database_Config_General::getDefaultActiveResources ();
+    std::vector <std::string> resources = webserver_request.database_config_user()->getActiveResources ();
+    if (is_def) resources = database::config::general::get_default_active_resources ();
     resources.push_back (divider);
-    if (is_def) Database_Config_General::setDefaultActiveResources (resources);
+    if (is_def) database::config::general::set_default_active_resources (resources);
     else webserver_request.database_config_user()->setActiveResources (resources);
     if (!is_def) webserver_request.database_config_user()->addUpdatedSetting (Sync_Logic::settings_send_resources_organization);
     redirect_browser (webserver_request, resource_organize_url ());
-    return "";
+    return std::string();
   }
   
 

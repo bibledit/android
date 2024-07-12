@@ -33,10 +33,9 @@
 #include <navigation/passage.h>
 #include <notes/note.h>
 #include <access/logic.h>
-using namespace std;
 
 
-string notes_comment_url ()
+std::string notes_comment_url ()
 {
   return "notes/comment";
 }
@@ -48,17 +47,17 @@ bool notes_comment_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_comment (Webserver_Request& webserver_request)
+std::string notes_comment (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
 
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Comment"), webserver_request);
   page += header.run ();
   Assets_View view;
-  string success;
+  std::string success;
   
   
   int id;
@@ -69,41 +68,41 @@ string notes_comment (Webserver_Request& webserver_request)
   
   
   if (webserver_request.post.count ("body")) {
-    string comment = filter::strings::trim (webserver_request.post ["body"]);
+    std::string comment = filter::strings::trim (webserver_request.post ["body"]);
     comment = filter_url_tag_to_plus (comment);
     notes_logic.addComment (id, comment);
-    redirect_browser (webserver_request, notes_note_url () + "?id=" + filter::strings::convert_to_string (id) + "&temporal=");
-    return "";
+    redirect_browser (webserver_request, notes_note_url () + "?id=" + std::to_string (id) + "&temporal=");
+    return std::string();
   }
   
   
   if (webserver_request.post.count ("cancel")) {
-    redirect_browser (webserver_request, notes_note_url () + "?id=" + filter::strings::convert_to_string (id));
-    return "";
+    redirect_browser (webserver_request, notes_note_url () + "?id=" + std::to_string (id));
+    return std::string();
   }
   
   
-  view.set_variable ("id", filter::strings::convert_to_string (id));
-  string script = "var noteId = '" + filter::strings::convert_to_string (id) + "';\n";
+  view.set_variable ("id", std::to_string (id));
+  std::string script = "var noteId = '" + std::to_string (id) + "';\n";
   view.set_variable ("script", script);
 
 
-  vector <Passage> passages = database_notes.get_passages (id);
+  std::vector <Passage> passages = database_notes.get_passages (id);
   view.set_variable ("passage", filter_passage_display_inline (passages));
   
   
-  string summary = database_notes.get_summary (id);
+  std::string summary = database_notes.get_summary (id);
   view.set_variable ("summary", summary);
 
   
   bool show_note_status = webserver_request.database_config_user ()->getShowNoteStatus ();
   if (show_note_status) {
-    string status = database_notes.get_status (id);
+    std::string status = database_notes.get_status (id);
     view.set_variable ("status", status);
   }
 
   
-  string content = database_notes.get_contents (id);
+  std::string content = database_notes.get_contents (id);
   view.set_variable ("content", content);
   
   

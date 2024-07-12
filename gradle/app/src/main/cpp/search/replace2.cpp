@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <menu/logic.h>
 #include <dialog/list2.h>
-using namespace std;
 
 
-string search_replace2_url ()
+std::string search_replace2_url ()
 {
   return "search/replace2";
 }
@@ -50,27 +49,27 @@ bool search_replace2_acl (Webserver_Request& webserver_request)
 }
 
 
-string search_replace2 (Webserver_Request& webserver_request)
+std::string search_replace2 (Webserver_Request& webserver_request)
 {
   // Build the advanced replace page.
-  string bible = webserver_request.database_config_user()->getBible ();
+  std::string bible = webserver_request.database_config_user()->getBible ();
   
   // Set the user chosen Bible as the current Bible.
   if (webserver_request.post.count ("bibleselect")) {
-    string bibleselect = webserver_request.post ["bibleselect"];
+    std::string bibleselect = webserver_request.post ["bibleselect"];
     webserver_request.database_config_user ()->setBible (bibleselect);
-    return string();
+    return std::string();
   }
 
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Replace"), webserver_request);
   header.add_bread_crumb (menu_logic_search_menu (), menu_logic_search_text ());
   page = header.run ();
   Assets_View view;
 
   {
-    string bible_html;
-    vector <string> bibles = access_bible::bibles (webserver_request);
+    std::string bible_html;
+    std::vector <std::string> bibles = access_bible::bibles (webserver_request);
     for (auto selectable_bible : bibles) {
       bible_html = Options_To_Select::add_selection (selectable_bible, selectable_bible, bible_html);
     }
@@ -78,8 +77,8 @@ string search_replace2 (Webserver_Request& webserver_request)
   }
 
   view.set_variable ("bible", bible);
-  stringstream script {};
-  script << "var searchBible = " << quoted(bible) << ";";
+  std::stringstream script {};
+  script << "var searchBible = " << std::quoted(bible) << ";";
   view.set_variable ("script", script.str());
   page += view.render ("search", "replace2");
   page += assets_page::footer ();

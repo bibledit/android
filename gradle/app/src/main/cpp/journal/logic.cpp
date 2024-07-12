@@ -41,12 +41,10 @@
 #include <webserver/request.h>
 #include <filter/string.h>
 #include <database/logs.h>
-using namespace std;
-using namespace pugi;
 
 
 // This returns true if the $entry can be filtered out from the Journal.
-bool journal_logic_filter_entry (const string& entry)
+bool journal_logic_filter_entry (const std::string& entry)
 {
   if (entry.find (sendreceive_notes_sendreceive_text ()) != std::string::npos) return true;
   if (entry.find (sendreceive_notes_up_to_date_text ()) != std::string::npos) return true;
@@ -68,22 +66,22 @@ bool journal_logic_filter_entry (const string& entry)
 }
 
 
-string journal_logic_filtered_message ()
+std::string journal_logic_filtered_message ()
 {
   return translate ("Has been sending and receiving during the past hour");
 }
 
 
-string journal_logic_see_journal_for_progress ()
+std::string journal_logic_see_journal_for_progress ()
 {
-  xml_document document;
-  xml_node a_node = document.append_child ("a");
-  string href = "../";
+  pugi::xml_document document;
+  pugi::xml_node a_node = document.append_child ("a");
+  std::string href = "../";
   href.append (journal_index_url ());
   a_node.append_attribute ("href") = href.c_str ();
   a_node.text () = translate ("See the Journal for progress.").c_str();
-  stringstream output;
-  document.print (output, "", format_default);
+  std::stringstream output;
+  document.print (output, "", pugi::format_default);
   return output.str ();
 }
 

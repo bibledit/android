@@ -282,6 +282,8 @@ locale/id.po
 locale/bibledit.pot
 locale/af.po
 locale/pt.po
+bootstrap/loading.css
+bootstrap/loading.html
 bb/order.html
 bb/css.html
 bb/manage.html
@@ -364,7 +366,6 @@ utf8proc/LICENSE.md
 utf8proc/NEWS.md
 utf8proc/MANIFEST
 utf8proc/README.md
-mbedtls/Makefile
 mbedtls/0readme.txt
 nicedit/nicedit.js
 nicedit/nicEditorIcons.gif
@@ -452,6 +453,8 @@ dialog/yes.html
 dialog/upload.html
 dialog/color.html
 dialog/entry.html
+mbedtls_2.x/Makefile
+mbedtls_2.x/0readme.txt
 edit/preview.html
 edit/index.html
 edit/keys.js
@@ -531,9 +534,9 @@ microtar/readme.txt
 consultations/gitflag
 .github/workflows/build.yml
 pkgdata/files.txt
-pkgdata/.!16152!files.txt
 pkgdata/install.sh
 pkgdata/create.sh
+pkgdata/.!72340!files.txt
 book/books.js
 compare/index.html
 sources/etcbc4.txt
@@ -567,19 +570,13 @@ pugixml/pugixml.hpp
 pugixml/00readme.txt
 pugixml/readme.txt
 revisions/gitflag
-build/Makefile
-build/stamp-h1
-build/config.status
-build/config.log
-build/confyLGTNU/subs1.awk
-build/confyLGTNU/defines.awk
-build/confyLGTNU/subs.awk
 filter/cas.crt
 filter/passage.js
 filter/focus.js
 filter/usfm.js
 filter/string.hpp
 filter/url.js
+filter/UriCodec.hpp
 slip/slip.js
 slip/example.html
 slip/readme.txt

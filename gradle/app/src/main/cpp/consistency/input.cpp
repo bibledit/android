@@ -23,10 +23,9 @@
 #include <webserver/request.h>
 #include <consistency/logic.h>
 #include <database/volatile.h>
-using namespace std;
 
 
-string consistency_input_url ()
+std::string consistency_input_url ()
 {
   return "consistency/input";
 }
@@ -38,15 +37,15 @@ bool consistency_input_acl (Webserver_Request& webserver_request)
 }
 
 
-string consistency_input (Webserver_Request& webserver_request)
+std::string consistency_input (Webserver_Request& webserver_request)
 {
   const int id = filter::strings::convert_to_int (webserver_request.post ["id"]);
-  const string passages = webserver_request.post ["passages"];
-  const string translations = webserver_request.post ["translations"];
-  Database_Volatile::setValue (id, "passages", passages);
-  Database_Volatile::setValue (id, "translations", translations);
+  const std::string passages = webserver_request.post ["passages"];
+  const std::string translations = webserver_request.post ["translations"];
+  database::volatile_::set_value (id, "passages", passages);
+  database::volatile_::set_value (id, "translations", translations);
   Consistency_Logic consistency_logic (webserver_request, id);
-  const string response = consistency_logic.response ();
-  Database_Volatile::setValue (id, "response", response);
+  const std::string response = consistency_logic.response ();
+  database::volatile_::set_value (id, "response", response);
   return response;
 }

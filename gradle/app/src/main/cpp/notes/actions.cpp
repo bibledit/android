@@ -36,10 +36,9 @@
 #include <database/logs.h>
 #include <styles/logic.h>
 #include <access/logic.h>
-using namespace std;
 
 
-string notes_actions_url ()
+std::string notes_actions_url ()
 {
   return "notes/actions";
 }
@@ -51,29 +50,29 @@ bool notes_actions_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_actions (Webserver_Request& webserver_request)
+std::string notes_actions (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic = Notes_Logic (webserver_request);
 
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Actions"), webserver_request);
   header.set_navigator ();
   page += header.run ();
   Assets_View view;
-  string success, error;
+  std::string success, error;
 
   
-  string user = webserver_request.session_logic()->currentUser ();
-  int level = webserver_request.session_logic()->currentLevel ();
+  const std::string& user = webserver_request.session_logic ()->get_username ();
+  int level = webserver_request.session_logic()->get_level ();
 
   
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
   if (!id) id = filter::strings::convert_to_int (webserver_request.post ["val1"]);
 
   
-  string checkbox = webserver_request.post ["checkbox"];
+  std::string checkbox = webserver_request.post ["checkbox"];
   bool checked = filter::strings::convert_to_bool (webserver_request.post ["checked"]);
 
 
@@ -88,7 +87,7 @@ string notes_actions (Webserver_Request& webserver_request)
   
   
   if (webserver_request.query.count ("unassign")) {
-    string unassign = webserver_request.query["unassign"];
+    std::string unassign = webserver_request.query["unassign"];
     notes_logic.unassignUser (id, unassign);
   }
   
@@ -112,20 +111,20 @@ string notes_actions (Webserver_Request& webserver_request)
   if (webserver_request.query.count ("delete")) {
     notes_logic.erase (id);
     redirect_browser (webserver_request, notes_index_url ());
-    return "";
+    return std::string();
   }
   
   
   if (checkbox == "public") {
     database_notes.set_public (id, checked);
-    return "";
+    return std::string();
   }
 
   
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
   
                       
-  string summary = database_notes.get_summary (id);
+  std::string summary = database_notes.get_summary (id);
   view.set_variable ("summary", summary);
                                           
                                           
@@ -134,12 +133,12 @@ string notes_actions (Webserver_Request& webserver_request)
   else view.enable_zone ("subscribe");
   
 
-  vector <string> assignees = database_notes.get_assignees (id);
-  stringstream assigneeblock;
+  std::vector <std::string> assignees = database_notes.get_assignees (id);
+  std::stringstream assigneeblock;
   for (auto & assignee : assignees) {
     assigneeblock << assignee;
     if (level >= Filter_Roles::manager ()) {
-      assigneeblock << "<a href=" << quoted ("?id=" + filter::strings::convert_to_string (id) + "&unassign=" + assignee) << "> [" << translate("unassign") << "]</a>";
+      assigneeblock << "<a href=" << std::quoted ("?id=" + std::to_string (id) + "&unassign=" + assignee) << "> [" << translate("unassign") << "]</a>";
       assigneeblock << " | ";
     }
   }
@@ -151,21 +150,21 @@ string notes_actions (Webserver_Request& webserver_request)
   if (assigned) view.enable_zone ("assigned");
   
   
-  string status = database_notes.get_status (id);
+  std::string status = database_notes.get_status (id);
   view.set_variable ("status", status);
   if (Filter_Roles::translator ()) view.enable_zone ("editstatus");
   else view.enable_zone ("viewstatus");
 
   
-  string verses = filter_passage_display_inline (database_notes.get_passages (id));
+  std::string verses = filter_passage_display_inline (database_notes.get_passages (id));
   view.set_variable ("verses", verses);
                                           
                                           
-  string severity = database_notes.get_severity (id);
+  std::string severity = database_notes.get_severity (id);
   view.set_variable ("severity",  severity);
 
   
-  string bible = database_notes.get_bible (id);
+  std::string bible = database_notes.get_bible (id);
   view.set_variable ("bible", bible);
   if (bible.empty ()) view.enable_zone ("nobible");
 

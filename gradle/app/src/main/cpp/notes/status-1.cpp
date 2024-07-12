@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <navigation/passage.h>
 #include <notes/actions.h>
-using namespace std;
 
 
-string notes_status_1_url ()
+std::string notes_status_1_url ()
 {
   return "notes/status-1";
 }
@@ -49,35 +48,35 @@ bool notes_status_1_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_status_1 (Webserver_Request& webserver_request)
+std::string notes_status_1 (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Note status"), webserver_request);
   page += header.run ();
   Assets_View view;
-  string success, error;
+  std::string success, error;
   
   
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
   
   
   if (webserver_request.query.count ("status")) {
-    string status = webserver_request.query["status"];
+    std::string status = webserver_request.query["status"];
     notes_logic.setStatus (id, status);
-    redirect_browser (webserver_request, notes_actions_url () + "?id=" + filter::strings::convert_to_string (id));
-    return "";
+    redirect_browser (webserver_request, notes_actions_url () + "?id=" + std::to_string (id));
+    return std::string();
   }
   
   
-  stringstream statusblock;
-  const vector <Database_Notes_Text> statuses = database_notes.get_possible_statuses ();
+  std::stringstream statusblock;
+  const std::vector <Database_Notes_Text> statuses = database_notes.get_possible_statuses ();
   for (const auto& status : statuses) {
-    statusblock << "<li><a href=" << quoted ("status-1?id=" + filter::strings::convert_to_string (id) + "&status=" + status.raw) << ">" << status.localized + "</a></li>" << std::endl;
+    statusblock << "<li><a href=" << std::quoted ("status-1?id=" + std::to_string (id) + "&status=" + status.raw) << ">" << status.localized + "</a></li>" << std::endl;
   }
   view.set_variable ("statusblock", statusblock.str());
   

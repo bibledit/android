@@ -26,10 +26,9 @@
 #include <ipc/focus.h>
 #include <database/ipc.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string editor_id_url ()
+std::string editor_id_url ()
 {
   return "editor/id";
 }
@@ -44,15 +43,15 @@ bool editor_id_acl (Webserver_Request& webserver_request)
 }
 
 
-string editor_id (Webserver_Request& webserver_request)
+std::string editor_id (Webserver_Request& webserver_request)
 {
   // Update the timestamp indicating that the Bible editor is alive.
   webserver_request.database_config_user()->setLiveBibleEditor (filter::date::seconds_since_epoch ());
 
   
-  string bible = webserver_request.query ["bible"];
+  std::string bible = webserver_request.query ["bible"];
   int book = filter::strings::convert_to_int (webserver_request.query ["book"]);
   int chapter = filter::strings::convert_to_int (webserver_request.query ["chapter"]);
-  int id = webserver_request.database_bibles()->get_chapter_id (bible, book, chapter);
-  return filter::strings::convert_to_string (id);
+  int id = database::bibles::get_chapter_id (bible, book, chapter);
+  return std::to_string (id);
 }

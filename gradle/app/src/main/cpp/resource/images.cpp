@@ -32,10 +32,9 @@
 #include <dialog/yes.h>
 #include <dialog/entry.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string resource_images_url ()
+std::string resource_images_url ()
 {
   return "resource/images";
 }
@@ -47,14 +46,14 @@ bool resource_images_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_images (Webserver_Request& webserver_request)
+std::string resource_images (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Image resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;
-  string error, success;
+  std::string error, success;
   
 
   Database_ImageResources database_imageresources;
@@ -67,8 +66,8 @@ string resource_images (Webserver_Request& webserver_request)
     return page;
   }
   if (webserver_request.post.count ("new")) {
-    string resource = webserver_request.post ["entry"];
-    vector <string> resources = database_imageresources.names ();
+    std::string resource = webserver_request.post ["entry"];
+    std::vector <std::string> resources = database_imageresources.names ();
     if (in_array (resource, resources)) {
       error = translate("This image resource already exists");
     } else if (resource.empty ()) {
@@ -81,9 +80,9 @@ string resource_images (Webserver_Request& webserver_request)
 
   
   // Delete resource.
-  string remove = webserver_request.query ["delete"];
+  std::string remove = webserver_request.query ["delete"];
   if (remove != "") {
-    string confirm = webserver_request.query ["confirm"];
+    std::string confirm = webserver_request.query ["confirm"];
     if (confirm == "") {
       Dialog_Yes dialog_yes = Dialog_Yes ("images", translate("Would you like to delete this resource?"));
       dialog_yes.add_query ("delete", remove);
@@ -96,8 +95,8 @@ string resource_images (Webserver_Request& webserver_request)
   }
 
 
-  vector <string> resources = database_imageresources.names ();
-  vector <string> resourceblock;
+  std::vector <std::string> resources = database_imageresources.names ();
+  std::vector <std::string> resourceblock;
   for (auto & resource : resources) {
     resourceblock.push_back ("<p>");
     resourceblock.push_back ("<a href=\"image?name=" + resource + "\">");

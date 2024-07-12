@@ -33,10 +33,9 @@
 #include <access/logic.h>
 #include <database/userresources.h>
 #include <database/books.h>
-using namespace std;
 
 
-string resource_user1view_url ()
+std::string resource_user1view_url ()
 {
   return "resource/user1view";
 }
@@ -48,9 +47,9 @@ bool resource_user1view_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_user1view (Webserver_Request& webserver_request)
+std::string resource_user1view (Webserver_Request& webserver_request)
 {
-  string page {};
+  std::string page {};
   Assets_Header header = Assets_Header (translate("Resources"), webserver_request);
   header.set_navigator ();
   header.add_bread_crumb (menu_logic_translate_menu (), menu_logic_translate_text ());
@@ -58,23 +57,23 @@ string resource_user1view (Webserver_Request& webserver_request)
   Assets_View view {};
   
 
-  string name = webserver_request.query ["name"];
+  std::string name = webserver_request.query ["name"];
 
   
-  vector <string> code {};
-  string url = Database_UserResources::url (name);
+  std::vector <std::string> code {};
+  std::string url = Database_UserResources::url (name);
   code.push_back ("var userResourceUrl = \"" + url + "\";");
   code.push_back ("var userResourceBooks = [];");
-  vector <book_id> ids = database::books::get_ids ();
+  std::vector <book_id> ids = database::books::get_ids ();
   for (auto id : ids) {
     book_type type = database::books::get_type (id);
     if ((type == book_type::old_testament) || (type == book_type::new_testament)) {
-      string book = Database_UserResources::book (name, static_cast<int> (id));
-      if (book.empty ()) book = filter::strings::convert_to_string (static_cast<int>(id));
-      code.push_back ("userResourceBooks [" + filter::strings::convert_to_string (static_cast<int>(id)) + "] = \"" + book + "\";");
+      std::string book = Database_UserResources::book (name, static_cast<int> (id));
+      if (book.empty ()) book = std::to_string (static_cast<int>(id));
+      code.push_back ("userResourceBooks [" + std::to_string (static_cast<int>(id)) + "] = \"" + book + "\";");
     }
   }
-  string script = filter::strings::implode (code, "\n");
+  std::string script = filter::strings::implode (code, "\n");
   config::logic::swipe_enabled (webserver_request, script);
   view.set_variable ("script", script);
   

@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/url.h>
 #include <filter/string.h>
 #include <database/sqlite.h>
-using namespace std;
 
 
 // Database robustness:
@@ -31,76 +30,71 @@ using namespace std;
 //    This is acceptable, because translation work can still continue.
 
 
+constexpr const auto database_name {"sprint"};
+
+
 #ifdef HAVE_CLOUD
-
-
-sqlite3 * Database_Sprint::connect ()
-{
-  return database_sqlite_connect ("sprint");
-}
 
 
 void Database_Sprint::create ()
 {
-  sqlite3 * db = connect ();
+  SqliteDatabase sql (database_name);
 
-  string sql = 
-    "CREATE TABLE IF NOT EXISTS sprint ("
-    "  year integer,"
-    "  month integer,"
-    "  title text,"
-    "  body text,"
-    "  complete integer"
-    ");";
-  database_sqlite_exec (db, sql);
+  sql.set_sql ("CREATE TABLE IF NOT EXISTS sprint ("
+               " year integer,"
+               " month integer,"
+               " title text,"
+               " body text,"
+               " complete integer"
+               ");");
+  sql.execute ();
 
-  sql = "CREATE INDEX IF NOT EXISTS yearmonth ON sprint (year, month)";
-  database_sqlite_exec (db, sql);
+  sql.set_sql ("CREATE INDEX IF NOT EXISTS yearmonth ON sprint (year, month)");
+  sql.execute ();
 
-  sql = "CREATE INDEX IF NOT EXISTS complete ON sprint (complete)";
-  database_sqlite_exec (db, sql);
+  sql.set_sql ("CREATE INDEX IF NOT EXISTS complete ON sprint (complete)");
+  sql.execute ();
 
-  sql =
-    "CREATE TABLE IF NOT EXISTS sprinthistory ("
-    "  year integer,"
-    "  month integer,"
-    "  day integer,"
-    "  tasks integer,"
-    "  complete integer"
-    ");";
-  database_sqlite_exec (db, sql);
+  sql.set_sql ("CREATE TABLE IF NOT EXISTS sprinthistory ("
+               " year integer,"
+               " month integer,"
+               " day integer,"
+               " tasks integer,"
+               " complete integer"
+               ");");
+  sql.execute ();
 
   // Upgrade the two tables: Add a column for the Bible.
-  sql = "PRAGMA table_info (sprint);";
-  vector <string> columns = database_sqlite_query (db, sql) ["name"];
-  if (find (columns.begin(), columns.end(), "bible") == columns.end()) {
-    sql = "ALTER TABLE sprint ADD COLUMN bible text;";
-    database_sqlite_exec (db, sql);
+  sql.set_sql ("PRAGMA table_info (sprint);");
+  std::vector <std::string> columns = sql.query () ["name"];
+  if (std::find (columns.begin(), columns.end(), "bible") == columns.end()) {
+    sql.set_sql ("ALTER TABLE sprint ADD COLUMN bible text;");
+    sql.execute ();
   }
-  sql = "PRAGMA table_info (sprinthistory);";
-  columns = database_sqlite_query (db, sql) ["name"];
-  if (find (columns.begin(), columns.end(), "bible") == columns.end()) {
-    sql = "ALTER TABLE sprinthistory ADD COLUMN bible text;";
-    database_sqlite_exec (db, sql);
+  sql.set_sql ("PRAGMA table_info (sprinthistory);");
+  columns = sql.query () ["name"];
+  if (std::find (columns.begin(), columns.end(), "bible") == columns.end()) {
+    sql.set_sql ("ALTER TABLE sprinthistory ADD COLUMN bible text;");
+    sql.execute ();
   }
-
-  database_sqlite_disconnect (db);
 }
 
 
 void Database_Sprint::optimize ()
 {
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, "REINDEX sprint;");
-  database_sqlite_exec (db, "VACUUM;");
-  database_sqlite_exec (db, "VACUUM;");
-  database_sqlite_disconnect (db);
+  SqliteDatabase sql (database_name);
+  sql.set_sql ("REINDEX sprint;");
+  sql.execute();
+  sql.set_sql ("VACUUM;");
+  sql.execute();
+  sql.set_sql ("VACUUM;");
+  sql.execute();
 }
 
 
-void Database_Sprint::storeTask (const string& bible, int year, int month, const string& title)
+void Database_Sprint::storeTask (const std::string& bible, int year, int month, const std::string& title)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("INSERT INTO sprint VALUES (");
   sql.add (year);
   sql.add (",");
@@ -110,27 +104,23 @@ void Database_Sprint::storeTask (const string& bible, int year, int month, const
   sql.add (", '', 0,");
   sql.add (bible);
   sql.add (");");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 
 void Database_Sprint::deleteTask (int id)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("DELETE FROM sprint WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 
-vector <int> Database_Sprint::getTasks (const string& bible, int year, int month)
+std::vector <int> Database_Sprint::getTasks (const std::string& bible, int year, int month)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT rowid FROM sprint WHERE bible =");
   sql.add (bible);
   sql.add ("AND year =");
@@ -138,62 +128,56 @@ vector <int> Database_Sprint::getTasks (const string& bible, int year, int month
   sql.add ("AND month =");
   sql.add (month);
   sql.add ("ORDER BY rowid ASC;");
-  sqlite3 * db = connect ();
-  vector <string> rowids = database_sqlite_query (db, sql.sql) ["rowid"];
-  database_sqlite_disconnect (db);
-  vector <int> ids;
-  for (auto & id : rowids) {
+  const std::vector <std::string> rowids = sql.query () ["rowid"];
+  std::vector <int> ids;
+  for (const auto& id : rowids) {
     ids.push_back (filter::strings::convert_to_int (id));
   }
   return ids;
 }
 
 
-string Database_Sprint::getTitle (int id)
+std::string Database_Sprint::getTitle (int id)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT title FROM sprint WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  sqlite3 * db = connect ();
-  vector <string> title = database_sqlite_query (db, sql.sql) ["title"];
-  database_sqlite_disconnect (db);
-  if (!title.empty ()) return title [0];
-  return "";
+  const std::vector <std::string> title = sql.query () ["title"];
+  if (!title.empty ())
+    return title.at(0);
+  return std::string();
 }
 
 
 void Database_Sprint::updateComplete (int id, int percentage)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("UPDATE sprint SET complete =");
   sql.add (percentage);
   sql.add ("WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 
 int Database_Sprint::getComplete (int id)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT complete FROM sprint WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  sqlite3 * db = connect ();
-  vector <string> complete = database_sqlite_query (db, sql.sql) ["complete"];
-  database_sqlite_disconnect (db);
-  if (!complete.empty ()) return filter::strings::convert_to_int (complete [0]);
+  const std::vector <std::string> complete = sql.query () ["complete"];
+  if (!complete.empty ())
+    return filter::strings::convert_to_int (complete.at(0));
   return 0;
 }
 
 
 void Database_Sprint::updateMonthYear (int id, int month, int year)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("UPDATE sprint SET month =");
   sql.add (month);
   sql.add (", year =");
@@ -201,51 +185,46 @@ void Database_Sprint::updateMonthYear (int id, int month, int year)
   sql.add ("WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 
-void Database_Sprint::logHistory (const string& bible, int year, int month, int day, int tasks, int complete)
+void Database_Sprint::logHistory (const std::string& bible, int year, int month, int day, int tasks, int complete)
 {
-  SqliteSQL sql1 = SqliteSQL ();
-  sql1.add ("DELETE FROM sprinthistory WHERE bible =");
-  sql1.add (bible);
-  sql1.add ("AND year =");
-  sql1.add (year);
-  sql1.add ("AND month =");
-  sql1.add (month);
-  sql1.add ("AND day =");
-  sql1.add (day);
-  sql1.add (";");
+  SqliteDatabase sql (database_name);
+  sql.add ("DELETE FROM sprinthistory WHERE bible =");
+  sql.add (bible);
+  sql.add ("AND year =");
+  sql.add (year);
+  sql.add ("AND month =");
+  sql.add (month);
+  sql.add ("AND day =");
+  sql.add (day);
+  sql.add (";");
+  sql.execute ();
 
-  SqliteSQL sql2 = SqliteSQL ();
-  sql2.add ("INSERT INTO sprinthistory VALUES (");
-  sql2.add (year);
-  sql2.add (",");
-  sql2.add (month);
-  sql2.add (",");
-  sql2.add (day);
-  sql2.add (",");
-  sql2.add (tasks);
-  sql2.add (",");
-  sql2.add (complete);
-  sql2.add (",");
-  sql2.add (bible);
-  sql2.add (");");
-
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql1.sql);
-  database_sqlite_exec (db, sql2.sql);
-  database_sqlite_disconnect (db);
+  sql.clear();
+  sql.add ("INSERT INTO sprinthistory VALUES (");
+  sql.add (year);
+  sql.add (",");
+  sql.add (month);
+  sql.add (",");
+  sql.add (day);
+  sql.add (",");
+  sql.add (tasks);
+  sql.add (",");
+  sql.add (complete);
+  sql.add (",");
+  sql.add (bible);
+  sql.add (");");
+  sql.execute ();
 }
 
 
-vector <Database_Sprint_Item> Database_Sprint::getHistory (const string& bible, int year, int month)
+std::vector <Database_Sprint_Item> Database_Sprint::getHistory (const std::string& bible, int year, int month)
 {
-  vector <Database_Sprint_Item> history;
-  SqliteSQL sql = SqliteSQL ();
+  std::vector <Database_Sprint_Item> history;
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT day, tasks, complete FROM sprinthistory WHERE bible =");
   sql.add (bible);
   sql.add ("AND year =");
@@ -253,12 +232,10 @@ vector <Database_Sprint_Item> Database_Sprint::getHistory (const string& bible, 
   sql.add ("AND month =");
   sql.add (month);
   sql.add ("ORDER BY day ASC;");
-  sqlite3 * db = connect ();
-  map <string, vector <string> > result = database_sqlite_query (db, sql.sql);
-  database_sqlite_disconnect (db);
-  vector <string> days = result ["day"];
-  vector <string> tasks = result ["tasks"];
-  vector <string> completes = result ["complete"];
+  std::map <std::string, std::vector <std::string> > result = sql.query ();
+  const std::vector <std::string> days = result ["day"];
+  const std::vector <std::string> tasks = result ["tasks"];
+  const std::vector <std::string> completes = result ["complete"];
   for (unsigned int i = 0; i < days.size(); i++) {
     Database_Sprint_Item item = Database_Sprint_Item ();
     item.day = filter::strings::convert_to_int (days [i]);
@@ -270,9 +247,9 @@ vector <Database_Sprint_Item> Database_Sprint::getHistory (const string& bible, 
 }
 
 
-void Database_Sprint::clearHistory (const string& bible, int year, int month)
+void Database_Sprint::clearHistory (const std::string& bible, int year, int month)
 {
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_name);
   sql.add ("DELETE FROM sprinthistory WHERE bible =");
   sql.add (bible);
   sql.add ("AND year =");
@@ -280,9 +257,7 @@ void Database_Sprint::clearHistory (const string& bible, int year, int month)
   sql.add ("AND month =");
   sql.add (month);
   sql.add (";");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 

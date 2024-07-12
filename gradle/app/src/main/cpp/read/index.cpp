@@ -43,10 +43,9 @@
 #include <workspace/logic.h>
 #include <public/new.h>
 #include <public/notes.h>
-using namespace std;
 
 
-string read_index_url ()
+std::string read_index_url ()
 {
   return "read/index";
 }
@@ -62,9 +61,9 @@ bool read_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string read_index (Webserver_Request& webserver_request)
+std::string read_index (Webserver_Request& webserver_request)
 {
-  bool touch = webserver_request.session_logic ()->touchEnabled ();
+  bool touch = webserver_request.session_logic ()->get_touch_enabled ();
   
   if (webserver_request.query.count ("switchbook") && webserver_request.query.count ("switchchapter")) {
     int switchbook = filter::strings::convert_to_int (webserver_request.query ["switchbook"]);
@@ -75,12 +74,12 @@ string read_index (Webserver_Request& webserver_request)
 
   // Set the user chosen Bible as the current Bible.
   if (webserver_request.post.count ("bibleselect")) {
-    string bibleselect = webserver_request.post ["bibleselect"];
+    std::string bibleselect = webserver_request.post ["bibleselect"];
     webserver_request.database_config_user ()->setBible (bibleselect);
-    return string();
+    return std::string();
   }
 
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Edit verse"), webserver_request);
   header.set_navigator ();
@@ -96,10 +95,10 @@ string read_index (Webserver_Request& webserver_request)
   // Or if the user have used query to preset the active Bible, get the preset Bible.
   // If needed, change Bible to one it has read access to.
   // Set the chosen Bible on the option HTML tag.
-  string bible = access_bible::clamp (webserver_request, webserver_request.database_config_user()->getBible ());
+  std::string bible = access_bible::clamp (webserver_request, webserver_request.database_config_user()->getBible ());
   if (webserver_request.query.count ("bible")) bible = access_bible::clamp (webserver_request, webserver_request.query ["bible"]);
-  string bible_html;
-  vector <string> bibles = access_bible::bibles (webserver_request);
+  std::string bible_html;
+  std::vector <std::string> bibles = access_bible::bibles (webserver_request);
   for (auto selectable_bible : bibles) {
     bible_html = Options_To_Select::add_selection (selectable_bible, selectable_bible, bible_html);
   }
@@ -110,29 +109,28 @@ string read_index (Webserver_Request& webserver_request)
   view.set_variable ("navigationCode", Navigation_Passage::code (bible));
   
   // Create a script for Javascript. Quote string to get legal Javascript.
-  stringstream script_stream {};
-  script_stream << "var readchooseEditorVerseLoaded = " << quoted(locale_logic_text_loaded ()) << ";\n";
-  script_stream << "var readchooseEditorVerseUpdating = " << quoted(locale_logic_text_updating ()) << ";\n";
-  script_stream << "var readchooseEditorVerseUpdated = " << quoted(locale_logic_text_updated ()) << ";\n";
-  script_stream << "var readchooseEditorWillSave = " << quoted(locale_logic_text_will_save ()) << ";\n";
-  script_stream << "var readchooseEditorVerseSaving = " << quoted(locale_logic_text_saving ()) << ";\n";
-  script_stream << "var readchooseEditorVerseSaved = " << quoted(locale_logic_text_saved ()) << ";\n";
-  script_stream << "var readchooseEditorVerseRetrying = " << quoted(locale_logic_text_retrying ()) << ";\n";
-  script_stream << "var readchooseEditorVerseUpdatedLoaded = " << quoted(locale_logic_text_reload ()) << ";\n";
+  std::stringstream script_stream {};
+  script_stream << "var readchooseEditorVerseLoaded = " << std::quoted(locale_logic_text_loaded ()) << ";\n";
+  script_stream << "var readchooseEditorVerseUpdating = " << std::quoted(locale_logic_text_updating ()) << ";\n";
+  script_stream << "var readchooseEditorVerseUpdated = " << std::quoted(locale_logic_text_updated ()) << ";\n";
+  script_stream << "var readchooseEditorWillSave = " << std::quoted(locale_logic_text_will_save ()) << ";\n";
+  script_stream << "var readchooseEditorVerseSaving = " << std::quoted(locale_logic_text_saving ()) << ";\n";
+  script_stream << "var readchooseEditorVerseSaved = " << std::quoted(locale_logic_text_saved ()) << ";\n";
+  script_stream << "var readchooseEditorVerseRetrying = " << std::quoted(locale_logic_text_retrying ()) << ";\n";
+  script_stream << "var readchooseEditorVerseUpdatedLoaded = " << std::quoted(locale_logic_text_reload ()) << ";\n";
   int verticalCaretPosition = webserver_request.database_config_user ()->getVerticalCaretPosition ();
   script_stream << "var verticalCaretPosition = " << verticalCaretPosition << ";\n";
-  script_stream << "var verseSeparator = " << quoted(Database_Config_General::getNotesVerseSeparator ()) << ";\n";
-  string script {script_stream.str()};
+  script_stream << "var verseSeparator = " << std::quoted(database::config::general::get_notes_verse_separator ()) << ";\n";
+  std::string script {script_stream.str()};
   config::logic::swipe_enabled (webserver_request, script);
   view.set_variable ("script", script);
 
-  string cls = Filter_Css::getClass (bible);
-  string font = fonts::logic::get_text_font (bible);
+  std::string cls = Filter_Css::getClass (bible);
+  std::string font = fonts::logic::get_text_font (bible);
   int current_theme_index = webserver_request.database_config_user ()->getCurrentTheme ();
-  string filename = current_theme_filebased_cache_filename (webserver_request.session_identifier);
-  int direction = Database_Config_Bible::getTextDirection (bible);
-  int lineheight = Database_Config_Bible::getLineHeight (bible);
-  int letterspacing = Database_Config_Bible::getLetterSpacing (bible);
+  int direction = database::config::bible::get_text_direction (bible);
+  int lineheight = database::config::bible::get_line_height (bible);
+  int letterspacing = database::config::bible::get_letter_spacing (bible);
   view.set_variable ("editor_theme_color", Filter_Css::theme_picker (current_theme_index, 2));
   view.set_variable ("active_editor_theme_color", Filter_Css::theme_picker (current_theme_index, 3));
   view.set_variable ("custom_class", cls);

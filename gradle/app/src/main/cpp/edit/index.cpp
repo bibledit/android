@@ -52,14 +52,14 @@ bool edit_index_acl (Webserver_Request& webserver_request)
 {
   if (Filter_Roles::access_control (webserver_request, Filter_Roles::translator ())) 
     return true;
-  auto [ read, write ] = access_bible::any (webserver_request);
+  const auto [ read, write ] = access_bible::any (webserver_request);
   return write;
 }
 
 
 std::string edit_index (Webserver_Request& webserver_request)
 {
-  const bool touch = webserver_request.session_logic ()->touchEnabled ();
+  const bool touch = webserver_request.session_logic ()->get_touch_enabled ();
 
   
   if (webserver_request.query.count ("switchbook") && webserver_request.query.count ("switchchapter")) {
@@ -79,7 +79,7 @@ std::string edit_index (Webserver_Request& webserver_request)
     webserver_request.database_config_user ()->setBible (bibleselect);
     // Going to another Bible, ensure that the focused book exists there.
     int book = Ipc_Focus::getBook (webserver_request);
-    const std::vector <int> books = webserver_request.database_bibles()->get_books (bibleselect);
+    const std::vector <int> books = database::bibles::get_books (bibleselect);
     if (find (books.begin(), books.end(), book) == books.end()) {
       if (!books.empty ()) book = books [0];
       else book = 0;
@@ -127,16 +127,16 @@ std::string edit_index (Webserver_Request& webserver_request)
   // Quote the text to be sure it's a legal Javascript string.
   // https://github.com/bibledit/cloud/issues/900
   std::stringstream script_stream {};
-  script_stream << "var editorChapterLoaded = " << quoted(locale_logic_text_loaded ()) << ";\n";
-  script_stream << "var editorChapterUpdating = " << quoted(locale_logic_text_updating ()) << ";\n";
-  script_stream << "var editorChapterUpdated = " << quoted(locale_logic_text_updated ()) << ";\n";
-  script_stream << "var editorWillSave = " << quoted(locale_logic_text_will_save ()) << ";\n";
-  script_stream << "var editorChapterSaving = " << quoted(locale_logic_text_saving ()) << ";\n";
-  script_stream << "var editorChapterSaved = " << quoted(locale_logic_text_saved ()) << ";\n";
-  script_stream << "var editorChapterRetrying = " << quoted(locale_logic_text_retrying ()) << ";\n";
-  script_stream << "var editorChapterVerseUpdatedLoaded = " << quoted(locale_logic_text_reload ()) << ";\n";
+  script_stream << "var editorChapterLoaded = " << std::quoted(locale_logic_text_loaded ()) << ";\n";
+  script_stream << "var editorChapterUpdating = " << std::quoted(locale_logic_text_updating ()) << ";\n";
+  script_stream << "var editorChapterUpdated = " << std::quoted(locale_logic_text_updated ()) << ";\n";
+  script_stream << "var editorWillSave = " << std::quoted(locale_logic_text_will_save ()) << ";\n";
+  script_stream << "var editorChapterSaving = " << std::quoted(locale_logic_text_saving ()) << ";\n";
+  script_stream << "var editorChapterSaved = " << std::quoted(locale_logic_text_saved ()) << ";\n";
+  script_stream << "var editorChapterRetrying = " << std::quoted(locale_logic_text_retrying ()) << ";\n";
+  script_stream << "var editorChapterVerseUpdatedLoaded = " << std::quoted(locale_logic_text_reload ()) << ";\n";
   script_stream << "var verticalCaretPosition = " << webserver_request.database_config_user ()->getVerticalCaretPosition () << ";\n";
-  script_stream << "var verseSeparator = " << quoted(Database_Config_General::getNotesVerseSeparator ()) << ";\n";
+  script_stream << "var verseSeparator = " << std::quoted(database::config::general::get_notes_verse_separator ()) << ";\n";
   std::string script = script_stream.str();
   config::logic::swipe_enabled (webserver_request, script);
   view.set_variable ("script", script);
@@ -145,9 +145,9 @@ std::string edit_index (Webserver_Request& webserver_request)
   const std::string clss = Filter_Css::getClass (bible);
   const std::string font = fonts::logic::get_text_font (bible);
   const int current_theme_index = webserver_request.database_config_user ()->getCurrentTheme ();
-  const int direction = Database_Config_Bible::getTextDirection (bible);
-  const int lineheight = Database_Config_Bible::getLineHeight (bible);
-  const int letterspacing = Database_Config_Bible::getLetterSpacing (bible);
+  const int direction = database::config::bible::get_text_direction (bible);
+  const int lineheight = database::config::bible::get_line_height (bible);
+  const int letterspacing = database::config::bible::get_letter_spacing (bible);
   std::string versebeam_current_theme = Filter_Css::theme_picker (current_theme_index, 5);
   if (versebeam_current_theme.empty())
     versebeam_current_theme = "versebeam";
@@ -177,10 +177,14 @@ std::string edit_index (Webserver_Request& webserver_request)
   }
   
   
-  page += view.render ("edit", "index");
+  // Whether to enable spell check.
+  view.set_variable ("spellcheck", filter::strings::convert_to_true_false(webserver_request.database_config_user ()->get_enable_spell_check()));
+
+  
+  page.append (view.render ("edit", "index"));
   
   
-  page += assets_page::footer ();
+  page.append (assets_page::footer ());
   
   
   return page;

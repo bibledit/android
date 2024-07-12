@@ -28,10 +28,9 @@
 #include <database/bibles.h>
 #include <client/logic.h>
 #include <config/globals.h>
-using namespace std;
 
 
-void sendreceive_queue_bible (string bible)
+void sendreceive_queue_bible (std::string bible)
 {
   tasks_logic_queue (SENDRECEIVEBIBLES, {bible});
 }
@@ -48,7 +47,7 @@ void sendreceive_queue_sync (int minute, int second)
   // Deal with a numerical minute to find out whether it's time to automatically sync.
   if (minute >= 0) {
 
-    int repeat = Database_Config_General::getRepeatSendReceive ();
+    int repeat = database::config::general::get_repeat_send_receive ();
 
     // Sync everything every hour.
     if ((repeat == 1) && (second == 0)) {
@@ -118,7 +117,7 @@ void sendreceive_queue_sync (int minute, int second)
 
     if (sync_bibles || sync_rest) {
       // Store the most recent time that the sync action ran.
-      Database_Config_General::setLastSendReceive (filter::date::seconds_since_epoch ());
+      database::config::general::set_last_send_receive (filter::date::seconds_since_epoch ());
     }
   }
 }
@@ -144,7 +143,7 @@ void sendreceive_queue_paratext (tasks::enums::paratext_sync method)
   if (sendreceive_paratext_queued ()) {
     Database_Logs::log ("About to start synchronizing with Paratext");
   } else {
-    tasks_logic_queue (SYNCPARATEXT, { to_string(static_cast<int>(method)) });
+    tasks_logic_queue (SYNCPARATEXT, { std::to_string(static_cast<int>(method)) });
   }
 #endif
   (void) method;
@@ -162,11 +161,10 @@ bool sendreceive_paratext_queued ()
 
 void sendreceive_queue_all (bool now)
 {
-  Database_Bibles database_bibles;
-  vector <string> bibles = database_bibles.get_bibles ();
+  std::vector <std::string> bibles = database::bibles::get_bibles ();
   for (auto & bible : bibles) {
-    if (Database_Config_Bible::getRemoteRepositoryUrl (bible) != "") {
-      if (Database_Config_Bible::getRepeatSendReceive (bible) || now) {
+    if (database::config::bible::get_remote_repository_url (bible) != "") {
+      if (database::config::bible::get_repeat_send_receive (bible) || now) {
         sendreceive_queue_bible (bible);
       }
     }
@@ -178,10 +176,10 @@ void sendreceive_queue_all (bool now)
 void sendreceive_queue_startup ()
 {
   // Next second when it is supposed to sync.
-  int next_second = Database_Config_General::getLastSendReceive ();
+  int next_second = database::config::general::get_last_send_receive ();
 
   // Check how often to repeat the sync action.
-  int repeat = Database_Config_General::getRepeatSendReceive ();
+  int repeat = database::config::general::get_repeat_send_receive ();
   if (repeat == 1) {
     // Repeat every hour.
     next_second += 3600;
@@ -215,8 +213,8 @@ bool sendreceive_logic_prioritized_task_is_active ()
 
 
 // Returns true if Bibledit Cloud has been linked to an external git repository.
-bool sendreceive_git_repository_linked (string bible)
+bool sendreceive_git_repository_linked (std::string bible)
 {
-  string url = Database_Config_Bible::getRemoteRepositoryUrl (bible);
+  std::string url = database::config::bible::get_remote_repository_url (bible);
   return !url.empty ();
 }

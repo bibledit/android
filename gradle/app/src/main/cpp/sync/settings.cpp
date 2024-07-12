@@ -30,36 +30,35 @@
 #include <locale/translate.h>
 #include <webserver/request.h>
 #include <sync/logic.h>
-using namespace std;
 
 
-string sync_settings_url ()
+std::string sync_settings_url ()
 {
   return "sync/settings";
 }
 
 
-string sync_settings (Webserver_Request& webserver_request)
+std::string sync_settings (Webserver_Request& webserver_request)
 {
   Sync_Logic sync_logic (webserver_request);
 
   if (!sync_logic.security_okay ()) {
     // When the Cloud enforces https, inform the client to upgrade.
     webserver_request.response_code = 426;
-    return "";
+    return std::string();
   }
 
   // Check on the credentials.
-  if (!sync_logic.credentials_okay ()) return "";
+  if (!sync_logic.credentials_okay ()) return std::string();
   
   // Client makes a prioritized server call: Record the client's IP address.
   sync_logic.prioritized_ip_address_record ();
 
   // Get the relevant parameters the client POSTed to us, the server.
   int action = filter::strings::convert_to_int (webserver_request.post ["a"]);
-  string value = webserver_request.post ["v"];
+  std::string value = webserver_request.post ["v"];
   // The value can be all Bibles, or one Bible.
-  string bible_s = webserver_request.post ["b"];
+  std::string bible_s = webserver_request.post ["b"];
 
   switch (action) {
     case Sync_Logic::settings_get_total_checksum:
@@ -69,7 +68,7 @@ string sync_settings (Webserver_Request& webserver_request)
     case Sync_Logic::settings_send_workspace_urls:
     {
       webserver_request.database_config_user()->setWorkspaceURLs (value);
-      return string();
+      return std::string();
     }
     case Sync_Logic::settings_get_workspace_urls:
     {
@@ -78,7 +77,7 @@ string sync_settings (Webserver_Request& webserver_request)
     case Sync_Logic::settings_send_workspace_widths:
     {
       webserver_request.database_config_user()->setWorkspaceWidths (value);
-      return string();
+      return std::string();
     }
     case Sync_Logic::settings_get_workspace_widths:
     {
@@ -87,7 +86,7 @@ string sync_settings (Webserver_Request& webserver_request)
     case Sync_Logic::settings_send_workspace_heights:
     {
       webserver_request.database_config_user()->setWorkspaceHeights (value);
-      return string();
+      return std::string();
     }
     case Sync_Logic::settings_get_workspace_heights:
     {
@@ -95,13 +94,13 @@ string sync_settings (Webserver_Request& webserver_request)
     }
     case Sync_Logic::settings_send_resources_organization:
     {
-      vector <string> resources = filter::strings::explode (value, '\n');
+      std::vector <std::string> resources = filter::strings::explode (value, '\n');
       webserver_request.database_config_user()->setActiveResources (resources);
-      return string();
+      return std::string();
     }
     case Sync_Logic::settings_get_resources_organization:
     {
-      vector <string> resources = webserver_request.database_config_user()->getActiveResources ();
+      std::vector <std::string> resources = webserver_request.database_config_user()->getActiveResources ();
       return filter::strings::implode (resources, "\n");
     }
     case Sync_Logic::settings_get_bible_id:
@@ -111,12 +110,12 @@ string sync_settings (Webserver_Request& webserver_request)
     }
     case Sync_Logic::settings_get_bible_font:
     {
-      return Database_Config_Bible::getTextFont (bible_s);
+      return database::config::bible::get_text_font (bible_s);
     }
     case Sync_Logic::settings_send_platform:
     {
       // No longer in use, just discard this.
-      return string();
+      return std::string();
     }
     case Sync_Logic::settings_get_privilege_delete_consultation_notes:
     {
@@ -129,7 +128,7 @@ string sync_settings (Webserver_Request& webserver_request)
 
   // Bad request.
   // Delay a while to obstruct a flood of bad requests.
-  this_thread::sleep_for (chrono::seconds (1));
+  std::this_thread::sleep_for (std::chrono::seconds (1));
   webserver_request.response_code = 400;
-  return "";
+  return std::string();
 }

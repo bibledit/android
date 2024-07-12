@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/roles.h>
 #include <filter/url.h>
 #include <config/globals.h>
-using namespace std;
 
 
 const char * developer_delay_url ()
@@ -36,11 +35,11 @@ bool developer_delay_acl ([[maybe_unused]] Webserver_Request& webserver_request)
 }
 
 
-string developer_delay ([[maybe_unused]] Webserver_Request& webserver_request)
+std::string developer_delay ([[maybe_unused]] Webserver_Request& webserver_request)
 {
   // Here is a delay routine that waits multiple seconds before sending the reponse.
   // The purpose is to test timeouts of the website live monitors.
-  //this_thread::sleep_for(chrono::seconds(10));
+  //this_thread::sleep_for(std::chrono::seconds(10));
   // Done.
   return "OK";
 }

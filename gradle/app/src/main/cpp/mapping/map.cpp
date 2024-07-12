@@ -29,10 +29,9 @@
 #include <dialog/yes.h>
 #include <assets/header.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string mapping_map_url ()
+std::string mapping_map_url ()
 {
   return "mapping/map";
 }
@@ -44,11 +43,11 @@ bool mapping_map_acl (Webserver_Request& webserver_request)
 }
 
 
-string mapping_map (Webserver_Request& webserver_request)
+std::string mapping_map (Webserver_Request& webserver_request)
 {
   Database_Mappings database_mappings;
   
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Verse mappings"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
@@ -57,20 +56,20 @@ string mapping_map (Webserver_Request& webserver_request)
   page = header.run ();
 
   Assets_View view;
-  string success;
+  std::string success;
   
-  string name = webserver_request.query["name"];
+  std::string name = webserver_request.query["name"];
   view.set_variable ("name", name);
 
   if (webserver_request.post.count ("submit")) {
-    string data = webserver_request.post["data"];
+    std::string data = webserver_request.post["data"];
     database_mappings.import (name, data);
     success = translate("The verse mapping was saved");
   }
 
   view.set_variable ("success", success);
 
-  string data = database_mappings.output (name);
+  std::string data = database_mappings.output (name);
   view.set_variable ("data", data);
   
   page += view.render ("mapping", "map");

@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <navigation/passage.h>
 #include <notes/actions.h>
-using namespace std;
 
 
-string notes_bible_1_url ()
+std::string notes_bible_1_url ()
 {
   return "notes/bb-1";
 }
@@ -47,37 +46,37 @@ bool notes_bible_1_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_bible_1 (Webserver_Request& webserver_request)
+std::string notes_bible_1 (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Bibles"), webserver_request);
   page += header.run ();
   Assets_View view;
-  string success, error;
+  std::string success, error;
   
   
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
   
   
   if (webserver_request.query.count ("bible")) {
-    string bible = webserver_request.query["bible"];
+    std::string bible = webserver_request.query["bible"];
     if (bible == notes_logic.generalBibleName ()) bible.clear();
     notes_logic.setBible (id, bible);
-    redirect_browser (webserver_request, notes_actions_url () + "?id=" + filter::strings::convert_to_string (id));
-    return "";
+    redirect_browser (webserver_request, notes_actions_url () + "?id=" + std::to_string (id));
+    return std::string();
   }
   
   
-  stringstream bibleblock;
-  vector <string> bibles = access_bible::bibles (webserver_request);
+  std::stringstream bibleblock;
+  std::vector <std::string> bibles = access_bible::bibles (webserver_request);
   bibles.push_back (notes_logic.generalBibleName ());
   for (const auto& bible : bibles) {
-    bibleblock << "<li><a href=" << quoted("bb-1?id=" + filter::strings::convert_to_string (id) + "&bible=" + bible) << ">" << bible << "</a></li>" << std::endl;
+    bibleblock << "<li><a href=" << std::quoted("bb-1?id=" + std::to_string (id) + "&bible=" + bible) << ">" << bible << "</a></li>" << std::endl;
   }
   view.set_variable ("bibleblock", bibleblock.str());
 

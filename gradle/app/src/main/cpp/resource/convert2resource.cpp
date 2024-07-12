@@ -29,32 +29,30 @@
 #include <database/config/bible.h>
 #include <locale/translate.h>
 #include <tasks/logic.h>
-using namespace std;
 
 
-void convert_bible_to_resource (string bible)
+void convert_bible_to_resource (std::string bible)
 {
-  Database_Bibles database_bibles;
   Database_UsfmResources database_usfmresources = Database_UsfmResources ();
   
   
   Database_Logs::log (translate("Converting Bible to USFM Resource") + ": " + bible, Filter_Roles::manager ());
   
   
-  vector <int> books = database_bibles.get_books (bible);
+  std::vector <int> books = database::bibles::get_books (bible);
   for (auto & book : books) {
-    string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+    std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
     Database_Logs::log (bookname, Filter_Roles::manager ());
-    vector <int> chapters = database_bibles.get_chapters (bible, book);
+    std::vector <int> chapters = database::bibles::get_chapters (bible, book);
     for (auto & chapter : chapters) {
-      string usfm = database_bibles.get_chapter (bible, book, chapter);
+      std::string usfm = database::bibles::get_chapter (bible, book, chapter);
       database_usfmresources.storeChapter (bible, book, chapter, usfm);
-      database_bibles.delete_chapter (bible, book, chapter);
+      database::bibles::delete_chapter (bible, book, chapter);
     }
   }
-  database_bibles.delete_bible (bible);
+  database::bibles::delete_bible (bible);
   DatabasePrivileges::remove_bible (bible);
-  Database_Config_Bible::remove (bible);
+  database::config::bible::remove (bible);
   
   
   // The Cloud updates the list of available USFM resources for the clients.

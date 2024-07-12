@@ -45,10 +45,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <client/logic.h>
 #include <config/globals.h>
 #include <config/logic.h>
-using namespace std;
 
 
-string personalize_index_url ()
+std::string personalize_index_url ()
 {
   return "personalize/index";
 }
@@ -60,9 +59,9 @@ bool personalize_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string personalize_index (Webserver_Request& webserver_request)
+std::string personalize_index (Webserver_Request& webserver_request)
 {
-  string checkbox = webserver_request.post ["checkbox"];
+  std::string checkbox = webserver_request.post ["checkbox"];
   bool checked = filter::strings::convert_to_bool (webserver_request.post ["checked"]);
 
 
@@ -71,13 +70,13 @@ string personalize_index (Webserver_Request& webserver_request)
     int chapterpercentage = filter::strings::convert_to_int (webserver_request.post ["chapterpercentage"]);
     chapterpercentage = clip (chapterpercentage, 10, 100);
     webserver_request.database_config_user ()->setEditingAllowedDifferenceChapter (chapterpercentage);
-    return "";
+    return std::string();
   }
   if (webserver_request.post.count ("versepercentage")) {
     int versepercentage = filter::strings::convert_to_int (webserver_request.post ["versepercentage"]);
     versepercentage = clip (versepercentage, 10, 100);
     webserver_request.database_config_user ()->setEditingAllowedDifferenceVerse (versepercentage);
-    return "";
+    return std::string();
   }
   
 
@@ -90,9 +89,9 @@ string personalize_index (Webserver_Request& webserver_request)
   }
 
   
-  string page;
-  string success;
-  string error;
+  std::string page;
+  std::string success;
+  std::string error;
 
 
   // Store new font sizes before displaying the header,
@@ -103,7 +102,7 @@ string personalize_index (Webserver_Request& webserver_request)
     if (config::logic::default_bibledit_configuration ()) {
       webserver_request.database_config_user ()->setGeneralFontSize (fontsizegeneral);
     }
-    return "";
+    return std::string();
   }
   if (webserver_request.post.count ("fontsizemenu")) {
     int fontsizemenu = filter::strings::convert_to_int (webserver_request.post["fontsizemenu"]);
@@ -111,7 +110,7 @@ string personalize_index (Webserver_Request& webserver_request)
     if (config::logic::default_bibledit_configuration ()) {
       webserver_request.database_config_user ()->setMenuFontSize (fontsizemenu);
     }
-    return "";
+    return std::string();
   }
   
   
@@ -125,13 +124,13 @@ string personalize_index (Webserver_Request& webserver_request)
   
   // Font size for everything.
   if (config::logic::default_bibledit_configuration ()) {
-    view.set_variable ("fontsizegeneral", filter::strings::convert_to_string (webserver_request.database_config_user ()->getGeneralFontSize ()));
+    view.set_variable ("fontsizegeneral", std::to_string (webserver_request.database_config_user ()->getGeneralFontSize ()));
   }
 
   
   // Font size for the menu.
   if (config::logic::default_bibledit_configuration ()) {
-    view.set_variable ("fontsizemenu", filter::strings::convert_to_string (webserver_request.database_config_user ()->getMenuFontSize ()));
+    view.set_variable ("fontsizemenu", std::to_string (webserver_request.database_config_user ()->getMenuFontSize ()));
   }
   
   
@@ -141,9 +140,9 @@ string personalize_index (Webserver_Request& webserver_request)
     fontsizeeditors = clip (fontsizeeditors, 50, 300);
     webserver_request.database_config_user ()->setBibleEditorsFontSize (fontsizeeditors);
     styles_sheets_create_all ();
-    return "";
+    return std::string();
   }
-  view.set_variable ("fontsizeeditors", filter::strings::convert_to_string (webserver_request.database_config_user ()->getBibleEditorsFontSize ()));
+  view.set_variable ("fontsizeeditors", std::to_string (webserver_request.database_config_user ()->getBibleEditorsFontSize ()));
   
   
   // Font size for the resources.
@@ -153,9 +152,9 @@ string personalize_index (Webserver_Request& webserver_request)
     if (config::logic::default_bibledit_configuration ()) {
       webserver_request.database_config_user ()->setResourcesFontSize (fontsizeresources);
     }
-    return "";
+    return std::string();
   }
-  view.set_variable ("fontsizeresources", filter::strings::convert_to_string (webserver_request.database_config_user ()->getResourcesFontSize ()));
+  view.set_variable ("fontsizeresources", std::to_string (webserver_request.database_config_user ()->getResourcesFontSize ()));
   
   
   // Font size for Hebrew resources.
@@ -165,9 +164,9 @@ string personalize_index (Webserver_Request& webserver_request)
     if (config::logic::default_bibledit_configuration ()) {
       webserver_request.database_config_user ()->setHebrewFontSize (fontsizehebrew);
     }
-    return "";
+    return std::string();
   }
-  view.set_variable ("fontsizehebrew", filter::strings::convert_to_string (webserver_request.database_config_user ()->getHebrewFontSize ()));
+  view.set_variable ("fontsizehebrew", std::to_string (webserver_request.database_config_user ()->getHebrewFontSize ()));
   
   
   // Font size for Greek resources.
@@ -177,9 +176,9 @@ string personalize_index (Webserver_Request& webserver_request)
     if (config::logic::default_bibledit_configuration ()) {
       webserver_request.database_config_user ()->setGreekFontSize (fontsizegreek);
     }
-    return "";
+    return std::string();
   }
-  view.set_variable ("fontsizegreek", filter::strings::convert_to_string (webserver_request.database_config_user ()->getGreekFontSize ()));
+  view.set_variable ("fontsizegreek", std::to_string (webserver_request.database_config_user ()->getGreekFontSize ()));
   
   
   // Vertical caret position in chapter editors.
@@ -187,9 +186,9 @@ string personalize_index (Webserver_Request& webserver_request)
     int caretposition = filter::strings::convert_to_int (webserver_request.post["caretposition"]);
     caretposition = clip (caretposition, 20, 80);
     webserver_request.database_config_user ()->setVerticalCaretPosition (caretposition);
-    return "";
+    return std::string();
   }
-  view.set_variable ("caretposition", filter::strings::convert_to_string (webserver_request.database_config_user ()->getVerticalCaretPosition ()));
+  view.set_variable ("caretposition", std::to_string (webserver_request.database_config_user ()->getVerticalCaretPosition ()));
   
 
   // Whether to display bread crumbs.
@@ -201,9 +200,8 @@ string personalize_index (Webserver_Request& webserver_request)
 
   
   // Set the chosen theme on the option HTML tag.
-  string theme_key = filter::strings::convert_to_string (webserver_request.database_config_user ()->getCurrentTheme ());
-  string filename = current_theme_filebased_cache_filename (webserver_request.session_identifier);
-  string theme_html;
+  std::string theme_key = std::to_string (webserver_request.database_config_user ()->getCurrentTheme ());
+  std::string theme_html;
   theme_html = Options_To_Select::add_selection ("Basic", "0", theme_html);
   theme_html = Options_To_Select::add_selection ("Light", "1", theme_html);
   theme_html = Options_To_Select::add_selection ("Dark", "2", theme_html);
@@ -218,14 +216,14 @@ string personalize_index (Webserver_Request& webserver_request)
     int workspacefadeoutdelay = filter::strings::convert_to_int (webserver_request.post["workspacefadeoutdelay"]);
     workspacefadeoutdelay = clip (workspacefadeoutdelay, 0, 100);
     webserver_request.database_config_user ()->setWorkspaceMenuFadeoutDelay (workspacefadeoutdelay);
-    return "";
+    return std::string();
   }
-  view.set_variable ("workspacefadeoutdelay", filter::strings::convert_to_string (webserver_request.database_config_user ()->getWorkspaceMenuFadeoutDelay ()));
+  view.set_variable ("workspacefadeoutdelay", std::to_string (webserver_request.database_config_user ()->getWorkspaceMenuFadeoutDelay ()));
 
   
   // Permissable relative changes in the two to four Bible editors.
-  view.set_variable ("chapterpercentage", filter::strings::convert_to_string (webserver_request.database_config_user ()->getEditingAllowedDifferenceChapter ()));
-  view.set_variable ("versepercentage", filter::strings::convert_to_string (webserver_request.database_config_user ()->getEditingAllowedDifferenceVerse ()));
+  view.set_variable ("chapterpercentage", std::to_string (webserver_request.database_config_user ()->getEditingAllowedDifferenceChapter ()));
+  view.set_variable ("versepercentage", std::to_string (webserver_request.database_config_user ()->getEditingAllowedDifferenceVerse ()));
   
   
   // Whether to keep the main menu always visible.
@@ -239,7 +237,7 @@ string personalize_index (Webserver_Request& webserver_request)
   // Whether to enable swipe actions.
   if (checkbox == "swipeactions") {
     webserver_request.database_config_user ()->setSwipeActionsAvailable (checked);
-    return "";
+    return std::string();
   }
   view.set_variable ("swipeactions", filter::strings::get_checkbox_status(webserver_request.database_config_user ()->getSwipeActionsAvailable ()));
   
@@ -247,39 +245,39 @@ string personalize_index (Webserver_Request& webserver_request)
   // Whether to enable fast Bible editor switching.
   if (checkbox == "fasteditorswitch") {
     webserver_request.database_config_user ()->setFastEditorSwitchingAvailable (checked);
-    return string();
+    return std::string();
   }
   view.set_variable ("fasteditorswitch", filter::strings::get_checkbox_status(webserver_request.database_config_user ()->getFastEditorSwitchingAvailable ()));
 
   
   // Visual editors in the fast Bible editor switcher.
   const char * fastswitchvisualeditors = "fastswitchvisualeditors";
-  string visual_editors_html;
+  std::string visual_editors_html;
   for (int i = 0; i < 3; i++) {
-    visual_editors_html = Options_To_Select::add_selection (menu_logic_editor_settings_text (true, i), filter::strings::convert_to_string (i), visual_editors_html);
+    visual_editors_html = Options_To_Select::add_selection (menu_logic_editor_settings_text (true, i), std::to_string (i), visual_editors_html);
   }
   if (webserver_request.post.count (fastswitchvisualeditors)) {
     int visual_editor_key = filter::strings::convert_to_int (webserver_request.post [fastswitchvisualeditors]);
     webserver_request.database_config_user ()->setFastSwitchVisualEditors (visual_editor_key);
-    return "";
+    return std::string();
   }
-  string editor_key = filter::strings::convert_to_string (webserver_request.database_config_user ()->getFastSwitchVisualEditors ());
+  std::string editor_key = std::to_string (webserver_request.database_config_user ()->getFastSwitchVisualEditors ());
   view.set_variable ("fastswitchvisualeditorsoptags", Options_To_Select::mark_selected (editor_key, visual_editors_html));
   view.set_variable (fastswitchvisualeditors, editor_key);
 
   
   // USFM editors fast Bible editor switcher.
   const char * fastswitchusfmeditors = "fastswitchusfmeditors";
-  string usfm_editors_html;
+  std::string usfm_editors_html;
   for (int i = 0; i < 2; i++) {
-    usfm_editors_html = Options_To_Select::add_selection (menu_logic_editor_settings_text (false, i), filter::strings::convert_to_string (i), usfm_editors_html);
+    usfm_editors_html = Options_To_Select::add_selection (menu_logic_editor_settings_text (false, i), std::to_string (i), usfm_editors_html);
   }
   if (webserver_request.post.count (fastswitchusfmeditors)) {
     int usfm_editor_key = filter::strings::convert_to_int (webserver_request.post [fastswitchusfmeditors]);
     webserver_request.database_config_user ()->setFastSwitchUsfmEditors (usfm_editor_key);
-    return "";
+    return std::string();
   }
-  editor_key = filter::strings::convert_to_string(webserver_request.database_config_user ()->getFastSwitchUsfmEditors ());
+  editor_key = std::to_string(webserver_request.database_config_user ()->getFastSwitchUsfmEditors ());
   view.set_variable ("fastswitchusfmeditorsoptags", Options_To_Select::mark_selected (editor_key, usfm_editors_html));
   view.set_variable (fastswitchusfmeditors, editor_key);
 
@@ -287,17 +285,17 @@ string personalize_index (Webserver_Request& webserver_request)
   // Whether to enable editing styles in the visual editors.
   if (checkbox == "enablestylesbutton") {
     webserver_request.database_config_user ()->setEnableStylesButtonVisualEditors (checked);
-    return string();
+    return std::string();
   }
   view.set_variable ("enablestylesbutton", filter::strings::get_checkbox_status(webserver_request.database_config_user ()->getEnableStylesButtonVisualEditors ()));
   
 
   // Change the active Bible.
   if (webserver_request.query.count ("changebible")) {
-    string changebible = webserver_request.query ["changebible"];
+    std::string changebible = webserver_request.query ["changebible"];
     if (changebible == "") {
       Dialog_List dialog_list = Dialog_List ("index", translate("Select which Bible to make the active one for editing"), "", "");
-      vector <string> bibles = access_bible::bibles (webserver_request);
+      std::vector <std::string> bibles = access_bible::bibles (webserver_request);
       for (auto & bible : bibles) {
         dialog_list.add_row (bible, "changebible", bible);
       }
@@ -307,7 +305,7 @@ string personalize_index (Webserver_Request& webserver_request)
       webserver_request.database_config_user()->setBible (changebible);
       // Going to another Bible, ensure that the focused book exists there.
       int book = Ipc_Focus::getBook (webserver_request);
-      vector <int> books = webserver_request.database_bibles()->get_books (changebible);
+      std::vector <int> books = database::bibles::get_books (changebible);
       if (find (books.begin(), books.end(), book) == books.end()) {
         if (!books.empty ()) book = books [0];
         else book = 0;
@@ -315,7 +313,7 @@ string personalize_index (Webserver_Request& webserver_request)
       }
     }
   }
-  string bible = access_bible::clamp (webserver_request, webserver_request.database_config_user()->getBible ());
+  std::string bible = access_bible::clamp (webserver_request, webserver_request.database_config_user()->getBible ());
   view.set_variable ("bible", bible);
 
   
@@ -337,12 +335,12 @@ string personalize_index (Webserver_Request& webserver_request)
   
   // Setting for whether to show the main menu in tabbed view in basic mode on phones and tablets.
   if (checkbox == "mainmenutabs") {
-    Database_Config_General::setMenuInTabbedViewOn (checked);
+    database::config::general::set_menu_in_tabbed_view_on (checked);
     menu_logic_tabbed_mode_save_json (webserver_request);
   }
   if (menu_logic_can_do_tabbed_mode ()) {
     view.enable_zone ("tabs_possible");
-    view.set_variable ("mainmenutabs", filter::strings::get_checkbox_status(Database_Config_General::getMenuInTabbedViewOn ()));
+    view.set_variable ("mainmenutabs", filter::strings::get_checkbox_status(database::config::general::get_menu_in_tabbed_view_on ()));
   }
 
   
@@ -393,9 +391,9 @@ string personalize_index (Webserver_Request& webserver_request)
   // This pop-up appears on some Chrome OS devices when selecting text in an editable area.
   // See https://github.com/bibledit/cloud/issues/282 for more information.
   if (checkbox == "disableselectionpopupchromeos") {
-    Database_Config_General::setDisableSelectionPopupChromeOS (checked);
+    database::config::general::set_disable_selection_popup_chrome_os (checked);
   }
-  view.set_variable ("disableselectionpopupchromeos", filter::strings::get_checkbox_status(Database_Config_General::getDisableSelectionPopupChromeOS ()));
+  view.set_variable ("disableselectionpopupchromeos", filter::strings::get_checkbox_status(database::config::general::get_disable_selection_popup_chrome_os ()));
   if (config_globals_running_on_chrome_os) {
     view.enable_zone ("chromeos");
   }
@@ -403,11 +401,11 @@ string personalize_index (Webserver_Request& webserver_request)
   
   // Setting for the verse separator during notes entry.
   if (webserver_request.post.count ("verseseparator")) {
-    Database_Config_General::setNotesVerseSeparator (webserver_request.post["verseseparator"]);
-    return "";
+    database::config::general::set_notes_verse_separator (webserver_request.post["verseseparator"]);
+    return std::string();
   }
-  string separator_key = Database_Config_General::getNotesVerseSeparator ();
-  string separator_html;
+  std::string separator_key = database::config::general::get_notes_verse_separator ();
+  std::string separator_html;
   separator_html = Options_To_Select::add_selection (menu_logic_verse_separator ("."), ".", separator_html);
   separator_html = Options_To_Select::add_selection (menu_logic_verse_separator (":"), ":", separator_html);
   view.set_variable ("verseseparatoroptags", Options_To_Select::mark_selected (separator_key, separator_html));
@@ -433,18 +431,24 @@ string personalize_index (Webserver_Request& webserver_request)
   if (webserver_request.post.count (dateformat)) {
     int date_format_key = filter::strings::convert_to_int (webserver_request.post [dateformat]);
     webserver_request.database_config_user ()->setNotesDateFormat(date_format_key);
-    return string();
+    return std::string();
   }
-  string date_format_key = filter::strings::convert_to_string (webserver_request.database_config_user ()->getNotesDateFormat());
-  string date_format_html;
+  std::string date_format_key = std::to_string (webserver_request.database_config_user ()->getNotesDateFormat());
+  std::string date_format_html;
   for (filter::date::date_format df = filter::date::dd_mm_yyyy;
        df <= filter::date::yyyy_mn_dd;
        df = static_cast<filter::date::date_format>(df + 1)) {
-    date_format_html = Options_To_Select::add_selection (filter::date::date_format_to_text (df), filter::strings::convert_to_string(df), date_format_html);
+    date_format_html = Options_To_Select::add_selection (filter::date::date_format_to_text (df), std::to_string(df), date_format_html);
   }
   view.set_variable ("dateformatoptags", Options_To_Select::mark_selected (date_format_key, date_format_html));
   view.set_variable (dateformat, date_format_key);
 
+  
+  // Spell check in the Bible editors.
+  if (checkbox == "spellcheck") {
+    webserver_request.database_config_user ()->set_enable_spell_check (checked);
+  }
+  view.set_variable ("spellcheck", filter::strings::get_checkbox_status(webserver_request.database_config_user ()->get_enable_spell_check ()));
   
   // Enable the sections with settings relevant to the user and device.
   bool resources = access_logic::privilege_view_resources (webserver_request);
@@ -453,7 +457,7 @@ string personalize_index (Webserver_Request& webserver_request)
   auto [ read, write ] = access_bible::any (webserver_request);
   if (read || write) bibles = true;
   if (bibles) view.enable_zone ("bibles");
-  if (webserver_request.session_logic ()->touchEnabled ()) {
+  if (webserver_request.session_logic ()->get_touch_enabled ()) {
     view.enable_zone ("touch");
   }
 

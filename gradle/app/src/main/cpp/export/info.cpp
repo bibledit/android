@@ -33,35 +33,31 @@
 #include <filter/shell.h>
 #include <locale/translate.h>
 #include <styles/sheets.h>
-using namespace std;
 
 
-void export_info (string bible, bool log)
+void export_info (std::string bible, bool log)
 {
   // Create folders for the information.
-  string directory = filter_url_create_path ({export_logic::bible_directory (bible), "info"});
+  std::string directory = filter_url_create_path ({export_logic::bible_directory (bible), "info"});
   if (!file_or_dir_exists (directory)) filter_url_mkdir (directory);
   
   
   // Filenames for the various types of OpenDocument files.
-  string informationdFilename = filter_url_create_path ({directory, "information.html"});
-  string falloutFilename = filter_url_create_path ({directory, "fallout.html"});
+  std::string informationdFilename = filter_url_create_path ({directory, "information.html"});
+  std::string falloutFilename = filter_url_create_path ({directory, "fallout.html"});
   
   
-  Database_Bibles database_bibles;
-  
-  
-  string stylesheet = Database_Config_Bible::getExportStylesheet (bible);
+  const std::string stylesheet = database::config::bible::get_export_stylesheet (bible);
   
   
   Filter_Text filter_text = Filter_Text (bible);
   
   
-  vector <int> books = database_bibles.get_books (bible);
+  std::vector <int> books = database::bibles::get_books (bible);
   for (auto book : books) {
-    vector <int> chapters = database_bibles.get_chapters (bible, book);
+    std::vector <int> chapters = database::bibles::get_chapters (bible, book);
     for (auto chapter : chapters) {
-      string usfm = database_bibles.get_chapter (bible, book, chapter);
+      std::string usfm = database::bibles::get_chapter (bible, book, chapter);
       usfm = filter::strings::trim (usfm);
       // Use small chunks of USFM at a time for much better performance.
       filter_text.add_usfm_code (usfm);

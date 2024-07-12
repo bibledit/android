@@ -34,10 +34,9 @@
 #include <search/logic.h>
 #include <menu/logic.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string search_originals_url ()
+std::string search_originals_url ()
 {
   return "search/originals";
 }
@@ -52,13 +51,13 @@ bool search_originals_acl (Webserver_Request& webserver_request)
 }
 
 
-string search_originals (Webserver_Request& webserver_request)
+std::string search_originals (Webserver_Request& webserver_request)
 {
   Database_OsHb database_oshb = Database_OsHb ();
   Database_Sblgnt database_sblgnt = Database_Sblgnt ();
   
   
-  string bible = webserver_request.database_config_user()->getBible ();
+  std::string bible = webserver_request.database_config_user()->getBible ();
   if (webserver_request.query.count ("b")) {
     bible = webserver_request.query ["b"];
   }
@@ -72,11 +71,11 @@ string search_originals (Webserver_Request& webserver_request)
     
     book_type type = database::books::get_type (book);
     
-    string classs{};
+    std::string classs{};
     
     // Get Hebrew or Greek words.
-    string searchtext;
-    vector <string> details;
+    std::string searchtext;
+    std::vector <std::string> details;
     if (type == book_type::old_testament) {
       details = database_oshb.getVerse (static_cast<int>(book), chapter, verse);
       classs = "hebrew";
@@ -93,10 +92,10 @@ string search_originals (Webserver_Request& webserver_request)
   
   
   if (webserver_request.query.count ("words")) {
-    string words = webserver_request.query ["words"];
+    std::string words = webserver_request.query ["words"];
     
     words = filter::strings::trim (words);
-    vector <string> v_words = filter::strings::explode (words, ' ');
+    std::vector <std::string> v_words = filter::strings::explode (words, ' ');
     
     book_id book = static_cast<book_id>(Ipc_Focus::getBook (webserver_request));
     book_type type = database::books::get_type (book);
@@ -115,12 +114,12 @@ string search_originals (Webserver_Request& webserver_request)
     // Store how often a verse occurs in an array.
     // The keys are the passages of the search results.
     // The values are how often the passages occur in the search results.
-    map <int, int> passages {};
+    std::map <int, int> passages {};
     
     for (const auto & word : v_words) {
       
       // Find out how often this word occurs in the Hebrew or Greek Bible. Skip if too often.
-      vector <Passage> details {};
+      std::vector <Passage> details {};
       if (type == book_type::old_testament) {
         details = database_oshb.searchHebrew (word);
       }
@@ -141,8 +140,8 @@ string search_originals (Webserver_Request& webserver_request)
     
     // Sort on occurrence from high to low.
     // Skip passages that only occur once.
-    vector <int> v_passages;
-    vector <int> counts;
+    std::vector <int> v_passages;
+    std::vector <int> counts;
     for (auto & element : passages) {
       int passage = element.first;
       int count = element.second;
@@ -155,10 +154,10 @@ string search_originals (Webserver_Request& webserver_request)
 
     
     // Output the passages to the browser.
-    string output;
+    std::string output;
     for (auto & passage : v_passages) {
       if (!output.empty ()) output.append ("\n");
-      output.append (filter::strings::convert_to_string (passage));
+      output.append (std::to_string (passage));
     }
     return output;
   }
@@ -171,21 +170,21 @@ string search_originals (Webserver_Request& webserver_request)
     Passage passage = filter_integer_to_passage (id);
     int book = passage.m_book;
     int chapter = passage.m_chapter;
-    string verse = passage.m_verse;
+    std::string verse = passage.m_verse;
     
     // Get the plain text.
-    string text = search_logic_get_bible_verse_text (bible, book, chapter, filter::strings::convert_to_int (verse));
+    std::string text = search_logic_get_bible_verse_text (bible, book, chapter, filter::strings::convert_to_int (verse));
     
     // Format it.
-    string link = filter_passage_link_for_opening_editor_at (book, chapter, verse);
-    string output = "<div>" + link + " " + text + "</div>";
+    std::string link = filter_passage_link_for_opening_editor_at (book, chapter, verse);
+    std::string output = "<div>" + link + " " + text + "</div>";
     
     // Output to browser.
     return output;
   }
   
   
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Search"), webserver_request);
   header.set_navigator ();
@@ -196,8 +195,8 @@ string search_originals (Webserver_Request& webserver_request)
   
   view.set_variable ("bible", bible);
   
-  stringstream script {};
-  script << "var searchBible = " << quoted(bible) << ";";
+  std::stringstream script {};
+  script << "var searchBible = " << std::quoted(bible) << ";";
   view.set_variable ("script", script.str());
 
   page += view.render ("search", "originals");

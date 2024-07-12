@@ -24,10 +24,9 @@
 #include <webserver/request.h>
 #include <ipc/focus.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string editusfm_offset_url ()
+std::string editusfm_offset_url ()
 {
   return "editusfm/offset";
 }
@@ -45,14 +44,14 @@ bool editusfm_offset_acl (Webserver_Request& webserver_request)
 // This receives the position of the caret in the editor,
 // and translates that to a verse number,
 // and focuses that verse number.
-string editusfm_offset (Webserver_Request& webserver_request)
+std::string editusfm_offset (Webserver_Request& webserver_request)
 {
-  string bible = webserver_request.query ["bible"];
+  std::string bible = webserver_request.query ["bible"];
   int book = filter::strings::convert_to_int (webserver_request.query ["book"]);
   int chapter = filter::strings::convert_to_int (webserver_request.query ["chapter"]);
   unsigned int offset = static_cast<unsigned> (filter::strings::convert_to_int (webserver_request.query ["offset"]));
-  string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
-  vector <int> verses = filter::usfm::offset_to_versenumber (usfm, offset);
+  std::string usfm = database::bibles::get_chapter (bible, book, chapter);
+  std::vector <int> verses = filter::usfm::offset_to_versenumber (usfm, offset);
   // Only update navigation in case the verse differs.
   // This avoids unnecessary focus operations in the clients.
   if (!in_array (Ipc_Focus::getVerse (webserver_request), verses)) {
@@ -60,6 +59,6 @@ string editusfm_offset (Webserver_Request& webserver_request)
       Ipc_Focus::set (webserver_request, book, chapter, verses[0]);
     }
   }
-  return "";
+  return std::string();
 }
 

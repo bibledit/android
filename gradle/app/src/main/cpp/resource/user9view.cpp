@@ -30,10 +30,9 @@
 #include <menu/logic.h>
 #include <database/userresources.h>
 #include <access/logic.h>
-using namespace std;
 
 
-string resource_user9view_url ()
+std::string resource_user9view_url ()
 {
   return "resource/user9view";
 }
@@ -45,17 +44,17 @@ bool resource_user9view_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_user9view (Webserver_Request& webserver_request)
+std::string resource_user9view (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("User resources"), webserver_request);
   header.add_bread_crumb (menu_logic_translate_menu (), menu_logic_translate_text ());
   page = header.run ();
   Assets_View view;
   
 
-  vector <string> resources = Database_UserResources::names ();
-  vector <string> resourceblock;
+  std::vector <std::string> resources = Database_UserResources::names ();
+  std::vector <std::string> resourceblock;
   for (auto & resource : resources) {
     resourceblock.push_back ("<p>");
     resourceblock.push_back ("<a href=\"user1view?name=" + resource + "\">");

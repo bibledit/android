@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <navigation/passage.h>
 #include <notes/actions.h>
-using namespace std;
 
 
-string notes_severity_n_url ()
+std::string notes_severity_n_url ()
 {
   return "notes/severity-n";
 }
@@ -47,21 +46,21 @@ bool notes_severity_n_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_severity_n (Webserver_Request& webserver_request)
+std::string notes_severity_n (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Severity"), webserver_request);
   page += header.run ();
   Assets_View view;
   
   
-  stringstream severityblock;
-  vector <Database_Notes_Text> severities = database_notes.get_possible_severities ();
+  std::stringstream severityblock;
+  std::vector <Database_Notes_Text> severities = database_notes.get_possible_severities ();
   for (auto & severity : severities) {
-    severityblock << "<li><a href=" << quoted ("bulk?severity=" + severity.raw) << ">" << severity.localized + "</a></li>" << std::endl;
+    severityblock << "<li><a href=" << std::quoted ("bulk?severity=" + severity.raw) << ">" << severity.localized + "</a></li>" << std::endl;
   }
   view.set_variable ("severityblock", severityblock.str());
   

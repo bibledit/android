@@ -42,11 +42,9 @@
 #include <pugixml.hpp>
 #endif
 #pragma GCC diagnostic pop
-using namespace std;
-using namespace pugi;
 
 
-string resource_studylight_url ()
+std::string resource_studylight_url ()
 {
   return "resource/studylight";
 }
@@ -58,9 +56,9 @@ bool resource_studylight_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_studylight (Webserver_Request& webserver_request)
+std::string resource_studylight (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
@@ -68,7 +66,7 @@ string resource_studylight (Webserver_Request& webserver_request)
 
   
   if (webserver_request.query.count ("refresh")) {
-    string error = resource_logic_study_light_module_list_refresh ();
+    std::string error = resource_logic_study_light_module_list_refresh ();
     if (error.empty ()) {
       view.set_variable ("success", translate ("The list was updated"));
     }
@@ -76,9 +74,9 @@ string resource_studylight (Webserver_Request& webserver_request)
   }
   
   
-  string path = resource_logic_study_light_module_list_path ();
-  string moduleblock = filter_url_file_get_contents (path);
-  vector <string> lines = filter::strings::explode (moduleblock, '\n');
+  std::string path = resource_logic_study_light_module_list_path ();
+  std::string moduleblock = filter_url_file_get_contents (path);
+  std::vector <std::string> lines = filter::strings::explode (moduleblock, '\n');
   moduleblock.clear ();
   for (auto line : lines) {
     moduleblock.append ("<p>");

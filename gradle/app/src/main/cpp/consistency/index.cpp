@@ -35,10 +35,9 @@
 #include <dialog/list.h>
 #include <resource/logic.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string consistency_index_url ()
+std::string consistency_index_url ()
 {
   return "consistency/index";
 }
@@ -50,37 +49,37 @@ bool consistency_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string consistency_index (Webserver_Request& webserver_request)
+std::string consistency_index (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Consistency"), webserver_request);
   header.add_bread_crumb (menu_logic_tools_menu (), menu_logic_tools_text ());
   page = header.run ();
   Assets_View view;
 
   
-  string add = webserver_request.post ["add"];
+  std::string add = webserver_request.post ["add"];
   if (!add.empty ()) {
-    vector <string> resources = webserver_request.database_config_user()->getConsistencyResources ();
+    std::vector <std::string> resources = webserver_request.database_config_user()->getConsistencyResources ();
     resources.push_back (add);
     webserver_request.database_config_user()->setConsistencyResources (resources);
   }
   
   
-  string remove = webserver_request.query ["remove"];
+  std::string remove = webserver_request.query ["remove"];
   if (!remove.empty ()) {
-    vector <string> resources = webserver_request.database_config_user()->getConsistencyResources ();
+    std::vector <std::string> resources = webserver_request.database_config_user()->getConsistencyResources ();
     resources = filter::strings::array_diff (resources, {remove});
     webserver_request.database_config_user()->setConsistencyResources (resources);
   }
   
   
-  stringstream resourceblock;
-  vector <string> resources = webserver_request.database_config_user()->getConsistencyResources ();
+  std::stringstream resourceblock;
+  std::vector <std::string> resources = webserver_request.database_config_user()->getConsistencyResources ();
   for (auto resource : resources) {
     resourceblock << resource;
     resourceblock << "\n";
-    resourceblock << "<a href=" << quoted("?remove=" + resource) << ">[" << translate("remove") << "]</a>";
+    resourceblock << "<a href=" << std::quoted("?remove=" + resource) << ">[" << translate("remove") << "]</a>";
     resourceblock << " | ";
   }
   view.set_variable ("resourceblock", resourceblock.str());

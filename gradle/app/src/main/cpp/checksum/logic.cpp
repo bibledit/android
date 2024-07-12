@@ -22,7 +22,6 @@
 #include <filter/md5.h>
 #include <filter/usfm.h>
 #include <webserver/request.h>
-using namespace std;
 
 
 // This function reads $data,
@@ -32,9 +31,9 @@ using namespace std;
 // The first line contains the checksum.
 // The second line contains the readwrite as 0 or 1.
 // The rest contains the $data.
-string checksum_logic::send (const string & data, bool readwrite)
+std::string checksum_logic::send (const std::string& data, bool readwrite)
 {
-  string checksum = get (data);
+  std::string checksum = get (data);
   checksum.append ("\n");
   checksum.append (filter::strings::convert_to_string (readwrite));
   checksum.append ("\n");
@@ -45,68 +44,67 @@ string checksum_logic::send (const string & data, bool readwrite)
 
 // This function gets the checksum for $data, and returns it.
 // It calculates the length of 'data' in bytes.
-string checksum_logic::get (const string & data)
+std::string checksum_logic::get (const std::string& data)
 {
-  return filter::strings::convert_to_string (data.length ());
+  return std::to_string (data.length ());
 }
 
 
 // This function gets the checksum for $data, and returns it.
 // It calculates the length of vector 'data' in bytes.
-string checksum_logic::get (const vector <string>& data)
+std::string checksum_logic::get (const std::vector <std::string>& data)
 {
   int length = 0;
   for (auto & bit : data) length += static_cast<int>(bit.length ());
-  return filter::strings::convert_to_string (length);
+  return std::to_string (length);
 }
 
 
 // Returns a proper checksum for the USFM in the chapter.
-string checksum_logic::get_chapter (Webserver_Request& webserver_request, const string & bible, int book, int chapter)
+std::string checksum_logic::get_chapter (Webserver_Request& webserver_request, const std::string& bible, int book, int chapter)
 {
-  string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
-  string checksum = md5 (filter::strings::trim (usfm));
+  std::string usfm = database::bibles::get_chapter (bible, book, chapter);
+  std::string checksum = md5 (filter::strings::trim (usfm));
   return checksum;
 }
 
 
 // Returns a proper checksum for the USFM in the book.
-string checksum_logic::get_book (Webserver_Request& webserver_request, const string & bible, int book)
+std::string checksum_logic::get_book (Webserver_Request& webserver_request, const std::string& bible, int book)
 {
-  vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
-  vector <string> checksums;
+  std::vector <int> chapters = database::bibles::get_chapters (bible, book);
+  std::vector <std::string> checksums;
   for (auto chapter : chapters) {
     checksums.push_back (get_chapter (webserver_request, bible, book, chapter));
   }
-  string checksum = filter::strings::implode (checksums, string());
+  std::string checksum = filter::strings::implode (checksums, std::string());
   checksum = md5 (checksum);
   return checksum;
 }
 
 
 // Returns a proper checksum for the USFM in the $bible.
-string checksum_logic::get_bible (Webserver_Request& webserver_request, const string & bible)
+std::string checksum_logic::get_bible (Webserver_Request& webserver_request, const std::string& bible)
 {
-  vector <int> books = webserver_request.database_bibles()->get_books (bible);
-  vector <string> checksums;
+  std::vector <int> books = database::bibles::get_books (bible);
+  std::vector <std::string> checksums;
   for (auto book : books) {
     checksums.push_back (get_book (webserver_request, bible, book));
   }
-  string checksum = filter::strings::implode (checksums, string());
+  std::string checksum = filter::strings::implode (checksums, std::string());
   checksum = md5 (checksum);
   return checksum;
 }
 
 
 // Returns a proper checksum for the USFM in the array of $bibles.
-string checksum_logic::get_bibles (Webserver_Request& webserver_request, const vector <string> & bibles)
+std::string checksum_logic::get_bibles (Webserver_Request& webserver_request, const std::vector <std::string> & bibles)
 {
-  vector <string> checksums;
+  std::vector <std::string> checksums;
   for (const auto & bible : bibles) {
     checksums.push_back (get_bible (webserver_request, bible));
   }
-  string checksum = filter::strings::implode (checksums, string());
+  std::string checksum = filter::strings::implode (checksums, std::string());
   checksum = md5 (checksum);
   return checksum;
 }
-

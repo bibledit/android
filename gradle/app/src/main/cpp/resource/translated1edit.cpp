@@ -40,10 +40,9 @@
 #include <menu/logic.h>
 #include <access/logic.h>
 #include <client/logic.h>
-using namespace std;
 
 
-string resource_translated1edit_url ()
+std::string resource_translated1edit_url ()
 {
   return "resource/translated1edit";
 }
@@ -55,36 +54,36 @@ bool resource_translated1edit_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_translated1edit (Webserver_Request& webserver_request)
+std::string resource_translated1edit (Webserver_Request& webserver_request)
 {
-  string page {};
+  std::string page {};
   Assets_Header header = Assets_Header (translate("Translated resource"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view {};
-  string error {};
-  string success {};
+  std::string error {};
+  std::string success {};
   
   
-  string name = webserver_request.query ["name"];
+  std::string name = webserver_request.query ["name"];
   if (name.empty()) name = webserver_request.post ["val1"];
   view.set_variable ("name", name);
 
   
-  string checkbox = webserver_request.post ["checkbox"];
+  std::string checkbox = webserver_request.post ["checkbox"];
   bool checked = filter::strings::convert_to_bool (webserver_request.post ["checked"]);
 
   
   bool resource_edited {false};
 
 
-  string title {};
-  string original_resource {};
-  string source_language {};
-  string target_language {};
+  std::string title {};
+  std::string original_resource {};
+  std::string source_language {};
+  std::string target_language {};
   bool cache {false};
   {
-    vector <string> resources = Database_Config_General::getTranslatedResources ();
+    std::vector <std::string> resources = database::config::general::get_translated_resources ();
     for (const auto & resource : resources) {
       resource_logic_parse_translated_resource (resource, &title, &original_resource, &source_language, &target_language, &cache);
       if (title == name) break;
@@ -94,11 +93,11 @@ string resource_translated1edit (Webserver_Request& webserver_request)
   
   // The translated resource's original resource.
   if (webserver_request.query.count ("original")) {
-    string value = webserver_request.query["original"];
+    std::string value = webserver_request.query["original"];
     if (value.empty()) {
-      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select a resource to be used as the original resource"), translate ("The original resource will be translated from the source language to the target language."), string());
+      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select a resource to be used as the original resource"), translate ("The original resource will be translated from the source language to the target language."), std::string());
       dialog_list.add_query ("name", name);
-      vector <string> resources = resource_logic_get_names (webserver_request, true);
+      std::vector <std::string> resources = resource_logic_get_names (webserver_request, true);
       for (const auto & resource : resources) {
         dialog_list.add_row (resource, "original", resource);
       }
@@ -113,11 +112,11 @@ string resource_translated1edit (Webserver_Request& webserver_request)
   
   // The language of the original resource.
   if (webserver_request.query.count ("source")) {
-    string value = webserver_request.query["source"];
+    std::string value = webserver_request.query["source"];
     if (value.empty()) {
-      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select the language of the original resource"), translate ("The language the original resource is written in."), string());
+      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select the language of the original resource"), translate ("The language the original resource is written in."), std::string());
       dialog_list.add_query ("name", name);
-      vector <pair <string, string> > languages = filter::google::get_languages ("en");
+      std::vector <std::pair <std::string, std::string> > languages = filter::google::get_languages ("en");
       for (const auto & language : languages) {
         dialog_list.add_row (language.second, "source", language.first);
       }
@@ -132,11 +131,11 @@ string resource_translated1edit (Webserver_Request& webserver_request)
   
   // The language to translate the resource into.
   if (webserver_request.query.count ("target")) {
-    string value = webserver_request.query["target"];
+    std::string value = webserver_request.query["target"];
     if (value.empty()) {
-      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select the language to translate the resource into"), translate ("The language the resource will be translated into."), string());
+      Dialog_List dialog_list = Dialog_List ("translated1edit", translate("Select the language to translate the resource into"), translate ("The language the resource will be translated into."), std::string());
       dialog_list.add_query ("name", name);
-      vector <pair <string, string> > languages = filter::google::get_languages ("en");
+      std::vector <std::pair <std::string, std::string> > languages = filter::google::get_languages ("en");
       for (const auto & language : languages) {
         dialog_list.add_row (language.second, "target", language.first);
       }
@@ -159,25 +158,25 @@ string resource_translated1edit (Webserver_Request& webserver_request)
   // If the resource was edited, then take some steps.
   if (resource_edited) {
     // Save the translated resource.
-    vector <string> resources = Database_Config_General::getTranslatedResources ();
+    std::vector <std::string> resources = database::config::general::get_translated_resources ();
     error = translate ("Could not save");
     for (size_t i = 0; i < resources.size(); i++) {
-      string title2 {};
+      std::string title2 {};
       resource_logic_parse_translated_resource (resources[i], &title2);
       if (title2 == title) {
-        string resource = resource_logic_assemble_translated_resource (title, original_resource, source_language, target_language, cache);
+        std::string resource = resource_logic_assemble_translated_resource (title, original_resource, source_language, target_language, cache);
         resources[i] = resource;
         success = translate ("Saved");
         error.clear();
       }
     }
-    Database_Config_General::setTranslatedResources (resources);
+    database::config::general::set_translated_resources (resources);
     // Update the list of resources not to be cached on the client devices.
     if (cache) client_logic_no_cache_resource_remove(title);
     else client_logic_no_cache_resource_add(title);
     // Store the list of translated resources for download by the client devices.
     {
-      string path = resource_logic_translated_resources_list_path ();
+      std::string path = resource_logic_translated_resources_list_path ();
       filter_url_file_put_contents (path, filter::strings::implode (resources, "\n"));
     }
   }

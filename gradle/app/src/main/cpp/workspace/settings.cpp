@@ -32,10 +32,9 @@
 #include <filter/url.h>
 #include <menu/logic.h>
 #include <workspace/organize.h>
-using namespace std;
 
 
-string workspace_settings_url ()
+std::string workspace_settings_url ()
 {
   return "workspace/settings";
 }
@@ -47,9 +46,9 @@ bool workspace_settings_acl (Webserver_Request& webserver_request)
 }
 
 
-string workspace_settings (Webserver_Request& webserver_request)
+std::string workspace_settings (Webserver_Request& webserver_request)
 {
-  string name = webserver_request.query ["name"];
+  std::string name = webserver_request.query ["name"];
   webserver_request.database_config_user()->setActiveWorkspace (name);
   
   if (webserver_request.query.count ("preset")) {
@@ -60,19 +59,19 @@ string workspace_settings (Webserver_Request& webserver_request)
   }
   
   if (webserver_request.post.count ("save")) {
-    map <int, string> urls;
-    map <int, string> widths;
-    map <int, string> row_heights;
+    std::map <int, std::string> urls;
+    std::map <int, std::string> widths;
+    std::map <int, std::string> row_heights;
     int to14 = 0;
     int to2 = 0;
     for (int row = 1; row <= 3; row++) {
       for (int column = 1; column <= 5; column++) {
-        string key = filter::strings::convert_to_string (row) + filter::strings::convert_to_string (column);
+        std::string key = std::to_string (row) + std::to_string (column);
         urls [to14] = webserver_request.post ["url" + key];
         widths [to14] = webserver_request.post ["width" + key];
         to14++;
       }
-      string key = filter::strings::convert_to_string (row);
+      std::string key = std::to_string (row);
       row_heights [to2] = webserver_request.post ["height" + key];
       to2++;
     }
@@ -81,7 +80,7 @@ string workspace_settings (Webserver_Request& webserver_request)
     workspace_set_heights (webserver_request, row_heights);
     // If no "px" or "%" is given, then default to "%".
     // https://github.com/bibledit/cloud/issues/643
-    string workspacewidth = filter::strings::trim(webserver_request.post ["workspacewidth"]);\
+    std::string workspacewidth = filter::strings::trim(webserver_request.post ["workspacewidth"]);\
     if (!workspacewidth.empty()) {
       size_t pos_px = workspacewidth.find ("px");
       size_t pos_pct = workspacewidth.find ("%");
@@ -93,10 +92,10 @@ string workspace_settings (Webserver_Request& webserver_request)
     }
     workspace_set_entire_width (webserver_request, workspacewidth);
     redirect_browser (webserver_request, workspace_index_url ());
-    return "";
+    return std::string();
   }
   
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Edit workspace"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
@@ -105,35 +104,35 @@ string workspace_settings (Webserver_Request& webserver_request)
   
   Assets_View view;
   
-  map <int, string> urls = workspace_get_urls (webserver_request, false);
-  map <int, string> widths = workspace_get_widths (webserver_request);
+  std::map <int, std::string> urls = workspace_get_urls (webserver_request, false);
+  std::map <int, std::string> widths = workspace_get_widths (webserver_request);
   for (const auto & element : urls) {
     int key = element.first;
     int row = static_cast<int>(round (key / 5)) + 1;
     int column = key % 5 + 1;
-    string variable = "url" + filter::strings::convert_to_string (row) + filter::strings::convert_to_string (column);
+    std::string variable = "url" + std::to_string (row) + std::to_string (column);
     view.set_variable (variable, urls[key]);
-    variable = "width" + filter::strings::convert_to_string (row) + filter::strings::convert_to_string (column);
+    variable = "width" + std::to_string (row) + std::to_string (column);
     view.set_variable (variable, widths[key]);
   }
   
-  map <int, string> row_heights = workspace_get_heights (webserver_request);
+  std::map <int, std::string> row_heights = workspace_get_heights (webserver_request);
   for (auto & element : row_heights) {
     int key = element.first;
     int row = key + 1;
-    string variable = "height" + filter::strings::convert_to_string (row);
+    std::string variable = "height" + std::to_string (row);
     view.set_variable (variable, row_heights [key]);
   }
 
-  string workspacewidth = workspace_get_entire_width (webserver_request);
+  std::string workspacewidth = workspace_get_entire_width (webserver_request);
   view.set_variable ("workspacewidth", workspacewidth);
   
   view.set_variable ("name", name);
   
   
-  vector <string> samples = workspace_get_default_names ();
+  std::vector <std::string> samples = workspace_get_default_names ();
   for (size_t i = 0; i < samples.size (); i++) {
-    string sample = "<a href=\"settings?name=##name##&preset=" + filter::strings::convert_to_string (i + 1) + "\">" + samples[i] + "</a>";
+    std::string sample = "<a href=\"settings?name=##name##&preset=" + std::to_string (i + 1) + "\">" + samples[i] + "</a>";
     samples [i] = sample;
   }
   view.set_variable ("samples", filter::strings::implode (samples, "\n|\n"));

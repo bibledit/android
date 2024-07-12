@@ -37,16 +37,15 @@
 #include <checksum/logic.h>
 #include <access/bible.h>
 #include <bb/logic.h>
-using namespace std;
 
 
-string sync_usfmresources_url ()
+std::string sync_usfmresources_url ()
 {
   return "sync/usfmresources";
 }
 
 
-string sync_usfmresources (Webserver_Request& webserver_request)
+std::string sync_usfmresources (Webserver_Request& webserver_request)
 {
   Sync_Logic sync_logic (webserver_request);
   Database_UsfmResources database_usfmresources = Database_UsfmResources ();
@@ -54,11 +53,11 @@ string sync_usfmresources (Webserver_Request& webserver_request)
   if (!sync_logic.security_okay ()) {
     // When the Cloud enforces https, inform the client to upgrade.
     webserver_request.response_code = 426;
-    return "";
+    return std::string();
   }
 
   int action = filter::strings::convert_to_int (webserver_request.post ["a"]);
-  string resource = webserver_request.post ["r"];
+  std::string resource = webserver_request.post ["r"];
   int book = filter::strings::convert_to_int (webserver_request.post ["b"]);
   int chapter = filter::strings::convert_to_int (webserver_request.post ["c"]);
   
@@ -67,7 +66,7 @@ string sync_usfmresources (Webserver_Request& webserver_request)
   }
   
   else if (action == Sync_Logic::usfmresources_get_resources) {
-    vector <string> resources = database_usfmresources.getResources ();
+    std::vector <std::string> resources = database_usfmresources.getResources ();
     return filter::strings::implode (resources, "\n");
   }
   
@@ -76,9 +75,9 @@ string sync_usfmresources (Webserver_Request& webserver_request)
   }
   
   else if (action == Sync_Logic::usfmresources_get_books) {
-    vector <int> resource_books = database_usfmresources.getBooks (resource);
-    vector <string> sbooks;
-    for (auto & resource_book : resource_books) sbooks.push_back (filter::strings::convert_to_string (resource_book));
+    std::vector <int> resource_books = database_usfmresources.getBooks (resource);
+    std::vector <std::string> sbooks;
+    for (auto & resource_book : resource_books) sbooks.push_back (std::to_string (resource_book));
     return filter::strings::implode (sbooks, "\n");    
   }
   
@@ -87,9 +86,9 @@ string sync_usfmresources (Webserver_Request& webserver_request)
   }
   
   else if (action == Sync_Logic::usfmresources_get_chapters) {
-    vector <int> res_chapters = database_usfmresources.getChapters (resource, book);
-    vector <string> s_chapters;
-    for (auto & res_chapter : res_chapters) s_chapters.push_back (filter::strings::convert_to_string (res_chapter));
+    std::vector <int> res_chapters = database_usfmresources.getChapters (resource, book);
+    std::vector <std::string> s_chapters;
+    for (auto & res_chapter : res_chapters) s_chapters.push_back (std::to_string (res_chapter));
     return filter::strings::implode (s_chapters, "\n");
   }
   
@@ -102,8 +101,8 @@ string sync_usfmresources (Webserver_Request& webserver_request)
   }
 
   // Bad request. Delay flood of bad requests.
-  this_thread::sleep_for (chrono::seconds (1));
+  std::this_thread::sleep_for (std::chrono::seconds (1));
   webserver_request.response_code = 400;
-  return "";
+  return std::string();
 }
 

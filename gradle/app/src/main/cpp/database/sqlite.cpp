@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <database/logs.h>
 #include <database/logic.h>
-using namespace std;
 
 
 /*
@@ -91,16 +90,31 @@ The database errors went away.
 // INSERT INTO cache VALUES ( 136 , 0 , '' ); - database is locked - database is locked
 // INSERT INTO cache VALUES ( 25 , 21 , '' ); - unrecognized token: "'" - SQL logic error or missing database
 // Therefore here's an extra mutex for our own logic, and that should fix those errors.
-mutex sqlite_execute_mutex;
+std::mutex sqlite_execute_mutex;
 
 
-sqlite3 * database_sqlite_connect_file (string filename)
+// Stores values collected during a reading session of sqlite3.
+class SqliteReader
+{
+public:
+  SqliteReader (int dummy);
+  ~SqliteReader ();
+  std::map <std::string, std::vector <std::string> > result {};
+  static int callback (void *userdata, int argc, char **argv, char **column_names);
+private:
+};
+
+
+namespace database::sqlite {
+
+
+sqlite3 * connect_file (const std::string& filename)
 {
   sqlite3 *db {nullptr};
-  int rc = sqlite3_open (filename.c_str(), &db);
+  const int rc = sqlite3_open (filename.c_str(), &db);
   if (rc) {
     const char * error = sqlite3_errmsg (db);
-    database_sqlite_error (db, "Database " + filename, const_cast<char*>(error));
+    database::sqlite::error (db, "Database " + filename, const_cast<char*>(error));
     return nullptr;
   }
   sqlite3_busy_timeout (db, 1000);
@@ -111,88 +125,94 @@ sqlite3 * database_sqlite_connect_file (string filename)
 // The function provides the path to the "database" in the default database folder.
 // It does this in case "database" contains no path.
 // If it has a path, then it returns the path as given.
-string database_sqlite_file (string database)
+std::string get_file (const std::string& database)
 {
   if (filter_url_dirname (database) == ".") {
-    return filter_url_create_root_path ({database_logic_databases (), database + database_sqlite_suffix ()});
+    return filter_url_create_root_path ({database_logic_databases (), database + suffix ()});
   }
   return database;
 }
 
 
-string database_sqlite_suffix ()
+std::string suffix ()
 {
   return ".sqlite";
 }
 
 
-sqlite3 * database_sqlite_connect (string database)
+sqlite3 * connect (const std::string& database)
 {
-  return database_sqlite_connect_file (database_sqlite_file (database));
+  return connect_file (get_file (database));
 }
 
 
-string database_sqlite_no_sql_injection (string sql)
+std::string no_sql_injection (const std::string& sql)
 {
   return filter::strings::replace ("'", "''", sql);
 }
 
 
-void database_sqlite_exec (sqlite3 * db, string sql)
+void exec (sqlite3 * db, const std::string& sql)
 {
   char *error = nullptr;
   if (db) {
     sqlite_execute_mutex.lock ();
-    int rc = sqlite3_exec (db, sql.c_str(), nullptr, nullptr, &error);
+    const int rc = sqlite3_exec (db, sql.c_str(), nullptr, nullptr, &error);
     sqlite_execute_mutex.unlock ();
-    if (rc != SQLITE_OK) database_sqlite_error (db, sql, error);
+    if (rc != SQLITE_OK) 
+      database::sqlite::error (db, sql, error);
   } else {
-    database_sqlite_error (db, sql, error);
+    database::sqlite::error (db, sql, error);
   }
-  if (error) sqlite3_free (error);
+  if (error) 
+    sqlite3_free (error);
 }
 
 
-map <string, vector <string> > database_sqlite_query (sqlite3 * db, string sql)
+std::map <std::string, std::vector <std::string> > query (sqlite3 * db, const std::string& sql)
 {
   char * error = nullptr;
   SqliteReader reader (0);
   if (db) {
     sqlite_execute_mutex.lock ();
-    int rc = sqlite3_exec (db, sql.c_str(), reader.callback, &reader, &error);
+    const int rc = sqlite3_exec (db, sql.c_str(), reader.callback, &reader, &error);
     sqlite_execute_mutex.unlock ();
-    if (rc != SQLITE_OK) database_sqlite_error (db, sql, error);
+    if (rc != SQLITE_OK) 
+      database::sqlite::error (db, sql, error);
   } else {
-    database_sqlite_error (db, sql, error);
+    database::sqlite::error (db, sql, error);
   }
-  if (error) sqlite3_free (error);
+  if (error) 
+    sqlite3_free (error);
   return reader.result;
 }
 
 
-void database_sqlite_disconnect (sqlite3 * database)
+void disconnect (sqlite3 * database)
 {
-  if (database) sqlite3_close (database);
+  if (database) 
+    sqlite3_close (database);
 }
 
 
 // Does an integrity check on the database.
 // Returns true if healthy, false otherwise.
-bool database_sqlite_healthy (string database)
+bool healthy (const std::string& database)
 {
-  string file = database_sqlite_file (database);
+  const std::string file = database::sqlite::get_file (database);
   bool ok = false;
   // Do an integrity check on the database.
   // An empty file appears healthy too, so deal with that.
   if (filter_url_filesize (file) > 0) {
-    sqlite3 * db = database_sqlite_connect (database);
-    string query = "PRAGMA integrity_check;";
-    map <string, vector <string> > result = database_sqlite_query (db, query);
-    vector <string> health = result ["integrity_check"];
+    sqlite3 * db = connect (database);
+    const std::string query = "PRAGMA integrity_check;";
+    std::map <std::string, std::vector <std::string> > result = database::sqlite::query (db, query);
+    const std::vector <std::string> health = result ["integrity_check"];
     if (health.size () == 1) {
-      if (health [0] == "ok") ok = true;
+      if (health.at(0) == "ok")
+        ok = true;
     }
-    database_sqlite_disconnect (db);
+    disconnect (db);
   }
   return ok;
 }
@@ -200,22 +220,24 @@ bool database_sqlite_healthy (string database)
 
 // Logs any error on the database connection,
 // The error will be prefixed by $prefix.
-void database_sqlite_error (sqlite3 * database, const string & prefix, char * error)
+void error (sqlite3 * database, const std::string& prefix, char * error)
 {
-  string message = prefix;
+  std::string message = prefix;
   if (error) {
     message.append (" - ");
     message.append (error);
   }
   if (database) {
-    int errcode = sqlite3_errcode (database);
+    const int errcode = sqlite3_errcode (database);
     const char * errstr = sqlite3_errstr (errcode);
-    string error_string;
-    if (errstr) error_string.assign (errstr);
-    int x_errcode = sqlite3_extended_errcode (database);
+    std::string error_string;
+    if (errstr) 
+      error_string.assign (errstr);
+    const int x_errcode = sqlite3_extended_errcode (database);
     const char * x_errstr = sqlite3_errstr (x_errcode);
-    string extended_error_string;
-    if (x_errstr) extended_error_string.assign (x_errstr);
+    std::string extended_error_string;
+    if (x_errstr) 
+      extended_error_string.assign (x_errstr);
     if (!error_string.empty ()) {
       message.append (" - ");
       message.append (error_string);
@@ -230,40 +252,15 @@ void database_sqlite_error (sqlite3 * database, const string & prefix, char * er
       message.append (filename);
     }
   } else {
-    if (!message.empty ()) message.append (" - ");
+    if (!message.empty ()) 
+      message.append (" - ");
     message.append ("No database connection");
   }
   Database_Logs::log (message);
 }
 
 
-void SqliteSQL::clear ()
-{
-  sql.clear ();
-}
-
-
-void SqliteSQL::add (const char * fragment)
-{
-  sql.append (" ");
-  sql.append (fragment);
-  sql.append (" ");
-}
-
-void SqliteSQL::add (int value)
-{
-  sql.append (" ");
-  sql.append (filter::strings::convert_to_string (value));
-  sql.append (" ");
-}
-
-void SqliteSQL::add (string value)
-{
-  sql.append (" '");
-  value = database_sqlite_no_sql_injection (value);
-  sql.append (value);
-  sql.append ("' ");
-}
+} // Namespace.
 
 
 SqliteReader::SqliteReader (int dummy)
@@ -277,7 +274,7 @@ SqliteReader::~SqliteReader ()
 }
 
 
-int SqliteReader::callback (void *userdata, int argc, char **argv, char **column_names) // Todo
+int SqliteReader::callback (void *userdata, int argc, char **argv, char **column_names)
 {
   SqliteReader * sqlite_reader = static_cast<SqliteReader *> (userdata);
   for (int i = 0; i < argc; i++) {
@@ -289,56 +286,102 @@ int SqliteReader::callback (void *userdata, int argc, char **argv, char **column
 }
 
 
-SqliteDatabase::SqliteDatabase (string filename)
+SqliteDatabase::SqliteDatabase (const std::string& filename)
 {
-  db = database_sqlite_connect (filename);
+  // Connect to the database lazily, only when first needed,
+  // i.e. just before execution of SQL or querying SQL.
+  m_filename = filename;
 }
 
 
 SqliteDatabase::~SqliteDatabase ()
 {
-  database_sqlite_disconnect (db);
+  // When the object goes out of scope, it disconnects from the SQlite database.
+  if (db)
+    database::sqlite::disconnect (db);
 }
 
 
 void SqliteDatabase::clear ()
 {
-  sql.clear ();
+  m_sql.clear ();
 }
 
 
 void SqliteDatabase::add (const char * fragment)
 {
-  sql.append (" ");
-  sql.append (fragment);
-  sql.append (" ");
+  m_sql.append (" ");
+  m_sql.append (fragment);
+  m_sql.append (" ");
 }
 
 
 void SqliteDatabase::add (int value)
 {
-  sql.append (" ");
-  sql.append (filter::strings::convert_to_string (value));
-  sql.append (" ");
+  m_sql.append (" ");
+  m_sql.append (std::to_string (value));
+  m_sql.append (" ");
 }
 
 
-void SqliteDatabase::add (string value)
+void SqliteDatabase::add (std::string value)
 {
-  sql.append (" '");
-  value = database_sqlite_no_sql_injection (value);
-  sql.append (value);
-  sql.append ("' ");
+  m_sql.append (" '");
+  value = database::sqlite::no_sql_injection (value);
+  m_sql.append (value);
+  m_sql.append ("' ");
+}
+
+
+const std::string& SqliteDatabase::get_sql() const
+{
+  return m_sql;
+}
+
+
+void SqliteDatabase::set_sql (const std::string& sql)
+{
+  m_sql = sql;
+}
+
+
+void SqliteDatabase::push_sql()
+{
+  m_save_restore = std::move (m_sql);
+}
+
+
+void SqliteDatabase::pop_sql()
+{
+  m_sql = std::move (m_save_restore);
+
 }
 
 
 void SqliteDatabase::execute ()
 {
-  database_sqlite_exec (db, sql);
+  // Connect to the database if not yet connected, i.e. connect lazily.
+  if (!db)
+    db = database::sqlite::connect (m_filename);
+  // Execute the query.
+  database::sqlite::exec (db, m_sql);
 }
 
 
-map <string, vector <string> > SqliteDatabase::query ()
+std::map <std::string, std::vector <std::string> > SqliteDatabase::query ()
 {
-  return database_sqlite_query (db, sql);
+  // Connect to the database if not yet connected, i.e. connect lazily.
+  if (!db)
+    db = database::sqlite::connect (m_filename);
+  // Execute the query.
+  return database::sqlite::query (db, m_sql);
+}
+
+
+// Manually disconnect from the database if so required.
+void SqliteDatabase::disconnect ()
+{
+  if (db)
+    database::sqlite::disconnect (db);
+  db = nullptr;
 }

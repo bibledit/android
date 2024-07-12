@@ -26,24 +26,23 @@
 #include <database/cache.h>
 #include <database/config/general.h>
 #include <tasks/logic.h>
-using namespace std;
 
 
-string sync_resources_url ()
+std::string sync_resources_url ()
 {
   return "sync/resources";
 }
 
 
 // Serves general resource content to a client.
-string sync_resources (Webserver_Request& webserver_request)
+std::string sync_resources (Webserver_Request& webserver_request)
 {
   Sync_Logic sync_logic (webserver_request);
 
   if (!sync_logic.security_okay ()) {
     // When the Cloud enforces https, inform the client to upgrade.
     webserver_request.response_code = 426;
-    return string();
+    return std::string();
   }
 
   // If the client's IP address very recently made a prioritized server call,
@@ -51,11 +50,11 @@ string sync_resources (Webserver_Request& webserver_request)
   // This is to give priority to the other calls from the same client:
   // Not clogging that client's internet connection.
   if (sync_logic.prioritized_ip_address_active ()) {
-    this_thread::sleep_for (chrono::seconds (5));
+    std::this_thread::sleep_for (std::chrono::seconds (5));
   }
 
   int action = filter::strings::convert_to_int (webserver_request.query ["a"]);
-  string resource = webserver_request.query ["r"];
+  std::string resource = webserver_request.query ["r"];
   int book = filter::strings::convert_to_int (webserver_request.query ["b"]);
   int chapter = filter::strings::convert_to_int (webserver_request.query ["c"]);
   int verse = filter::strings::convert_to_int (webserver_request.query ["v"]);
@@ -78,17 +77,17 @@ string sync_resources (Webserver_Request& webserver_request)
       case Sync_Logic::resources_request_database:
       {
         // If the cache is ready, return its file size.
-        if (Database_Cache::exists (resource, book)) {
-          if (Database_Cache::ready (resource, book)) {
-            return filter::strings::convert_to_string (Database_Cache::size (resource, book));
+        if (database::cache::sql::exists (resource, book)) {
+          if (database::cache::sql::ready (resource, book)) {
+            return std::to_string (database::cache::sql::size (resource, book));
           }
         }
         // Schedule this resource for caching if that's not yet the case.
-        vector <string> signatures = Database_Config_General::getResourcesToCache ();
-        string signature = resource + " " + filter::strings::convert_to_string (book);
+        std::vector <std::string> signatures = database::config::general::get_resources_to_cache ();
+        std::string signature = resource + " " + std::to_string (book);
         if (!in_array (signature, signatures)) {
           signatures.push_back (signature);
-          Database_Config_General::setResourcesToCache (signatures);
+          database::config::general::set_resources_to_cache (signatures);
         }
         if (!tasks_logic_queued (CACHERESOURCES)) {
           tasks_logic_queue (CACHERESOURCES);
@@ -98,7 +97,7 @@ string sync_resources (Webserver_Request& webserver_request)
       
       case Sync_Logic::resources_request_download:
       {
-        return Database_Cache::path (resource, book);
+        return database::cache::sql::path (resource, book);
       }
       
       default: {};
@@ -106,7 +105,7 @@ string sync_resources (Webserver_Request& webserver_request)
   }
     
   // Bad request. Delay flood of bad requests.
-  this_thread::sleep_for (chrono::seconds (1));
+  std::this_thread::sleep_for (std::chrono::seconds (1));
   webserver_request.response_code = 400;
-  return string();
+  return std::string();
 }

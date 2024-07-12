@@ -20,15 +20,14 @@
 #include <public/logic.h>
 #include <webserver/request.h>
 #include <database/config/bible.h>
-using namespace std;
 
 
-vector <string> public_logic_bibles (Webserver_Request& webserver_request)
+std::vector <std::string> public_logic_bibles (Webserver_Request& webserver_request)
 {
-  vector <string> public_bibles;
-  vector <string> bibles = webserver_request.database_bibles()->get_bibles ();
+  std::vector <std::string> public_bibles;
+  const std::vector <std::string> bibles = database::bibles::get_bibles ();
   for (const auto& bible : bibles) {
-    if (Database_Config_Bible::getPublicFeedbackEnabled (bible)) {
+    if (database::config::bible::get_public_feedback_enabled (bible)) {
       public_bibles.push_back (bible);
     }
   }

@@ -34,10 +34,9 @@
 #include <journal/index.h>
 #include <dialog/yes.h>
 #include <dialog/entry.h>
-using namespace std;
 
 
-string resource_img_url ()
+std::string resource_img_url ()
 {
   return "resource/img";
 }
@@ -49,26 +48,26 @@ bool resource_img_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_img (Webserver_Request& webserver_request)
+std::string resource_img (Webserver_Request& webserver_request)
 {
   Database_ImageResources database_imageresources;
 
   
-  string page {};
+  std::string page {};
   Assets_Header header = Assets_Header (translate("Image resources"), webserver_request);
   page = header.run ();
   Assets_View view {};
-  string error, success;
+  std::string error, success;
   book_id book1 {book_id::_unknown};
   book_id book2 {book_id::_unknown};
   int chapter1, verse1, chapter2, verse2;
   
   
-  string name = webserver_request.query ["name"];
+  std::string name = webserver_request.query ["name"];
   view.set_variable ("name", name);
 
   
-  string image = webserver_request.query ["image"];
+  std::string image = webserver_request.query ["image"];
   view.set_variable ("image", image);
 
   
@@ -77,9 +76,9 @@ string resource_img (Webserver_Request& webserver_request)
   
   if (webserver_request.post.count ("submit")) {
     
-    vector <string> errors {};
+    std::vector <std::string> errors {};
     
-    string book = webserver_request.post ["book1"];
+    std::string book = webserver_request.post ["book1"];
     book1 = filter_passage_interpret_book_v2 (book);
     if (book1 == book_id::_unknown) errors.push_back (translate ("Unknown starting book."));
 
@@ -103,20 +102,20 @@ string resource_img (Webserver_Request& webserver_request)
     if (chapter2 < 0) errors.push_back (translate ("Negative ending verse."));
     if (chapter2 > 200) errors.push_back (translate ("High ending verse."));
     
-    int start = filter_passage_to_integer (Passage (string(), static_cast<int>(book1), chapter1, filter::strings::convert_to_string (verse1)));
-    int end = filter_passage_to_integer (Passage (string(), static_cast<int>(book2), chapter2, filter::strings::convert_to_string (verse2)));
+    int start = filter_passage_to_integer (Passage (std::string(), static_cast<int>(book1), chapter1, std::to_string (verse1)));
+    int end = filter_passage_to_integer (Passage (std::string(), static_cast<int>(book2), chapter2, std::to_string (verse2)));
     if (start > end) {
       errors.push_back (translate ("The starting passage is beyond the ending passage."));
     }
 
     database_imageresources.assign (name, image, static_cast<int>(book1), chapter1, verse1, static_cast<int>(book2), chapter2, verse2);
     
-    Database_Volatile::setValue (userid, "imageresources", filter::strings::convert_to_string (end));
+    database::volatile_::set_value (userid, "imageresources", std::to_string (end));
 
     error = filter::strings::implode (errors, " ");
     if (errors.empty ()) {
       redirect_browser (webserver_request, filter_url_build_http_query (resource_image_url (), "name", name));
-      return "";
+      return std::string();
     }
   }
   
@@ -130,7 +129,7 @@ string resource_img (Webserver_Request& webserver_request)
     book2 = static_cast<book_id>(ibook2);
   }
   if ((book1 == book_id::_unknown) || (book2 == book_id::_unknown)) {
-    string end = Database_Volatile::getValue (userid, "imageresources");
+    std::string end = database::volatile_::get_value (userid, "imageresources");
     Passage passage = filter_integer_to_passage (filter::strings::convert_to_int (end));
     book1 = book2 = static_cast<book_id>(passage.m_book);
     chapter1 = chapter2 = passage.m_chapter;
@@ -139,11 +138,11 @@ string resource_img (Webserver_Request& webserver_request)
     if (book2 == book_id::_unknown) book2 = book_id::_genesis;
   }
   view.set_variable ("book1", database::books::get_english_from_id (book1));
-  view.set_variable ("chapter1", filter::strings::convert_to_string (chapter1));
-  view.set_variable ("verse1", filter::strings::convert_to_string (verse1));
+  view.set_variable ("chapter1", std::to_string (chapter1));
+  view.set_variable ("verse1", std::to_string (verse1));
   view.set_variable ("book2", database::books::get_english_from_id (book2));
-  view.set_variable ("chapter2", filter::strings::convert_to_string (chapter2));
-  view.set_variable ("verse2", filter::strings::convert_to_string (verse2));
+  view.set_variable ("chapter2", std::to_string (chapter2));
+  view.set_variable ("verse2", std::to_string (verse2));
   
 
   view.set_variable ("success", success);

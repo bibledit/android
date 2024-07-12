@@ -22,10 +22,9 @@
 #include <webserver/request.h>
 #include <navigation/passage.h>
 #include <ipc/focus.h>
-using namespace std;
 
 
-string navigation_poll_url ()
+std::string navigation_poll_url ()
 {
   return "navigation/poll";
 }
@@ -37,15 +36,14 @@ bool navigation_poll_acl (Webserver_Request& webserver_request)
 }
 
 
-string navigation_poll (Webserver_Request& webserver_request)
+std::string navigation_poll (Webserver_Request& webserver_request)
 {
   int book = Ipc_Focus::getBook (webserver_request);
   int chapter = Ipc_Focus::getChapter (webserver_request);
   int verse = Ipc_Focus::getVerse (webserver_request);
-  vector <string> passage;
-  passage.push_back (filter::strings::convert_to_string (book));
-  passage.push_back (filter::strings::convert_to_string (chapter));
-  passage.push_back (filter::strings::convert_to_string (verse));
+  std::vector <std::string> passage;
+  passage.push_back (std::to_string (book));
+  passage.push_back (std::to_string (chapter));
+  passage.push_back (std::to_string (verse));
   return filter::strings::implode (passage, "\n");
 }
-

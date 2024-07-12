@@ -29,10 +29,9 @@
 #include <access/bible.h>
 #include <tasks/logic.h>
 #include <database/jobs.h>
-using namespace std;
 
 
-string jobs_index_url ()
+std::string jobs_index_url ()
 {
   return "jobs/index";
 }
@@ -44,9 +43,9 @@ bool jobs_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string jobs_index (Webserver_Request& webserver_request)
+std::string jobs_index (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate ("Job"), webserver_request);
   
@@ -58,15 +57,15 @@ string jobs_index (Webserver_Request& webserver_request)
   Database_Jobs database_jobs = Database_Jobs ();
   const bool exists = database_jobs.id_exists (id);
   const int level = database_jobs.get_level (id);
-  const string start = database_jobs.get_start (id);
-  const string percentage = database_jobs.get_percentage (id);
-  const string progress = database_jobs.get_progress (id);
-  const string result = database_jobs.get_result (id);
+  const std::string start = database_jobs.get_start (id);
+  const std::string percentage = database_jobs.get_percentage (id);
+  const std::string progress = database_jobs.get_progress (id);
+  const std::string result = database_jobs.get_result (id);
 
   // Access control for the user.
-  const int userlevel = webserver_request.session_logic()->currentLevel ();
+  const int userlevel = webserver_request.session_logic()->get_level ();
 
-  string contents;
+  std::string contents;
   if (!exists) {
     // Check on existence of the job.
     contents = translate("This job does not exist.");

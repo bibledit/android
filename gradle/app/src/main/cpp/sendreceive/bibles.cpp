@@ -40,7 +40,6 @@
 #include <checksum/logic.h>
 #include <bb/logic.h>
 #include <demo/logic.h>
-using namespace std;
 
 
 int sendreceive_bibles_watchdog {0};
@@ -53,19 +52,19 @@ void send_receive_bibles_done ()
 }
 
 
-string sendreceive_bibles_text ()
+std::string sendreceive_bibles_text ()
 {
   return translate("Bibles") + ": ";
 }
 
 
-string sendreceive_bibles_sendreceive_text ()
+std::string sendreceive_bibles_sendreceive_text ()
 {
   return sendreceive_bibles_text () + translate ("Send/receive");
 }
 
 
-string sendreceive_bibles_up_to_date_text ()
+std::string sendreceive_bibles_up_to_date_text ()
 {
   return sendreceive_bibles_text () + translate ("Up to date");
 }
@@ -92,7 +91,7 @@ void sendreceive_bibles ()
   Sync_Logic sync_logic (webserver_request);
   
   
-  string response = client_logic_connection_setup ("", "");
+  std::string response = client_logic_connection_setup ("", "");
   int iresponse = filter::strings::convert_to_int (response);
   if (iresponse < Filter_Roles::guest () || iresponse > Filter_Roles::admin ()) {
     Database_Logs::log (sendreceive_bibles_text () + translate("Failure to initiate connection"), Filter_Roles::translator ());
@@ -102,33 +101,33 @@ void sendreceive_bibles ()
   
   
   // Set the correct user in the session: The sole user on the Client.
-  vector <string> users = webserver_request.database_users ()->get_users ();
+  std::vector <std::string> users = webserver_request.database_users ()->get_users ();
   if (users.empty ()) {
     Database_Logs::log (translate("No user found"), Filter_Roles::translator ());
     send_receive_bibles_done ();
     return;
   }
-  string user = users [0];
+  std::string user = users [0];
   webserver_request.session_logic ()->set_username (user);
-  string password = webserver_request.database_users ()->get_md5 (user);
+  std::string password = webserver_request.database_users ()->get_md5 (user);
   
   
   // The basic request to be POSTed to the server.
   // It contains the user's credentials.
-  map <string, string> post;
+  std::map <std::string, std::string> post;
   post ["u"] = filter::strings::bin2hex (user);
   post ["p"] = password;
-  post ["l"] = filter::strings::convert_to_string (webserver_request.database_users ()->get_level (user));
+  post ["l"] = std::to_string (webserver_request.database_users ()->get_level (user));
 
   
   // Error variable.
-  string error;
+  std::string error;
   
   
   // Server URL to call.
-  string address = Database_Config_General::getServerAddress ();
-  int port = Database_Config_General::getServerPort ();
-  string url = client_logic_url (address, port, sync_bibles_url ());
+  std::string address = database::config::general::get_server_address ();
+  int port = database::config::general::get_server_port ();
+  std::string url = client_logic_url (address, port, sync_bibles_url ());
   
 
   // Check on communication errors to be careful that there will be no loss of Bible data on the client.
@@ -136,47 +135,46 @@ void sendreceive_bibles ()
 
   
   // Go through the Bibles / books / chapters that have actions recorded for them.
-  Database_BibleActions database_bibleactions;
-  vector <string> bibles = database_bibleactions.getBibles ();
-  for (string bible : bibles) {
-    vector <int> books = database_bibleactions.getBooks (bible);
+  std::vector <std::string> bibles = database::bible_actions::get_bibles ();
+  for (std::string bible : bibles) {
+    std::vector <int> books = database::bible_actions::get_books (bible);
     for (int book : books) {
-      vector <int> chapters = database_bibleactions.getChapters (bible, book);
+      std::vector <int> chapters = database::bible_actions::get_chapters (bible, book);
       for (int chapter : chapters) {
         
         sendreceive_bibles_kick_watchdog ();
 
-        string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
-        Database_Logs::log (sendreceive_bibles_text () + translate("Sending to server") + ": " + bible + " " + bookname + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
+        std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+        Database_Logs::log (sendreceive_bibles_text () + translate("Sending to server") + ": " + bible + " " + bookname + " " + std::to_string (chapter), Filter_Roles::translator ());
         
         // Get old and new USFM for this chapter.
-        string oldusfm = database_bibleactions.getUsfm (bible, book, chapter);
-        string newusfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+        std::string oldusfm = database::bible_actions::get_usfm (bible, book, chapter);
+        std::string newusfm = database::bibles::get_chapter (bible, book, chapter);
         
         // Straightaway clear the Bible action for this chapter.
         // This atomic operation enables new edits from the user in this chapter to be recorded straightaway,
         // even during the time that this chapter is still being sent.
         // In the face of a slow network at times, this does occur in practise.
         // Examples have been seen.
-        database_bibleactions.erase (bible, book, chapter);
+        database::bible_actions::erase (bible, book, chapter);
         
         // If old USFM and new USFM differ, and the new USFM is not empty, send it to the server.
         if ((newusfm != oldusfm) && (newusfm != "")) {
           
-          string checksum = checksum_logic::get (oldusfm + newusfm);
+          std::string checksum = checksum_logic::get (oldusfm + newusfm);
           
           // Generate a POST webserver_request.
-          map <string, string> sendpost = post;
-          sendpost ["a"]  = filter::strings::convert_to_string (Sync_Logic::bibles_send_chapter);
+          std::map <std::string, std::string> sendpost = post;
+          sendpost ["a"]  = std::to_string (Sync_Logic::bibles_send_chapter);
           sendpost ["b"]  = bible;
-          sendpost ["bk"] = filter::strings::convert_to_string (book);
-          sendpost ["c"]  = filter::strings::convert_to_string (chapter);
+          sendpost ["bk"] = std::to_string (book);
+          sendpost ["c"]  = std::to_string (chapter);
           // Safeguard the + signs that the server otherwise would remove.
           sendpost ["o"]  = filter_url_plus_to_tag (oldusfm);
           sendpost ["n"]  = filter_url_plus_to_tag (newusfm);
           sendpost ["s"]  = checksum;
           
-          string send_error;
+          std::string send_error;
           response = sync_logic.post (sendpost, url, send_error);
           
           if (!send_error.empty ()) {
@@ -185,8 +183,8 @@ void sendreceive_bibles ()
             communication_errors = true;
             Database_Logs::log (sendreceive_bibles_text () + "Failure sending chapter: " + send_error, Filter_Roles::translator ());
             // Restore the Bible action for this chapter.
-            database_bibleactions.erase (bible, book, chapter);
-            database_bibleactions.record (bible, book, chapter, oldusfm);
+            database::bible_actions::erase (bible, book, chapter);
+            database::bible_actions::record (bible, book, chapter, oldusfm);
             
           } else if (response == checksum) {
             
@@ -198,8 +196,8 @@ void sendreceive_bibles ()
             communication_errors = true;
             Database_Logs::log (sendreceive_bibles_text () + translate ("Failure sending chapter") + ", " + translate ("Bibledit Cloud says:") + " " + response, Filter_Roles::translator ());
             // Restore the Bible action for this chapter.
-            database_bibleactions.erase (bible, book, chapter);
-            database_bibleactions.record (bible, book, chapter, oldusfm);
+            database::bible_actions::erase (bible, book, chapter);
+            database::bible_actions::record (bible, book, chapter, oldusfm);
             
           }
         }
@@ -220,7 +218,7 @@ void sendreceive_bibles ()
   
   // After successfully sending all changes to the Cloud, clear the unsent-data timeout warning data.
   if (!communication_errors) {
-    Database_Config_General::setUnsentBibleDataTime (0);
+    database::config::general::set_unsent_bible_data_time (0);
   }
   
   
@@ -238,7 +236,7 @@ void sendreceive_bibles ()
 
   
   // Whether this is the first synchronize action after the user connected to the Cloud.
-  bool first_sync_after_connect = Database_Config_General::getJustConnectedToCloud ();
+  bool first_sync_after_connect = database::config::general::get_just_connected_to_cloud ();
   
   
   // Calculate the total checksum of all chapters in all books in all local Bibles.
@@ -247,10 +245,10 @@ void sendreceive_bibles ()
   // that the client username has access to via its credentials.
   // The client compares the two checksums.
   // If they match, it means everything is in sync.
-  bibles = webserver_request.database_bibles()->get_bibles ();
-  string client_checksum = checksum_logic::get_bibles (webserver_request, bibles);
-  post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_total_checksum);
-  string server_checksum = sync_logic.post (post, url, error);
+  bibles = database::bibles::get_bibles ();
+  std::string client_checksum = checksum_logic::get_bibles (webserver_request, bibles);
+  post ["a"] = std::to_string (Sync_Logic::bibles_get_total_checksum);
+  std::string server_checksum = sync_logic.post (post, url, error);
   if (!error.empty ()) {
     Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting total checksum") + ": " + error, Filter_Roles::translator ());
     send_receive_bibles_done ();
@@ -267,9 +265,9 @@ void sendreceive_bibles ()
   // Send the user credentials to the server and request the Bibles.
   // The server responds with the Bibles this user has access to.
   // The client stores this list for later use.
-  post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_bibles);
-  string server_bibles = sync_logic.post (post, url, error);
-  vector <string> v_server_bibles = filter::strings::explode (server_bibles, '\n');
+  post ["a"] = std::to_string (Sync_Logic::bibles_get_bibles);
+  std::string server_bibles = sync_logic.post (post, url, error);
+  std::vector <std::string> v_server_bibles = filter::strings::explode (server_bibles, '\n');
   if (!error.empty () || v_server_bibles.empty ()) {
     Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting list of Bibles"), Filter_Roles::translator ());
     send_receive_bibles_done ();
@@ -281,7 +279,7 @@ void sendreceive_bibles ()
   // Checksumming prevents this behaviour.
   server_checksum = v_server_bibles [0];
   v_server_bibles.erase (v_server_bibles.begin());
-  string message_checksum = checksum_logic::get (v_server_bibles);
+  std::string message_checksum = checksum_logic::get (v_server_bibles);
   if (server_checksum != message_checksum) {
     Database_Logs::log (sendreceive_bibles_text () + translate("Checksum error while receiving list of Bibles"), Filter_Roles::translator ());
     send_receive_bibles_done ();
@@ -292,7 +290,7 @@ void sendreceive_bibles ()
   
   
   // The client now has a list of Bibles the user has access to on the server.
-  bibles = webserver_request.database_bibles()->get_bibles ();
+  bibles = database::bibles::get_bibles ();
   bibles = filter::strings::array_diff (bibles, v_server_bibles);
   if (first_sync_after_connect) {
     // At the first synchronize action after the user connected to the Cloud,
@@ -302,36 +300,36 @@ void sendreceive_bibles ()
     // This would be undesired behaviour. Skip it.
     for (auto bible : bibles) {
       if (bible == demo_sample_bible_name ()) continue;
-      vector <int> books = webserver_request.database_bibles()->get_books (bible);
+      std::vector <int> books = database::bibles::get_books (bible);
       for (auto book : books) {
-        vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
+        std::vector <int> chapters = database::bibles::get_chapters (bible, book);
         for (auto chapter : chapters) {
-          database_bibleactions.record (bible, book, chapter, "");
+          database::bible_actions::record (bible, book, chapter, "");
         }
       }
     }
   } else {
     // The client deletes any local Bible not available from the server.
     // It does not record change Bible actions for this operation.
-    for (string bible : bibles) {
-      webserver_request.database_bibles()->delete_bible (bible);
+    for (std::string bible : bibles) {
+      database::bibles::delete_bible (bible);
       DatabasePrivileges::remove_bible (bible);
-      Database_Config_Bible::remove (bible);
+      database::config::bible::remove (bible);
       Database_Logs::log (sendreceive_bibles_text () + translate("Deleting Bible because the server did not grant access to it") + ": " + bible, Filter_Roles::translator ());
     }
   }
   
   
   // The client goes through all the Bibles, and deals with each of them.
-  for (string bible : v_server_bibles) {
+  for (std::string bible : v_server_bibles) {
     
     
     // Compare the checksum of the whole Bible on client and server
     // to see if this Bible is in sync.
-    string client_checksum_bible = checksum_logic::get_bible (webserver_request, bible);
-    post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_bible_checksum);
+    std::string client_checksum_bible = checksum_logic::get_bible (webserver_request, bible);
+    post ["a"] = std::to_string (Sync_Logic::bibles_get_bible_checksum);
     post ["b"] = bible;
-    string server_checksum_bible = sync_logic.post (post, url, error);
+    std::string server_checksum_bible = sync_logic.post (post, url, error);
     if (!error.empty () || client_checksum_bible.empty ()) {
       Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting Bible checksum") + ": " + error, Filter_Roles::translator ());
       communication_errors = true;
@@ -344,9 +342,9 @@ void sendreceive_bibles ()
     
     
     // Request all books in the $bible on the server.
-    vector <int> client_books = webserver_request.database_bibles()->get_books (bible);
-    post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_books);
-    string server_books = sync_logic.post (post, url, error);
+    std::vector <int> client_books = database::bibles::get_books (bible);
+    post ["a"] = std::to_string (Sync_Logic::bibles_get_books);
+    std::string server_books = sync_logic.post (post, url, error);
     if (!error.empty () || server_books.empty ()) {
       Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting books") + ": " + error, Filter_Roles::translator ());
       communication_errors = true;
@@ -354,16 +352,16 @@ void sendreceive_bibles ()
     }
     // Do checksumming on the book list to be sure the data is valid.
     // Invalid data may cause books to be added or deleted on the client.
-    vector <string> v_server_books = filter::strings::explode (server_books, '\n');
+    std::vector <std::string> v_server_books = filter::strings::explode (server_books, '\n');
     server_checksum_bible = v_server_books [0];
     v_server_books.erase (v_server_books.begin());
-    string message_checksum_bible = checksum_logic::get (v_server_books);
+    std::string message_checksum_bible = checksum_logic::get (v_server_books);
     if (server_checksum_bible != message_checksum_bible) {
       Database_Logs::log (sendreceive_bibles_text () + translate("Checksum error while receiving list of books from server"), Filter_Roles::translator ());
       communication_errors = true;
       continue;
     }
-    vector <int> i_server_books;
+    std::vector <int> i_server_books;
     for (auto & book : v_server_books) i_server_books.push_back (filter::strings::convert_to_int (book));
 
 
@@ -374,9 +372,9 @@ void sendreceive_bibles ()
       // any books on the client and not on the server,
       // schedule them for upload to the Cloud.
       for (auto book : client_books) {
-        vector <int> chapters = webserver_request.database_bibles()->get_chapters (bible, book);
+        std::vector <int> chapters = database::bibles::get_chapters (bible, book);
         for (auto & chapter : chapters) {
-          database_bibleactions.record (bible, book, chapter, "");
+          database::bible_actions::record (bible, book, chapter, "");
         }
       }
     } else {
@@ -384,8 +382,8 @@ void sendreceive_bibles ()
       // But for more robustness while connected to a very bad network, the client will remove only one book at a time.
       if (!client_books.empty ()) {
         int book = client_books [0];
-        webserver_request.database_bibles()->delete_book (bible, book);
-        string book_name = database::books::get_english_from_id (static_cast<book_id>(book));
+        database::bibles::delete_book (bible, book);
+        std::string book_name = database::books::get_english_from_id (static_cast<book_id>(book));
         Database_Logs::log (sendreceive_bibles_text () + translate("Deleting book because the server does not have it") + ": " + bible + " " + book_name , Filter_Roles::translator ());
       }
     }
@@ -395,14 +393,14 @@ void sendreceive_bibles ()
     for (auto & book : i_server_books) {
       
   
-      string book_name = database::books::get_english_from_id (static_cast<book_id>(book));
+      std::string book_name = database::books::get_english_from_id (static_cast<book_id>(book));
       
       
       // Compare the checksum for the whole book on the client with the same on the server to see if this book is in sync.
-      string client_checksum_book = checksum_logic::get_book (webserver_request, bible, book);
-      post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_book_checksum);
-      post ["bk"] = filter::strings::convert_to_string (book);
-      string server_checksum_book = sync_logic.post (post, url, error);
+      std::string client_checksum_book = checksum_logic::get_book (webserver_request, bible, book);
+      post ["a"] = std::to_string (Sync_Logic::bibles_get_book_checksum);
+      post ["bk"] = std::to_string (book);
+      std::string server_checksum_book = sync_logic.post (post, url, error);
       if (!error.empty ()) {
         Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting book checksum") + ": " + error, Filter_Roles::translator ());
         communication_errors = true;
@@ -414,26 +412,26 @@ void sendreceive_bibles ()
 
 
       // The client requests all chapters per book from the server.
-      vector <int> client_chapters = webserver_request.database_bibles()->get_chapters (bible, book);
-      post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_chapters);
-      string server_chapters = sync_logic.post (post, url, error);
+      std::vector <int> client_chapters = database::bibles::get_chapters (bible, book);
+      post ["a"] = std::to_string (Sync_Logic::bibles_get_chapters);
+      std::string server_chapters = sync_logic.post (post, url, error);
       if (!error.empty () || server_chapters.empty ()) {
         Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting list of chapters:") + " " + bible + " " + book_name, Filter_Roles::translator ());
         communication_errors = true;
         continue;
       }
-      vector <string> v_server_chapters = filter::strings::explode (server_chapters, '\n');
+      std::vector <std::string> v_server_chapters = filter::strings::explode (server_chapters, '\n');
       // Do checksumming on the data to be sure the data is valid.
       // Invalid data may cause chapters to be added or deleted on the client.
       server_checksum_book = v_server_chapters [0];
       v_server_chapters.erase (v_server_chapters.begin());
-      string message_checksum_book = checksum_logic::get (v_server_chapters);
+      std::string message_checksum_book = checksum_logic::get (v_server_chapters);
       if (server_checksum_book != message_checksum_book) {
         Database_Logs::log (sendreceive_bibles_text () + translate("Checksum error while receiving list of chapters"), Filter_Roles::translator ());
         communication_errors = true;
         continue;
       }
-      vector <int> i_server_chapters;
+      std::vector <int> i_server_chapters;
       for (auto & chapter : v_server_chapters) i_server_chapters.push_back (filter::strings::convert_to_int (chapter));
       
       
@@ -443,15 +441,15 @@ void sendreceive_bibles ()
         // First sync after connecting to Cloud:
         // It does not delete any chapters, but rather sends them to the Cloud.
         for (auto chapter : client_chapters) {
-          database_bibleactions.record (bible, book, chapter, "");
+          database::bible_actions::record (bible, book, chapter, "");
         }
       } else {
         // For better robustness, while connected to a very bad network, the client only removes one local chapter.
         // If necessary it will delete another one during next sync operation.
         if (!client_chapters.empty ()) {
           int chapter = client_chapters [0];
-          webserver_request.database_bibles()->delete_chapter (bible, book, chapter);
-          Database_Logs::log (sendreceive_bibles_text () + translate("Deleting chapter because the server does not have it") + ": " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
+          database::bibles::delete_chapter (bible, book, chapter);
+          Database_Logs::log (sendreceive_bibles_text () + translate("Deleting chapter because the server does not have it") + ": " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
         }
       }
       
@@ -471,12 +469,12 @@ void sendreceive_bibles ()
         
         // Get checksum for the chapter on client and on server.
         // If both are the same, it means the USFM in both is the same, and we're done.
-        string client_checksum_chapter = checksum_logic::get_chapter (webserver_request, bible, book, chapter);
-        post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_chapter_checksum);
-        post ["c"] = filter::strings::convert_to_string (chapter);
-        string server_checksum_chapter = sync_logic.post (post, url, error);
+        std::string client_checksum_chapter = checksum_logic::get_chapter (webserver_request, bible, book, chapter);
+        post ["a"] = std::to_string (Sync_Logic::bibles_get_chapter_checksum);
+        post ["c"] = std::to_string (chapter);
+        std::string server_checksum_chapter = sync_logic.post (post, url, error);
         if (!error.empty () || server_checksum_chapter.empty ()) {
-          Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting checksum:") + " " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
+          Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting checksum:") + " " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
           communication_errors = true;
           continue;
         }
@@ -489,23 +487,23 @@ void sendreceive_bibles ()
 
 
         // Different checksums: Get the USFM for the chapter as it is on the server.
-        Database_Logs::log (sendreceive_bibles_text () + translate("Getting chapter:") + " " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
-        post ["a"] = filter::strings::convert_to_string (Sync_Logic::bibles_get_chapter);
-        string server_usfm = sync_logic.post (post, url, error);
+        Database_Logs::log (sendreceive_bibles_text () + translate("Getting chapter:") + " " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
+        post ["a"] = std::to_string (Sync_Logic::bibles_get_chapter);
+        std::string server_usfm = sync_logic.post (post, url, error);
         if (!error.empty () || server_usfm.empty ()) {
-          Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting chapter:") + " " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
+          Database_Logs::log (sendreceive_bibles_text () + translate("Failure getting chapter:") + " " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
           communication_errors = true;
           continue;
         }
 
         
         // Verify the checksum of the chapter on the server, to be sure there's no corruption during transmission.
-        vector <string> v_server_usfm = filter::strings::explode (server_usfm, '\n');
-        string checksum = v_server_usfm [0];
+        std::vector <std::string> v_server_usfm = filter::strings::explode (server_usfm, '\n');
+        std::string checksum = v_server_usfm [0];
         v_server_usfm.erase (v_server_usfm.begin());
         server_usfm = filter::strings::implode (v_server_usfm, "\n");
         if (checksum_logic::get (server_usfm) != checksum) {
-          Database_Logs::log (sendreceive_bibles_text () + translate("Checksum error while receiving chapter from server:") + " " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
+          Database_Logs::log (sendreceive_bibles_text () + translate("Checksum error while receiving chapter from server:") + " " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
           communication_errors = true;
           continue;
         }
@@ -513,9 +511,9 @@ void sendreceive_bibles ()
 
         // Check whether the user on the client has made changes in this chapter since the edits were sent to the server.
         // If there are none, then the client stores the chapter as it gets it from the server, and is done.
-        string old_usfm = database_bibleactions.getUsfm (bible, book, chapter);
+        std::string old_usfm = database::bible_actions::get_usfm (bible, book, chapter);
         if (old_usfm.empty ()) {
-          webserver_request.database_bibles()->store_chapter (bible, book, chapter, server_usfm);
+          database::bibles::store_chapter (bible, book, chapter, server_usfm);
           continue;
         }
 
@@ -527,10 +525,10 @@ void sendreceive_bibles ()
         // Store the merged data on the client.
         // It stores through the Bible logic so the changes get staged to be sent.
         // The changes will be sent to the server during the next synchronize action.
-        vector <Merge_Conflict> conflicts;
-        Database_Logs::log (sendreceive_bibles_text () + translate("Merging changes on server and client") + " " + bible + " " + book_name + " " + filter::strings::convert_to_string (chapter), Filter_Roles::translator ());
-        string client_usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
-        string merged_usfm = filter_merge_run (old_usfm, client_usfm, server_usfm, true, conflicts);
+        std::vector <Merge_Conflict> conflicts;
+        Database_Logs::log (sendreceive_bibles_text () + translate("Merging changes on server and client") + " " + bible + " " + book_name + " " + std::to_string (chapter), Filter_Roles::translator ());
+        std::string client_usfm = database::bibles::get_chapter (bible, book, chapter);
+        std::string merged_usfm = filter_merge_run (old_usfm, client_usfm, server_usfm, true, conflicts);
         filter_merge_add_book_chapter (conflicts, book, chapter);
         bible_logic::merge_irregularity_mail ( { user }, conflicts);
         bible_logic::store_chapter (bible, book, chapter, merged_usfm);
@@ -543,7 +541,7 @@ void sendreceive_bibles ()
   // Clear the first-run flag in case there's no communication errors.
   if (!communication_errors) {
     if (first_sync_after_connect) {
-      Database_Config_General::setJustConnectedToCloud (false);
+      database::config::general::set_just_connected_to_cloud (false);
     }
   }
 

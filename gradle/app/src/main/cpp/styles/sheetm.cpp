@@ -37,10 +37,9 @@
 #include <menu/logic.h>
 #include <styles/indexm.h>
 #include <database/logic.h>
-using namespace std;
 
 
-string styles_sheetm_url ()
+std::string styles_sheetm_url ()
 {
   return "styles/sheetm";
 }
@@ -52,9 +51,9 @@ bool styles_sheetm_acl (Webserver_Request& webserver_request)
 }
 
 
-string styles_sheetm (Webserver_Request& webserver_request)
+std::string styles_sheetm (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Stylesheet"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
@@ -63,19 +62,19 @@ string styles_sheetm (Webserver_Request& webserver_request)
 
   Assets_View view;
   
-  string name = webserver_request.query["name"];
+  std::string name = webserver_request.query["name"];
   view.set_variable ("name", filter::strings::escape_special_xml_characters (name));
 
   Database_Styles database_styles;
   
-  string username = webserver_request.session_logic ()->currentUser ();
-  int userlevel = webserver_request.session_logic ()->currentLevel ();
+  const std::string& username = webserver_request.session_logic ()->get_username ();
+  int userlevel = webserver_request.session_logic ()->get_level ();
   bool write = database_styles.hasWriteAccess (username, name);
   if (userlevel >= Filter_Roles::admin ()) write = true;
 
   if (webserver_request.post.count ("new")) {
-    string newstyle = webserver_request.post["entry"];
-    vector <string> existing_markers = database_styles.getMarkers (name);
+    std::string newstyle = webserver_request.post["entry"];
+    std::vector <std::string> existing_markers = database_styles.getMarkers (name);
     if (find (existing_markers.begin(), existing_markers.end(), newstyle) != existing_markers.end()) {
       page += assets_page::error (translate("This style already exists"));
     } else {
@@ -91,16 +90,16 @@ string styles_sheetm (Webserver_Request& webserver_request)
     return page;
   }
   
-  string del = webserver_request.query["delete"];
+  std::string del = webserver_request.query["delete"];
   if (del != "") {
     if (write) database_styles.deleteMarker (name, del);
   }
 
-  stringstream markerblock;
-  map <string, string> markers_names = database_styles.getMarkersAndNames (name);
+  std::stringstream markerblock;
+  std::map <std::string, std::string> markers_names = database_styles.getMarkersAndNames (name);
   for (auto & item : markers_names) {
-    string marker = item.first;
-    string marker_name = item.second;
+    std::string marker = item.first;
+    std::string marker_name = item.second;
     marker_name = translate (marker_name);
     markerblock << "<tr>";
     markerblock << R"(<td><a href=")" << "view?sheet=" << name << "&style=" << marker << R"(">)"  << marker << "</a></td>";
@@ -110,7 +109,7 @@ string styles_sheetm (Webserver_Request& webserver_request)
   }
   view.set_variable ("markerblock", markerblock.str());
   
-  string folder = filter_url_create_root_path ({database_logic_databases (), "styles", name});
+  std::string folder = filter_url_create_root_path ({database_logic_databases (), "styles", name});
   view.set_variable ("folder", folder);
 
   page += view.render ("styles", "sheetm");

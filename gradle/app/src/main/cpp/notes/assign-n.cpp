@@ -59,14 +59,14 @@ std::string notes_assign_n (Webserver_Request& webserver_request)
   Assets_View view;
 
   
-  const std::string user = webserver_request.session_logic ()->currentUser ();
+  const std::string& user = webserver_request.session_logic ()->get_username ();
  
   
   // Notes can be assigned to the assignees.
   std::stringstream userblock{};
   const std::vector <std::string> assignees = database_noteassignment.assignees (user);
   for (const auto& assignee : assignees) {
-    userblock << "<li><a href=" << quoted ("bulk?assign=" + assignee) << ">" << assignee << "</a></li>" << std::endl;
+    userblock << "<li><a href=" << std::quoted ("bulk?assign=" + assignee) << ">" << assignee << "</a></li>" << std::endl;
   }
   view.set_variable ("userblock", userblock.str());
   

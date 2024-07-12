@@ -157,7 +157,7 @@ void sword_logic_refresh_module_list ()
       sword_modules.push_back (module);
     }
 #endif
-    Database_Logs::log (remote_source + ": " + filter::strings::convert_to_string (modules.size ()) + " modules");
+    Database_Logs::log (remote_source + ": " + std::to_string (modules.size ()) + " modules");
   }
   
   // Store the list of remote sources and their modules.
@@ -375,18 +375,18 @@ std::string sword_logic_get_text (const std::string& source, const std::string& 
   std::string resource = sword_logic_get_resource_name (source, module);
 
   // Client checks for and optionally creates the cache for this SWORD source/module.
-  if (!Database_Cache::exists (resource, book)) {
-    Database_Cache::create (resource, book);
+  if (!database::cache::sql::exists (resource, book)) {
+    database::cache::sql::create (resource, book);
   }
 
   // If this module/passage exists in the cache, return it (it updates the access days in the cache).
-  if (Database_Cache::exists (resource, book, chapter, verse)) {
-    return Database_Cache::retrieve (resource, book, chapter, verse);
+  if (database::cache::sql::exists (resource, book, chapter, verse)) {
+    return database::cache::sql::retrieve (resource, book, chapter, verse);
   }
 
   // Fetch this SWORD resource from the server.
-  std::string address = Database_Config_General::getServerAddress ();
-  int port = Database_Config_General::getServerPort ();
+  std::string address = database::config::general::get_server_address ();
+  int port = database::config::general::get_server_port ();
   if (!client_logic_client_enabled ()) {
     // If the client has not been connected to a cloud instance,
     // fetch the SWORD content from the Bibledit Cloud demo.
@@ -395,9 +395,9 @@ std::string sword_logic_get_text (const std::string& source, const std::string& 
   }
   std::string url = client_logic_url (address, port, sync_resources_url ());
   url = filter_url_build_http_query (url, "r", resource);
-  url = filter_url_build_http_query (url, "b", filter::strings::convert_to_string (book));
-  url = filter_url_build_http_query (url, "c", filter::strings::convert_to_string (chapter));
-  url = filter_url_build_http_query (url, "v", filter::strings::convert_to_string (verse));
+  url = filter_url_build_http_query (url, "b", std::to_string(book));
+  url = filter_url_build_http_query (url, "c", std::to_string(chapter));
+  url = filter_url_build_http_query (url, "v", std::to_string(verse));
   std::string error {};
   std::string html = filter_url_http_get (url, error, true);
   
@@ -408,7 +408,7 @@ std::string sword_logic_get_text (const std::string& source, const std::string& 
   // Except in case of predefined responses from the Cloud.
   if (html != sword_logic_installing_module_text ()) {
     if (html != sword_logic_fetch_failure_text ()) {
-      Database_Cache::cache (resource, book, chapter, verse, html);
+      database::cache::sql::cache (resource, book, chapter, verse, html);
     }
   }
   
@@ -420,7 +420,7 @@ std::string sword_logic_get_text (const std::string& source, const std::string& 
   bool module_available {false};
 
   const std::string osis = database::books::get_osis_from_id (static_cast<book_id>(book));
-  const std::string chapter_verse = filter::strings::convert_to_string (chapter) + ":" + filter::strings::convert_to_string (verse);
+  const std::string chapter_verse = std::to_string (chapter) + ":" + std::to_string (verse);
 
   // See notes on function sword_logic_diatheke
   // for why it is not currently fetching content via a SWORD library call.
@@ -434,7 +434,7 @@ std::string sword_logic_get_text (const std::string& source, const std::string& 
   // diatheke -b KJV -k Jn 3:16
   // To included, run this instead: $ diatheke -b KJV -o n -k Jn 3:16
   std::vector <std::string> parameters {"-b", module};
-  if (Database_Config_General::getKeepOsisContentInSwordResources ()) {
+  if (database::config::general::get_keep_osis_content_in_sword_resources ()) {
     parameters.push_back("-o");
     parameters.push_back("n");
   }
@@ -516,7 +516,7 @@ std::map <int, std::string> sword_logic_get_bulk_text (const std::string& module
   // diatheke -b AB -k Ezra
   std::string error {};
   std::string bulk_text {};
-  const int result = filter_shell_run (sword_logic_get_path (), "diatheke", { "-b", module, "-k", osis, filter::strings::convert_to_string (chapter) }, &bulk_text, &error);
+  const int result = filter_shell_run (sword_logic_get_path (), "diatheke", { "-b", module, "-k", osis, std::to_string (chapter) }, &bulk_text, &error);
   bulk_text.append (error);
   if (result != 0) Database_Logs::log (error);
   // This is how the output would look.
@@ -533,7 +533,7 @@ std::map <int, std::string> sword_logic_get_bulk_text (const std::string& module
   // In case of such verses, there's no content to extract from the chapter.
   // The cause in such verses is in the module builder.
   for (const auto verse : verses) {
-    const std::string starter = " " + filter::strings::convert_to_string(chapter) + ":" + filter::strings::convert_to_string(verse) + ":";
+    const std::string starter = " " + std::to_string(chapter) + ":" + std::to_string(verse) + ":";
     size_t pos1 = bulk_text.find (starter);
     if (pos1 == std::string::npos) {
       //Database_Logs::log("Cannot find starter: |" + starter + "|");
@@ -727,7 +727,7 @@ void sword_logic_installmgr_list_remote_sources ([[maybe_unused]] const std::vec
     const std::string caption (it->second->caption);
     sources.push_back (caption);
     /*
-    string description;
+    std::string description;
     description.append (caption);
     description.append (" - ");
     description.append (it->second->type);
@@ -794,7 +794,7 @@ void sword_logic_installmgr_list_remote_modules ([[maybe_unused]] const std::str
       if (it->second & sword::InstallMgr::MODSTAT_NEW) status = "*";
       if (it->second & sword::InstallMgr::MODSTAT_OLDER) status = "-";
       if (it->second & sword::InstallMgr::MODSTAT_UPDATED) status = "+";
-      string module_name (status);
+      std::string module_name (status);
       module_name.append ("[");
       module_name.append (module->getName());
       module_name.append ("]  \t(");
@@ -803,7 +803,7 @@ void sword_logic_installmgr_list_remote_modules ([[maybe_unused]] const std::str
       module_name.append (module->getDescription());
       // Check if the module is a verse-based Bible or commentary.
       bool verse_based = false;
-      string module_type = module->getType ();
+      std::string module_type = module->getType ();
       if (module_type == "Biblical Texts") verse_based = true;
       if (module_type == "Commentaries") verse_based = true;
       if (verse_based) modules.push_back (module_name);
@@ -865,7 +865,7 @@ std::string sword_logic_diatheke ([[maybe_unused]] const std::string& module_nam
   sword::SWModule *module = manager.getModule (module_name.c_str ());
   available = module;
   if (module) {
-    string key = osis + " " + filter::strings::convert_to_string (chapter) + ":" + filter::strings::convert_to_string (verse);
+    std::string key = osis + " " + filter::strings::convert_to_string (chapter) + ":" + filter::strings::convert_to_string (verse);
     module->setKey (key.c_str ());
     rendering = module->renderText();
   }
@@ -894,7 +894,7 @@ void sword_logic_log (std::string message)
 std::string sword_logic_clean_verse (const std::string& module, int chapter, int verse, std::string text)
 {
   // Remove any OSIS elements or make those elements displayable.
-  if (Database_Config_General::getKeepOsisContentInSwordResources ()) {
+  if (database::config::general::get_keep_osis_content_in_sword_resources ()) {
     text = filter::strings::escape_special_xml_characters (text);
   } else {
     filter::strings::replace_between (text, "<", ">", "");
@@ -902,7 +902,7 @@ std::string sword_logic_clean_verse (const std::string& module, int chapter, int
   
   // Remove the passage name that diatheke adds.
   // A reliable signature for this is the chapter and verse plus subsequent colon.
-  const std::string chapter_verse = filter::strings::convert_to_string (chapter) + ":" + filter::strings::convert_to_string (verse);
+  const std::string chapter_verse = std::to_string (chapter) + ":" + std::to_string (verse);
   size_t pos = text.find (" " + chapter_verse + ":");
   if (pos != std::string::npos) {
     pos += 2;

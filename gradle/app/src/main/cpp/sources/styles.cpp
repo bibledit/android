@@ -20,18 +20,17 @@
 #include <sources/styles.h>
 #include <filter/string.h>
 #include <filter/url.h>
-using namespace std;
 
 
-string sources_style_parse_create_c_comment (string key)
+std::string sources_style_parse_create_c_comment (std::string key)
 {
   return "/* " + key + " */";
 }
 
 
-string sources_style_parse_generate_entry (string key, string value, bool quote)
+std::string sources_style_parse_generate_entry (std::string key, std::string value, bool quote)
 {
-  string result;
+  std::string result;
   result.append ("    ");
   result.append (sources_style_parse_create_c_comment (key));
   result.append (" ");
@@ -43,7 +42,7 @@ string sources_style_parse_generate_entry (string key, string value, bool quote)
 }
 
 
-bool sources_style_parse_cpp_element (string & line, string signature)
+bool sources_style_parse_cpp_element (std::string & line, std::string signature)
 {
   signature = sources_style_parse_create_c_comment (signature);
   size_t pos = line.find (signature);
@@ -62,10 +61,10 @@ void sources_styles_parse ()
 {
 
   // Read the C++ source files with the default style definitions.
-  string cpp_path = filter_url_create_root_path ({"database", "styles.cpp"});
-  string contents = filter_url_file_get_contents (cpp_path);
-  string cpp_start = "style_record styles_table [] =";
-  string cpp_end = "};";
+  std::string cpp_path = filter_url_create_root_path ({"database", "styles.cpp"});
+  std::string contents = filter_url_file_get_contents (cpp_path);
+  std::string cpp_start = "style_record styles_table [] =";
+  std::string cpp_end = "};";
   size_t pos = contents.find (cpp_start);
   if (pos == std::string::npos) {
     std::cout << "Cannot find default styles signature: " << cpp_start << std::endl;
@@ -78,7 +77,7 @@ void sources_styles_parse ()
     return;
   }
   contents.erase (pos);
-  vector <string> cpp_lines = filter::strings::explode (contents, '\n');
+  std::vector <std::string> cpp_lines = filter::strings::explode (contents, '\n');
 
   // Parser signatures for the C++ source code.
   const char * marker_key = "marker";
@@ -114,10 +113,10 @@ void sources_styles_parse ()
   const char * backgroundcolor_key = "backgroundcolor";
   
   // Parse the default style definitions.
-  typedef map <string, string> definition_type;
+  typedef std::map <std::string, std::string> definition_type;
   definition_type style_definition;
-  map <string, definition_type> style_definitions;
-  string marker;
+  std::map <std::string, definition_type> style_definitions;
+  std::string marker;
   for (auto line : cpp_lines) {
     if (sources_style_parse_cpp_element (line, marker_key)) {
       marker = line;
@@ -216,22 +215,22 @@ void sources_styles_parse ()
   }
   
   // Read the default stylesheet for Paratext projects.
-  string path = filter_url_create_root_path ({"sources", "usfm.sty"});
+  std::string path = filter_url_create_root_path ({"sources", "usfm.sty"});
   contents = filter_url_file_get_contents (path);
-  vector <string> paratext_lines = filter::strings::explode (contents, '\n');
+  std::vector <std::string> paratext_lines = filter::strings::explode (contents, '\n');
   
   // Parse state variables.
-  string paratext_marker;
-  vector <string> non_existing_markers;
+  std::string paratext_marker;
+  std::vector <std::string> non_existing_markers;
 
   // Parser signatures for the Paratext stylesheet usfm.sty.
-  string backslash_marker = "\\Marker ";
-  string backslash_fontsize = "\\FontSize ";
-  string backslash_leftmargin = "\\LeftMargin ";
-  string backslash_rightmargin = "\\RightMargin ";
-  string backslash_firstlineindent = "\\FirstLineIndent ";
-  string backslash_spacebefore = "\\SpaceBefore ";
-  string backslash_spaceafter = "\\SpaceAfter ";
+  std::string backslash_marker = "\\Marker ";
+  std::string backslash_fontsize = "\\FontSize ";
+  std::string backslash_leftmargin = "\\LeftMargin ";
+  std::string backslash_rightmargin = "\\RightMargin ";
+  std::string backslash_firstlineindent = "\\FirstLineIndent ";
+  std::string backslash_spacebefore = "\\SpaceBefore ";
+  std::string backslash_spaceafter = "\\SpaceAfter ";
   
   // Parse the stylesheet.
   for (auto paratext_line : paratext_lines) {
@@ -246,7 +245,7 @@ void sources_styles_parse ()
     // Look for the start of a style block trough e.g. "\Marker id".
     if (paratext_line.find (backslash_marker) == 0) {
       paratext_line.erase (0, backslash_marker.length ());
-      string curr_marker = filter::strings::trim (paratext_line);
+      std::string curr_marker = filter::strings::trim (paratext_line);
       // Skip markers in the z-area.
       if (curr_marker [0] == 'z') continue;
       // A new style block starts here.
@@ -268,7 +267,7 @@ void sources_styles_parse ()
     // Read and import the font size.
     if (paratext_line.find (backslash_fontsize) == 0) {
       paratext_line.erase (0, backslash_fontsize.length());
-      string fontsize = filter::strings::trim (paratext_line);
+      std::string fontsize = filter::strings::trim (paratext_line);
       style_definitions [paratext_marker] [fontsize_key] = fontsize;
       continue;
     }
@@ -276,7 +275,7 @@ void sources_styles_parse ()
     // Read and import the left margin.
     if (paratext_line.find (backslash_leftmargin) == 0) {
       paratext_line.erase (0, backslash_leftmargin.length());
-      string inches = filter::strings::trim (paratext_line);
+      std::string inches = filter::strings::trim (paratext_line);
       int value = static_cast<int>(round (254 * filter::strings::convert_to_float (inches)));
       float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [leftmargin_key] = filter::strings::convert_to_string (millimeters);
@@ -286,7 +285,7 @@ void sources_styles_parse ()
     // Read and import the right margin.
     if (paratext_line.find (backslash_rightmargin) == 0) {
       paratext_line.erase (0, backslash_rightmargin.length());
-      string inches = filter::strings::trim (paratext_line);
+      std::string inches = filter::strings::trim (paratext_line);
       int value = static_cast<int>(round (254 * filter::strings::convert_to_float (inches)));
       float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [rightmargin_key] = filter::strings::convert_to_string (millimeters);
@@ -296,7 +295,7 @@ void sources_styles_parse ()
     // Read and import the first line indent.
     if (paratext_line.find (backslash_firstlineindent) == 0) {
       paratext_line.erase (0, backslash_firstlineindent.length());
-      string inches = filter::strings::trim (paratext_line);
+      std::string inches = filter::strings::trim (paratext_line);
       int value = static_cast<int>(round (254 * filter::strings::convert_to_float (inches)));
       float millimeters = static_cast<float> (value) / 10;
       style_definitions [paratext_marker] [firstlineindent_key] = filter::strings::convert_to_string (millimeters);
@@ -306,7 +305,7 @@ void sources_styles_parse ()
     // Read and import the space before.
     if (paratext_line.find (backslash_spacebefore) == 0) {
       paratext_line.erase (0, backslash_spacebefore.length());
-      string value = filter::strings::trim (paratext_line);
+      std::string value = filter::strings::trim (paratext_line);
       style_definitions [paratext_marker] [spacebefore_key] = value;
       continue;
     }
@@ -314,7 +313,7 @@ void sources_styles_parse ()
     // Read and import the space after.
     if (paratext_line.find (backslash_spaceafter) == 0) {
       paratext_line.erase (0, backslash_spaceafter.length());
-      string value = filter::strings::trim (paratext_line);
+      std::string value = filter::strings::trim (paratext_line);
       style_definitions [paratext_marker] [spaceafter_key] = value;
       continue;
     }
@@ -327,7 +326,7 @@ void sources_styles_parse ()
   cpp_lines.push_back ("{");
   for (auto element : style_definitions) {
     definition_type style_def = element.second;
-    string line;
+    std::string line;
     cpp_lines.push_back ("  {");
 
     line = sources_style_parse_generate_entry (marker_key, style_def [marker_key], true);
@@ -399,8 +398,8 @@ void sources_styles_parse ()
   
   // Insert the C++ fragment into the source code.
   contents = filter_url_file_get_contents (cpp_path);
-  vector <string> source_lines = filter::strings::explode (contents, '\n');
-  vector <string> updated_lines;
+  std::vector <std::string> source_lines = filter::strings::explode (contents, '\n');
+  std::vector <std::string> updated_lines;
   bool updating = false;
   for (auto source_line : source_lines) {
     if (updating) {

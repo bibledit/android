@@ -38,7 +38,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <sync/logic.h>
 #include <client/logic.h>
 #include <locale/translate.h>
-using namespace std;
 
 
 void email_send ()
@@ -52,15 +51,15 @@ void email_send ()
   Database_Mail database_mail (webserver_request);
   Database_Users database_users;
 
-  vector <int> mails = database_mail.getMailsToSend ();
+  std::vector <int> mails = database_mail.getMailsToSend ();
   for (auto id : mails) {
 
     // Get all details of the mail.
     Database_Mail_Item details = database_mail.get (id);
-    string username = details.username;
-    string email = database_users.get_email (username);
-    string subject = details.subject;
-    string body = details.body;
+    std::string username = details.username;
+    std::string email = database_users.get_email (username);
+    std::string subject = details.subject;
+    std::string body = details.body;
     
 #ifdef HAVE_CLIENT
     
@@ -96,11 +95,11 @@ void email_send ()
     }
     
     // Send the email.
-    string result = email_send (email, username, subject, body);
+    std::string result = email_send (email, username, subject, body);
     if (result.empty ()) {
       database_mail.erase (id);
-      stringstream ss;
-      ss << "Email to " << email << " with subject " << quoted(subject) << " was ";
+      std::stringstream ss;
+      ss << "Email to " << email << " with subject " << std::quoted(subject) << " was ";
       result = ss.str();
 #ifdef HAVE_CLOUD
       result.append ("sent successfully");
@@ -118,11 +117,11 @@ void email_send ()
       // If the login was denied, then postpone all emails queued for sending,
       // rather than trying to send them all, and have them all cause a 'login denied' error.
       if (login_denied) {
-        vector <int> ids = database_mail.getAllMails ();
+        std::vector <int> ids = database_mail.getAllMails ();
         for (auto id2 : ids) {
           database_mail.postpone (id2);
         }
-        Database_Logs::log ("Postponing sending " + filter::strings::convert_to_string (ids.size()) + " emails", Filter_Roles::manager ());
+        Database_Logs::log ("Postponing sending " + std::to_string (ids.size()) + " emails", Filter_Roles::manager ());
         break;
       } else {
         database_mail.postpone (id);
@@ -134,7 +133,7 @@ void email_send ()
 }
 
 
-static vector <string> payload_text;
+static std::vector <std::string> payload_text;
 
 
 struct upload_status {
@@ -171,16 +170,16 @@ static size_t payload_source (void *ptr, size_t size, size_t nmemb, void *userp)
 // Sends the email as specified by the parameters.
 // If all went well, it returns an empty string.
 // In case of failure, it returns the error message.
-string email_send ([[maybe_unused]] string to_mail,
-                   string to_name,
-                   string subject,
-                   string body,
-                   [[maybe_unused]] bool verbose)
+std::string email_send ([[maybe_unused]] std::string to_mail,
+                        std::string to_name,
+                        std::string subject,
+                        std::string body,
+                        [[maybe_unused]] bool verbose)
 {
   // Truncate huge emails because libcurl crashes on it.
   size_t length = body.length ();
   if (length > 100000) {
-    body = "This email was " + filter::strings::convert_to_string (length) + " bytes long. It was too long, and could not be sent.";
+    body = "This email was " + std::to_string (length) + " bytes long. It was too long, and could not be sent.";
   }
   
   // Deal with empty subject.
@@ -189,23 +188,23 @@ string email_send ([[maybe_unused]] string to_mail,
 #ifdef HAVE_CLIENT
 
   if (!client_logic_client_enabled ()) {
-    return "";
+    return std::string();
   }
 
   Webserver_Request webserver_request;
   Sync_Logic sync_logic (webserver_request);
 
-  map <string, string> post;
+  std::map <std::string, std::string> post;
   post ["n"] = filter::strings::bin2hex (to_name);
   post ["s"] = subject;
   post ["b"] = body;
 
-  string address = Database_Config_General::getServerAddress ();
-  int port = Database_Config_General::getServerPort ();
-  string url = client_logic_url (address, port, sync_mail_url ());
+  std::string address = database::config::general::get_server_address ();
+  int port = database::config::general::get_server_port ();
+  std::string url = client_logic_url (address, port, sync_mail_url ());
 
-  string error;
-  string response = sync_logic.post (post, url, error);
+  std::string error;
+  std::string response = sync_logic.post (post, url, error);
 
   if (!error.empty ()) {
     Database_Logs::log ("Failure sending email: " + error, Filter_Roles::guest ());
@@ -215,8 +214,8 @@ string email_send ([[maybe_unused]] string to_mail,
   
 #else
   
-  string from_mail = Database_Config_General::getSiteMailAddress ();
-  string from_name = Database_Config_General::getSiteMailName ();
+  std::string from_mail = database::config::general::get_site_mail_address ();
+  std::string from_name = database::config::general::get_site_mail_name ();
   
   CURL *curl;
   CURLcode res = CURLE_OK;
@@ -227,17 +226,17 @@ string email_send ([[maybe_unused]] string to_mail,
 
   int seconds = filter::date::seconds_since_epoch ();
   payload_text.clear();
-  string payload;
-  payload = "Date: " + filter::strings::convert_to_string (filter::date::numerical_year (seconds)) + "/" + filter::strings::convert_to_string (filter::date::numerical_month (seconds)) + "/" + filter::strings::convert_to_string (filter::date::numerical_month_day (seconds)) + " " + filter::strings::convert_to_string (filter::date::numerical_hour (seconds)) + ":" + filter::strings::convert_to_string (filter::date::numerical_minute (seconds)) + "\n";
+  std::string payload;
+  payload = "Date: " + std::to_string (filter::date::numerical_year (seconds)) + "/" + std::to_string (filter::date::numerical_month (seconds)) + "/" + std::to_string (filter::date::numerical_month_day (seconds)) + " " + std::to_string (filter::date::numerical_hour (seconds)) + ":" + std::to_string (filter::date::numerical_minute (seconds)) + "\n";
   payload_text.push_back (payload);
   payload = "To: <" + to_mail + "> " + to_name + "\n";
   payload_text.push_back (payload);
   payload = "From: <" + from_mail + "> " + from_name + "\n";
   payload_text.push_back (payload);
-  string site = from_mail;
+  std::string site = from_mail;
   size_t pos = site.find ("@");
   if (pos != std::string::npos) site = site.substr (pos);
-  payload = "Message-ID: <" + md5 (filter::strings::convert_to_string (filter::strings::rand (0, 1000000))) + site + ">\n";
+  payload = "Message-ID: <" + md5 (std::to_string (filter::strings::rand (0, 1000000))) + site + ">\n";
   payload_text.push_back (payload);
   payload = "Subject: " + subject + "\n";
   payload_text.push_back (payload);
@@ -262,7 +261,7 @@ string email_send ([[maybe_unused]] string to_mail,
   payload_text.push_back ("<meta charset=\"utf-8\" />\n");
   payload_text.push_back ("</head>\n");
   payload_text.push_back ("<body>\n");
-  vector <string> bodylines = filter::strings::explode (body, '\n');
+  std::vector <std::string> bodylines = filter::strings::explode (body, '\n');
   for (auto & line : bodylines) {
     if (filter::strings::trim (line).empty ()) payload_text.push_back (" ");
     else payload_text.push_back (line);
@@ -275,8 +274,8 @@ string email_send ([[maybe_unused]] string to_mail,
 
   curl = curl_easy_init();
   /* Set username and password */
-  string username = Database_Config_General::getMailSendUsername();
-  string password = Database_Config_General::getMailSendPassword();
+  std::string username = database::config::general::get_mail_send_username();
+  std::string password = database::config::general::get_mail_send_password();
   curl_easy_setopt(curl, CURLOPT_USERNAME, username.c_str());
   curl_easy_setopt(curl, CURLOPT_PASSWORD, password.c_str());
 
@@ -284,10 +283,10 @@ string email_send ([[maybe_unused]] string to_mail,
    * instead of the normal SMTP port (25). Port 587 is commonly used for
    * secure mail submission (see RFC4403), but you should use whatever
    * matches your server configuration. */
-  string smtp = "smtp://";
-  smtp.append (Database_Config_General::getMailSendHost());
+  std::string smtp = "smtp://";
+  smtp.append (database::config::general::get_mail_send_host());
   smtp.append (":");
-  string port = Database_Config_General::getMailSendPort();
+  std::string port = database::config::general::get_mail_send_port();
   smtp.append (port);
   curl_easy_setopt(curl, CURLOPT_URL, smtp.c_str());
 
@@ -347,7 +346,7 @@ string email_send ([[maybe_unused]] string to_mail,
   res = curl_easy_perform(curl);
 
   /* Check for errors */
-  string result;
+  std::string result;
   if (res != CURLE_OK) result = curl_easy_strerror (res);
 
   /* Free the list of recipients */
@@ -361,7 +360,7 @@ string email_send ([[maybe_unused]] string to_mail,
 }
 
 
-void email_schedule (string to, string subject, string body, int time)
+void email_schedule (std::string to, std::string subject, std::string body, int time)
 {
   // Schedule the mail for sending.
   Webserver_Request webserver_request;
@@ -375,7 +374,7 @@ void email_schedule (string to, string subject, string body, int time)
 // If the email sending and receiving has not yet been (completely) set up,
 // it returns information about that.
 // If everything's OK, it returns nothing.
-string email_setup_information (bool require_send, bool require_receive)
+std::string email_setup_information (bool require_send, bool require_receive)
 {
 #ifdef HAVE_CLIENT
   (void) require_send;
@@ -383,26 +382,26 @@ string email_setup_information (bool require_send, bool require_receive)
 #endif
 #ifdef HAVE_CLOUD
   bool incomplete = false;
-  if (Database_Config_General::getSiteMailName ().empty ()) incomplete = true;
-  if (Database_Config_General::getSiteMailAddress ().empty ()) incomplete = true;
+  if (database::config::general::get_site_mail_name ().empty ()) incomplete = true;
+  if (database::config::general::get_site_mail_address ().empty ()) incomplete = true;
   if (require_receive) {
-    if (Database_Config_General::getMailStorageHost ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailStorageUsername ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailStoragePassword ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailStorageProtocol ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailStoragePort ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_storage_host ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_storage_username ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_storage_password ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_storage_protocol ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_storage_port ().empty ()) incomplete = true;
   }
   if (require_send) {
-    if (Database_Config_General::getMailSendHost ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailSendUsername ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailSendPassword ().empty ()) incomplete = true;
-    if (Database_Config_General::getMailSendPort ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_send_host ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_send_username ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_send_password ().empty ()) incomplete = true;
+    if (database::config::general::get_mail_send_port ().empty ()) incomplete = true;
   }
   if (incomplete) {
-    string msg1 = translate ("Cannot send email yet.");
-    string msg2 = translate ("The emailer is not yet set up.");
+    std::string msg1 = translate ("Cannot send email yet.");
+    std::string msg2 = translate ("The emailer is not yet set up.");
     return msg1 + R"( <a href="../)" + email_index_url () + + R"(">)" + msg2 + "</a>";
   }
 #endif
-  return string();
+  return std::string();
 }

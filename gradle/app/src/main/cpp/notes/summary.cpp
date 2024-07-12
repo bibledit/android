@@ -31,10 +31,9 @@
 #include <access/bible.h>
 #include <ipc/focus.h>
 #include <notes/note.h>
-using namespace std;
 
 
-string notes_summary_url ()
+std::string notes_summary_url ()
 {
   return "notes/summary";
 }
@@ -46,31 +45,31 @@ bool notes_summary_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_summary (Webserver_Request& webserver_request)
+std::string notes_summary (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
 
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Note summary"), webserver_request);
   page += header.run ();
   Assets_View view;
 
 
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
   
   
   if (webserver_request.post.count ("submit")) {
-    string summary = webserver_request.post["entry"];
+    std::string summary = webserver_request.post["entry"];
     notes_logic.set_summary (id, summary);
-    redirect_browser (webserver_request, notes_note_url () + "?id=" + filter::strings::convert_to_string (id));
-    return "";
+    redirect_browser (webserver_request, notes_note_url () + "?id=" + std::to_string (id));
+    return std::string();
   }
   
   
-  string summary = database_notes.get_summary (id);
+  std::string summary = database_notes.get_summary (id);
   view.set_variable ("summary", filter::strings::escape_special_xml_characters (summary));
 
   

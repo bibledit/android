@@ -19,11 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include <database/check.h>
 #include <filter/url.h>
+#include <filter/passage.h>
 #include <filter/string.h>
 #include <config/globals.h>
 #include <database/sqlite.h>
+#include <database/check.h>
 #include <locale/translate.h>
-using namespace std;
 
 
 // Database resilience.
@@ -35,19 +36,19 @@ using namespace std;
 // before running setup.
 
 
-const char * Database_Check::filename ()
+constexpr const auto database_name {"check"};
+
+
+namespace database::check {
+
+
+void create ()
 {
-  return "check";
-}
-
-
-void Database_Check::create ()
-{
-  SqliteDatabase sql (filename ());
-
+  SqliteDatabase sql (database_name);
+  
   sql.add ("DROP TABLE IF EXISTS output;");
   sql.execute ();
-
+  
   sql.clear ();
   
   sql.add ("CREATE TABLE IF NOT EXISTS output2 ("
@@ -65,7 +66,7 @@ void Database_Check::create ()
   sql.execute ();
   
   sql.clear ();
-
+  
   sql.add ("CREATE TABLE IF NOT EXISTS suppress2 ("
            " bible text,"
            " book integer,"
@@ -77,17 +78,17 @@ void Database_Check::create ()
 }
 
 
-void Database_Check::optimize ()
+void optimize ()
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   sql.add ("VACUUM;");
   sql.execute ();
 }
 
 
-void Database_Check::truncateOutput (string bible)
+void truncate_output (const std::string& bible)
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   if (bible == "") {
     sql.add ("DELETE FROM output2;");
   } else {
@@ -99,9 +100,9 @@ void Database_Check::truncateOutput (string bible)
 }
 
 
-void Database_Check::recordOutput (string bible, int book, int chapter, int verse, string data)
+void record_output (const std::string& bible, int book, int chapter, int verse, std::string data)
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   int count = 0;
   // Check whether this is a suppressed item.
   // If it was suppressed, do not record it.
@@ -117,7 +118,7 @@ void Database_Check::recordOutput (string bible, int book, int chapter, int vers
   sql.add ("AND data = ");
   sql.add (data);
   sql.add (";");
-  vector <string> result = sql.query () ["count(*)"];
+  std::vector <std::string> result = sql.query () ["count(*)"];
   if (!result.empty ()) {
     count = filter::strings::convert_to_int (result [0]);
   }
@@ -129,7 +130,7 @@ void Database_Check::recordOutput (string bible, int book, int chapter, int vers
     sql.add ("AND data = ");
     sql.add (data);
     sql.add (";");
-    vector <string> count_result = sql.query () ["count(*)"];
+    std::vector <std::string> count_result = sql.query () ["count(*)"];
     if (!count_result.empty ()) {
       count = filter::strings::convert_to_int (count_result [0]);
     }
@@ -174,20 +175,20 @@ void Database_Check::recordOutput (string bible, int book, int chapter, int vers
 }
 
 
-vector <Database_Check_Hit> Database_Check::getHits ()
+std::vector <database::check::Hit> get_hits ()
 {
-  vector <Database_Check_Hit> hits;
-  SqliteDatabase sql (filename ());
+  std::vector <database::check::Hit> hits;
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT rowid, bible, book, chapter, verse, data FROM output2;");
-  map <string, vector <string> > result = sql.query ();
-  vector <string> rowids = result ["rowid"];
-  vector <string> bibles = result ["bible"];
-  vector <string> books = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> verses = result ["verse"];
-  vector <string> data = result ["data"];
+  std::map <std::string, std::vector <std::string> > result = sql.query ();
+  std::vector <std::string> rowids = result ["rowid"];
+  std::vector <std::string> bibles = result ["bible"];
+  std::vector <std::string> books = result ["book"];
+  std::vector <std::string> chapters = result ["chapter"];
+  std::vector <std::string> verses = result ["verse"];
+  std::vector <std::string> data = result ["data"];
   for (unsigned int i = 0; i < rowids.size(); i++) {
-    Database_Check_Hit hit = Database_Check_Hit ();
+    database::check::Hit hit = database::check::Hit ();
     hit.rowid = filter::strings::convert_to_int (rowids [i]);
     hit.bible = bibles [i];
     hit.book = filter::strings::convert_to_int (books [i]);
@@ -200,10 +201,10 @@ vector <Database_Check_Hit> Database_Check::getHits ()
 }
 
 
-void Database_Check::approve (int id)
+void approve (int id)
 {
   // The query moves all values, apart from the auto_increment id.
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   sql.add ("INSERT INTO suppress2 (bible, book, chapter, verse, data) SELECT bible, book, chapter, verse, data FROM output2 WHERE rowid =");
   sql.add (id);
   sql.add (";");
@@ -216,9 +217,9 @@ void Database_Check::approve (int id)
 }
 
 
-void Database_Check::erase (int id)
+void erase (int id)
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   sql.add ("DELETE FROM output2 WHERE rowid =");
   sql.add (id);
   sql.add (";");
@@ -226,16 +227,16 @@ void Database_Check::erase (int id)
 }
 
 
-Passage Database_Check::getPassage (int id)
+Passage get_passage (int id)
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT book, chapter, verse FROM output2 WHERE rowid =");
   sql.add (id);
   sql.add (";");
-  map <string, vector <string> > result = sql.query ();
-  vector <string> books = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> verses = result ["verse"];
+  std::map <std::string, std::vector <std::string> > result = sql.query ();
+  std::vector <std::string> books = result ["book"];
+  std::vector <std::string> chapters = result ["chapter"];
+  std::vector <std::string> verses = result ["verse"];
   if (!books.empty()) {
     Passage passage = Passage ("", filter::strings::convert_to_int (books[0]), filter::strings::convert_to_int (chapters[0]), verses[0]);
     return passage;
@@ -244,20 +245,20 @@ Passage Database_Check::getPassage (int id)
 }
 
 
-vector <Database_Check_Hit> Database_Check::getSuppressions ()
+std::vector <database::check::Hit> get_suppressions ()
 {
-  SqliteDatabase sql (filename ());
-  vector <Database_Check_Hit> hits;
+  SqliteDatabase sql (database_name);
+  std::vector <database::check::Hit> hits;
   sql.add ("SELECT rowid, bible, book, chapter, verse, data FROM suppress2;");
-  map <string, vector <string> > result = sql.query ();
-  vector <string> rowids = result ["rowid"];
-  vector <string> bibles = result ["bible"];
-  vector <string> books = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> verses = result ["verse"];
-  vector <string> data = result ["data"];
+  std::map <std::string, std::vector <std::string> > result = sql.query ();
+  std::vector <std::string> rowids = result ["rowid"];
+  std::vector <std::string> bibles = result ["bible"];
+  std::vector <std::string> books = result ["book"];
+  std::vector <std::string> chapters = result ["chapter"];
+  std::vector <std::string> verses = result ["verse"];
+  std::vector <std::string> data = result ["data"];
   for (unsigned int i = 0; i < rowids.size(); i++) {
-    Database_Check_Hit hit = Database_Check_Hit ();
+    database::check::Hit hit = database::check::Hit ();
     hit.rowid = filter::strings::convert_to_int (rowids [i]);
     hit.bible = bibles [i];
     hit.book = filter::strings::convert_to_int (books [i]);
@@ -270,9 +271,9 @@ vector <Database_Check_Hit> Database_Check::getSuppressions ()
 }
 
 
-void Database_Check::release (int id)
+void release (int id)
 {
-  SqliteDatabase sql (filename ());
+  SqliteDatabase sql (database_name);
   sql.add ("INSERT INTO output2 (bible, book, chapter, verse, data) SELECT bible, book, chapter, verse, data FROM suppress2 WHERE rowid =");
   sql.add (id);
   sql.add (";");
@@ -284,3 +285,5 @@ void Database_Check::release (int id)
   sql.execute ();
 }
 
+
+} // Namespace.

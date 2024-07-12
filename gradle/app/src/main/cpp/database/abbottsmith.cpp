@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/url.h>
 #include <filter/string.h>
 #include <database/sqlite.h>
-using namespace std;
 
 
 // This is the database that contains Abbott-Smith's Manual Greek Lexicon.
@@ -29,43 +28,47 @@ using namespace std;
 // Chances of corruption are nearly zero.
 
 
-const char * Database_AbbottSmith::filename ()
-{
-  return "abbottsmith";
-}
+namespace database::abboth_smith {
 
 
-void Database_AbbottSmith::create ()
+constexpr const auto filename {"abbottsmith"};
+
+
+void create ()
 {
-  filter_url_unlink (database_sqlite_file (filename ()));
+  filter_url_unlink (database::sqlite::get_file (filename));
   
-  SqliteDatabase sql = SqliteDatabase (filename ());
-
+  SqliteDatabase sql (filename);
+  
   sql.clear ();
   sql.add ("CREATE TABLE IF NOT EXISTS entry (lemma text, lemmacf text, strong text, contents string);");
   sql.execute ();
 }
 
 
-void Database_AbbottSmith::optimize ()
+void optimize ()
 {
-  SqliteDatabase sql = SqliteDatabase (filename ());
+  SqliteDatabase sql (filename);
   sql.add ("VACUUM;");
   sql.execute ();
 }
 
 
-void Database_AbbottSmith::store (string lemma, string lemma_casefold, string strong, string contents)
+void store (const std::string& lemma, const std::string& lemma_casefold,
+            const std::string& strong, const std::string& contents)
 {
-  SqliteDatabase sql = SqliteDatabase (filename ());
+  SqliteDatabase sql (filename);
   sql.add ("PRAGMA temp_store = MEMORY;");
   sql.execute ();
+  
   sql.clear ();
   sql.add ("PRAGMA synchronous = OFF;");
   sql.execute ();
+  
   sql.clear ();
   sql.add ("PRAGMA journal_mode = OFF;");
   sql.execute ();
+  
   sql.clear ();
   sql.add ("INSERT INTO entry (lemma, lemmacf, strong, contents) VALUES (");
   sql.add (lemma);
@@ -80,10 +83,10 @@ void Database_AbbottSmith::store (string lemma, string lemma_casefold, string st
 }
 
 
-string Database_AbbottSmith::get (string lemma, string strong)
+std::string get (const std::string& lemma, const std::string& strong)
 {
-  string contents;
-  SqliteDatabase sql = SqliteDatabase (filename ());
+  std::string contents;
+  SqliteDatabase sql (filename);
   sql.add ("SELECT contents FROM entry WHERE");
   if (lemma.empty()) {
     // No lemma: Select on Strong's number only.
@@ -102,8 +105,11 @@ string Database_AbbottSmith::get (string lemma, string strong)
     sql.add (strong);
   }
   sql.add (";");
-  vector <string> results = sql.query () ["contents"];
-  for (auto result : results) contents.append (result);
+  const std::vector <std::string> results = sql.query () ["contents"];
+  for (const auto& result : results)
+    contents.append (result);
   return contents;
 }
 
+
+}

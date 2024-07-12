@@ -84,7 +84,7 @@ namespace filter::strings {
 
 // Split a string on a delimiter.
 // Return a vector of strings.
-std::vector <std::string> explode (std::string value, char delimiter)
+std::vector <std::string> explode (const std::string& value, char delimiter)
 {
   std::vector <std::string> result;
   std::istringstream iss (value);
@@ -97,7 +97,7 @@ std::vector <std::string> explode (std::string value, char delimiter)
 
 
 // Explodes an input string on multiple delimiters.
-std::vector <std::string> explode (std::string value, std::string delimiters)
+std::vector <std::string> explode (std::string value, const std::string& delimiters)
 {
   std::vector <std::string> result {};
   while (!value.empty ()) {
@@ -106,8 +106,9 @@ std::vector <std::string> explode (std::string value, std::string delimiters)
       result.push_back (value);
       value.clear ();
     } else {
-      std::string s {value.substr (0, pos)};
-      if (!s.empty()) result.push_back (s);
+      const std::string s {value.substr (0, pos)};
+      if (!s.empty())
+        result.push_back (s);
       pos++;
       value.erase (0, pos);
     }
@@ -118,13 +119,14 @@ std::vector <std::string> explode (std::string value, std::string delimiters)
 
 // Join a vector of string, with delimiters, into a string.
 // Return this string.
-std::string implode (std::vector <std::string>& values, std::string delimiter)
+std::string implode (const std::vector <std::string>& values, std::string delimiter)
 {
   std::string full {};
-  for (std::vector<std::string>::iterator it = values.begin (); it != values.end (); ++it)
+  for (auto iter = values.cbegin (); iter != values.cend (); ++iter)
   {
-    full += (*it);
-    if (it != values.end ()-1) full += delimiter;
+    full.append(*iter);
+    if (iter != values.cend ()-1)
+      full.append (delimiter);
   }
   return full;
 }
@@ -157,29 +159,6 @@ bool replace_between (std::string& line, const std::string& start, const std::st
     replacements_done = true;
   }
   return replacements_done;
-}
-
-
-// On some platforms the sizeof (unsigned int) is equal to the sizeof (size_t).
-// Then compilation would fail if there were two functions "convert_to_string",
-// one taking the unsigned int, and the other taking the size_t.
-// Therefore there is now one function doing both.
-// This may lead to embiguity errors for the C++ compiler.
-// In such case the ambiguity can be removed by changing the type to be passed
-// to this function to "size_t", possibly via a static_cast.
-std::string convert_to_string (const size_t i)
-{
-  std::ostringstream r;
-  r << i;
-  return r.str();
-}
-
-
-std::string convert_to_string (const int i)
-{
-  std::ostringstream r;
-  r << i;
-  return r.str();
 }
 
 
@@ -256,7 +235,8 @@ bool convert_to_bool (const std::string& s)
 
 std::string convert_to_true_false (const bool b)
 {
-  if (b) return "true";
+  if (b) 
+    return "true";
   return "false";
 }
 
@@ -624,7 +604,7 @@ std::string unicode_string_casefold (const std::string& s)
    // Case folding.
    source.foldCase ();
    // UTF-16 UnicodeString -> UTF-8 std::string
-   string result;
+   std::string result;
    source.toUTF8String (result);
    // Ready.
    return result;
@@ -664,7 +644,7 @@ std::string unicode_string_uppercase (const std::string& s)
    How to do the above through the ICU library.
    UnicodeString source = UnicodeString::fromUTF8 (StringPiece (s));
    source.toUpper ();
-   string result;
+   std::string result;
    source.toUTF8String (result);
    return result;
    */
@@ -704,7 +684,7 @@ std::string unicode_string_transliterate (const std::string& s)
    transliterator->transliterate(source);
    
    // UTF-16 UnicodeString -> UTF-8 std::string
-   string result;
+   std::string result;
    source.toUTF8String (result);
    
    // Done.
@@ -1045,7 +1025,7 @@ std::string extract_body (const std::string& input, std::string year, std::strin
 std::string get_checkbox_status (const bool enabled)
 {
   if (enabled) return "checked";
-  return "";
+  return std::string();
 }
 
 
@@ -1421,9 +1401,9 @@ std::vector <std::string> search_needles (const std::string& search, const std::
 // Returns an integer identifier based on the name of the current user.
 int user_identifier (Webserver_Request& webserver_request)
 {
-  const std::string username = webserver_request.session_logic()->currentUser ();
+  const std::string& username = webserver_request.session_logic()->get_username ();
   const std::string hash = md5 (username).substr (0, 5);
-  const int identifier = config::logic::my_stoi (hash, nullptr, 36);
+  const int identifier = std::stoi (hash, nullptr, 36);
   return identifier;
 }
 
@@ -1453,7 +1433,7 @@ std::string hex2bin (const std::string& hex)
     for (std::string::const_iterator pos = hex.begin(); pos < hex.end(); pos += 2)
     {
       extract.assign (pos, pos+2);
-      out.push_back (static_cast<char> (config::logic::my_stoi (extract, nullptr, 16)));
+      out.push_back (static_cast<char> (std::stoi (extract, nullptr, 16)));
     }
   }
   return out;
@@ -1558,9 +1538,9 @@ std::string encrypt_decrypt (std::string key, std::string data)
 // Gets a new random string for sessions, encryption, you name it.
 std::string get_new_random_string ()
 {
-  const std::string u = filter::strings::convert_to_string (filter::date::numerical_microseconds ());
-  const std::string s = filter::strings::convert_to_string (filter::date::seconds_since_epoch ());
-  const std::string r = filter::strings::convert_to_string (config_globals_int_distribution (config_globals_random_engine));
+  const std::string u = std::to_string (filter::date::numerical_microseconds ());
+  const std::string s = std::to_string (filter::date::seconds_since_epoch ());
+  const std::string r = std::to_string (config_globals_int_distribution (config_globals_random_engine));
   return md5 (u + s + r);
 }
 
@@ -1748,7 +1728,7 @@ std::string html_get_element (std::string html, std::string element)
 
 
 /*
- string filter_string_tidy_invalid_html_leaking (string html)
+ string filter_string_tidy_invalid_html_leaking (std::string html)
  {
  // Everything in the <head> can be left out: It is not relevant.
  filter::strings::replace_between (html, "<head>", "</head>", "");
@@ -1818,6 +1798,7 @@ static std::string substitute_xml_entities_into_text(const std::string& text)
 }
 
 
+#ifdef HAVE_CLOUD
 static std::string substitute_xml_entities_into_attributes(const char quote, const std::string& text)
 {
   std::string result {substitute_xml_entities_into_text (text)};
@@ -1829,6 +1810,7 @@ static std::string substitute_xml_entities_into_attributes(const char quote, con
   }
   return result;
 }
+#endif
 
 
 #ifdef HAVE_CLOUD

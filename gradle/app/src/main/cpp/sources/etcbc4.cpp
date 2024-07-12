@@ -33,18 +33,15 @@
 #include <pugixml.hpp>
 #endif
 #pragma GCC diagnostic pop
-using namespace std;
-using namespace pugi;
 
 
 void sources_etcbc4_download ()
 {
   Database_Logs::log ("Start to download the raw Hebrew morphology data from the ETCBC4 database");
-  Database_Etcbc4 database_etcbc4;
-  database_etcbc4.create ();
+  database::etcbc4::create ();
   
   // The book names for downloading data.
-  vector <string> books = {
+  std::vector <std::string> books = {
     "Genesis",
     "Exodus",
     "Leviticus",
@@ -89,7 +86,7 @@ void sources_etcbc4_download ()
   for (size_t bk = 0; bk < books.size (); bk++) {
 
     int book = static_cast<int>(bk + 1);
-    string bookname = books[bk];
+    std::string bookname = books[bk];
 
     bool book_done = false;
     for (int chapter = 1; chapter <= 150; chapter++) {
@@ -98,13 +95,13 @@ void sources_etcbc4_download ()
       for (int verse = 1; verse < 200; verse++) {
         if (book_done) continue;
 
-        string data = database_etcbc4.raw (book, chapter, verse);
+        std::string data = database::etcbc4::raw (book, chapter, verse);
         if (!data.empty ()) continue;
         
-        string url = "https://shebanq.ancient-data.org/hebrew/verse?version=4b&book=" + bookname + "&chapter=" + filter::strings::convert_to_string (chapter) + "&verse=" + filter::strings::convert_to_string (verse);
+        std::string url = "https://shebanq.ancient-data.org/hebrew/verse?version=4b&book=" + bookname + "&chapter=" + std::to_string (chapter) + "&verse=" + std::to_string (verse);
 
-        string error;
-        string response = filter_url_http_get (url, error, false);
+        std::string error;
+        std::string response = filter_url_http_get (url, error, false);
         if (!error.empty ()) {
           Database_Logs::log (error);
           continue;
@@ -113,10 +110,10 @@ void sources_etcbc4_download ()
           if (verse == 1) book_done = true;
           break;
         }
-        Database_Logs::log (bookname + " " + filter::strings::convert_to_string (chapter) + "." + filter::strings::convert_to_string (verse));
-        database_etcbc4.store (book, chapter, verse, response);
+        Database_Logs::log (bookname + " " + std::to_string (chapter) + "." + std::to_string (verse));
+        database::etcbc4::store (book, chapter, verse, response);
         // Wait a second: Be polite: Do not overload the website.
-        this_thread::sleep_for (chrono::seconds (1));
+        std::this_thread::sleep_for (std::chrono::seconds (1));
       }
     }
   }
@@ -125,7 +122,7 @@ void sources_etcbc4_download ()
 }
 
 
-string sources_etcbc4_clean (string item)
+std::string sources_etcbc4_clean (std::string item)
 {
   item = filter::strings::replace ("/", "", item);
   item = filter::strings::replace ("]", "", item);
@@ -141,58 +138,57 @@ string sources_etcbc4_clean (string item)
 void sources_etcbc4_parse ()
 {
   Database_Logs::log ("Parsing data from the ETCBC4 database");
-  Database_Etcbc4 database_etcbc4;
-  database_etcbc4.create ();
-  vector <int> books = database_etcbc4.books ();
+  database::etcbc4::create ();
+  const std::vector <int> books = database::etcbc4::books ();
   for (auto book : books) {
-    vector <int> chapters = database_etcbc4.chapters (book);
+    const std::vector <int> chapters = database::etcbc4::chapters (book);
     for (auto chapter : chapters) {
-      Database_Logs::log ("Parsing book " + filter::strings::convert_to_string (book) + " chapter " + filter::strings::convert_to_string (chapter));
-      vector <int> verses = database_etcbc4.verses (book, chapter);
+      Database_Logs::log ("Parsing book " + std::to_string (book) + " chapter " + std::to_string (chapter));
+      std::vector <int> verses = database::etcbc4::verses (book, chapter);
       for (auto verse : verses) {
         // The raw data for the verse.
-        string data = database_etcbc4.raw (book, chapter, verse);
+        std::string data = database::etcbc4::raw (book, chapter, verse);
         if (data.empty ()) continue;
         data = filter::strings::replace (filter::strings::unicode_non_breaking_space_entity (), "", data);
         // Parse the data.
-        xml_document document;
+        pugi::xml_document document;
         document.load_string (data.c_str());
         // Iterate through the <table> elements, one element per word or word fragment.
-        for (xml_node table : document.children()) {
+        for (pugi::xml_node table : document.children()) {
           // The relevant grammatical information to be extracted from the data.
-          string word;
-          string vocalized_lexeme;
-          string consonantal_lexeme;
-          string gloss;
-          string pos;
-          string subpos;
-          string gender;
-          string number;
-          string person;
-          string state;
-          string tense;
-          string stem;
-          string phrase_function;
-          string phrase_type;
-          string phrase_relation;
-          string phrase_a_relation;
-          string clause_text_type;
-          string clause_type;
-          string clause_relation;
+          std::string word;
+          std::string vocalized_lexeme;
+          std::string consonantal_lexeme;
+          std::string gloss;
+          std::string pos;
+          std::string subpos;
+          std::string gender;
+          std::string number;
+          std::string person;
+          std::string state;
+          std::string tense;
+          std::string stem;
+          std::string phrase_function;
+          std::string phrase_type;
+          std::string phrase_relation;
+          std::string phrase_a_relation;
+          std::string clause_text_type;
+          std::string clause_type;
+          std::string clause_relation;
           // Iterate through the <tr> elements.
           // Each element contains one or more table cells with information.
-          for (xml_node tr : table.children ()) {
+          for (pugi::xml_node tr : table.children ()) {
             // Iterate through the <td> elements.
-            for (xml_node td : tr.children ()) {
+            for (pugi::xml_node td : tr.children ()) {
               // Iterate through the one or more <span> elements within this table cell.
               // Each <span> elements has a grammatical tag.
-              for (xml_node span : td.children ()) {
+              for (pugi::xml_node span : td.children ()) {
                 // Get the text this <span> contains.
-                xml_node txtnode = span.first_child ();
-                string value = txtnode.text ().get ();
+                pugi::xml_node txtnode = span.first_child ();
+                std::string value = txtnode.text ().get ();
                 value = sources_etcbc4_clean (value);
                 // The class of the <span> element indicates what kind of grammatical tag it has.
-                string clazz = span.attribute ("class").value ();
+                std::string clazz = span.attribute ("class").value ();
                 if (clazz == "ht") word = value;
                 if (clazz.find ("hl_hlv") != std::string::npos) vocalized_lexeme = value;
                 if (clazz.find ("hl_hlc") != std::string::npos) consonantal_lexeme = value;
@@ -216,12 +212,12 @@ void sources_etcbc4_parse ()
             }
           }
           // The table element has been done: Store it.
-          database_etcbc4.store (book, chapter, verse,
-                                 word, vocalized_lexeme, consonantal_lexeme, gloss, pos, subpos,
-                                 gender, number, person,
-                                 state, tense, stem,
-                                 phrase_function, phrase_type, phrase_relation,
-                                 phrase_a_relation, clause_text_type, clause_type, clause_relation);
+          database::etcbc4::store (book, chapter, verse,
+                                   word, vocalized_lexeme, consonantal_lexeme, gloss, pos, subpos,
+                                   gender, number, person,
+                                   state, tense, stem,
+                                   phrase_function, phrase_type, phrase_relation,
+                                   phrase_a_relation, clause_text_type, clause_type, clause_relation);
         }
       }
     }

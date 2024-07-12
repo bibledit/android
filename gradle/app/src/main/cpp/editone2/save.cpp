@@ -39,10 +39,9 @@
 #include <developer/logic.h>
 #include <rss/logic.h>
 #include <sendreceive/logic.h>
-using namespace std;
 
 
-string editone2_save_url ()
+std::string editone2_save_url ()
 {
   return "editone2/save";
 }
@@ -57,7 +56,7 @@ bool editone2_save_acl (Webserver_Request& webserver_request)
 }
 
 
-string editone2_save (Webserver_Request& webserver_request)
+std::string editone2_save (Webserver_Request& webserver_request)
 {
   // Check on information about where to save the verse.
   bool save = (webserver_request.post.count ("bible") && webserver_request.post.count ("book") && webserver_request.post.count ("chapter") && webserver_request.post.count ("verse") && webserver_request.post.count ("html"));
@@ -66,13 +65,13 @@ string editone2_save (Webserver_Request& webserver_request)
   }
 
   
-  string bible = webserver_request.post["bible"];
+  std::string bible = webserver_request.post["bible"];
   int book = filter::strings::convert_to_int (webserver_request.post["book"]);
   int chapter = filter::strings::convert_to_int (webserver_request.post["chapter"]);
   int verse = filter::strings::convert_to_int (webserver_request.post["verse"]);
-  string html = webserver_request.post["html"];
-  string checksum = webserver_request.post["checksum"];
-  string unique_id = webserver_request.post ["id"];
+  std::string html = webserver_request.post["html"];
+  std::string checksum = webserver_request.post["checksum"];
+  std::string unique_id = webserver_request.post ["id"];
 
   
   // Checksum.
@@ -99,23 +98,23 @@ string editone2_save (Webserver_Request& webserver_request)
   }
   
   
-  if (!access_bible::book_write (webserver_request, string(), bible, book)) {
+  if (!access_bible::book_write (webserver_request, std::string(), bible, book)) {
     return translate ("No write access");
   }
 
   
-  string stylesheet = Database_Config_Bible::getEditorStylesheet (bible);
+  const std::string stylesheet = database::config::bible::get_editor_stylesheet (bible);
  
   
-  string verse_usfm = editone_logic_html_to_usfm (stylesheet, html);
+  std::string verse_usfm = editone_logic_html_to_usfm (stylesheet, html);
 
   
   // Collect some data about the changes for this user.
-  string username = webserver_request.session_logic()->currentUser ();
+  const std::string& username = webserver_request.session_logic ()->get_username ();
 #ifdef HAVE_CLOUD
-  int oldID = webserver_request.database_bibles()->get_chapter_id (bible, book, chapter);
+  int oldID = database::bibles::get_chapter_id (bible, book, chapter);
 #endif
-  string old_chapter_usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+  std::string old_chapter_usfm = database::bibles::get_chapter (bible, book, chapter);
 
   
   // If the most recent save operation on this chapter
@@ -126,36 +125,35 @@ string editone2_save (Webserver_Request& webserver_request)
   // it's worth to check on this.
   // Because the user's editor may not yet have loaded this updated Bible text.
   // https://github.com/bibledit/cloud/issues/340
-  string loaded_usfm = getLoadedUsfm2 (webserver_request, bible, book, chapter, unique_id);
+  std::string loaded_usfm = getLoadedUsfm2 (webserver_request, bible, book, chapter, unique_id);
   if (loaded_usfm != old_chapter_usfm) {
     bible_logic::recent_save_email (bible, book, chapter, username, loaded_usfm, old_chapter_usfm);
   }
 
   
   // Safely store the verse.
-  string explanation;
-  string message = filter::usfm::safely_store_verse (webserver_request, bible, book, chapter, verse, verse_usfm, explanation, true);
+  std::string explanation;
+  std::string message = filter::usfm::safely_store_verse (webserver_request, bible, book, chapter, verse, verse_usfm, explanation, true);
   bible_logic::unsafe_save_mail (message, explanation, username, verse_usfm, book, chapter);
   // If storing the verse worked out well, there's no message to display.
   if (message.empty ()) {
     // Get the chapter text now, that is, after the save operation completed.
-    string new_chapter_usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+    std::string new_chapter_usfm = database::bibles::get_chapter (bible, book, chapter);
     // Check whether the text on disk was changed while the user worked with the older copy.
     if (!loaded_usfm.empty () && (loaded_usfm != old_chapter_usfm)) {
       // Do a merge for better editing reliability.
-      vector <Merge_Conflict> conflicts;
+      std::vector <Merge_Conflict> conflicts;
       // Prioritize the USFM already in the chapter.
       new_chapter_usfm = filter_merge_run (loaded_usfm, new_chapter_usfm, old_chapter_usfm, true, conflicts);
-      webserver_request.database_bibles()->store_chapter (bible, book, chapter, new_chapter_usfm);
+      database::bibles::store_chapter (bible, book, chapter, new_chapter_usfm);
       Database_Logs::log (translate ("Merging chapter."));
     }
 #ifdef HAVE_CLOUD
     // The Cloud stores details of the user's changes.
-    int newID = webserver_request.database_bibles()->get_chapter_id (bible, book, chapter);
-    Database_Modifications database_modifications;
-    database_modifications.recordUserSave (username, bible, book, chapter, oldID, old_chapter_usfm, newID, new_chapter_usfm);
+    int newID = database::bibles::get_chapter_id (bible, book, chapter);
+    database::modifications::recordUserSave (username, bible, book, chapter, oldID, old_chapter_usfm, newID, new_chapter_usfm);
     if (sendreceive_git_repository_linked (bible)) {
-      Database_Git::store_chapter (username, bible, book, chapter, old_chapter_usfm, new_chapter_usfm);
+      database::git::store_chapter (username, bible, book, chapter, old_chapter_usfm, new_chapter_usfm);
     }
     rss_logic_schedule_update (username, bible, book, chapter, old_chapter_usfm, new_chapter_usfm);
 #endif

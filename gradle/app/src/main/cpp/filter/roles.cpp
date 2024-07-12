@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/roles.h>
 #include <locale/translate.h>
 #include <webserver/request.h>
-using namespace std;
 
 
 int Filter_Roles::guest ()
@@ -71,7 +70,7 @@ int Filter_Roles::highest ()
 }
 
 
-string Filter_Roles::english (int role)
+std::string Filter_Roles::english (int role)
 {
   if (role == admin ()) return "Administrator";
   if (role == manager ()) return "Manager";
@@ -82,13 +81,18 @@ string Filter_Roles::english (int role)
 }
 
 
-string Filter_Roles::text (int role)
+std::string Filter_Roles::text (int role)
 {
-  if (role == admin ()) return translate ("Administrator");
-  if (role == manager ()) return translate ("Manager");
-  if (role == translator ()) return translate ("Translator");
-  if (role == consultant ())return translate ("Consultant");
-  if (role == member ()) return translate ("Member");
+  if (role == admin ()) 
+    return translate ("Administrator");
+  if (role == manager ()) 
+    return translate ("Manager");
+  if (role == translator ()) 
+    return translate ("Translator");
+  if (role == consultant ())
+    return translate ("Consultant");
+  if (role == member ()) 
+    return translate ("Member");
   return translate ("Guest");
 }
 
@@ -97,7 +101,6 @@ string Filter_Roles::text (int role)
 // The "role" is the role required for the user to have access.
 bool Filter_Roles::access_control (Webserver_Request& webserver_request, int role)
 {
-  int level = webserver_request.session_logic ()->currentLevel ();
+  int level = webserver_request.session_logic ()->get_level ();
   return level >= role;
 }
-

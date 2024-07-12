@@ -26,46 +26,43 @@
 #include <database/config/bible.h>
 #include <styles/logic.h>
 #include <locale/translate.h>
-using namespace std;
 
 
-void checks_verses::missing_punctuation_at_end (const string & bible, int book, int chapter,
-                                                const map <int, string> & verses,
-                                                const string & center_marks, const string & end_marks,
-                                                const string & disregards)
+void checks_verses::missing_punctuation_at_end (const std::string& bible, int book, int chapter,
+                                                const std::map <int, std::string> & verses,
+                                                const std::string& center_marks, const std::string& end_marks,
+                                                const std::string& disregards)
 {
-  const vector <string> centermarks = filter::strings::explode (center_marks, ' ');
-  const vector <string> endmarks = filter::strings::explode (end_marks, ' ');
-  const vector <string> ignores = filter::strings::explode (disregards, ' ');
-  Database_Check database_check {};
+  const std::vector <std::string> centermarks = filter::strings::explode (center_marks, ' ');
+  const std::vector <std::string> endmarks = filter::strings::explode (end_marks, ' ');
+  const std::vector <std::string> ignores = filter::strings::explode (disregards, ' ');
   for (const auto & element : verses) {
     int verse = element.first;
-    string text = element.second;
+    std::string text = element.second;
     if (verse == 0) continue;
     if (text.empty ()) continue;
     for (const auto & ignore_text : ignores) {
-      text = filter::strings::replace (ignore_text, string(), text);
+      text = filter::strings::replace (ignore_text, std::string(), text);
     }
     const size_t text_length = filter::strings::unicode_string_length (text);
-    const string lastCharacter = filter::strings::unicode_string_substr (text, text_length - 1, 1);
+    const std::string lastCharacter = filter::strings::unicode_string_substr (text, text_length - 1, 1);
     if (in_array (lastCharacter, centermarks)) continue;
     if (in_array (lastCharacter, endmarks)) continue;
-    database_check.recordOutput (bible, book, chapter, verse, translate ("No punctuation at end of verse:") + " " + lastCharacter);
+    database::check::record_output (bible, book, chapter, verse, translate ("No punctuation at end of verse:") + " " + lastCharacter);
   }
 }
 
 
-void checks_verses::patterns (const string & bible, int book, int chapter,
-                              const map <int, string> & verses, const vector <string> & patterns)
+void checks_verses::patterns (const std::string& bible, int book, int chapter,
+                              const std::map <int, std::string> & verses, const std::vector <std::string> & patterns)
 {
-  Database_Check database_check {};
   for (const auto & element : verses) {
     const int verse = element.first;
-    const string text = element.second;
+    const std::string text = element.second;
     for (const auto & pattern : patterns) {
       if (pattern.empty ()) continue;
       if (text.find (pattern) != std::string::npos) {
-        database_check.recordOutput (bible, book, chapter, verse, translate ("Pattern found in text:") + " " + pattern);
+        database::check::record_output (bible, book, chapter, verse, translate ("Pattern found in text:") + " " + pattern);
       }
     }
   }

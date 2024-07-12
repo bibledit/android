@@ -24,10 +24,9 @@
 #include <webserver/request.h>
 #include <editor/styles.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string edit_styles_url ()
+std::string edit_styles_url ()
 {
   return "edit/styles";
 }
@@ -42,12 +41,12 @@ bool edit_styles_acl (Webserver_Request& webserver_request)
 }
 
 
-string edit_styles (Webserver_Request& webserver_request)
+std::string edit_styles (Webserver_Request& webserver_request)
 {
   if (webserver_request.query.count ("style")) {
-    string style = webserver_request.query["style"];
+    std::string style = webserver_request.query["style"];
     Editor_Styles::recordUsage (webserver_request, style);
-    string action = Editor_Styles::getAction (webserver_request, style);
+    std::string action = Editor_Styles::getAction (webserver_request, style);
     return style + "\n" + action;
   }
   

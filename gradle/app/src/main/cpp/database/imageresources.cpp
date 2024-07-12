@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <database/sqlite.h>
 #include <webserver/request.h>
 #include <database/logic.h>
-using namespace std;
 
 
 // Database resilience: 
@@ -31,66 +30,63 @@ using namespace std;
 // That should be resilient enough.
 
 
-string Database_ImageResources::mainFolder ()
+std::string Database_ImageResources::mainFolder ()
 {
   return filter_url_create_root_path ({database_logic_databases (), "imageresources"});
 }
 
 
-string Database_ImageResources::resourceFolder (const string& name)
+std::string Database_ImageResources::resourceFolder (const std::string& name)
 {
   return filter_url_create_path ({mainFolder (), name});
 }
 
 
-string Database_ImageResources::imagePath (string name, string image)
+std::string Database_ImageResources::imagePath (std::string name, std::string image)
 {
   return filter_url_create_path ({resourceFolder (name), image});
 }
 
 
-string Database_ImageResources::databaseFile ()
+std::string Database_ImageResources::databaseFile ()
 {
   return "passages.sqlite";
 }
 
 
-sqlite3 * Database_ImageResources::connect (string name)
+std::string Database_ImageResources::database_path (const std::string& name)
 {
-  string path = filter_url_create_path ({resourceFolder (name), databaseFile ()});
-  return database_sqlite_connect (path);
+  return filter_url_create_path ({resourceFolder (name), databaseFile ()});
 }
 
 
-vector <string> Database_ImageResources::names ()
+std::vector <std::string> Database_ImageResources::names ()
 {
   return filter_url_scandir (mainFolder ());
 }
 
 
-void Database_ImageResources::create (string name)
+void Database_ImageResources::create (std::string name)
 {
   // Create folder to store the images.
-  string path = resourceFolder (name);
+  std::string path = resourceFolder (name);
   filter_url_unlink (path);
   filter_url_mkdir (path);
 
   // Create the passages database.
-  sqlite3 * db = connect (name);
-  string sql =
-  "CREATE TABLE IF NOT EXISTS passages ("
-  " start integer,"
-  " end integer,"
-  " image text"
-  ");";
-  database_sqlite_exec (db, sql);
-  database_sqlite_disconnect (db);
+  SqliteDatabase sql (database_path(name));
+  sql.set_sql ("CREATE TABLE IF NOT EXISTS passages ("
+               " start integer,"
+               " end integer,"
+               " image text"
+               ");");
+  sql.execute ();
 }
 
 
-void Database_ImageResources::erase (string name)
+void Database_ImageResources::erase (std::string name)
 {
-  string path = resourceFolder (name);
+  std::string path = resourceFolder (name);
   // If a folder: Delete it.
   filter_url_rmdir (path);
   // If a file: Delete it.
@@ -98,27 +94,23 @@ void Database_ImageResources::erase (string name)
 }
 
 
-void Database_ImageResources::erase (string name, string image)
+void Database_ImageResources::erase (std::string name, std::string image)
 {
   filter_url_unlink (imagePath (name, image));
-  sqlite3 * db = connect (name);
-  {
-    SqliteSQL sql = SqliteSQL ();
-    sql.add ("DELETE FROM passages WHERE image =");
-    sql.add (image);
-    sql.add (";");
-    database_sqlite_exec (db, sql.sql);
-  }
-  database_sqlite_disconnect (db);
+  SqliteDatabase sql (database_path(name));
+  sql.add ("DELETE FROM passages WHERE image =");
+  sql.add (image);
+  sql.add (";");
+  sql.execute ();
 }
 
 
 // Moves $file (path to an image file) into the database.
-string Database_ImageResources::store (string name, string file)
+std::string Database_ImageResources::store (std::string name, std::string file)
 {
-  string folder = resourceFolder (name);
-  string image = filter_url_basename (file);
-  string path;
+  std::string folder = resourceFolder (name);
+  std::string image = filter_url_basename (file);
+  std::string path;
   bool exists = false;
   do {
     path = filter_url_create_path ({folder, image});
@@ -132,63 +124,56 @@ string Database_ImageResources::store (string name, string file)
 
 // Assign a passage range to the $image.
 // It means that this image contains text for the passage range.
-void Database_ImageResources::assign (string name, string image,
+void Database_ImageResources::assign (std::string name, std::string image,
                                       int book1, int chapter1, int verse1,
                                       int book2, int chapter2, int verse2)
 {
-  sqlite3 * db = connect (name);
-  {
-    SqliteSQL sql = SqliteSQL ();
-    sql.add ("DELETE FROM passages WHERE image =");
-    sql.add (image);
-    sql.add (";");
-    database_sqlite_exec (db, sql.sql);
-  }
-  {
-    SqliteSQL sql = SqliteSQL ();
-    sql.add ("INSERT INTO passages VALUES (");
-    sql.add (filter_passage_to_integer (Passage ("", book1, chapter1, filter::strings::convert_to_string (verse1))));
-    sql.add (",");
-    sql.add (filter_passage_to_integer (Passage ("", book2, chapter2, filter::strings::convert_to_string (verse2))));
-    sql.add (",");
-    sql.add (image);
-    sql.add (");");
-    database_sqlite_exec (db, sql.sql);
-  }
-  database_sqlite_disconnect (db);
+  SqliteDatabase sql (database_path(name));
+
+  sql.clear();
+  sql.add ("DELETE FROM passages WHERE image =");
+  sql.add (image);
+  sql.add (";");
+  sql.execute ();
+  
+  sql.clear();
+  sql.add ("INSERT INTO passages VALUES (");
+  sql.add (filter_passage_to_integer (Passage ("", book1, chapter1, std::to_string (verse1))));
+  sql.add (",");
+  sql.add (filter_passage_to_integer (Passage ("", book2, chapter2, std::to_string (verse2))));
+  sql.add (",");
+  sql.add (image);
+  sql.add (");");
+  sql.execute ();
 }
 
 
-vector <string> Database_ImageResources::get (string name, int book, int chapter, int verse)
+std::vector <std::string> Database_ImageResources::get (std::string name, int book, int chapter, int verse)
 {
-  int passage = filter_passage_to_integer (Passage ("", book, chapter, filter::strings::convert_to_string (verse)));
-  SqliteSQL sql = SqliteSQL ();
+  int passage = filter_passage_to_integer (Passage ("", book, chapter, std::to_string (verse)));
+  SqliteDatabase sql (database_path(name));
   sql.add ("SELECT image FROM passages WHERE start <=");
   sql.add (passage);
   sql.add ("AND end >=");
   sql.add (passage);
   sql.add ("ORDER BY start;");
-  sqlite3 * db = connect (name);
-  vector <string> images = database_sqlite_query (db, sql.sql) ["image"];
-  database_sqlite_disconnect (db);
+  const std::vector <std::string> images = sql.query () ["image"];
   return images;
 }
 
 
-vector <string> Database_ImageResources::get (string name)
+std::vector <std::string> Database_ImageResources::get (std::string name)
 {
   // Get images from database, sorted on passage.
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_path(name));
   sql.add ("SELECT image FROM passages ORDER by start;");
-  sqlite3 * db = connect (name);
-  vector <string> images = database_sqlite_query (db, sql.sql) ["image"];
-  database_sqlite_disconnect (db);
+  std::vector <std::string> images = sql.query () ["image"];
  
   // Get images from the folder.
-  vector <string> files = filter_url_scandir (resourceFolder (name));
+  std::vector <std::string> files = filter_url_scandir (resourceFolder (name));
  
   // Files on disk, and not in the list from the database, add them.
-  for (auto & file : files) {
+  for (const auto& file : files) {
     if (!in_array (file, images)) {
       if (file != databaseFile ()) {
         images.push_back (file);
@@ -201,7 +186,7 @@ vector <string> Database_ImageResources::get (string name)
 }
 
 
-void Database_ImageResources::get (string name, string image,
+void Database_ImageResources::get (std::string name, std::string image,
                                    int & book1, int & chapter1, int & verse1,
                                    int & book2, int & chapter2, int & verse2)
 {
@@ -212,15 +197,13 @@ void Database_ImageResources::get (string name, string image,
   chapter2 = 0;
   verse2 = 0;
 
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (database_path(name));
   sql.add ("SELECT start, end FROM passages WHERE image =");
   sql.add (image);
   sql.add ("ORDER by start;");
-  sqlite3 * db = connect (name);
-  map <string, vector <string> > results = database_sqlite_query (db, sql.sql);
-  database_sqlite_disconnect (db);
-  vector <string> start = results["start"];
-  vector <string> end   = results["end"];
+  std::map <std::string, std::vector <std::string> > results = sql.query ();
+  const std::vector <std::string> start = results["start"];
+  const std::vector <std::string> end   = results["end"];
 
   if (!start.empty ()) {
     Passage passage = filter_integer_to_passage (filter::strings::convert_to_int (start [0]));
@@ -238,8 +221,8 @@ void Database_ImageResources::get (string name, string image,
 }
 
 
-string Database_ImageResources::get (string name, string image)
+std::string Database_ImageResources::get (std::string name, std::string image)
 {
-  string path = imagePath (name, image);
+  std::string path = imagePath (name, image);
   return filter_url_file_get_contents (path);
 }

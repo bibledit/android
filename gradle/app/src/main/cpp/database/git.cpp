@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <filter/date.h>
 #include <database/sqlite.h>
-using namespace std;
 
 
 // Database resilience: It contains statistical and non-essential data.
@@ -32,9 +31,15 @@ using namespace std;
 #ifdef HAVE_CLOUD
 
 
-void Database_Git::create ()
+constexpr const char * database_name {"git"};
+
+
+namespace database::git {
+
+
+void create ()
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("CREATE TABLE IF NOT EXISTS changes ("
            " timestamp integer,"
            " user text,"
@@ -48,24 +53,24 @@ void Database_Git::create ()
 }
 
 
-void Database_Git::optimize ()
+void optimize ()
 {
-  bool healthy_database = database_sqlite_healthy (name ());
+  const bool healthy_database = database::sqlite::healthy (database_name);
   if (!healthy_database) {
-    filter_url_unlink (database_sqlite_file (name ()));
+    filter_url_unlink (database::sqlite::get_file (database_name));
     create ();
   }
   
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   
   // On Android, this pragma prevents the following error: VACUUM; Unable to open database file.
   sql.add ("PRAGMA temp_store = MEMORY;");
   sql.execute ();
   
   sql.clear ();
-
+  
   // Delete entries older than 10 days.
-  int timestamp = filter::date::seconds_since_epoch () - 432000;
+  const int timestamp = filter::date::seconds_since_epoch () - 432000;
   sql.add ("DELETE FROM changes WHERE timestamp <");
   sql.add (timestamp);
   sql.add (";");
@@ -78,10 +83,10 @@ void Database_Git::optimize ()
 }
 
 
-void Database_Git::store_chapter (string user, string bible, int book, int chapter,
-                                  string oldusfm, string newusfm)
+void store_chapter (const std::string& user, const std::string& bible, int book, int chapter,
+                                  const std::string& oldusfm, const std::string& newusfm)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("INSERT INTO changes VALUES (");
   sql.add (filter::date::seconds_since_epoch ());
   sql.add (",");
@@ -102,65 +107,71 @@ void Database_Git::store_chapter (string user, string bible, int book, int chapt
 
 
 // Fetches the distinct users from the database for $bible.
-vector <string> Database_Git::get_users (string bible)
+std::vector <std::string> get_users (const std::string& bible)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT DISTINCT user FROM changes WHERE bible =");
   sql.add (bible);
   sql.add (";");
-  vector <string> users = sql.query () ["user"];
+  std::vector <std::string> users = sql.query () ["user"];
   return users;
 }
 
 
 // Fetches the rowids from the database for $user and $bible.
-vector <int> Database_Git::get_rowids (string user, string bible)
+std::vector <int> get_rowids (const std::string& user, const std::string& bible)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT rowid FROM changes WHERE user =");
   sql.add (user);
   sql.add ("AND bible =");
   sql.add (bible);
   sql.add ("ORDER BY rowid;");
-  vector <string> values = sql.query () ["rowid"];
-  vector <int> rowids;
-  for (auto value : values) {
+  const std::vector <std::string> values = sql.query () ["rowid"];
+  std::vector <int> rowids;
+  for (const auto& value : values) {
     rowids.push_back (filter::strings::convert_to_int (value));
   }
   return rowids;
 }
 
 
-bool Database_Git::get_chapter (int rowid,
-                                string & user, string & bible, int & book, int & chapter,
-                                string & oldusfm, string & newusfm)
+bool get_chapter (int rowid,
+                  std::string & user, std::string & bible, int & book, int & chapter,
+                  std::string & oldusfm, std::string & newusfm)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("SELECT * FROM changes WHERE rowid =");
   sql.add (rowid);
   sql.add (";");
-  map <string, vector <string> > result = sql.query ();
-  vector <string> users    = result ["user"];
-  vector <string> bibles   = result ["bible"];
-  vector <string> books    = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> oldusfms = result ["oldusfm"];
-  vector <string> newusfms = result ["newusfm"];
-  if (bibles.empty ()) return false;
-  if (!users.empty ())    user    = users [0];
-  if (!bibles.empty ())   bible   = bibles [0];
-  if (!books.empty ())    book    = filter::strings::convert_to_int (books [0]);
-  if (!chapters.empty ()) chapter = filter::strings::convert_to_int (chapters [0]);
-  if (oldusfm.empty ())   oldusfm = oldusfms [0];
-  if (newusfm.empty ())   newusfm = newusfms [0];
+  std::map <std::string, std::vector <std::string> > result = sql.query ();
+  const std::vector <std::string> users = result ["user"];
+  const std::vector <std::string> bibles = result ["bible"];
+  const std::vector <std::string> books = result ["book"];
+  const std::vector <std::string> chapters = result ["chapter"];
+  const std::vector <std::string> oldusfms = result ["oldusfm"];
+  const std::vector <std::string> newusfms = result ["newusfm"];
+  if (bibles.empty ()) 
+    return false;
+  if (!users.empty ())
+    user = users.at(0);
+  if (!bibles.empty ())
+    bible = bibles.at(0);
+  if (!books.empty ())
+    book = filter::strings::convert_to_int (books.at(0));
+  if (!chapters.empty ())
+    chapter = filter::strings::convert_to_int (chapters.at(0));
+  if (oldusfm.empty ())
+    oldusfm = oldusfms.at(0);
+  if (newusfm.empty ())
+    newusfm = newusfms.at(0);
   return true;
 }
 
 
-// Flag export of $bible $book to $format.
-void Database_Git::erase_rowid (int rowid)
+void erase_rowid (int rowid)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("DELETE FROM changes WHERE rowid =");
   sql.add (rowid);
   sql.add (";");
@@ -168,9 +179,9 @@ void Database_Git::erase_rowid (int rowid)
 }
 
 
-void Database_Git::touch_timestamps (int timestamp)
+void touch_timestamps (int timestamp)
 {
-  SqliteDatabase sql = SqliteDatabase (name ());
+  SqliteDatabase sql (database_name);
   sql.add ("UPDATE changes SET timestamp =");
   sql.add (timestamp);
   sql.add (";");
@@ -178,10 +189,7 @@ void Database_Git::touch_timestamps (int timestamp)
 }
 
 
-const char * Database_Git::name ()
-{
-  return "git";
-}
+} // Namespace.
 
 
 #endif

@@ -35,10 +35,9 @@
 #include <notes/index.h>
 #include <dialog/yes.h>
 #include <trash/handler.h>
-using namespace std;
 
 
-string notes_click_url ()
+std::string notes_click_url ()
 {
   return "notes/click";
 }
@@ -51,14 +50,14 @@ bool notes_click_acl (Webserver_Request& webserver_request)
 
 
 // This function is called from click.js.
-string notes_click (Webserver_Request& webserver_request)
+std::string notes_click (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
   
   
   if (webserver_request.query.count ("open")) {
-    string open = webserver_request.query ["open"];
+    std::string open = webserver_request.query ["open"];
     open = filter_url_basename_web (open);
     int iopen = filter::strings::convert_to_int (open);
     if (database_notes.identifier_exists (iopen)) {
@@ -68,23 +67,22 @@ string notes_click (Webserver_Request& webserver_request)
   
   
   if (webserver_request.query.count ("new")) {
-    string snew = webserver_request.query ["new"];
+    std::string snew = webserver_request.query ["new"];
     snew = filter_url_basename_web (snew);
     int inew = filter::strings::convert_to_int (snew);
-    Database_Modifications database_modifications;
-    string bible = database_modifications.getNotificationBible (inew);
-    string summary = translate("Query about a change in the text");
-    string contents = "<p>" + translate("Old text:") + "</p>";
-    contents += database_modifications.getNotificationOldText (inew);
+    std::string bible = database::modifications::getNotificationBible (inew);
+    std::string summary = translate("Query about a change in the text");
+    std::string contents = "<p>" + translate("Old text:") + "</p>";
+    contents += database::modifications::getNotificationOldText (inew);
     contents += "<p>" +  translate("Change:") + "</p>";
-    contents += "<p>" + database_modifications.getNotificationModification (inew) + "</p>";
+    contents += "<p>" + database::modifications::getNotificationModification (inew) + "</p>";
     contents += "<p>" + translate("New text:") + "</p>";
-    contents += database_modifications.getNotificationNewText (inew);
-    Passage passage = database_modifications.getNotificationPassage (inew);
+    contents += database::modifications::getNotificationNewText (inew);
+    Passage passage = database::modifications::getNotificationPassage (inew);
     int identifier = notes_logic.createNote (bible, passage.m_book, passage.m_chapter, filter::strings::convert_to_int (passage.m_verse), summary, contents, false);
     Ipc_Notes::open (webserver_request, identifier);
   }
   
 
-  return "";
+  return std::string();
 }

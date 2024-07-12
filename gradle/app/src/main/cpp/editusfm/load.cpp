@@ -24,10 +24,9 @@
 #include <checksum/logic.h>
 #include <edit/logic.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string editusfm_load_url ()
+std::string editusfm_load_url ()
 {
   return "editusfm/load";
 }
@@ -42,22 +41,22 @@ bool editusfm_load_acl (Webserver_Request& webserver_request)
 }
 
 
-string editusfm_load (Webserver_Request& webserver_request)
+std::string editusfm_load (Webserver_Request& webserver_request)
 {
-  string bible = webserver_request.query ["bible"];
+  std::string bible = webserver_request.query ["bible"];
   int book = filter::strings::convert_to_int (webserver_request.query ["book"]);
   int chapter = filter::strings::convert_to_int (webserver_request.query ["chapter"]);
-  string unique_id = webserver_request.query ["id"];
+  std::string unique_id = webserver_request.query ["id"];
 
   // Store a copy of the USFM loaded in the editor for later reference.
   storeLoadedUsfm2 (webserver_request, bible, book, chapter, unique_id);
 
-  string usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
+  std::string usfm = database::bibles::get_chapter (bible, book, chapter);
 
   // Escape the XML special characters so they load properly in the editor.
   usfm = filter::strings::escape_special_xml_characters (usfm);
 
-  string user = webserver_request.session_logic ()->currentUser ();
+  const std::string& user = webserver_request.session_logic ()->get_username ();
   bool write = access_bible::book_write (webserver_request, user, bible, book);
 
   return checksum_logic::send (usfm, write);

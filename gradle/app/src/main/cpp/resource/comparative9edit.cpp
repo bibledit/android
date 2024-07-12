@@ -43,11 +43,9 @@
 #pragma GCC diagnostic pop
 #include <resource/comparative1edit.h>
 #include <client/logic.h>
-using namespace std;
-using namespace pugi;
 
 
-string resource_comparative9edit_url ()
+std::string resource_comparative9edit_url ()
 {
   return "resource/comparative9edit";
 }
@@ -59,14 +57,14 @@ bool resource_comparative9edit_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_comparative9edit (Webserver_Request& webserver_request)
+std::string resource_comparative9edit (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Comparative resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;
-  string error, success;
+  std::string error, success;
   
 
   // New comparative resource handler.
@@ -79,16 +77,16 @@ string resource_comparative9edit (Webserver_Request& webserver_request)
     // The title for the new resource as entered by the user.
     // Clean the title up and ensure it always starts with "Comparative ".
     // This word flags the comparative resource as being one of that category.
-    string new_resource = webserver_request.post ["entry"];
+    std::string new_resource = webserver_request.post ["entry"];
     size_t pos = new_resource.find (resource_logic_comparative_resource ());
     if (pos != std::string::npos) {
       new_resource.erase (pos, resource_logic_comparative_resource ().length());
     }
     new_resource.insert (0, resource_logic_comparative_resource ());
-    vector <string> titles;
-    vector <string> resources = Database_Config_General::getComparativeResources ();
+    std::vector <std::string> titles;
+    std::vector <std::string> resources = database::config::general::get_comparative_resources ();
     for (auto resource : resources) {
-      string title;
+      std::string title;
       if (resource_logic_parse_comparative_resource (resource, &title)) {
         titles.push_back (title);
       }
@@ -99,61 +97,61 @@ string resource_comparative9edit (Webserver_Request& webserver_request)
       error = translate("Please give a name for the comparative resource");
     } else {
       // Store the new resource in the list.
-      string resource = resource_logic_assemble_comparative_resource (new_resource);
+      std::string resource = resource_logic_assemble_comparative_resource (new_resource);
       resources.push_back (resource);
-      Database_Config_General::setComparativeResources (resources);
+      database::config::general::set_comparative_resources (resources);
       success = translate("The comparative resource was created");
       // Since the default for a new resource is not to cache it,
       // add the resource to the ones not to be cached by the client.
       client_logic_no_cache_resource_add (new_resource);
       // Redirect the user to the place where to edit that new resource.
-      string url = resource_comparative1edit_url () + "?name=" + new_resource;
+      std::string url = resource_comparative1edit_url () + "?name=" + new_resource;
       redirect_browser (webserver_request, url);
-      return "";
+      return std::string();
     }
   }
 
   
   // Delete resource.
-  string title2remove = webserver_request.query ["delete"];
+  std::string title2remove = webserver_request.query ["delete"];
   if (!title2remove.empty()) {
-    string confirm = webserver_request.query ["confirm"];
+    std::string confirm = webserver_request.query ["confirm"];
     if (confirm == "") {
       Dialog_Yes dialog_yes = Dialog_Yes ("comparative9edit", translate("Would you like to delete this resource?"));
       dialog_yes.add_query ("delete", title2remove);
       page += dialog_yes.run ();
       return page;
     } if (confirm == "yes") {
-      vector <string> updated_resources;
-      vector <string> existing_resources = Database_Config_General::getComparativeResources ();
+      std::vector <std::string> updated_resources;
+      std::vector <std::string> existing_resources = database::config::general::get_comparative_resources ();
       for (auto resource : existing_resources) {
-        string title;
+        std::string title;
         resource_logic_parse_comparative_resource (resource, &title);
         if (title != title2remove) updated_resources.push_back (resource);
       }
-      Database_Config_General::setComparativeResources (updated_resources);
+      database::config::general::set_comparative_resources (updated_resources);
       client_logic_no_cache_resource_remove (title2remove);
       success = translate ("The resource was deleted");
     }
   }
 
 
-  vector <string> resources = Database_Config_General::getComparativeResources ();
-  string resourceblock;
+  std::vector <std::string> resources = database::config::general::get_comparative_resources ();
+  std::string resourceblock;
   {
-    xml_document document;
+    pugi::xml_document document;
     for (auto & resource : resources) {
-      string title;
+      std::string title;
       if (!resource_logic_parse_comparative_resource (resource, &title)) continue;
-      xml_node p_node = document.append_child ("p");
-      xml_node a_node = p_node.append_child("a");
-      string href = "comparative1edit?name=" + title;
+      pugi::xml_node p_node = document.append_child ("p");
+      pugi::xml_node a_node = p_node.append_child("a");
+      std::string href = "comparative1edit?name=" + title;
       a_node.append_attribute ("href") = href.c_str();
       title.append (" [" + translate("edit") + "]");
       a_node.text().set (title.c_str());
     }
-    stringstream output;
-    document.print (output, "", format_raw);
+    std::stringstream output;
+    document.print (output, "", pugi::format_raw);
     resourceblock = output.str ();
   }
   view.set_variable ("resourceblock", resourceblock);

@@ -31,45 +31,43 @@
 #include <client/logic.h>
 #include <changes/changes.h>
 #include <email/send.h>
-using namespace std;
 
 
 void statistics_statistics ()
 {
   Webserver_Request webserver_request;
-  Database_Modifications database_modifications;
   Database_Notes database_notes (webserver_request);
   
   
   Database_Logs::log (translate("Sending statistics"), Filter_Roles::manager ());
 
   
-  string siteUrl = config::logic::site_url (webserver_request);
+  std::string siteUrl = config::logic::site_url (webserver_request);
   
   
-  vector <string> bibles = webserver_request.database_bibles()->get_bibles ();
+  std::vector <std::string> bibles = database::bibles::get_bibles ();
   
   
-  vector <string> users = webserver_request.database_users ()->get_users ();
+  std::vector <std::string> users = webserver_request.database_users ()->get_users ();
   for (auto & user : users) {
     
     
-    string subject = "Bibledit " + translate("statistics");
-    stringstream body;
+    std::string subject = "Bibledit " + translate("statistics");
+    std::stringstream body;
     
   
     size_t change_notificatons_count = 0;
     if (webserver_request.database_config_user()->getUserPendingChangesNotification (user)) {
-      string any_bible = string();
-      vector <int> ids = database_modifications.getNotificationIdentifiers (user, any_bible);
+      std::string any_bible = std::string();
+      std::vector <int> ids = database::modifications::getNotificationIdentifiers (user, any_bible);
       change_notificatons_count = ids.size();
-      body << "<p><a href=" << quoted (siteUrl + changes_changes_url ()) << ">" << translate("Number of change notifications") << "</a>: " << ids.size() << "</p>" << std::endl;
+      body << "<p><a href=" << std::quoted (siteUrl + changes_changes_url ()) << ">" << translate("Number of change notifications") << "</a>: " << ids.size() << "</p>" << std::endl;
     }
     
 
     size_t assigned_notes_count = 0;
     if (webserver_request.database_config_user()->getUserAssignedNotesStatisticsNotification (user)) {
-      vector <int> ids = database_notes.select_notes (
+      std::vector <int> ids = database_notes.select_notes (
                                                      bibles, // Bibles.
                                                      0,      // Book
                                                      0,      // Chapter
@@ -86,7 +84,7 @@ void statistics_statistics ()
                                                      "",     // Search text.
                                                      -1);     // Limit.
       assigned_notes_count = ids.size();
-      body << "<p><a href=" << quoted (siteUrl + notes_index_url () + "?presetselection=assigned") << ">" << translate("Number of consultation notes assigned to you awaiting your response") << "</a>: " << ids.size() << "</p>" << std::endl;
+      body << "<p><a href=" << std::quoted (siteUrl + notes_index_url () + "?presetselection=assigned") << ">" << translate("Number of consultation notes assigned to you awaiting your response") << "</a>: " << ids.size() << "</p>" << std::endl;
     }
     
 
@@ -96,7 +94,7 @@ void statistics_statistics ()
       body << "<ul>" << std::endl;
       webserver_request.session_logic ()->set_username (user);
       
-      vector <int> ids = database_notes.select_notes (
+      std::vector <int> ids = database_notes.select_notes (
                                                      bibles, // Bible.
                                                      0,      // Book
                                                      0,      // Chapter
@@ -113,7 +111,7 @@ void statistics_statistics ()
                                                      "",     // Search text.
                                                      -1);     // Limit.
       subscribed_notes_count = ids.size();
-      body << "<li><a href=" << quoted (siteUrl + notes_index_url () + "?presetselection=subscribed") << ">" << translate("Total") << "</a>: " << ids.size () << "</li>" << std::endl;
+      body << "<li><a href=" << std::quoted (siteUrl + notes_index_url () + "?presetselection=subscribed") << ">" << translate("Total") << "</a>: " << ids.size () << "</li>" << std::endl;
       ids = database_notes.select_notes (
                                                      bibles, // Bible.
                                                      0,      // Book
@@ -130,7 +128,7 @@ void statistics_statistics ()
                                                      0,      // Text selector.
                                                      "",     // Search text.
                                                      -1);     // Limit.
-      body << "<li><a href=" << quoted (siteUrl + notes_index_url () + "?presetselection=subscribeddayidle") << ">" << translate("Inactive for a day") << "</a>: " << ids.size() << "</li>" << std::endl;
+      body << "<li><a href=" << std::quoted (siteUrl + notes_index_url () + "?presetselection=subscribeddayidle") << ">" << translate("Inactive for a day") << "</a>: " << ids.size() << "</li>" << std::endl;
       ids = database_notes.select_notes (
                                                      bibles, // Bible.
                                                      0,      // Book
@@ -147,7 +145,7 @@ void statistics_statistics ()
                                                      0,      // Text selector.
                                                      "",     // Search text.
                                                      -1);     // Limit.
-      body << "<li><a href=" << quoted (siteUrl + notes_index_url () + "?presetselection=subscribedweekidle") << ">" << translate("Inactive for a week") << "</a>: " << ids.size() << "</li>" << std::endl;
+      body << "<li><a href=" << std::quoted (siteUrl + notes_index_url () + "?presetselection=subscribedweekidle") << ">" << translate("Inactive for a week") << "</a>: " << ids.size() << "</li>" << std::endl;
       body << "</ul>" << std::endl;
       webserver_request.session_logic ()->set_username ("");
     }

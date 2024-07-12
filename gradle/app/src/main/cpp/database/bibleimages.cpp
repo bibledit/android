@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/string.h>
 #include <webserver/request.h>
 #include <database/logic.h>
-using namespace std;
 
 
 // Database resilience: 
@@ -30,12 +29,27 @@ using namespace std;
 // That should be resilient enough.
 
 
-vector <string> Database_BibleImages::get ()
+static std::string folder ()
 {
-  vector <string> files = filter_url_scandir (folder ());
-  vector <string> images;
-  for (auto file : files) {
-    string extension = filter_url_get_extension (file);
+  return filter_url_create_root_path ({"images"});
+}
+
+
+static std::string path (const std::string& image)
+{
+  return filter_url_create_path ({folder (), image});
+}
+
+
+namespace database::bible_images {
+
+
+std::vector <std::string> get ()
+{
+  const std::vector <std::string> files = filter_url_scandir (folder ());
+  std::vector <std::string> images;
+  for (const auto& file : files) {
+    const std::string extension = filter_url_get_extension (file);
     if (extension == "o") continue;
     if (extension == "h") continue;
     if (extension == "cpp") continue;
@@ -46,36 +60,25 @@ vector <string> Database_BibleImages::get ()
 }
 
 
-void Database_BibleImages::store (string file)
+void store (const std::string& file)
 {
-  string image = filter_url_basename (file);
+  const std::string image = filter_url_basename (file);
   filter_url_file_cp (file, path (image));
 }
 
 
-string Database_BibleImages::get (string image)
+std::string get (const std::string& image)
 {
-  string contents = filter_url_file_get_contents (path(image));
-  return contents;
+  return filter_url_file_get_contents (path(image));
 }
 
 
-void Database_BibleImages::erase (string image)
+void erase (const std::string& image)
 {
-  string filepath = path(image);
+  const std::string filepath = path(image);
   filter_url_unlink (filepath);
 }
 
 
-string Database_BibleImages::folder ()
-{
-  return filter_url_create_root_path ({"images"});
-}
-
-
-string Database_BibleImages::path (string image)
-{
-  return filter_url_create_path ({folder (), image});
-}
-
+} // Namespace.
 

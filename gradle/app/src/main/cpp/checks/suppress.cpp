@@ -27,14 +27,14 @@
 #include <webserver/request.h>
 #include <locale/translate.h>
 #include <database/config/general.h>
+#include <database/check.h>
 #include <client/logic.h>
 #include <demo/logic.h>
 #include <sendreceive/logic.h>
 #include <access/bible.h>
-using namespace std;
 
 
-string checks_suppress_url ()
+std::string checks_suppress_url ()
 {
   return "checks/suppress";
 }
@@ -46,27 +46,24 @@ bool checks_suppress_acl (Webserver_Request& webserver_request)
 }
 
 
-string checks_suppress (Webserver_Request& webserver_request)
+std::string checks_suppress (Webserver_Request& webserver_request)
 {
-  Database_Check database_check {};
-  
-  
-  string page {};
+  std::string page {};
   page = assets_page::header (translate ("Suppressed checking results"), webserver_request);
   Assets_View view {};
   
   
   if (webserver_request.query.count ("release")) {
     int release = filter::strings::convert_to_int (webserver_request.query["release"]);
-    database_check.release (release);
+    database::check::release (release);
     view.set_variable ("success", translate ("The check result is no longer suppressed."));
   }
   
                         
   // Get the Bibles the user has write-access to.
-  vector <string> bibles {};
+  std::vector <std::string> bibles {};
   {
-    vector <string> all_bibles = webserver_request.database_bibles()->get_bibles ();
+    std::vector <std::string> all_bibles = database::bibles::get_bibles ();
     for (const auto & bible : all_bibles) {
       if (access_bible::write (webserver_request, bible)) {
         bibles.push_back (bible);
@@ -75,19 +72,19 @@ string checks_suppress (Webserver_Request& webserver_request)
   }
   
   
-  string block {};
-  const vector <Database_Check_Hit> suppressions = database_check.getSuppressions ();
+  std::string block {};
+  const std::vector <database::check::Hit> suppressions = database::check::get_suppressions ();
   for (const auto & suppression : suppressions) {
-    string bible = suppression.bible;
+    std::string bible = suppression.bible;
     // Only display entries for Bibles the user has write access to.
     if (in_array (bible, bibles)) {
       int id = suppression.rowid;
       bible = filter::strings::escape_special_xml_characters (bible);
-      string passage = filter_passage_display_inline ({Passage ("", suppression.book, suppression.chapter, filter::strings::convert_to_string (suppression.verse))});
-      string result = filter::strings::escape_special_xml_characters (suppression.data);
+      const std::string passage = filter_passage_display_inline ({Passage ("", suppression.book, suppression.chapter, std::to_string (suppression.verse))});
+      std::string result = filter::strings::escape_special_xml_characters (suppression.data);
       result.insert (0, bible + " " + passage + " ");
       block.append (R"(<p style="color:grey;">)");
-      block.append (R"(<a href="suppress?release=)" + filter::strings::convert_to_string (id) + R"(">)");
+      block.append (R"(<a href="suppress?release=)" + std::to_string (id) + R"(">)");
       block.append (filter::strings::emoji_wastebasket ());
       block.append ("</a>");
       block.append (result);

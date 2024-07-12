@@ -31,10 +31,9 @@
 #include <dialog/entry.h>
 #include <assets/header.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string versification_system_url ()
+std::string versification_system_url ()
 {
   return "versification/system";
 }
@@ -46,9 +45,9 @@ bool versification_system_acl (Webserver_Request& webserver_request)
 }
 
 
-string versification_system (Webserver_Request& webserver_request)
+std::string versification_system (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Versification system"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
@@ -59,32 +58,32 @@ string versification_system (Webserver_Request& webserver_request)
   
   Database_Versifications database_versifications = Database_Versifications();
 
-  string name = webserver_request.query["name"];
+  std::string name = webserver_request.query["name"];
   view.set_variable ("name", filter::strings::escape_special_xml_characters (name));
 
   if (webserver_request.post.count ("submit")) {
-    string data = webserver_request.post["data"];
+    std::string data = webserver_request.post["data"];
     if (data != "") {
       database_versifications.input (data, name);
     }
   }
 
-  vector <string> data;
-  vector <Passage> passages = database_versifications.getBooksChaptersVerses (name);
+  std::vector <std::string> data;
+  std::vector <Passage> passages = database_versifications.getBooksChaptersVerses (name);
   for (auto & passage : passages) {
     int book = passage.m_book;
     int chapter = passage.m_chapter;
-    string verse = passage.m_verse;
-    string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
+    std::string verse = passage.m_verse;
+    std::string bookname = database::books::get_english_from_id (static_cast<book_id>(book));
     data.push_back ("<tr>");
     data.push_back ("<td>" + bookname + "</td>");
-    data.push_back ("<td>" + filter::strings::convert_to_string (chapter) + "</td>");
+    data.push_back ("<td>" + std::to_string (chapter) + "</td>");
     data.push_back ("<td>" + filter::strings::convert_to_string (verse) + "</td>");
     data.push_back ("</tr>");
   }
   view.set_variable ("data", filter::strings::implode (data, "\n"));
 
-  string output = database_versifications.output (name);
+  std::string output = database_versifications.output (name);
   view.set_variable ("output", output);
 
   page += view.render ("versification", "system");

@@ -26,16 +26,15 @@
 #include <database/logs.h>
 #include <webserver/request.h>
 #include <locale/translate.h>
-using namespace std;
 
 
-string sendreceive_tag ()
+std::string sendreceive_tag ()
 {
   return "Git repository: ";
 }
 
 
-void sendreceive_sendreceive ([[maybe_unused]] string bible)
+void sendreceive_sendreceive ([[maybe_unused]] std::string bible)
 {
 #ifdef HAVE_CLOUD
   // Check on Bible.
@@ -46,15 +45,15 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   
 
   // The git repository directory for this object.
-  string directory = filter_git_directory (bible);
+  std::string directory = filter_git_directory (bible);
   
   
-  bool read_from_git = Database_Config_Bible::getReadFromGit (bible);
+  bool read_from_git = database::config::bible::get_read_from_git (bible);
   
 
   // Check that the repository directory is there.
   if (!file_or_dir_exists (directory)) {
-    string msg = "Cannot send ";
+    std::string msg = "Cannot send ";
     if (read_from_git) msg.append ("and receive ");
     msg.append ("because the local git repository was not found.");
     Database_Logs::log (sendreceive_tag () + msg);
@@ -72,7 +71,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   
   Webserver_Request webserver_request;
   bool success = true;
-  string error;
+  std::string error;
   
   
   // Configure the repository to prevent errors, just to be sure.
@@ -91,7 +90,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   // Set a flag indicating whether there are local changes available.
   bool localchanges = false;
   if (success) {
-    vector <string> lines = filter_git_status (directory, true);
+    std::vector <std::string> lines = filter_git_status (directory, true);
     for (auto & line : lines) {
       Passage passage = filter_git_get_passage (line);
       if (passage.m_book) {
@@ -113,7 +112,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
 
   // In case of local changes, commit the index to the repository.
   if (success && localchanges) {
-    vector <string> messages;
+    std::vector <std::string> messages;
     success = filter_git_commit (directory, "", translate ("Changes made in Bibledit"), messages, error);
     if (!success) {
       Database_Logs::log (sendreceive_tag () + error, Filter_Roles::translator ());
@@ -124,10 +123,10 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   // Pull changes from the remote repository.
   // Record the pull messages to see which chapter has changes.
   // Record the conflicting passages, to see which chapters to update.
-  vector <string> pull_messages;
-  vector <string> paths_resolved_conflicts;
+  std::vector <std::string> pull_messages;
+  std::vector <std::string> paths_resolved_conflicts;
   if (success) {
-    vector <string> logs;
+    std::vector <std::string> logs;
     bool conflict = false;
     success = filter_git_pull (directory, pull_messages);
     for (auto & line : pull_messages) {
@@ -149,9 +148,9 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
       Database_Logs::log (sendreceive_tag () + translate ("Bibledit will resolve the conflicts"), Filter_Roles::translator ());
       filter_git_resolve_conflicts (directory, paths_resolved_conflicts, error);
       if (!error.empty ()) Database_Logs::log (error, Filter_Roles::translator ());
-      vector <string> messages;
-      string tmp_error;
-      string no_user {};
+      std::vector <std::string> messages;
+      std::string tmp_error;
+      std::string no_user {};
       filter_git_commit (directory, no_user, translate ("Bibledit resolved the conflicts"), messages, tmp_error);
       for (auto & msg : messages) Database_Logs::log (sendreceive_tag () + "conflict resolution: " + msg, Filter_Roles::translator ());
       // The above "git pull" operation failed due to the conflict(s).
@@ -165,7 +164,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   // Push any local changes to the remote repository.
   // Or changes due to automatic merge and/or conflict resolution.
   if (success) {
-    vector <string> messages;
+    std::vector <std::string> messages;
     success = filter_git_push (directory, messages);
     if (!success || messages.size() > 1) {
       for (auto & msg : messages) Database_Logs::log (sendreceive_tag () + "send: " + msg, Filter_Roles::translator ());
@@ -179,7 +178,7 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   // This is normally off due to some race conditions that came up now and then,
   // where a change made by a user was committed was reverted by the system.
   // So having it off by default is the safest thing one can do.
-  if (Database_Config_Bible::getReadFromGit (bible)) {
+  if (database::config::bible::get_read_from_git (bible)) {
     if (success) {
       pull_messages.insert (pull_messages.end (), paths_resolved_conflicts.begin (), paths_resolved_conflicts.end());
       for (auto & pull_message : pull_messages) {
@@ -196,12 +195,12 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
   
   // Done.
   if (!success) {
-    string msg = "Failure during sending";
+    std::string msg = "Failure during sending";
     if (read_from_git) msg.append ("and receiving");
     Database_Logs::log (sendreceive_tag () + msg, Filter_Roles::translator ());
   }
   {
-    string msg;
+    std::string msg;
     if (read_from_git) {
       msg = sendreceive_sendreceive_sendreceive_ready_text ();
     } else {
@@ -213,25 +212,25 @@ void sendreceive_sendreceive ([[maybe_unused]] string bible)
 }
 
 
-string sendreceive_sendreceive_sendreceive_text ()
+std::string sendreceive_sendreceive_sendreceive_text ()
 {
   return "Send/receive Bible ";
 }
 
 
-string sendreceive_sendreceive_send_text ()
+std::string sendreceive_sendreceive_send_text ()
 {
   return "Send Bible ";
 }
 
 
-string sendreceive_sendreceive_sendreceive_ready_text ()
+std::string sendreceive_sendreceive_sendreceive_ready_text ()
 {
   return "Ready sending and receiving Bible";
 }
 
 
-string sendreceive_sendreceive_send_ready_text ()
+std::string sendreceive_sendreceive_send_ready_text ()
 {
   return "Ready sending Bible";
 }

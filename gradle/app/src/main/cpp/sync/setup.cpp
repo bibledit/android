@@ -25,39 +25,38 @@
 #include <database/users.h>
 #include <sync/logic.h>
 #include <user/logic.h>
-using namespace std;
 
 
-string sync_setup_url ()
+std::string sync_setup_url ()
 {
   return "sync/setup";
 }
 
 
-string sync_setup (Webserver_Request& webserver_request)
+std::string sync_setup (Webserver_Request& webserver_request)
 {
   Sync_Logic sync_logic (webserver_request);
   
   if (!sync_logic.security_okay ()) {
     // When the Cloud enforces https, inform the client to upgrade.
     webserver_request.response_code = 426;
-    return "";
+    return std::string();
   }
   
-  string page;
+  std::string page;
   
-  string username = webserver_request.query ["user"];
+  std::string username = webserver_request.query ["user"];
   username = filter::strings::hex2bin (username);
-  string password = webserver_request.query ["pass"];
+  std::string password = webserver_request.query ["pass"];
 
   // Check the credentials of the client.
   if (webserver_request.database_users ()->usernameExists (username)) {
-    string md5 = webserver_request.database_users ()->get_md5 (username);
+    std::string md5 = webserver_request.database_users ()->get_md5 (username);
     if (password == md5) {
       // Check brute force attack mitigation.
       if (user_logic_login_failure_check_okay ()) {
         // Return the level to the client.
-        return filter::strings::convert_to_string (webserver_request.database_users ()->get_level (username));
+        return std::to_string (webserver_request.database_users ()->get_level (username));
       }
     }
   }

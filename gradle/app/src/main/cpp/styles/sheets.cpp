@@ -26,7 +26,6 @@
 #include <database/logs.h>
 #include <styles/css.h>
 #include <webserver/request.h>
-using namespace std;
 
 
 // Recreates all stylesheet.css files through a background process.
@@ -49,17 +48,17 @@ void styles_sheets_create_all_run ()
 void Styles_Sheets::recreate ()
 {
   Database_Styles database_styles;
-  vector <string> stylesheets = database_styles.getSheets ();
+  std::vector <std::string> stylesheets = database_styles.getSheets ();
   for (const auto & stylesheet : stylesheets) {
-    string path = get_location (stylesheet, false);
-    create (stylesheet, path, false, string());
+    std::string path = get_location (stylesheet, false);
+    create (stylesheet, path, false, std::string());
     path = get_location (stylesheet, true);
-    create (stylesheet, path, true, string());
+    create (stylesheet, path, true, std::string());
   }
 }
 
 
-void Styles_Sheets::create (string stylesheet, string path, bool editor, string export_bible)
+void Styles_Sheets::create (std::string stylesheet, std::string path, bool editor, std::string export_bible)
 {
   Webserver_Request webserver_request {};
   Styles_Css styles_css (webserver_request, stylesheet);
@@ -69,16 +68,16 @@ void Styles_Sheets::create (string stylesheet, string path, bool editor, string 
   if (!export_bible.empty ()) {
     styles_css.exports ();
     styles_css.customize (export_bible);
-    styles_css.customize (string());
+    styles_css.customize (std::string());
   }
   styles_css.generate ();
   styles_css.css (path);
 }
 
 
-string Styles_Sheets::get_location (string sheet, bool editor)
+std::string Styles_Sheets::get_location (std::string sheet, bool editor)
 {
-  string path;
+  std::string path;
   if (editor) path = "editor";
   else path = "basic";
   path.append (sheet);

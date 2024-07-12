@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <navigation/passage.h>
 #include <notes/actions.h>
-using namespace std;
 
 
-string notes_severity_1_url ()
+std::string notes_severity_1_url ()
 {
   return "notes/severity-1";
 }
@@ -47,35 +46,35 @@ bool notes_severity_1_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_severity_1 (Webserver_Request& webserver_request)
+std::string notes_severity_1 (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Severity"), webserver_request);
   page += header.run ();
   Assets_View view;
-  string success, error;
+  std::string success, error;
   
   
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
   
   
   if (webserver_request.query.count ("severity")) {
     int severity = filter::strings::convert_to_int (webserver_request.query["severity"]);
     notes_logic.setRawSeverity (id, severity);
-    redirect_browser (webserver_request, notes_actions_url () + "?id=" + filter::strings::convert_to_string (id));
+    redirect_browser (webserver_request, notes_actions_url () + "?id=" + std::to_string (id));
     return std::string();
   }
   
   
-  stringstream severityblock;
-  vector <Database_Notes_Text> severities = database_notes.get_possible_severities ();
+  std::stringstream severityblock;
+  std::vector <Database_Notes_Text> severities = database_notes.get_possible_severities ();
   for (auto & severity : severities) {
-    severityblock << "<li><a href=" << quoted ("severity-1?id=" + filter::strings::convert_to_string (id) + "&severity=" + severity.raw) << ">" << severity.localized << "</a></li>" << std::endl;
+    severityblock << "<li><a href=" << std::quoted ("severity-1?id=" + std::to_string (id) + "&severity=" + severity.raw) << ">" << severity.localized << "</a></li>" << std::endl;
   }
   view.set_variable ("severityblock", severityblock.str());
   

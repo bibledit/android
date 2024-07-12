@@ -32,10 +32,9 @@
 #include <dialog/entry.h>
 #include <dialog/yes.h>
 #include <database/userresources.h>
-using namespace std;
 
 
-string resource_user9edit_url ()
+std::string resource_user9edit_url ()
 {
   return "resource/user9edit";
 }
@@ -47,14 +46,14 @@ bool resource_user9edit_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_user9edit (Webserver_Request& webserver_request)
+std::string resource_user9edit (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("User resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;
-  string error, success;
+  std::string error, success;
   
 
   // New user-defined resource handler.
@@ -64,8 +63,8 @@ string resource_user9edit (Webserver_Request& webserver_request)
     return page;
   }
   if (webserver_request.post.count ("new")) {
-    string resource = webserver_request.post ["entry"];
-    vector <string> resources = Database_UserResources::names ();
+    std::string resource = webserver_request.post ["entry"];
+    std::vector <std::string> resources = Database_UserResources::names ();
     if (in_array (resource, resources)) {
       error = translate("This user-defined resource already exists");
     } else if (resource.empty ()) {
@@ -78,9 +77,9 @@ string resource_user9edit (Webserver_Request& webserver_request)
 
   
   // Delete resource.
-  string remove = webserver_request.query ["delete"];
+  std::string remove = webserver_request.query ["delete"];
   if (remove != "") {
-    string confirm = webserver_request.query ["confirm"];
+    std::string confirm = webserver_request.query ["confirm"];
     if (confirm == "") {
       Dialog_Yes dialog_yes = Dialog_Yes ("user9edit", translate("Would you like to delete this resource?"));
       dialog_yes.add_query ("delete", remove);
@@ -93,8 +92,8 @@ string resource_user9edit (Webserver_Request& webserver_request)
   }
 
 
-  vector <string> resources = Database_UserResources::names ();
-  vector <string> resourceblock;
+  std::vector <std::string> resources = Database_UserResources::names ();
+  std::vector <std::string> resourceblock;
   for (auto & resource : resources) {
     resourceblock.push_back ("<p>");
     resourceblock.push_back ("<a href=\"user1edit?name=" + resource + "\">");

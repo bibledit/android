@@ -39,10 +39,9 @@
 #include <menu/logic.h>
 #include <config/globals.h>
 #include <tasks/enums.h>
-using namespace std;
 
 
-string sendreceive_index_url ()
+std::string sendreceive_index_url ()
 {
   return "sendreceive/index";
 }
@@ -63,35 +62,35 @@ bool sendreceive_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string sendreceive_index (Webserver_Request& webserver_request)
+std::string sendreceive_index (Webserver_Request& webserver_request)
 {
   if (webserver_request.query.count ("status")) {
-    vector <string> bits;
+    std::vector <std::string> bits;
     if (config_globals_syncing_bibles)    bits.push_back (translate ("Bibles"));
     if (config_globals_syncing_notes)     bits.push_back (translate ("Notes"));
     if (config_globals_syncing_settings)  bits.push_back (translate ("Settings"));
     if (config_globals_syncing_changes)   bits.push_back (translate ("Changes"));
     if (config_globals_syncing_files)     bits.push_back (translate ("Files"));
     if (config_globals_syncing_resources) bits.push_back (translate ("Resources"));
-    if (bits.empty ()) return "";
-    string status = translate ("Sending and receiving:") + " " + filter::strings::implode (bits, ", ") + " ...";
+    if (bits.empty ()) return std::string();
+    std::string status = translate ("Sending and receiving:") + " " + filter::strings::implode (bits, ", ") + " ...";
     return status;
   }
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Send/Receive"), webserver_request);
   header.add_bread_crumb (menu_logic_tools_menu (), menu_logic_tools_text ());
   page = header.run ();
   Assets_View view;
   
   
-  string bible;
+  std::string bible;
   if (webserver_request.query.count ("bible")) {
     bible = webserver_request.query["bible"];
     if (bible.empty()) {
       Dialog_List dialog_list = Dialog_List ("index", translate("Select a Bible"), "", "");
-      vector <string> bibles = access_bible::bibles (webserver_request);
+      std::vector <std::string> bibles = access_bible::bibles (webserver_request);
       for (auto & selectable_bible : bibles) {
         // Select Bibles the user has write access to.
         if (access_bible::write (webserver_request, selectable_bible)) {
@@ -110,8 +109,8 @@ string sendreceive_index (Webserver_Request& webserver_request)
   view.set_variable ("bible", bible);
 
 
-  string starting_to_sync;
-  if (Database_Config_Bible::getReadFromGit (bible)) {
+  std::string starting_to_sync;
+  if (database::config::bible::get_read_from_git (bible)) {
     starting_to_sync = translate ("Starting to send and receive now.");
   } else {
     starting_to_sync = translate ("Starting to send now.");
@@ -124,18 +123,18 @@ string sendreceive_index (Webserver_Request& webserver_request)
   }
   
   
-  string checkbox = webserver_request.post ["checkbox"];
+  std::string checkbox = webserver_request.post ["checkbox"];
   bool checked = filter::strings::convert_to_bool (webserver_request.post ["checked"]);
   if (checkbox == "repeatbible") {
-    Database_Config_Bible::setRepeatSendReceive (bible, checked);
-    return "";
+    database::config::bible::set_repeat_send_receive (bible, checked);
+    return std::string();
   }
-  view.set_variable ("repeatbible", filter::strings::get_checkbox_status (Database_Config_Bible::getRepeatSendReceive (bible)));
+  view.set_variable ("repeatbible", filter::strings::get_checkbox_status (database::config::bible::get_repeat_send_receive (bible)));
   
     
   if (sendreceive_git_repository_linked (bible)) {
     view.enable_zone ("collab_on");
-    string url = Database_Config_Bible::getRemoteRepositoryUrl (bible);
+    std::string url = database::config::bible::get_remote_repository_url (bible);
     view.set_variable ("url", filter_url_remove_username_password (url));
   } else {
     view.enable_zone ("collab_off");
@@ -189,12 +188,12 @@ string sendreceive_index (Webserver_Request& webserver_request)
     // Clamp the values.
     if (repeatsync < 0) repeatsync = 0;
     if (repeatsync > 2) repeatsync = 2;
-    Database_Config_General::setRepeatSendReceive (repeatsync);
+    database::config::general::set_repeat_send_receive (repeatsync);
   }
-  int repeatsync = Database_Config_General::getRepeatSendReceive ();
+  int repeatsync = database::config::general::get_repeat_send_receive ();
   // After removing value 3, if the setting had "3", make it "2".
   if (repeatsync > 2) repeatsync = 2;
-  string repeatsynczone = "repeatsync" + filter::strings::convert_to_string (repeatsync);
+  std::string repeatsynczone = "repeatsync" + std::to_string (repeatsync);
   view.enable_zone (repeatsynczone);
   
   
@@ -202,7 +201,7 @@ string sendreceive_index (Webserver_Request& webserver_request)
 
   
 #ifdef HAVE_PARATEXT
-  vector <string> bibles = Paratext_Logic::enabledBibles ();
+  std::vector <std::string> bibles = Paratext_Logic::enabledBibles ();
   if (!bibles.empty ()) {
     view.enable_zone ("paratexton");
     view.set_variable ("paratextbibles", filter::strings::implode (bibles, ", "));
@@ -212,7 +211,7 @@ string sendreceive_index (Webserver_Request& webserver_request)
 #endif
 
   
-  if (Database_Config_Bible::getReadFromGit (bible)) {
+  if (database::config::bible::get_read_from_git (bible)) {
     view.enable_zone ("gitreadwrite");
   } else {
     view.enable_zone ("gitwrite");

@@ -23,32 +23,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <database/sqlite.h>
 #include <webserver/request.h>
 #include <filter/passage.h>
-using namespace std;
 
 
 // Database resilience: It is re-created every night 
 
 
-sqlite3 * Database_Navigation::connect ()
-{
-  return database_sqlite_connect ("navigation");
-}
+constexpr const auto navigation {"navigation"};
 
 
 void Database_Navigation::create ()
 {
-  sqlite3 * db = connect ();
-  string sql = 
-    "CREATE TABLE IF NOT EXISTS navigation ("
-    "  timestamp integer,"
-    "  username text,"
-    "  book integer,"
-    "  chapter integer,"
-    "  verse integer,"
-    "  active boolean"
-    ");";
-  database_sqlite_exec (db, sql);
-  database_sqlite_disconnect (db);
+  SqliteDatabase sql (navigation);
+  sql.set_sql ("CREATE TABLE IF NOT EXISTS navigation ("
+               " timestamp integer,"
+               " username text,"
+               " book integer,"
+               " chapter integer,"
+               " verse integer,"
+               " active boolean"
+               ");");
+  sql.execute ();
 }
 
 
@@ -57,99 +51,95 @@ void Database_Navigation::trim ()
   // Delete items older than, say, several weeks.
   int time = filter::date::seconds_since_epoch ();
   time -= (3600 * 24 * 14);
-  SqliteSQL sql;
+  SqliteDatabase sql (navigation);
   sql.add ("DELETE FROM navigation WHERE timestamp <=");
   sql.add (time);
   sql.add (";");
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql.sql);
-  database_sqlite_disconnect (db);
+  sql.execute ();
 }
 
 
-void Database_Navigation::record (int time, string user, int book, int chapter, int verse)
+void Database_Navigation::record (int time, std::string user, int book, int chapter, int verse)
 {
+  SqliteDatabase sql (navigation);
+
   // Clear any 'active' flags.
-  SqliteSQL sql1 = SqliteSQL ();
-  sql1.add ("UPDATE navigation SET active = 0 WHERE username =");
-  sql1.add (user);
-  sql1.add (";");
+  sql.add ("UPDATE navigation SET active = 0 WHERE username =");
+  sql.add (user);
+  sql.add (";");
+  sql.execute();
 
   // Remove entries recorded less than several seconds ago.
-  SqliteSQL sql2 = SqliteSQL ();
   int recent = time - 5;
-  sql2.add ("DELETE FROM navigation WHERE timestamp >=");
-  sql2.add (recent);
-  sql2.add ("AND username =");
-  sql2.add (user);
-  sql2.add (";");
+  sql.clear();
+  sql.add ("DELETE FROM navigation WHERE timestamp >=");
+  sql.add (recent);
+  sql.add ("AND username =");
+  sql.add (user);
+  sql.add (";");
+  sql.execute();
 
   // Record entry.
-  SqliteSQL sql3 = SqliteSQL ();
-  sql3.add ("INSERT INTO navigation VALUES (");
-  sql3.add (time);
-  sql3.add (",");
-  sql3.add (user);
-  sql3.add (",");
-  sql3.add (book);
-  sql3.add (",");
-  sql3.add (chapter);
-  sql3.add (",");
-  sql3.add (verse);
-  sql3.add (", 1);");
-
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql1.sql);
-  database_sqlite_exec (db, sql2.sql);
-  database_sqlite_exec (db, sql3.sql);
-  database_sqlite_disconnect (db);
+  sql.clear();
+  sql.add ("INSERT INTO navigation VALUES (");
+  sql.add (time);
+  sql.add (",");
+  sql.add (user);
+  sql.add (",");
+  sql.add (book);
+  sql.add (",");
+  sql.add (chapter);
+  sql.add (",");
+  sql.add (verse);
+  sql.add (", 1);");
+  sql.execute();
 }
 
 
-bool Database_Navigation::previous_exists (const string& user)
+bool Database_Navigation::previous_exists (const std::string& user)
 {
   return (get_previous_id (user) != 0);
 }
 
 
-bool Database_Navigation::next_exists (const string& user)
+bool Database_Navigation::next_exists (const std::string& user)
 {
   return (get_next_id (user) != 0);
 }
 
 
-Passage Database_Navigation::get_previous (const string& user)
+Passage Database_Navigation::get_previous (const std::string& user)
 {
   int id = get_previous_id (user);
   if (id == 0) return Passage ();
 
   // Update the 'active' flag.
-  SqliteSQL sql1 = SqliteSQL ();
+  SqliteDatabase sql1 (navigation);
   sql1.add ("UPDATE navigation SET active = 0 WHERE username =");
   sql1.add (user);
   sql1.add (";");
-  SqliteSQL sql2 = SqliteSQL ();
+  SqliteDatabase sql2 (navigation);
   sql2.add ("UPDATE navigation SET active = 1 WHERE rowid =");
   sql2.add (id);
   sql2.add (";");
 
   // Read the passage.
-  map <string, vector <string> > result;
-  SqliteSQL sql3 = SqliteSQL ();
+  SqliteDatabase sql3 (navigation);
   sql3.add ("SELECT book, chapter, verse FROM navigation WHERE rowid =");
   sql3.add (id);
   sql3.add (";");
 
   // Run all of the SQL at once, to minimize the database connection time.
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql1.sql);
-  database_sqlite_exec (db, sql2.sql);
-  result = database_sqlite_query (db, sql3.sql);
-  database_sqlite_disconnect (db);
+  sql1.execute ();
+  sql1.disconnect();
+  sql2.execute ();
+  sql2.disconnect();
+  std::map <std::string, std::vector <std::string> > result = sql3.query ();
+  sql3.disconnect();
   
-  vector <string> books = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> verses = result ["verse"];
+  const std::vector <std::string> books = result ["book"];
+  const std::vector <std::string> chapters = result ["chapter"];
+  const std::vector <std::string> verses = result ["verse"];
   if (!books.empty()) {
     Passage passage;
     passage.m_book = filter::strings::convert_to_int (books [0]);
@@ -161,38 +151,38 @@ Passage Database_Navigation::get_previous (const string& user)
 }
 
 
-Passage Database_Navigation::get_next (const string& user)
+Passage Database_Navigation::get_next (const std::string& user)
 {
   int id = get_next_id (user);
   if (id == 0) return Passage ();
 
   // Update the 'active' flag.
-  SqliteSQL sql1 = SqliteSQL ();
+  SqliteDatabase sql1 (navigation);
   sql1.add ("UPDATE navigation SET active = 0 WHERE username =");
   sql1.add (user);
   sql1.add (";");
-  SqliteSQL sql2 = SqliteSQL ();
+  SqliteDatabase sql2 (navigation);
   sql2.add ("UPDATE navigation SET active = 1 WHERE rowid =");
   sql2.add (id);
   sql2.add (";");
 
   // Read the passage.
-  map <string, vector <string> > result;
-  SqliteSQL sql3 = SqliteSQL ();
+  SqliteDatabase sql3 (navigation);
   sql3.add ("SELECT book, chapter, verse FROM navigation WHERE rowid =");
   sql3.add (id);
   sql3.add (";");
 
-  // Run all of the SQL at once.
-  sqlite3 * db = connect ();
-  database_sqlite_exec (db, sql1.sql);
-  database_sqlite_exec (db, sql2.sql);
-  result = database_sqlite_query (db, sql3.sql);
-  database_sqlite_disconnect (db);
+  // Run all of the SQL at once, to minimize the database connection time.
+  sql1.execute ();
+  sql1.disconnect();
+  sql2.execute ();
+  sql2.disconnect();
+  std::map <std::string, std::vector <std::string> > result = sql3.query ();
+  sql3.disconnect();
   
-  vector <string> books = result ["book"];
-  vector <string> chapters = result ["chapter"];
-  vector <string> verses = result ["verse"];
+  const std::vector <std::string> books = result ["book"];
+  const std::vector <std::string> chapters = result ["chapter"];
+  const std::vector <std::string> verses = result ["verse"];
   if (!books.empty()) {
     Passage passage;
     passage.m_book = filter::strings::convert_to_int (books [0]);
@@ -204,37 +194,33 @@ Passage Database_Navigation::get_next (const string& user)
 }
 
 
-int Database_Navigation::get_previous_id (const string& user)
+int Database_Navigation::get_previous_id (const std::string& user)
 {
   // Get the database row identifier of the active entry for the user.
   int id = 0;
   {
-    SqliteSQL sql = SqliteSQL ();
+    SqliteDatabase sql (navigation);
     sql.add ("SELECT rowid FROM navigation WHERE username =");
     sql.add (user);
     sql.add ("AND active = 1;");
-    sqlite3 * db = connect ();
-    vector <string> ids = database_sqlite_query (db, sql.sql) ["rowid"];
-    for (auto & s : ids) {
+    const std::vector <std::string> ids = sql.query () ["rowid"];
+    for (const auto& s : ids) {
       id = filter::strings::convert_to_int (s);
     }
-    database_sqlite_disconnect (db);
   }
   // If no active row identifier was found, return zero.
   if (id == 0) return 0;
 
   // Get the database row identifier of the entry just before the active entry.
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (navigation);
   sql.add ("SELECT rowid FROM navigation WHERE rowid <");
   sql.add (id);
   sql.add ("AND username =");
   sql.add (user);
   sql.add ("ORDER BY rowid DESC LIMIT 1;");
-  sqlite3 * db = connect ();
-  vector <string> ids = database_sqlite_query (db, sql.sql) ["rowid"];
-  database_sqlite_disconnect (db);
+  const std::vector <std::string> ids = sql.query () ["rowid"];
   if (!ids.empty()) {
-    return filter::strings::convert_to_int (ids[0]);
+    return filter::strings::convert_to_int (ids.at(0));
   }
 
   // Nothing found.
@@ -242,37 +228,33 @@ int Database_Navigation::get_previous_id (const string& user)
 }
 
 
-int Database_Navigation::get_next_id (const string& user)
+int Database_Navigation::get_next_id (const std::string& user)
 {
   // Get the database row identifier of the active entry for the user.
   int id = 0;
   {
-    SqliteSQL sql = SqliteSQL ();
+    SqliteDatabase sql (navigation);
     sql.add ("SELECT rowid FROM navigation WHERE username =");
     sql.add (user);
     sql.add ("AND active = 1;");
-    sqlite3 * db = connect ();
-    vector <string> ids = database_sqlite_query (db, sql.sql) ["rowid"];
-    for (auto & s : ids) {
+    const std::vector <std::string> ids = sql.query () ["rowid"];
+    for (const auto& s : ids) {
       id = filter::strings::convert_to_int (s);
     }
-    database_sqlite_disconnect (db);
   }
   // If no active row identifier was found, return zero.
   if (id == 0) return 0;
 
   // Get the database row identifier of the entry just after the active entry.
-  SqliteSQL sql = SqliteSQL ();
+  SqliteDatabase sql (navigation);
   sql.add ("SELECT rowid FROM navigation WHERE rowid >");
   sql.add (id);
   sql.add ("AND username =");
   sql.add (user);
   sql.add ("ORDER BY rowid ASC LIMIT 1;");
-  sqlite3 * db = connect ();
-  vector <string> ids = database_sqlite_query (db, sql.sql) ["rowid"];
-  database_sqlite_disconnect (db);
+  const std::vector <std::string> ids = sql.query () ["rowid"];
   if (!ids.empty()) {
-    return filter::strings::convert_to_int (ids[0]);
+    return filter::strings::convert_to_int (ids.at(0));
   }
 
   // Nothing found.
@@ -284,9 +266,9 @@ int Database_Navigation::get_next_id (const string& user)
 // The $direction into which to get the history:
 // * negative: Get the past history as if going back.
 // * positive: Get the future history as if going forward.
-vector <Passage> Database_Navigation::get_history (const string& user, int direction)
+std::vector <Passage> Database_Navigation::get_history (const std::string& user, int direction)
 {
-  vector <Passage> passages;
+  std::vector <Passage> passages;
   
   int id = 0;
   if (direction > 0) id = get_next_id(user);
@@ -294,8 +276,7 @@ vector <Passage> Database_Navigation::get_history (const string& user, int direc
   if (id) {
 
     // Read the passages history for this user.
-    map <string, vector <string> > result;
-    SqliteSQL sql = SqliteSQL ();
+    SqliteDatabase sql (navigation);
     sql.add ("SELECT book, chapter, verse FROM navigation WHERE rowid");
     if (direction > 0) sql.add (">=");
     if (direction < 0) sql.add ("<=");
@@ -310,14 +291,12 @@ vector <Passage> Database_Navigation::get_history (const string& user, int direc
     sql.add (";");
 
     // Run the query on the database.
-    sqlite3 * db = connect ();
-    result = database_sqlite_query (db, sql.sql);
-    database_sqlite_disconnect (db);
+    std::map <std::string, std::vector <std::string> > result = sql.query ();
 
     // Assemble the results.
-    vector <string> books = result ["book"];
-    vector <string> chapters = result ["chapter"];
-    vector <string> verses = result ["verse"];
+    const std::vector <std::string> books = result ["book"];
+    const std::vector <std::string> chapters = result ["chapter"];
+    const std::vector <std::string> verses = result ["verse"];
     for (unsigned int i = 0; i < books.size(); i++) {
       Passage passage;
       passage.m_book = filter::strings::convert_to_int (books [i]);

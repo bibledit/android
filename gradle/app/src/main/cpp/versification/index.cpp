@@ -28,10 +28,9 @@
 #include <dialog/yes.h>
 #include <assets/header.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string versification_index_url ()
+std::string versification_index_url ()
 {
   return "versification/index";
 }
@@ -43,9 +42,9 @@ bool versification_index_acl (Webserver_Request& webserver_request)
 }
 
 
-string versification_index (Webserver_Request& webserver_request)
+std::string versification_index (Webserver_Request& webserver_request)
 {
-  string page;
+  std::string page;
   
   Assets_Header header = Assets_Header (translate("Versifications"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
@@ -56,7 +55,7 @@ string versification_index (Webserver_Request& webserver_request)
   Database_Versifications database_versifications = Database_Versifications();
 
   if (webserver_request.post.count ("new")) {
-    string name = webserver_request.post["entry"];
+    std::string name = webserver_request.post["entry"];
     database_versifications.createSystem (name);
   }
   if (webserver_request.query.count ("new")) {
@@ -66,8 +65,8 @@ string versification_index (Webserver_Request& webserver_request)
   }
 
   if (webserver_request.query.count ("delete")) {
-    string name = webserver_request.query ["delete"];
-    string confirm = webserver_request.query ["confirm"];
+    std::string name = webserver_request.query ["delete"];
+    std::string confirm = webserver_request.query ["confirm"];
     if (confirm == "yes") {
       database_versifications.erase (name);
     } else if (confirm == "cancel") {
@@ -79,10 +78,10 @@ string versification_index (Webserver_Request& webserver_request)
     }
   }
 
-  stringstream systemblock;
-  vector <string> systems = database_versifications.getSystems();
+  std::stringstream systemblock;
+  std::vector <std::string> systems = database_versifications.getSystems();
   for (auto & system : systems) {
-    systemblock << "<p><a href=" << quoted ("system?name=" + system) << ">" << system << "</a></p>" << std::endl;
+    systemblock << "<p><a href=" << std::quoted ("system?name=" + system) << ">" << system << "</a></p>" << std::endl;
   }
   view.set_variable ("systemblock", systemblock.str());
   

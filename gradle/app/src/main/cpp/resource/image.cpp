@@ -37,10 +37,9 @@
 #include <menu/logic.h>
 #include <resource/images.h>
 #include <journal/logic.h>
-using namespace std;
 
 
-string resource_image_url ()
+std::string resource_image_url ()
 {
   return "resource/image";
 }
@@ -52,35 +51,35 @@ bool resource_image_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_image (Webserver_Request& webserver_request)
+std::string resource_image (Webserver_Request& webserver_request)
 {
   Database_ImageResources database_imageresources;
 
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Image resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.add_bread_crumb (resource_images_url (), menu_logic_resource_images_text ());
   page = header.run ();
   Assets_View view;
-  string error, success;
+  std::string error, success;
   
   
-  string name = webserver_request.query ["name"];
+  std::string name = webserver_request.query ["name"];
   view.set_variable ("name", name);
   
 
   // File upload.
   if (webserver_request.post.count ("upload")) {
-    string folder = filter_url_tempfile ();
+    std::string folder = filter_url_tempfile ();
     filter_url_mkdir (folder);
-    string file =  filter_url_create_path ({folder, webserver_request.post ["filename"]});
-    string data = webserver_request.post ["data"];
+    std::string file =  filter_url_create_path ({folder, webserver_request.post ["filename"]});
+    std::string data = webserver_request.post ["data"];
     if (!data.empty ()) {
       filter_url_file_put_contents (file, data);
       bool background_import = false;
       if (filter_archive_is_archive (file)) background_import = true;
-      string extension = filter_url_get_extension (file);
+      std::string extension = filter_url_get_extension (file);
       extension = filter::strings::unicode_string_casefold (extension);
       if (extension == "pdf") background_import = true;
       if (background_import) {
@@ -89,12 +88,12 @@ string resource_image (Webserver_Request& webserver_request)
         view.set_variable ("journal", journal_logic_see_journal_for_progress ());
       } else {
         // Store image.
-        string image = database_imageresources.store (name, file);
+        std::string image = database_imageresources.store (name, file);
         // Immediately open the uploaded image.
-        string url = filter_url_build_http_query (resource_img_url (), "name", name);
+        std::string url = filter_url_build_http_query (resource_img_url (), "name", name);
         url = filter_url_build_http_query (url, "image", image);
         redirect_browser (webserver_request, url);
-        return "";
+        return std::string();
       }
     } else {
       error = translate ("Nothing was uploaded");
@@ -103,9 +102,9 @@ string resource_image (Webserver_Request& webserver_request)
   
   
   // Delete image.
-  string remove = webserver_request.query ["delete"];
+  std::string remove = webserver_request.query ["delete"];
   if (remove != "") {
-    string confirm = webserver_request.query ["confirm"];
+    std::string confirm = webserver_request.query ["confirm"];
     if (confirm == "") {
       Dialog_Yes dialog_yes = Dialog_Yes ("image", translate("Would you like to delete this image?"));
       dialog_yes.add_query ("name", name);
@@ -119,8 +118,8 @@ string resource_image (Webserver_Request& webserver_request)
   }
   
   
-  vector <string> images = database_imageresources.get (name);
-  string imageblock;
+  std::vector <std::string> images = database_imageresources.get (name);
+  std::string imageblock;
   for (auto & image : images) {
     imageblock.append ("<tr>");
     
@@ -140,7 +139,7 @@ string resource_image (Webserver_Request& webserver_request)
     // From passage ...
     imageblock.append ("<td>");
     if (book1) {
-      imageblock.append (filter_passage_display (book1, chapter1, filter::strings::convert_to_string (verse1)));
+      imageblock.append (filter_passage_display (book1, chapter1, std::to_string (verse1)));
     }
     imageblock.append ("</td>");
 
@@ -149,7 +148,7 @@ string resource_image (Webserver_Request& webserver_request)
     // ... to passage.
     imageblock.append ("<td>");
     if (book2) {
-      imageblock.append (filter_passage_display (book2, chapter2, filter::strings::convert_to_string (verse2)));
+      imageblock.append (filter_passage_display (book2, chapter2, std::to_string (verse2)));
     }
     imageblock.append ("</td>");
     

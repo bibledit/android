@@ -32,10 +32,9 @@
 #include <journal/index.h>
 #include <sword/logic.h>
 #include <menu/logic.h>
-using namespace std;
 
 
-string resource_sword_url ()
+std::string resource_sword_url ()
 {
   return "resource/sword";
 }
@@ -47,7 +46,7 @@ bool resource_sword_acl (Webserver_Request& webserver_request)
 }
 
 
-string resource_sword (Webserver_Request& webserver_request)
+std::string resource_sword (Webserver_Request& webserver_request)
 {
   if (webserver_request.query.count ("refresh")) {
     tasks_logic_queue (REFRESHSWORDMODULES);
@@ -71,33 +70,33 @@ string resource_sword (Webserver_Request& webserver_request)
    */
   
   
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Resources"), webserver_request);
   header.add_bread_crumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   Assets_View view;
 
   
-  map <string, string> installed_modules;
+  std::map <std::string, std::string> installed_modules;
   {
-    vector <string> modules = sword_logic_get_installed ();
+    std::vector <std::string> modules = sword_logic_get_installed ();
     for (auto module : modules) {
-      string name = sword_logic_get_installed_module (module);
-      string version = sword_logic_get_version (module);
+      std::string name = sword_logic_get_installed_module (module);
+      std::string version = sword_logic_get_version (module);
       installed_modules [name] = version;
     }
   }
   
-  vector <string> available_modules = sword_logic_get_available ();
-  string moduleblock;
+  std::vector <std::string> available_modules = sword_logic_get_available ();
+  std::string moduleblock;
   for (auto & available_module : available_modules) {
-    string source = sword_logic_get_source (available_module);
-    string module = sword_logic_get_remote_module (available_module);
+    std::string source = sword_logic_get_source (available_module);
+    std::string module = sword_logic_get_remote_module (available_module);
     moduleblock.append ("<p>");
     moduleblock.append (available_module);
     if (!installed_modules [module].empty ()) {
       moduleblock.append (" (" + translate ("installed") + ") ");
-      string version = sword_logic_get_version (available_module);
+      std::string version = sword_logic_get_version (available_module);
       if (version != installed_modules[module]) {
         moduleblock.append (" (" + translate ("to be updated") + ")");
       }

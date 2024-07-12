@@ -20,20 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <tbsx/text.h>
 #include <filter/string.h>
 #include <filter/url.h>
-using namespace std;
 
 
 // Class for creating Trinitarian Bible Society online Bible documents. 
 
 
-void Tbsx_Text::set_book_id (string id)
+void Tbsx_Text::set_book_id (std::string id)
 {
   flush ();
   output.push_back ("###" + id);
 }
 
 
-void Tbsx_Text::set_book_name (string name)
+void Tbsx_Text::set_book_name (std::string name)
 {
   flush ();
   output.push_back ("###! " + name);
@@ -43,11 +42,11 @@ void Tbsx_Text::set_book_name (string name)
 void Tbsx_Text::set_chapter (int chapter)
 {
   flush ();
-  output.push_back ("##" + filter::strings::convert_to_string (chapter));
+  output.push_back ("##" + std::to_string (chapter));
 }
 
 
-void Tbsx_Text::set_header (string header)
+void Tbsx_Text::set_header (std::string header)
 {
   flush ();
   output.push_back ("##! " + header);
@@ -66,11 +65,11 @@ void Tbsx_Text::open_verse (int verse)
 {
   flush ();
   in_note = false;
-  add_text (filter::strings::convert_to_string (verse));
+  add_text (std::to_string (verse));
 }
 
 
-void Tbsx_Text::add_text (string text, bool supplied)
+void Tbsx_Text::add_text (std::string text, bool supplied)
 {
   if (supplied) buffer.append ("*");
   buffer.append (text);
@@ -110,20 +109,20 @@ void Tbsx_Text::flush ()
 }
 
 
-string Tbsx_Text::line ()
+std::string Tbsx_Text::line ()
 {
   return buffer;
 }
 
 
-string Tbsx_Text::get_document ()
+std::string Tbsx_Text::get_document ()
 {
   flush ();
   return filter::strings::implode (output, "\n");
 }
 
 
-void Tbsx_Text::save_document (string filename)
+void Tbsx_Text::save_document (std::string filename)
 {
   filter_url_file_put_contents (filename, get_document ());
 }

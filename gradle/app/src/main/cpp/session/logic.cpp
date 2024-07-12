@@ -27,11 +27,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <filter/roles.h>
 #include <config/globals.h>
 #include <user/logic.h>
-using namespace std;
 
 
 // The username and password for a demo installation, and for a disconnected client installation
-string session_admin_credentials ()
+std::string session_admin_credentials ()
 {
   return "admin";
 }
@@ -70,7 +69,7 @@ It sets the cookie to expire after a certain time.
 Session_Logic::Session_Logic (Webserver_Request& webserver_request):
 m_webserver_request (webserver_request)
 {
-  touch_enabled = false;
+  m_touch_enabled = false;
   open ();
 }
 
@@ -78,83 +77,61 @@ m_webserver_request (webserver_request)
 // Call this when logging in.
 void Session_Logic::open ()
 {
-  if (openAccess ()) return;
-  if (clientAccess ()) return;
+  if (open_access ()) 
+    return;
+  if (client_access ()) 
+    return;
 
   // Work around a weird bug where the user_agent's size is 140735294083184 leading to a crash.
-  if (m_webserver_request.user_agent.size () > 10'000) return;
+  if (m_webserver_request.user_agent.size () > 10'000) 
+    return;
 
   // Discard empty cookies right-away.
   // Don't regard this as something that triggers the brute force attach mitigation mechanism.
-  string cookie = m_webserver_request.session_identifier;
+  std::string cookie = m_webserver_request.session_identifier;
   if (cookie.empty ()) {
-    set_username ("");
-    logged_in = false;
+    set_username (std::string());
+    m_logged_in = false;
     return;
   }
   
   bool daily;
-  string username_from_cookie = Database_Login::getUsername (cookie, daily);
+  std::string username_from_cookie = Database_Login::getUsername (cookie, daily);
   if (!username_from_cookie.empty ()) {
     set_username (username_from_cookie);
-    logged_in = true;
+    m_logged_in = true;
     if (daily) m_webserver_request.resend_cookie = true;
-    touch_enabled = Database_Login::getTouchEnabled (cookie);
+    m_touch_enabled = Database_Login::getTouchEnabled (cookie);
   } else {
-    set_username (string());
-    logged_in = false;
+    set_username (std::string());
+    m_logged_in = false;
   }
 }
 
 
-void Session_Logic::set_username (string name)
+void Session_Logic::set_username (const std::string& name)
 {
-  username = name;
+  m_username = name;
 }
 
 
-bool Session_Logic::openAccess ()
+bool Session_Logic::open_access ()
 {
   // Open access if it is flagged as such.
   if (config_globals_open_installation) {
     set_username (session_admin_credentials ());
-    level = Filter_Roles::admin ();
-    logged_in = true;
+    m_level = Filter_Roles::admin ();
+    m_logged_in = true;
     return true;
   }
   return false;
 }
 
 
-// Returns IP blocks of remote address.
-string Session_Logic::remoteAddress ()
-{
-  vector <string> blocks = filter::strings::explode (m_webserver_request.remote_address, '.');
-  string address;
-  size_t num_blocks = static_cast<size_t> (abs (check_ip_blocks));
-  if (num_blocks > blocks.size ()) num_blocks = blocks.size ();
-  for (unsigned int i = 0; i < num_blocks; i++) {
-    address += blocks [i] + ".";
-  }
-  return address;
-}
-
-
-// Returns a fingerprint from the user's browser.
-string Session_Logic::fingerprint ()
-{
-  string fingerprint = "";
-  // fingerprint += $_SERVER ['HTTP_CONNECTION']; Unstable fingerprint. No use for persistent login.
-  // fingerprint += $_SERVER ['HTTP_ACCEPT_ENCODING']; Unstable fingerprint. No use for persistent login.
-  fingerprint += m_webserver_request.accept_language;
-  return fingerprint;
-}
-
-
 // Attempts to log into the system.
 // Records whether the user logged in from a touch-enabled device.
 // Returns boolean success.
-bool Session_Logic::attempt_login (string user_or_email, string password,
+bool Session_Logic::attempt_login (std::string user_or_email, const std::string& password,
                                    bool touch_enabled_in, bool skip_checks)
 {
   // Brute force attack mitigation.
@@ -188,10 +165,10 @@ bool Session_Logic::attempt_login (string user_or_email, string password,
   if (login_okay) {
     open ();
     set_username (user_or_email);
-    logged_in = true;
-    string cookie = m_webserver_request.session_identifier;
+    m_logged_in = true;
+    std::string cookie = m_webserver_request.session_identifier;
     Database_Login::setTokens (user_or_email, "", "", "", cookie, touch_enabled_in);
-    currentLevel (true);
+    get_level (true);
     return true;
   } else {
     user_logic_login_failure_register ();
@@ -202,7 +179,7 @@ bool Session_Logic::attempt_login (string user_or_email, string password,
 
 
 // Returns true if the user is logged in.
-bool Session_Logic::loggedIn ()
+bool Session_Logic::get_logged_in ()
 {
   // The logged-in status is stored in the object, so that if it is requested twice,
   // the session system is queried only once. It has been seen on some sites that if the php session
@@ -210,18 +187,19 @@ bool Session_Logic::loggedIn ()
   // Buffering the status in the object resolved this.
   // After the session system was dropped, the above comment is no longer relevant.
   // The information this comment contains remains relevant for the future.
-  if (openAccess ()) return true;
-  return logged_in;
+  if (open_access ()) 
+    return true;
+  return m_logged_in;
 }
 
 
-string Session_Logic::currentUser ()
+const std::string& Session_Logic::get_username () const
 {
-  return username;
+  return m_username;
 }
 
 
-bool Session_Logic::touchEnabled ()
+bool Session_Logic::get_touch_enabled ()
 {
   // Deal with the global variable for touch-enabled.
   // The variable, if zero, does nothing.
@@ -229,65 +207,68 @@ bool Session_Logic::touchEnabled ()
   // This 'doing nothing' is needed for a situation where a server has clients
   // with and without a touch-screen, so one global variable does not affect a local state.
   // The global variable is for a client application, where there's only one user per app.
-  if (config_globals_touch_enabled > 0) touch_enabled = true;
-  if (config_globals_touch_enabled < 0) touch_enabled = false;
+  if (config_globals_touch_enabled > 0) 
+    m_touch_enabled = true;
+  if (config_globals_touch_enabled < 0)
+    m_touch_enabled = false;
   // Give the result, either set globally, or else through prior reading from the database.
-  return touch_enabled;
+  return m_touch_enabled;
 }
 
 
 // Returns the current level of the session as an integer.
-int Session_Logic::currentLevel (bool force)
+int Session_Logic::get_level (bool force)
 {
-  if (openAccess ()) return level;
-  if ((level == 0) || force) {
-    if (loggedIn()) {
+  if (open_access ()) 
+    return m_level;
+  if ((m_level == 0) || force) {
+    if (m_logged_in) {
       Database_Users database = Database_Users();
-      level = database.get_level (currentUser());
+      m_level = database.get_level (m_username);
     } else {
-      level = Filter_Roles::guest ();
+      m_level = Filter_Roles::guest ();
     }
   }
-  return level;
+  return m_level;
 }
 
 
 void Session_Logic::logout ()
 {
-  const string cookie = m_webserver_request.session_identifier;
-  Database_Login::removeTokens (currentUser (), cookie);
-  set_username (string());
-  level = Filter_Roles::guest();
+  const std::string cookie = m_webserver_request.session_identifier;
+  Database_Login::removeTokens (m_username, cookie);
+  set_username (std::string());
+  m_level = Filter_Roles::guest();
 }
 
 
-bool Session_Logic::clientAccess ()
+bool Session_Logic::client_access ()
 {
   // If client mode is prepared, 
   // log in as the first username in the user database,
   // or as the admin in case no user has been set up yet.
   if (config_globals_client_prepared) {
     Database_Users database_users;
-    vector <string> users = database_users.get_users ();
-    string user;
+    std::vector <std::string> users = database_users.get_users ();
+    std::string user;
     if (users.empty ()) {
       user = session_admin_credentials ();
-      level = Filter_Roles::admin ();
+      m_level = Filter_Roles::admin ();
     } else {
-      user = users [0];
-      level = database_users.get_level (user);
+      user = users.at(0);
+      m_level = database_users.get_level (user);
     }
     set_username (user);
-    logged_in = true;
+    m_logged_in = true;
     return true;
   }
   return false;
 }
 
 
-void Session_Logic::switch_user (string new_user)
+void Session_Logic::switch_user (std::string new_user)
 {
-  string cookie = m_webserver_request.session_identifier;
+  std::string cookie = m_webserver_request.session_identifier;
   Database_Login::removeTokens (new_user, cookie);
-  Database_Login::renameTokens (currentUser (), new_user, cookie);
+  Database_Login::renameTokens (m_username, new_user, cookie);
 }

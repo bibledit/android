@@ -32,10 +32,9 @@
 #include <ipc/focus.h>
 #include <navigation/passage.h>
 #include <notes/actions.h>
-using namespace std;
 
 
-string notes_verses_url ()
+std::string notes_verses_url ()
 {
   return "notes/verses";
 }
@@ -47,26 +46,26 @@ bool notes_verses_acl (Webserver_Request& webserver_request)
 }
 
 
-string notes_verses (Webserver_Request& webserver_request)
+std::string notes_verses (Webserver_Request& webserver_request)
 {
   Database_Notes database_notes (webserver_request);
   Notes_Logic notes_logic (webserver_request);
 
 
-  string page;
+  std::string page;
   Assets_Header header = Assets_Header (translate("Passages"), webserver_request);
   page += header.run ();
   Assets_View view;
-  string success, error;
+  std::string success, error;
   
   
   int id = filter::strings::convert_to_int (webserver_request.query ["id"]);
-  view.set_variable ("id", filter::strings::convert_to_string (id));
+  view.set_variable ("id", std::to_string (id));
 
 
   if (webserver_request.post.count ("submit")) {
-    vector <string> verses = filter::strings::explode (webserver_request.post["verses"], '\n');
-    vector <Passage> passages;
+    std::vector <std::string> verses = filter::strings::explode (webserver_request.post["verses"], '\n');
+    std::vector <Passage> passages;
     Passage previousPassage = Passage ("", 1, 1, "1");
     for (auto & line : verses) {
       line = filter::strings::trim (line);
@@ -82,13 +81,13 @@ string notes_verses (Webserver_Request& webserver_request)
       error = translate ("The note should have one or more passages assigned.");
     } else {
       notes_logic.setPassages (id, passages);
-      redirect_browser (webserver_request, notes_actions_url () + "?id=" + filter::strings::convert_to_string (id));
-      return "";
+      redirect_browser (webserver_request, notes_actions_url () + "?id=" + std::to_string (id));
+      return std::string();
     }
   }
   
   
-  string verses = filter_passage_display_multiline (database_notes.get_passages (id));
+  std::string verses = filter_passage_display_multiline (database_notes.get_passages (id));
   view.set_variable ("verses", verses);
   
   

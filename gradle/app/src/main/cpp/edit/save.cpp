@@ -40,10 +40,9 @@
 #include <quill/logic.h>
 #include <rss/logic.h>
 #include <sendreceive/logic.h>
-using namespace std;
 
 
-string edit_save_url ()
+std::string edit_save_url ()
 {
   return "edit/save";
 }
@@ -58,19 +57,19 @@ bool edit_save_acl (Webserver_Request& webserver_request)
 }
 
 
-string edit_save (Webserver_Request& webserver_request)
+std::string edit_save (Webserver_Request& webserver_request)
 {
   bool post_complete = (webserver_request.post.count ("bible") && webserver_request.post.count ("book") && webserver_request.post.count ("chapter") && webserver_request.post.count ("html") && webserver_request.post.count ("checksum"));
   if (!post_complete) {
     return translate("Insufficient information");
   }
 
-  string bible = webserver_request.post["bible"];
+  std::string bible = webserver_request.post["bible"];
   int book = filter::strings::convert_to_int (webserver_request.post["book"]);
   int chapter = filter::strings::convert_to_int (webserver_request.post["chapter"]);
-  string html = webserver_request.post["html"];
-  string checksum = webserver_request.post["checksum"];
-  string unique_id = webserver_request.post ["id"];
+  std::string html = webserver_request.post["html"];
+  std::string checksum = webserver_request.post["checksum"];
+  std::string unique_id = webserver_request.post ["id"];
 
   if (checksum_logic::get (html) != checksum) {
     webserver_request.response_code = 409;
@@ -90,21 +89,21 @@ string edit_save (Webserver_Request& webserver_request)
     return translate("Save failure");
   }
   
-  if (!access_bible::book_write (webserver_request, string(), bible, book)) {
+  if (!access_bible::book_write (webserver_request, std::string(), bible, book)) {
     return translate("No write access");
   }
 
-  string stylesheet = Database_Config_Bible::getEditorStylesheet (bible);
+  const std::string stylesheet = database::config::bible::get_editor_stylesheet (bible);
   
   Editor_Html2Usfm editor_export;
   editor_export.load (html);
   editor_export.stylesheet (stylesheet);
   editor_export.run ();
-  string user_usfm = editor_export.get ();
+  std::string user_usfm = editor_export.get ();
   
-  string ancestor_usfm = getLoadedUsfm2 (webserver_request, bible, book, chapter, unique_id);
+  std::string ancestor_usfm = getLoadedUsfm2 (webserver_request, bible, book, chapter, unique_id);
   
-  vector <filter::usfm::BookChapterData> book_chapter_text = filter::usfm::usfm_import (user_usfm, stylesheet);
+  std::vector <filter::usfm::BookChapterData> book_chapter_text = filter::usfm::usfm_import (user_usfm, stylesheet);
   if (book_chapter_text.size () != 1) {
     Database_Logs::log (translate ("User tried to save something different from exactly one chapter."));
     return translate("Incorrect chapter");
@@ -115,22 +114,22 @@ string edit_save (Webserver_Request& webserver_request)
   user_usfm = book_chapter_text[0].m_data;
   bool chapter_ok = (((book_number == book) || (book_number == 0)) && (chapter_number == chapter));
   if (!chapter_ok) {
-    return translate("Incorrect chapter") + " " + filter::strings::convert_to_string (chapter_number);
+    return translate("Incorrect chapter") + " " + std::to_string (chapter_number);
   }
   
   // Collect some data about the changes for this user
   // and for a possible merge of the user's data with the server's data.
-  string username = webserver_request.session_logic()->currentUser ();
-  [[maybe_unused]] int oldID = webserver_request.database_bibles()->get_chapter_id (bible, book, chapter);
-  string server_usfm = webserver_request.database_bibles()->get_chapter (bible, book, chapter);
-  string newText = user_usfm;
-  string oldText = ancestor_usfm;
+  const std::string& username = webserver_request.session_logic ()->get_username ();
+  [[maybe_unused]] int oldID = database::bibles::get_chapter_id (bible, book, chapter);
+  std::string server_usfm = database::bibles::get_chapter (bible, book, chapter);
+  std::string newText = user_usfm;
+  std::string oldText = ancestor_usfm;
   
   // Safekeep the USFM to save for later.
-  string change = user_usfm;
+  std::string change = user_usfm;
   
   // Merge if the ancestor is there and differs from what's in the database.
-  vector <Merge_Conflict> conflicts;
+  std::vector <Merge_Conflict> conflicts;
   if (!ancestor_usfm.empty ()) {
     if (server_usfm != ancestor_usfm) {
       // Prioritize the user's USFM.
@@ -156,8 +155,8 @@ string edit_save (Webserver_Request& webserver_request)
   }
 
   // Safely store the chapter.
-  string explanation;
-  string message = filter::usfm::safely_store_chapter (webserver_request, bible, book, chapter, user_usfm, explanation);
+  std::string explanation;
+  std::string message = filter::usfm::safely_store_chapter (webserver_request, bible, book, chapter, user_usfm, explanation);
   bible_logic::unsafe_save_mail (message, explanation, username, user_usfm, book, chapter);
 
   // If an error message was given, then return that message to the browser.
@@ -165,11 +164,10 @@ string edit_save (Webserver_Request& webserver_request)
 
   // In server configuration, store details for the user's changes.
 #ifdef HAVE_CLOUD
-  int newID = webserver_request.database_bibles()->get_chapter_id (bible, book, chapter);
-  Database_Modifications database_modifications;
-  database_modifications.recordUserSave (username, bible, book, chapter, oldID, oldText, newID, newText);
+  int newID = database::bibles::get_chapter_id (bible, book, chapter);
+  database::modifications::recordUserSave (username, bible, book, chapter, oldID, oldText, newID, newText);
   if (sendreceive_git_repository_linked (bible)) {
-    Database_Git::store_chapter (username, bible, book, chapter, oldText, newText);
+    database::git::store_chapter (username, bible, book, chapter, oldText, newText);
   }
   rss_logic_schedule_update (username, bible, book, chapter, oldText, newText);
 #endif
@@ -185,7 +183,7 @@ string edit_save (Webserver_Request& webserver_request)
   editor_usfm2html.load (user_usfm);
   editor_usfm2html.stylesheet (stylesheet);
   editor_usfm2html.run ();
-  string converted_html = editor_usfm2html.get ();
+  std::string converted_html = editor_usfm2html.get ();
   // Convert to XML for comparison.
   // Remove spaces before comparing.
   // Goal: Entering a space in the editor does not cause a reload.

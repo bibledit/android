@@ -25,10 +25,9 @@
 #include <webserver/request.h>
 #include <locale/translate.h>
 #include <search/logic.h>
-using namespace std;
 
 
-string webbible_search_url ()
+std::string webbible_search_url ()
 {
   return "webbb/search";
 }
@@ -40,18 +39,18 @@ bool webbible_search_acl (Webserver_Request& webserver_request)
 }
 
 
-string webbible_search (Webserver_Request& webserver_request)
+std::string webbible_search (Webserver_Request& webserver_request)
 {
   Assets_View view;
   
   
   // Get the URL and the text for the backlink.
-  string backlinkUrl = webserver_request.query.count ("url") ? webserver_request.query["url"] : "";
-  string backlinkText = webserver_request.query.count ("text") ? webserver_request.query["text"] : "";
+  std::string backlinkUrl = webserver_request.query.count ("url") ? webserver_request.query["url"] : "";
+  std::string backlinkText = webserver_request.query.count ("text") ? webserver_request.query["text"] : "";
   
   
   // The query: The word or string to search for.
-  string queryString = webserver_request.query.count ("q") ? webserver_request.query["q"] : "";
+  std::string queryString = webserver_request.query.count ("q") ? webserver_request.query["q"] : "";
   
   
   // Put the search query and the backlink into the search box.
@@ -65,22 +64,22 @@ string webbible_search (Webserver_Request& webserver_request)
   
   
   // Generate search words for emphasizing the search hits.
-  vector <string> queryWords = filter::strings::explode (queryString, ' ');
+  std::vector <std::string> queryWords = filter::strings::explode (queryString, ' ');
   
   
   // Exported Bible.
-  string exportedBible = filter_url_basename_web (filter_url_dirname_web (filter_url_dirname_web (backlinkUrl)));
+  std::string exportedBible = filter_url_basename_web (filter_url_dirname_web (filter_url_dirname_web (backlinkUrl)));
   
   
   // Search the Bible text in the exported Bible.
-  vector <Passage> passages = search_logic_search_text (queryString, {exportedBible});
+  std::vector <Passage> passages = search_logic_search_text (queryString, {exportedBible});
   
   
   // Hit count.
-  view.set_variable ("hitCount", filter::strings::convert_to_string (passages.size ()));
+  view.set_variable ("hitCount", std::to_string (passages.size ()));
   
   
-  stringstream hitsblock;
+  std::stringstream hitsblock;
   
   
   // Go through the search hits.
@@ -89,34 +88,34 @@ string webbible_search (Webserver_Request& webserver_request)
     
     // Get the passage of this search hit.
     if (passage.m_book == 0) continue;
-    string bible = passage.m_bible;
+    std::string bible = passage.m_bible;
     int book = passage.m_book;
     int chapter = passage.m_chapter;
-    string verse = passage.m_verse;
+    std::string verse = passage.m_verse;
     
     
     // The title.
-    string title = bible + " | " + filter_passage_display (book, chapter, verse);
+    std::string title = bible + " | " + filter_passage_display (book, chapter, verse);
     title = filter::strings::escape_special_xml_characters (title);
     
     
     // The URL.
-    string url = "/exports/" + bible + "/web/" + filter_url_html_file_name_bible (string(), book, chapter);
+    std::string url = "/exports/" + bible + "/web/" + filter_url_html_file_name_bible (std::string(), book, chapter);
     
     
     // Output title and URL.
-    hitsblock << "<p style=" << quoted ("margin-top: 0.75em; margin-bottom: 0em") << "><a href=" << quoted (url) << ">" << title << "</a></p>" << std::endl;
+    hitsblock << "<p style=" << std::quoted ("margin-top: 0.75em; margin-bottom: 0em") << "><a href=" << std::quoted (url) << ">" << title << "</a></p>" << std::endl;
     
     
     // The excerpt.
-    string text = search_logic_get_bible_verse_text (bible, book, chapter, filter::strings::convert_to_int (verse));
-    vector <string> v_text = filter::strings::explode (text, '\n');
+    std::string text = search_logic_get_bible_verse_text (bible, book, chapter, filter::strings::convert_to_int (verse));
+    std::vector <std::string> v_text = filter::strings::explode (text, '\n');
     // Go through each line of text separately.
     for (auto line : v_text) {
-      string markedLine = filter::strings::markup_words (queryWords, line);
+      std::string markedLine = filter::strings::markup_words (queryWords, line);
       if (markedLine != line) {
         // Store this bit of the excerpt.
-        hitsblock << "<p style=" << quoted ("margin-top: 0em; margin-bottom: 0em") << ">" << markedLine << "</p>" << std::endl;
+        hitsblock << "<p style=" << std::quoted ("margin-top: 0em; margin-bottom: 0em") << ">" << markedLine << "</p>" << std::endl;
       }
     }
   }
