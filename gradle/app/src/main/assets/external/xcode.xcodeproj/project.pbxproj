@@ -234,6 +234,7 @@
 		CA77114727524BC8003ADD67 /* libicuuc.67.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicuuc.67.1.dylib; path = ../../../../opt/local/lib/libicuuc.67.1.dylib; sourceTree = "<group>"; };
 		CA77114927524BFF003ADD67 /* libicudata.67.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicudata.67.1.dylib; path = ../../../../opt/local/lib/libicudata.67.1.dylib; sourceTree = "<group>"; };
 		CA772E29262F58580097D5C7 /* studylight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = studylight.cpp; sourceTree = "<group>"; };
+		CA7A057B2C4C067C0087DBE5 /* 0readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = 0readme.txt; sourceTree = "<group>"; };
 		CA83A69F289D7C9F0038E298 /* googletranslate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = googletranslate.cpp; sourceTree = "<group>"; };
 		CA83A6A0289D7C9F0038E298 /* googletranslate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = googletranslate.h; sourceTree = "<group>"; };
 		CA83A6A1289D7C9F0038E298 /* googletranslate.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = googletranslate.html; sourceTree = "<group>"; };
@@ -541,7 +542,6 @@
 		CADE38FF24F17422003165BB /* logic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = logic.cpp; sourceTree = "<group>"; };
 		CADE390024F17422003165BB /* usfm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usfm.h; sourceTree = "<group>"; };
 		CADE390124F17422003165BB /* textusfm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = textusfm.cpp; sourceTree = "<group>"; };
-		CADE390224F17422003165BB /* bibledropbox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bibledropbox.cpp; sourceTree = "<group>"; };
 		CADE390324F17422003165BB /* usfm.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = usfm.html; sourceTree = "<group>"; };
 		CADE390524F17422003165BB /* esword.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = esword.h; sourceTree = "<group>"; };
 		CADE390624F17422003165BB /* web.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = web.cpp; sourceTree = "<group>"; };
@@ -549,7 +549,6 @@
 		CADE390824F17422003165BB /* usfm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usfm.cpp; sourceTree = "<group>"; };
 		CADE390924F17422003165BB /* logic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logic.h; sourceTree = "<group>"; };
 		CADE390B24F17422003165BB /* textusfm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = textusfm.h; sourceTree = "<group>"; };
-		CADE390E24F17422003165BB /* bibledropbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bibledropbox.h; sourceTree = "<group>"; };
 		CADE390F24F17422003165BB /* info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
 		CADE391024F17422003165BB /* onlinebible.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = onlinebible.cpp; sourceTree = "<group>"; };
 		CADE392024F17422003165BB /* info.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = info.cpp; sourceTree = "<group>"; };
@@ -1907,6 +1906,7 @@
 		CA18ADB624F169DA00FF603C = {
 			isa = PBXGroup;
 			children = (
+				CA7A057B2C4C067C0087DBE5 /* 0readme.txt */,
 				CADE36FD24F1737A003165BB /* access */,
 				CADE36FC24F1737A003165BB /* aclocal.m4 */,
 				CADE370D24F1737A003165BB /* assets */,
@@ -2681,8 +2681,6 @@
 		CADE38F324F17422003165BB /* export */ = {
 			isa = PBXGroup;
 			children = (
-				CADE390224F17422003165BB /* bibledropbox.cpp */,
-				CADE390E24F17422003165BB /* bibledropbox.h */,
 				CADE38F824F17422003165BB /* esword.cpp */,
 				CADE390524F17422003165BB /* esword.h */,
 				CADE390724F17422003165BB /* html.cpp */,
