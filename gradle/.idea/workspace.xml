@@ -13,11 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/asset.external" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/asset.external" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/Makefile.am" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/install.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/install.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/manage/exports.html" afterDir="false" />
