@@ -69,7 +69,10 @@
 #define HAVE_BARE_BROWSER 1
 #define HAVE_TINY_JOURNAL 1
 #undef RUN_SECURE_SERVER
-// Todo #undef USE_STD_FILESYSTEM
+// Testing the std::fileystem in August 2024.
+// Results: 5 out of 6 devices tested had crahes in C++.
+// See https://github.com/bibledit/cloud/issues/952 for more info.
+#undef USE_STD_FILESYSTEM
 #endif
 
 
