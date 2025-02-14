@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -53,6 +53,4 @@ constexpr int export_online_bible { 8 };
 constexpr int export_esword { 9 };
 constexpr int export_end { 10 };
 
-}; // End of namespace.
-
-
+} // End of namespace.

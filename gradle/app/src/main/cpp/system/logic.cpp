@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -178,7 +178,7 @@ void system_logic_import_bibles_file (std::string tarball)
 
   // Since new Bibles may have been imported, index them all.
   database::config::general::set_index_bibles (true);
-  tasks_logic_queue (REINDEXBIBLES, {"1"});
+  tasks_logic_queue (task::reindex_bibles, {"1"});
 
   // Ready, hallelujah!
   Database_Logs::log ("Importing Bibles ready");
@@ -269,7 +269,7 @@ void system_logic_import_notes_file (std::string tarball)
 
   // Since notes may have been imported or updated, index them all.
   database::config::general::setIndexNotes (true);
-  tasks_logic_queue (REINDEXNOTES);
+  tasks_logic_queue (task::reindex_notes);
 
   // Ready, hallelujah!
   Database_Logs::log ("Importing Consultation Notes ready");

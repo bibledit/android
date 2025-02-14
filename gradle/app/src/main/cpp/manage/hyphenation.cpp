@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ std::string manage_hyphenation (Webserver_Request& webserver_request)
     } else if (secondset == "") {
       error = translate("No second set of characters given");
     } else {
-      tasks_logic_queue (HYPHENATE, {bible, webserver_request.session_logic ()->get_username ()});
+      tasks_logic_queue (task::hyphenate, {bible, webserver_request.session_logic ()->get_username ()});
       redirect_browser (webserver_request, journal_index_url ());
       return std::string();
     }

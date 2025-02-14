@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <database/books.h>
 #include <filter/string.h>
 #include <filter/passage.h>
+#include <filter/shell.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
 #pragma GCC diagnostic ignored "-Wsuggest-override"
@@ -47,7 +48,7 @@ void sources_oshb_parse ()
   unlink (file.c_str());
   std::cout << file << std::endl;
 
-  std::string command = "gunzip sources/oshb.xml.gz";
+  std::string command = std::string(filter::shell::get_executable(filter::shell::Executable::gunzip)) + " sources/oshb.xml.gz";
 #ifndef HAVE_IOS
   [[maybe_unused]] auto result = system (command.c_str ());
 #endif

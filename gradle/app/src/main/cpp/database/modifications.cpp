@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -290,6 +290,7 @@ std::vector <int> getTeamDiffChapters (const std::string& bible, int book)
   for (auto & file : files) {
     if (file.substr (0, length) != pattern) continue;
     std::vector <std::string> bits = filter::strings::explode (file, '.');
+    filter::strings::implode_from_beginning_remain_with_max_n_bits (bits, 3, ".");
     if (bits.size() != 3) continue;
     std::string path = filter_url_create_path ({teamFolder (), file});
     const int time = filter_url_file_modification_time (path);
@@ -330,12 +331,13 @@ int getTeamDiffCount (const std::string& bible)
 std::vector <int> getTeamDiffBooks (const std::string& bible)
 {
   std::vector <int> books;
-  std::string pattern = bible + ".";
-  size_t length = pattern.length ();
-  std::vector <std::string> files = filter_url_scandir (teamFolder ());
-  for (auto & file : files) {
+  const std::string pattern = bible + ".";
+  const size_t length = pattern.length ();
+  const std::vector <std::string> files = filter_url_scandir (teamFolder ());
+  for (const auto& file : files) {
     if (file.substr (0, length) != pattern) continue;
     std::vector <std::string> bits = filter::strings::explode (file, '.');
+    filter::strings::implode_from_beginning_remain_with_max_n_bits (bits, 3, ".");
     if (bits.size() != 3) continue;
     books.push_back (filter::strings::convert_to_int (bits [1]));
   }
@@ -347,12 +349,14 @@ std::vector <int> getTeamDiffBooks (const std::string& bible)
 
 
 // Returns an array with the available Bibles that have diff data.
+// Supports Bible names with one or more dots (.) in their name.
 std::vector <std::string> getTeamDiffBibles ()
 {
   std::vector <std::string> bibles;
   std::vector <std::string> files = filter_url_scandir (teamFolder ());
   for (auto & file : files) {
     std::vector <std::string> bits = filter::strings::explode (file, '.');
+    filter::strings::implode_from_beginning_remain_with_max_n_bits (bits, 3, ".");
     if (bits.size() != 3) continue;
     bibles.push_back (bits [0]);
   }
@@ -430,13 +434,13 @@ std::vector <int> getUserBooks (const std::string& username, const std::string& 
 
 std::vector <int> getUserChapters (const std::string& username, const std::string& bible, int book)
 {
-  std::string folder = userBookFolder (username, bible, book);
-  std::vector <std::string> files = filter_url_scandir (folder);
+  const std::string folder = userBookFolder (username, bible, book);
+  const std::vector <std::string> files = filter_url_scandir (folder);
   std::vector <int> chapters;
-  for (auto & file : files) {
-    std::string path = filter_url_create_path ({folder, file});
-    int time = filter_url_file_modification_time (path);
-    int days = (filter::date::seconds_since_epoch () - time) / 86400;
+  for (const auto& file : files) {
+    const std::string path = filter_url_create_path ({folder, file});
+    const int time = filter_url_file_modification_time (path);
+    const int days = (filter::date::seconds_since_epoch () - time) / 86400;
     if (days > 5) {
       // Unprocessed user changes older than so many days usually indicate a problem.
       // Perhaps the server crashed so it never could process them.
@@ -447,7 +451,7 @@ std::vector <int> getUserChapters (const std::string& username, const std::strin
       chapters.push_back (filter::strings::convert_to_int (file));
     }
   }
-  sort (chapters.begin(), chapters.end());
+  std::sort (chapters.begin(), chapters.end());
   return chapters;
 }
 
@@ -602,9 +606,9 @@ void indexTrimAllNotifications ()
     
     std::map <std::string, std::vector <std::string> > result;
     if (valid) {
-      SqliteDatabase sql (path);
-      sql.add ("SELECT * FROM notification;");
-      result = sql.query ();
+      SqliteDatabase sql2 (path);
+      sql2.add ("SELECT * FROM notification;");
+      result = sql2.query ();
     }
     if (result.empty ()) valid = false;
     

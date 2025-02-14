@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -35,5 +35,5 @@ void checks_logic_start_all ()
 
 void checks_logic_start (const std::string& bible)
 {
-  tasks_logic_queue (CHECKBIBLE, {bible});
+  tasks_logic_queue (task::check_bible, {bible});
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ std::string navigation_update (Webserver_Request& webserver_request)
   
   // Get the list of available chapters in the current book.
   else if (webserver_request.query.count ("getchapters")) {
-    return Navigation_Passage::get_chapters_fragment (webserver_request, bible, book, chapter);
+    return Navigation_Passage::get_chapters_fragment (bible, book, chapter);
   }
   
 
@@ -109,7 +109,7 @@ std::string navigation_update (Webserver_Request& webserver_request)
   
   // Get the list of available verses in the current chapter.
   else if (webserver_request.query.count ("getverses")) {
-    return Navigation_Passage::get_verses_fragment (webserver_request, bible, book, chapter, verse);
+    return Navigation_Passage::get_verses_fragment (bible, book, chapter, verse);
   }
 
   

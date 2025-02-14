@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ std::string developer_index (Webserver_Request& webserver_request)
   }
   
   if (debug == "receive") {
-    tasks_logic_queue (RECEIVEEMAIL);
+    tasks_logic_queue (task::receive_email);
     view.set_variable ("success", "Receiving email and running tasks that send mail");
   }
 
@@ -130,7 +130,7 @@ std::string developer_index (Webserver_Request& webserver_request)
   }
   
   if (debug == "maintain") {
-    tasks_logic_queue (MAINTAINDATABASE);
+    tasks_logic_queue (task::maintain_database);
     view.set_variable ("success", "Starting to maintain the databases");
   }
 

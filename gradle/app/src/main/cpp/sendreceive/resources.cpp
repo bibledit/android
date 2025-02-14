@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ void sendreceive_resources ()
   if (sendreceive_logic_prioritized_task_is_active ()) {
     sendreceive_resources_done ();
     std::this_thread::sleep_for (std::chrono::seconds (5));
-    tasks_logic_queue (SYNCRESOURCES);
+    tasks_logic_queue (task::sync_resources);
     return;
   }
 
@@ -222,7 +222,7 @@ void sendreceive_resources ()
   sendreceive_resources_interrupt = false;
 
   // If there's another resource waiting to be cached, schedule it for caching.
-  if (!resources.empty ()) tasks_logic_queue (SYNCRESOURCES);
+  if (!resources.empty ()) tasks_logic_queue (task::sync_resources);
 }
 
 

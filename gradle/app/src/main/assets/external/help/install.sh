@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (©) 2003-2024 Teus Benschop.
+# Copyright (©) 2003-2025 Teus Benschop.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -132,6 +132,7 @@ dnf --assumeyes install curl
 dnf --assumeyes install make
 dnf --assumeyes install utf8proc-devel
 dnf --assumeyes install pugixml-devel
+dnf --assumeyes install gst-devtools-devel
 fi
 
 # CentOS
@@ -180,6 +181,7 @@ zypper -n --non-interactive --no-gpg-checks install curl
 zypper -n --non-interactive --no-gpg-checks install make
 zypper -n --non-interactive --no-gpg-checks install utf8proc-devel
 zypper -n --non-interactive --no-gpg-checks install pugixml-devel
+zypper -n --non-interactive --no-gpg-checks install libxml2-devel
 fi
 
 

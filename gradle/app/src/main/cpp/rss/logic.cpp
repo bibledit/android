@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void rss_logic_schedule_update (std::string user, std::string bible, int book, i
   parameters.push_back (std::to_string (chapter));
   parameters.push_back (oldusfm);
   parameters.push_back (newusfm);
-  tasks_logic_queue (RSSFEEDUPDATECHAPTER, parameters);
+  tasks_logic_queue (task::rss_feed_update_chapter, parameters);
 }
 
 

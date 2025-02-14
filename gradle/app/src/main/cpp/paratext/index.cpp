@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -156,7 +156,7 @@ std::string paratext_index (Webserver_Request& webserver_request)
       return page;
     } else {
       // Set collaboration up.
-      tasks_logic_queue (SETUPPARATEXT, { bible, master });
+      tasks_logic_queue (task::setup_paratext, { bible, master });
       success = translate ("The collaboration will be set up");
       if (database::config::general::get_repeat_send_receive () == 0) {
         database::config::general::set_repeat_send_receive (2);

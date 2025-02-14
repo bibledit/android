@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 // The advantage of this is that the user interface will be more responsive.
 void styles_sheets_create_all ()
 {
-  tasks_logic_queue (CREATECSS);
+  tasks_logic_queue (task::create_css);
 }
 
 
@@ -47,8 +47,7 @@ void styles_sheets_create_all_run ()
 // Recreates the various stylesheets.css files.
 void Styles_Sheets::recreate ()
 {
-  Database_Styles database_styles;
-  std::vector <std::string> stylesheets = database_styles.getSheets ();
+  std::vector <std::string> stylesheets = database::styles::get_sheets ();
   for (const auto & stylesheet : stylesheets) {
     std::string path = get_location (stylesheet, false);
     create (stylesheet, path, false, std::string());

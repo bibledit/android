@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ void convert_resource_to_bible (std::string resource)
   
   
   // The Cloud updates the list of available USFM resources for the clients.
-  tasks_logic_queue (LISTUSFMRESOURCES);
+  tasks_logic_queue (task::list_usfm_resources);
 
   
   Database_Logs::log (translate("Conversion completed"));

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,13 +41,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma GCC diagnostic pop
 
 
+constexpr const std::string_view revisions {"revisions"};
+constexpr const std::string_view exports {"exports"};
+
+
 static bool index_listing_match (const std::string& url)
 {
-  if (url.length () >= 9) 
-    if (url.substr (0, 9) == "revisions")
+  if (url.length () >= revisions.size())
+    if (url.substr (0, revisions.size()) == revisions)
       return true;
-  if (url.length () >= 7) 
-    if (url.substr (0, 7) == "exports")
+  if (url.length () >= exports.size())
+    if (url.substr (0, exports.size()) == exports)
       return true;
   return false;
 }
@@ -57,14 +61,14 @@ std::string index_listing_url (const std::string& url)
 {
   if (index_listing_match (url)) 
     return url;
-  return "\\";
+  return R"(\)";
 }
 
 
 bool index_listing_acl (Webserver_Request& webserver_request, std::string url)
 {
   // Bible exports are public.
-  if (url.find ("exports") == 0) {
+  if (url.find (exports) == 0) {
     return Filter_Roles::access_control (webserver_request, Filter_Roles::guest ());
   }
   // Any other files are for people with at least a member role.
@@ -78,8 +82,7 @@ std::string index_listing (Webserver_Request& webserver_request, std::string url
   // No breadcrumbs because the user can arrive here from more than one place.
   Assets_View view;
   url = filter_url_urldecode (url);
-  url = filter_url_create_path ({std::string(), url});
-  url = filter::strings::replace (R"(\)", "/", url);
+  url = filter_url_create_path_web ({std::string(), url});
   view.set_variable ("url", url);
   const std::string parent = filter_url_dirname_web (url);
   if (parent.length () > 1) {

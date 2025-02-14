@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,6 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #endif
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wc99-extensions"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #include <mbedtls/version.h>
 #include <mbedtls/platform.h>
 #include "mbedtls/net_sockets.h"
@@ -45,10 +48,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "mbedtls/error.h"
 #pragma GCC diagnostic pop
 #ifdef HAVE_WINDOWS
-#include <direct.h>
-#include <io.h>
+#pragma comment(lib, "bcrypt.lib")
 #endif
-
 
 // Static check on required definitions, taken from the ssl_client1.c example.
 #ifndef MBEDTLS_BIGNUM_C
@@ -160,18 +161,12 @@ static std::vector <std::string> filter_url_scandir_internal (std::string folder
 
 
 // Gets the base URL of current Bibledit installation.
-std::string get_base_url (Webserver_Request& webserver_request)
+std::string get_base_url (const Webserver_Request& webserver_request)
 {
-  std::string scheme;
-  std::string port;
-  if (webserver_request.secure || config_globals_enforce_https_browser) {
-    scheme = "https";
-    port = config::logic::https_network_port ();
-  } else {
-    scheme = "http";
-    port = config::logic::http_network_port ();
-  }
-  std::string url = scheme + "://" + webserver_request.host + ":" + port + "/";
+  const bool secure {webserver_request.secure || config_globals_enforce_https_browser};
+  const std::string scheme {secure ? "https" : "http"};
+  const std::string port {secure ? config::logic::https_network_port () : config::logic::http_network_port ()};
+  const std::string url {scheme + "://" + webserver_request.host + ":" + port + "/"};
   return url;
 }
 
@@ -341,12 +336,7 @@ void filter_url_unlink (const std::string& filename)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  std::wstring wfilename = filter::strings::string2wstring (filename);
-  _wunlink (wfilename.c_str ());
-#else
   unlink (filename.c_str ());
-#endif
 }
 #endif
 
@@ -362,13 +352,7 @@ void filter_url_rename (const std::string& oldfilename, const std::string& newfi
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  std::wstring woldfilename = filter::strings::string2wstring (oldfilename);
-  std::wstring wnewfilename = filter::strings::string2wstring (newfilename);
-  _wrename (woldfilename.c_str (), wnewfilename.c_str ());
-#else
   rename (oldfilename.c_str (), newfilename.c_str ());
-#endif
 }
 #endif
 
@@ -403,6 +387,26 @@ std::string filter_url_create_path (const std::vector <std::string>& parts)
   return path;
 }
 #endif
+
+
+// Creates a web path out of the components.
+std::string filter_url_create_path_web (const std::vector <std::string>& parts)
+{
+  // Empty path.
+  std::string path;
+  for (size_t i = 0; i < parts.size(); i++) {
+    // Initially append the first part without directory separator.
+    if (i == 0)
+      path.append(parts.at(i));
+    else {
+      // Other parts: Append the web directory separator and then the part.
+      path.append("/");
+      path.append(parts.at(i));
+    }
+  }
+  // Done.
+  return path;
+}
 
 
 // Creates a file path out of the variable list of components,
@@ -489,17 +493,9 @@ bool file_or_dir_exists (const std::string& url)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  // Function '_wstat' works with wide characters.
-  std::wstring wurl = filter::strings::string2wstring(url);
-  struct _stat buffer;
-  int result = _wstat (wurl.c_str (), &buffer);
-  return (result == 0);
-#else
   // The 'stat' function works as expected on Linux.
   struct stat buffer;
   return (stat (url.c_str(), &buffer) == 0);
-#endif
 }
 #endif
 
@@ -516,13 +512,7 @@ void filter_url_mkdir (std::string directory)
 }
 #else
 {
-  int status;
-#ifdef HAVE_WINDOWS
-  std::wstring wdirectory = filter::strings::string2wstring(directory);
-  status = _wmkdir (wdirectory.c_str());
-#else
-  status = mkdir (directory.c_str(), 0777);
-#endif
+  const int status = mkdir (directory.c_str(), 0777);
   if (status != 0) {
     std::vector <std::string> paths;
     paths.push_back (directory);
@@ -533,12 +523,7 @@ void filter_url_mkdir (std::string directory)
     }
     reverse (paths.begin (), paths.end ());
     for (unsigned int i = 0; i < paths.size (); i++) {
-#ifdef HAVE_WINDOWS
-      std::wstring wpathsi = filter::strings::string2wstring(paths[i]);
-      _wmkdir (wpathsi.c_str ());
-#else
       mkdir (paths[i].c_str (), 0777);
-#endif
     }
   }
 }
@@ -566,24 +551,10 @@ void filter_url_rmdir (const std::string& directory)
     if (filter_url_is_dir(path)) {
       filter_url_rmdir(path);
     }
-#ifdef HAVE_WINDOWS
-    // Remove directory.
-    std::wstring wpath = filter::strings::string2wstring(path);
-    _wrmdir(wpath.c_str());
-    // Remove file.
-    filter_url_unlink(path);
-#else
     // On Linux remove the directory or the file.
     remove(path.c_str());
-#endif
   }
-#ifdef HAVE_WINDOWS
-  std::wstring wdirectory = filter::strings::string2wstring(directory);
-  _wrmdir(wdirectory.c_str());
-  filter_url_unlink(directory);
-#else
   remove(directory.c_str());
-#endif
 }
 #endif
 
@@ -600,15 +571,8 @@ bool filter_url_is_dir (const std::string& path)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  // Function '_wstat', on Windows, works with wide characters.
-  std::wstring wpath = filter::strings::string2wstring (path);
-  struct _stat sb;
-  _wstat (wpath.c_str (), &sb);
-#else
   struct stat sb;
   stat (path.c_str (), &sb);
-#endif
   return (sb.st_mode & S_IFMT) == S_IFDIR;
 }
 #endif
@@ -637,12 +601,7 @@ void filter_url_set_write_permission (const std::string& path)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  std::wstring wpath = filter::strings::string2wstring (path);
-  _wchmod (wpath.c_str (), _S_IREAD | _S_IWRITE);
-#else
   chmod (path.c_str (), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH);
-#endif
 }
 #endif
 
@@ -725,13 +684,8 @@ bool filter_url_file_cp (const std::string& input, const std::string& output)
 #else
 {
   try {
-#ifdef HAVE_WINDOWS
-    std::ifstream source (filter::strings::string2wstring (input), std::ios::binary);
-    std::ofstream dest (filter::strings::string2wstring (output), std::ios::binary | std::ios::trunc);
-#else
     std::ifstream source (input, std::ios::binary);
     std::ofstream dest (output, std::ios::binary | std::ios::trunc);
-#endif
     dest << source.rdbuf();
     source.close();
     dest.close();
@@ -779,14 +733,8 @@ int filter_url_filesize (const std::string& filename)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  std::wstring wfilename = filter::strings::string2wstring (filename);
-  struct _stat buf;
-  const int rc = _wstat (wfilename.c_str (), &buf);
-#else
   struct stat buf;
   const int rc = stat (filename.c_str (), &buf);
-#endif
   return rc == 0 ? static_cast<int> (buf.st_size) : 0;
 }
 #endif
@@ -858,15 +806,9 @@ int filter_url_file_modification_time (std::string filename)
 }
 #else
 {
-#ifdef HAVE_WINDOWS
-  std::wstring wfilename = filter::strings::string2wstring (filename);
-  struct _stat attributes;
-  _wstat (wfilename.c_str (), &attributes);
-#else
   struct stat attributes;
   stat (filename.c_str (), &attributes);
-#endif
-  return (int) attributes.st_mtime;
+  return static_cast<int> (attributes.st_mtime);
 }
 #endif
 
@@ -997,6 +939,27 @@ std::string filter_url_http_get (std::string url, std::string& error, [[maybe_un
     // Because a Bibledit client should work even over very bad networks,
     // pass some timeout options to curl so it properly deals with such networks.
     filter_url_curl_set_timeout (curl);
+    // Some websites may prevent simple scrapers from getting their content.
+    // If the request comes from a real browser, they may accept the request and give an appropriate response.
+    // Here is how to mimic a request coming from a real browser:
+    // https://stackoverflow.com/questions/28760694/how-to-use-curl-to-get-a-get-request-exactly-same-as-using-chrome
+    // The code below mimics the Chrome browser in October 2024.
+    curl_slist* extra_headers {nullptr};
+    extra_headers = curl_slist_append (extra_headers, "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+    extra_headers = curl_slist_append (extra_headers, "accept-language: en-US,en;q=0.9");
+    extra_headers = curl_slist_append (extra_headers, "cache-control: max-age=0");
+    extra_headers = curl_slist_append (extra_headers, "cookie: PHPSESSID=9jin0fmqnb03np12o8v5dv4jf1");
+    extra_headers = curl_slist_append (extra_headers, "priority: u=0, i");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-ch-ua: "Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129")");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-ch-ua-mobile: ?0)");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-ch-ua-platform: "macOS")");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-fetch-dest: document)");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-fetch-mode: navigate)");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-fetch-site: none)");
+    extra_headers = curl_slist_append (extra_headers, R"(sec-fetch-user: ?1)");
+    extra_headers = curl_slist_append (extra_headers, R"(upgrade-insecure-requests: 1)");
+    extra_headers = curl_slist_append (extra_headers, R"(user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36)");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, extra_headers);
     CURLcode res = curl_easy_perform (curl);
     if (res == CURLE_OK) {
       error.clear ();
@@ -1009,6 +972,7 @@ std::string filter_url_http_get (std::string url, std::string& error, [[maybe_un
       response.clear ();
       error = curl_easy_strerror (res);
     }
+    curl_slist_free_all (extra_headers);
     curl_easy_cleanup (curl);
   }
 #endif
@@ -1048,6 +1012,7 @@ static void filter_url_curl_debug_dump (const char *text, FILE *stream, unsigned
 
 // The trace function for libcurl.
 #ifdef HAVE_CLOUD
+[[maybe_unused]]
 static int filter_url_curl_trace (CURL *handle, curl_infotype type, char *data, size_t size, void *userp)
 {
   const char* text { nullptr };
@@ -1629,7 +1594,9 @@ std::string filter_url_http_request_mbed (std::string url, std::string& error,
       // The connection requires writing more data.
       if (ret == MBEDTLS_ERR_SSL_WANT_WRITE) continue;
       // Received NewSessionTicket Post Handshake Message.
+#if MBEDTLS_VERSION_MAJOR == 3
       if (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) continue;
+#endif
       // Handle all other error codes.
       filter_url_display_mbed_tls_error (ret, &error, false, std::string());
       connection_healthy = false;
@@ -1707,7 +1674,9 @@ std::string filter_url_http_request_mbed (std::string url, std::string& error,
           // until it returns a positive value.
           if (ret == MBEDTLS_ERR_SSL_WANT_READ) continue;
           if (ret == MBEDTLS_ERR_SSL_WANT_WRITE) continue;
+#if MBEDTLS_VERSION_MAJOR == 3
           if (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET) continue;
+#endif
           filter_url_display_mbed_tls_error (ret, &error, false, std::string());
           connection_healthy = false;
         }
@@ -1777,7 +1746,9 @@ std::string filter_url_http_request_mbed (std::string url, std::string& error,
         connection_healthy = false;
       } else if (secure && (ret == MBEDTLS_ERR_SSL_WANT_READ)) {
       } else if (secure && (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {
+#if MBEDTLS_VERSION_MAJOR == 3
       } else if (secure && (ret == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET)) {
+#endif
       } else if (secure && (ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY)) {
       } else if (secure && (ret < 0)) {
         filter_url_display_mbed_tls_error (ret, &error, false, std::string());

@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ void sendreceive_files ()
   if (sendreceive_logic_prioritized_task_is_active ()) {
     sendreceive_files_done ();
     std::this_thread::sleep_for (std::chrono::seconds (5));
-    tasks_logic_queue (SYNCFILES);
+    tasks_logic_queue (task::sync_files);
     return;
   }
   

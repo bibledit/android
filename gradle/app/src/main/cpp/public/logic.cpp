@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <database/config/bible.h>
 
 
-std::vector <std::string> public_logic_bibles (Webserver_Request& webserver_request)
+std::vector <std::string> public_logic_bibles ()
 {
   std::vector <std::string> public_bibles;
   const std::vector <std::string> bibles = database::bibles::get_bibles ();

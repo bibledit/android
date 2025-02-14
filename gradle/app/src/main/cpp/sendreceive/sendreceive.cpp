@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ void sendreceive_sendreceive ([[maybe_unused]] std::string bible)
 
   
   // Synchronize the Bible from the database to the local git repository.
-  filter_git_sync_bible_to_git (webserver_request, bible, directory);
+  filter_git_sync_bible_to_git (bible, directory);
   
 
   // Log the status of the repository: "git status".

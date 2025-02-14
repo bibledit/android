@@ -200,7 +200,6 @@ add_library( # Sets the name of the library.
         database/versifications.cpp
         database/modifications.cpp
         database/notes.cpp
-        database/volatile.cpp
         database/maintenance.cpp
         database/imageresources.cpp
         database/state.cpp
@@ -483,16 +482,12 @@ add_library( # Sets the name of the library.
         quill/logic.cpp
         rss/logic.cpp
         rss/feed.cpp
-        nmt/logic.cpp
-        nmt/index.cpp
-        editone2/index.cpp
-        editone2/load.cpp
-        editone2/save.cpp
-        editone2/verse.cpp
-        editone2/logic.cpp
-        editone2/update.cpp
-        redirect/index.cpp
-        tbsx/text.cpp
+        editone/index.cpp
+        editone/load.cpp
+        editone/save.cpp
+        editone/verse.cpp
+        editone/logic.cpp
+        editone/update.cpp
         database/abbottsmith.cpp
         resource/divider.cpp
         read/index.cpp
@@ -515,6 +510,10 @@ add_library( # Sets the name of the library.
         resource/translated1edit.cpp
         resource/translated9edit.cpp
         system/googletranslate.cpp
+        styles/view2.cpp
+        stylesv2/logic.cpp
+        database/temporal.cpp
+
 
         # End Bibledit kernel.
         )

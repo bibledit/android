@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2003-2024 Teus Benschop.
+Copyright (©) 2003-2025 Teus Benschop.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 // Suppress errors in Visual Studio 2019.
 // No longer needed since upgrading the UTF8 library?
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-macros"
 #define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING 1
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 1
-#pragma GCC diagnostic ignored "-Wunused-macros"
+#pragma GCC diagnostic pop
 
 #include <filter/string.h>
 #pragma GCC diagnostic push
@@ -41,14 +43,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utf8proc/utf8proc.h>
 #endif
 #include <config/globals.h>
-#ifdef HAVE_WINDOWS
-#include <codecvt>
-#endif
 #ifdef HAVE_ICU
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wdocumentation"
 #pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #include <unicode/ustdio.h>
 #include <unicode/normlzr.h>
 #include <unicode/utypes.h>
@@ -63,7 +64,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #ifdef HAVE_CLOUD
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
-#include <gumbo.h>
+#include "gumbo/gumbo.h"
 #pragma clang diagnostic pop
 #endif
 #ifdef HAVE_CLOUD
@@ -129,6 +130,17 @@ std::string implode (const std::vector <std::string>& values, std::string delimi
       full.append (delimiter);
   }
   return full;
+}
+
+
+// Get a container with n parts, and join the first parts to remain with maximum n last parts.
+// Example input {1, 2, 3, 4}, max three last bits, the output will be [12, 3, 4}.
+void implode_from_beginning_remain_with_max_n_bits (std::vector<std::string>& input, const int n, const std::string& joiner)
+{
+  while (input.size() > n) {
+    input[1].insert(0, input.at(0) + joiner);
+    input.erase(input.cbegin());
+  }
 }
 
 
@@ -243,8 +255,11 @@ std::string convert_to_true_false (const bool b)
 
 std::u16string convert_to_u16string (const std::string& s)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   std::wstring_convert <std::codecvt_utf8_utf16 <char16_t>, char16_t> utf16conv;
   std::u16string utf16 = utf16conv.from_bytes (s);
+#pragma clang diagnostic pop
   // utf16.length()
   return utf16;
 }
@@ -1486,10 +1501,6 @@ std::string convert_xml_character_entities_to_characters (std::string data)
     ss << std::hex << entity;
     ss >> codepoint;
     
-    // The following is not available in GNU libstdc++.
-    // wstring_convert <codecvt_utf8 <char32_t>, char32_t> conv1;
-    // string u8str = conv1.to_bytes (codepoint);
-    
     int cp = codepoint;
     // Adapted from: http://www.zedwood.com/article/cpp-utf8-char-to-codepoint.
     char c[5]={ 0x00,0x00,0x00,0x00,0x00 };
@@ -1817,7 +1828,7 @@ static std::string substitute_xml_entities_into_attributes(const char quote, con
 static std::string handle_unknown_tag(GumboStringPiece *text)
 {
   std::string tagname {};
-  if (text->data == NULL) {
+  if (text->data == nullptr) {
     return tagname;
   }
   // work with copy GumboStringPiece to prevent asserts
@@ -1856,7 +1867,7 @@ static std::string build_doctype(GumboNode *node)
     results.append("<!DOCTYPE ");
     results.append(node->v.document.name);
     std::string pi(node->v.document.public_identifier);
-    if ((node->v.document.public_identifier != NULL) && !pi.empty() ) {
+    if ((node->v.document.public_identifier != nullptr) && !pi.empty() ) {
       results.append(" PUBLIC \"");
       results.append(node->v.document.public_identifier);
       results.append("\" \"");

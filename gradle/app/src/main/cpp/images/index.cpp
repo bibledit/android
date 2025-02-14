@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ std::string images_index (Webserver_Request& webserver_request)
       std::string extension = filter_url_get_extension (file);
       extension = filter::strings::unicode_string_casefold (extension);
       if (background_import) {
-        tasks_logic_queue (IMPORTBIBLEIMAGES, { file });
+        tasks_logic_queue (task::import_bible_images, { file });
         success = translate("The file was uploaded and is being processed.");
         view.set_variable ("journal", journal_logic_see_journal_for_progress ());
       } else {

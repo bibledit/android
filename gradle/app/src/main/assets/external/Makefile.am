@@ -66,7 +66,7 @@ libbibledit_a_SOURCES = \
 	database/versifications.cpp \
 	database/modifications.cpp \
 	database/notes.cpp \
-	database/volatile.cpp \
+	database/temporal.cpp \
 	database/maintenance.cpp \
 	database/imageresources.cpp \
 	database/state.cpp \
@@ -98,6 +98,7 @@ libbibledit_a_SOURCES = \
 	styles/indexm.cpp \
 	styles/sheetm.cpp \
 	styles/view.cpp \
+	styles/view2.cpp \
 	styles/css.cpp \
 	styles/sheets.cpp \
 	text/text.cpp \
@@ -184,13 +185,12 @@ libbibledit_a_SOURCES = \
 	compare/index.cpp \
 	compare/compare.cpp \
 	jobs/index.cpp \
-	redirect/index.cpp \
-  editone2/index.cpp \
-  editone2/load.cpp \
-  editone2/save.cpp \
-  editone2/verse.cpp \
-  editone2/logic.cpp \
-  editone2/update.cpp \
+  editone/index.cpp \
+  editone/load.cpp \
+  editone/save.cpp \
+  editone/verse.cpp \
+  editone/logic.cpp \
+  editone/update.cpp \
 	navigation/passage.cpp \
 	navigation/update.cpp \
 	navigation/poll.cpp \
@@ -474,9 +474,6 @@ libbibledit_a_SOURCES = \
 	rss/feed.cpp \
 	microtar/microtar.c \
 	miniz/miniz.c \
-	nmt/index.cpp \
-	nmt/logic.cpp \
-  tbsx/text.cpp \
   read/index.cpp \
   read/load.cpp \
   read/verse.cpp \
@@ -525,7 +522,6 @@ libbibledit_a_SOURCES = \
   mimetic098/codec/base64.cxx \
   system/googletranslate.cpp \
   filter/google.cpp \
-  i18n/logic.cpp \
   tidy/access.c \
   tidy/alloc.c \
   tidy/attrdict.c \
@@ -551,7 +547,19 @@ libbibledit_a_SOURCES = \
   tidy/tags.c \
   tidy/tidylib.c \
   tidy/tmbstr.c \
-  tidy/utf8.c
+  tidy/utf8.c \
+  stylesv2/logic.cpp \
+  gumbo/attribute.c \
+  gumbo/char_ref.c \
+  gumbo/error.c \
+  gumbo/parser.c \
+  gumbo/string_buffer.c \
+  gumbo/string_piece.c \
+  gumbo/tag.c \
+  gumbo/tokenizer.c \
+  gumbo/utf8.c \
+  gumbo/util.c \
+  gumbo/vector.c
 
 bin_PROGRAMS = server unittest generate
 
@@ -568,9 +576,7 @@ unittest_SOURCES = \
 	unittests/flate.cpp \
 	unittests/checksum.cpp \
 	unittests/bibles.cpp \
-	unittests/html2usfm.cpp \
-	unittests/usfm2html.cpp \
-	unittests/usfm2html2usfm.cpp \
+	unittests/usfm-html.cpp \
 	unittests/workspaces.cpp \
 	unittests/client.cpp \
 	unittests/sentences.cpp \
@@ -587,7 +593,6 @@ unittest_SOURCES = \
 	unittests/http.cpp \
 	unittests/memory.cpp \
 	unittests/tasks.cpp \
-	unittests/biblegateway.cpp \
 	unittests/rss.cpp \
 	unittests/space.cpp \
 	unittests/roles.cpp \
@@ -640,13 +645,10 @@ unittest_SOURCES = \
 	unittests/javascript.cpp \
 	unittests/french.cpp \
   unittests/merge.cpp \
-  unittests/nmt.cpp \
   unittests/html2format.cpp \
-  unittests/studylight.cpp \
-  unittests/gbs.cpp \
   unittests/bibleimages.cpp \
   unittests/image.cpp \
-  unittests/easyenglishbible.cpp
+  unittests/scraper.cpp
 
 unittest_LDADD = libbibledit.a
 
@@ -676,7 +678,6 @@ AM_CXXFLAGS += $(WEBKIT2GTK_CFLAGS)
 AM_CXXFLAGS += $(ICU_CFLAGS)
 AM_CXXFLAGS += $(XML2_CFLAGS)
 AM_CXXFLAGS += $(UTF8PROC_CFLAGS)
-AM_CXXFLAGS += $(GUMBO_CFLAGS)
 # AM_CXXFLAGS += $(TIDY_CFLAGS) -I/usr/include/tidy
 AM_CXXFLAGS += $(PUGIXML_CFLAGS)
 AM_CXXFLAGS += $(GTEST_CFLAGS)
@@ -698,7 +699,6 @@ LIBS += $(WEBKIT2GTK_LIBS)
 LIBS += $(ICU_LIBS)
 LIBS += $(XML2_LIBS)
 LIBS += $(UTF8PROC_LIBS)
-LIBS += $(GUMBO_LIBS)
 # LIBS += $(TIDY_LIBS)
 LIBS += $(PUGIXML_LIBS)
 LIBS += $(GTEST_LIBS)

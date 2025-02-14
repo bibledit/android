@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -89,8 +89,8 @@ std::string sync_resources (Webserver_Request& webserver_request)
           signatures.push_back (signature);
           database::config::general::set_resources_to_cache (signatures);
         }
-        if (!tasks_logic_queued (CACHERESOURCES)) {
-          tasks_logic_queue (CACHERESOURCES);
+        if (!tasks_logic_queued (task::cache_resources)) {
+          tasks_logic_queue (task::cache_resources);
         }
         return "0";
       }

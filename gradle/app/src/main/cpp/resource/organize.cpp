@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ std::string resource_organize (Webserver_Request& webserver_request)
         }
       }
     }
-    tasks_logic_queue (SYNCRESOURCES);
+    tasks_logic_queue (task::sync_resources);
     view.set_variable ("success", translate ("Will install the resources.") + " " + translate ("The journal displays the progress."));
   }
 

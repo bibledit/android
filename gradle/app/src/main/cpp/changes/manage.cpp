@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ std::string changes_manage (Webserver_Request& webserver_request)
     const int jobId = database_jobs.get_new_id ();
     database_jobs.set_level (jobId, Filter_Roles::manager ());
     database_jobs.set_start (jobId, translate ("Clearing change notifications."));
-    tasks_logic_queue (DELETECHANGES, {std::to_string (jobId), username});
+    tasks_logic_queue (task::delete_changes, {std::to_string (jobId), username});
     redirect_browser (webserver_request, jobs_index_url () + "?id=" + std::to_string (jobId));
     return std::string();
   }

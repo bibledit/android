@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2024 Teus Benschop.
+ Copyright (©) 2003-2025 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -604,12 +604,12 @@ void resource_logic_import_images (std::string resource, std::string path)
       Database_Logs::log ("Processing PDF: " + basename);
       
       // Retrieve PDF information.
-      filter_shell_run ("", "pdfinfo", {path}, nullptr, nullptr);
+      filter::shell::run ("", filter::shell::get_executable(filter::shell::Executable::pdfinfo), {path}, nullptr, nullptr);
 
       // Convert the PDF file to separate images.
       std::string folder = filter_url_tempfile ();
       filter_url_mkdir (folder);
-      filter_shell_run (folder, "pdftocairo", {"-jpeg", path}, nullptr, nullptr);
+      filter::shell::run (folder, filter::shell::get_executable(filter::shell::Executable::pdftocairo), {"-jpeg", path}, nullptr, nullptr);
       // Add the images to the ones to be processed.
       filter_url_recursive_scandir (folder, paths);
       
@@ -904,7 +904,7 @@ void resource_logic_create_cache ()
   resource_logic_create_cache_running = false;
   
   // If there's another resource database waiting to be cached, schedule it for caching.
-  if (!signatures.empty ()) tasks_logic_queue (CACHERESOURCES);
+  if (!signatures.empty ()) tasks_logic_queue (task::cache_resources);
 }
 
 
