@@ -475,9 +475,9 @@ dtl/Ses.hpp
 dtl/Lcs.hpp
 styles/view2.html
 styles/sheetm.html
-styles/view.html
 styles/indexm.html
-styles/view.js
+styles/definitions.hpp
+styles/view2.js
 system/index.html
 system/googletranslate.html
 livetest/livetest.sh
@@ -543,7 +543,6 @@ pkgdata/files.txt
 pkgdata/install.sh
 pkgdata/create.sh
 book/books.js
-redirect/index.o
 compare/index.html
 sources/etcbc4.txt
 sources/oshb.txt
@@ -575,6 +574,7 @@ pugixml/pugixml.hpp
 pugixml/00readme.txt
 pugixml/readme.txt
 revisions/gitflag
+stylesv2/logic.o
 filter/cas.crt
 filter/passage.js
 filter/focus.js
@@ -728,7 +728,6 @@ help/introduction.html
 help/installcloudsource.html
 help/consistency.html
 help/navigation.html
-tbsx/text.o
 tbsx/specs.html
 tbsx/example.txt
 session/login.html

@@ -26,6 +26,7 @@ libbibledit_a_SOURCES = \
 	filter/webview.cpp \
 	filter/mail.cpp \
   filter/note.cpp \
+  filter/number.cpp \
 	flate/flate.cpp \
 	assets/view.cpp \
 	assets/page.cpp \
@@ -97,7 +98,6 @@ libbibledit_a_SOURCES = \
 	styles/logic.cpp \
 	styles/indexm.cpp \
 	styles/sheetm.cpp \
-	styles/view.cpp \
 	styles/view2.cpp \
 	styles/css.cpp \
 	styles/sheets.cpp \
@@ -548,7 +548,6 @@ libbibledit_a_SOURCES = \
   tidy/tidylib.c \
   tidy/tmbstr.c \
   tidy/utf8.c \
-  stylesv2/logic.cpp \
   gumbo/attribute.c \
   gumbo/char_ref.c \
   gumbo/error.c \
@@ -696,7 +695,7 @@ LIBS += $(CURL_LIBS)
 LIBS += $(OPENSSL_LIBS)
 LIBS += $(GTK_LIBS)
 LIBS += $(WEBKIT2GTK_LIBS)
-LIBS += $(ICU_LIBS)
+LIBS += $(ICU_LIBS) -licuuc
 LIBS += $(XML2_LIBS)
 LIBS += $(UTF8PROC_LIBS)
 # LIBS += $(TIDY_LIBS)
