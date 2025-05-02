@@ -228,7 +228,6 @@ add_library( # Sets the name of the library.
         styles/logic.cpp
         styles/indexm.cpp
         styles/sheetm.cpp
-        styles/view.cpp
         styles/css.cpp
         styles/sheets.cpp
         text/text.cpp
@@ -511,7 +510,6 @@ add_library( # Sets the name of the library.
         resource/translated9edit.cpp
         system/googletranslate.cpp
         styles/view2.cpp
-        stylesv2/logic.cpp
         database/temporal.cpp
 
 
