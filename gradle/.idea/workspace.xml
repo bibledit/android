@@ -13,12 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/asset.external" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/asset.external" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/editusfm/save.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +23,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=9B141FFAZ003H6)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
