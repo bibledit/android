@@ -478,7 +478,6 @@ add_library( # Sets the name of the library.
         search/logic.cpp
         related/logic.cpp
         ldap/logic.cpp
-        quill/logic.cpp
         rss/logic.cpp
         rss/feed.cpp
         editone/index.cpp
@@ -509,8 +508,11 @@ add_library( # Sets the name of the library.
         resource/translated1edit.cpp
         resource/translated9edit.cpp
         system/googletranslate.cpp
-        styles/view2.cpp
         database/temporal.cpp
+        filter/number.cpp
+        filter/quill.cpp
+        styles/new.cpp
+        styles/view.cpp
 
 
         # End Bibledit kernel.
