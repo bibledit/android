@@ -112,6 +112,7 @@ Checks_Usfm::Checks_Usfm (const std::string& bible)
       case stylesv2::Type::sidebar_begin:
       case stylesv2::Type::sidebar_end:
       case stylesv2::Type::peripheral:
+      case stylesv2::Type::milestone:
       case stylesv2::Type::starting_boundary:
       case stylesv2::Type::stopping_boundary:
       case stylesv2::Type::none:

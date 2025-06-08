@@ -473,17 +473,14 @@ dtl/variables.hpp
 dtl/COPYING
 dtl/Ses.hpp
 dtl/Lcs.hpp
-styles/view2.html
 styles/sheetm.html
+styles/view.html
 styles/indexm.html
+styles/view.js
+styles/new.html
 styles/definitions.hpp
-styles/view2.js
 system/index.html
 system/googletranslate.html
-livetest/livetest.sh
-livetest/paths.sh
-livetest/initialize.sh
-livetest/livetest.js
 public/index.html
 public/create.html
 public/index.js
@@ -574,7 +571,6 @@ pugixml/pugixml.hpp
 pugixml/00readme.txt
 pugixml/readme.txt
 revisions/gitflag
-stylesv2/logic.o
 filter/cas.crt
 filter/passage.js
 filter/focus.js
@@ -633,6 +629,7 @@ quill/LICENSE
 quill/quill.snow.css
 quill/quill.bubble.css
 quill/quill.min.js
+quill/logic.o
 quill/quill.min.js.map
 quill/quill.core.css
 quill/readme.txt

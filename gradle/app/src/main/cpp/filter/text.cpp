@@ -324,6 +324,7 @@ void Filter_Text::pre_process_usfm ()
               case stylesv2::Type::sidebar_end:
                 break;
               case stylesv2::Type::peripheral:
+              case stylesv2::Type::milestone:
                 break;
               case stylesv2::Type::stopping_boundary:
               default:
@@ -360,7 +361,8 @@ void Filter_Text::process_usfm ()
         // Clean up the marker, so we remain with the basic version, e.g. 'id'.
         const std::string marker = filter::usfm::get_marker (current_item);
         // Strip word-level attributes.
-        if (is_opening_marker) filter::usfm::remove_word_level_attributes (marker, chapter_usfm_markers_and_text, chapter_usfm_markers_and_text_pointer);
+        if (is_opening_marker)
+          filter::usfm::remove_word_level_attributes (marker, chapter_usfm_markers_and_text, chapter_usfm_markers_and_text_pointer);
         if (const stylesv2::Style* style {database::styles::get_marker_data (m_stylesheet, marker)}; style) {
           switch (style->type) {
             case stylesv2::Type::starting_boundary:
@@ -1077,6 +1079,14 @@ void Filter_Text::process_usfm ()
                 html_text_linked->new_page_break ();
               break;
             }
+            case stylesv2::Type::milestone:
+            {
+              const std::string data = filter::usfm::remove_milestone (chapter_usfm_markers_and_text, chapter_usfm_markers_and_text_pointer);
+              if (!data.empty()) {
+                add_to_info(R"(Milestone: )" + data, false);
+              }
+              break;
+            }
             case stylesv2::Type::stopping_boundary:
             default:
               break;
@@ -1438,6 +1448,7 @@ void Filter_Text::processNote ()
           case stylesv2::Type::sidebar_begin:
           case stylesv2::Type::sidebar_end:
           case stylesv2::Type::peripheral:
+          case stylesv2::Type::milestone:
           case stylesv2::Type::stopping_boundary:
           default:
             break;

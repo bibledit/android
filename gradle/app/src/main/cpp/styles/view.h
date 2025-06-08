@@ -16,9 +16,13 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-var page = require('webpage').create();
-page.open('http://localhost:8080/workspace/index', function(status) {
-  console.log("Status: " + status);
-  page.render('example.png');
-  phantom.exit();
-});
+
+#pragma once
+
+#include <config/libraries.h>
+
+class Webserver_Request;
+
+std::string styles_view_url ();
+bool styles_view_acl (Webserver_Request& webserver_request);
+std::string styles_view (Webserver_Request& webserver_request);

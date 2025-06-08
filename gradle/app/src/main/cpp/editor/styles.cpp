@@ -199,6 +199,8 @@ std::string Editor_Styles::get_action (Webserver_Request& webserver_request, con
         return mono();
       case stylesv2::Type::peripheral:
         return mono();
+      case stylesv2::Type::milestone:
+        return character ();
       case stylesv2::Type::starting_boundary:
       case stylesv2::Type::stopping_boundary:
       case stylesv2::Type::none:
