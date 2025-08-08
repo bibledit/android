@@ -10,11 +10,13 @@ ASSETSFOLDER=app/src/main/assets
 EXTERNALFOLDER=$ASSETSFOLDER/external
 
 
+# Exit script on error.
+set -e
+
 echo Put all the code of the Bibledit kernel into the following folder:
 echo $EXTERNALFOLDER
 echo This is in preparation for subsequent steps.
 rsync -a --delete --exclude .git ../../cloud/ $EXTERNALFOLDER/
-if [ $? -ne 0 ]; then exit; fi
 
 
 echo Clean the code up a bit by removing a couple of things.
@@ -31,20 +33,15 @@ echo At the end, it removes the journal entries that were logged in the process.
 pushd $EXTERNALFOLDER
 ./configure
 make --jobs=4
-if [ $? -ne 0 ]; then exit; fi
 ./generate . locale
-if [ $? -ne 0 ]; then exit; fi
 ./generate . mappings
-if [ $? -ne 0 ]; then exit; fi
 ./generate . versifications
-if [ $? -ne 0 ]; then exit; fi
 popd
 
 
 echo Clean the Bibledit kernel source code.
 pushd $EXTERNALFOLDER
 make distclean
-if [ $? -ne 0 ]; then exit; fi
 popd
 
 
@@ -52,7 +49,6 @@ popd
 CPPFOLDER=app/src/main/cpp
 echo Synchronize the Bibledit kernel source code to the cpp folder at $CPPFOLDER.
 rsync -av --delete --exclude bibleditjni.cpp --exclude CMakeLists.txt --exclude native.cpp --exclude stub.cpp --exclude stub.h $EXTERNALFOLDER/ $CPPFOLDER/
-if [ $? -ne 0 ]; then exit; fi
 
 
 echo Configure the code in the $CPPFOLDER folder for Android.
@@ -114,8 +110,9 @@ rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
 find $EXTERNALFOLDER -name "*.c" -delete
-find $EXTERNALFOLDER -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
-find $CPPFOLDER -name ".deps" -exec rm -r "{}" \; > /dev/null 2>&1
+# Not needed after $ make distclean
+#find $EXTERNALFOLDER -name ".deps" -exec rm -r "{}" \;
+#find $CPPFOLDER -name ".deps" -exec rm -r "{}" \;
 find $EXTERNALFOLDER -name ".dirstamp" -delete
 find $CPPFOLDER -name ".dirstamp" -delete
 
@@ -172,3 +169,4 @@ popd
 # rm jni/sources.txt
 
 
+echo The script completed successfully.
