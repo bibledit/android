@@ -201,7 +201,6 @@ add_library( # Sets the name of the library.
         database/modifications.cpp
         database/notes.cpp
         database/maintenance.cpp
-        database/imageresources.cpp
         database/state.cpp
         database/noteassignment.cpp
         database/strong.cpp
@@ -284,8 +283,6 @@ add_library( # Sets the name of the library.
         manage/index.cpp
         manage/users.cpp
         manage/exports.cpp
-        manage/hyphenation.cpp
-        manage/hyphenate.cpp
         manage/write.cpp
         manage/privileges.cpp
         system/index.cpp
@@ -299,7 +296,6 @@ add_library( # Sets the name of the library.
         access/bible.cpp
         access/logic.cpp
         dialog/entry.cpp
-        dialog/list.cpp
         dialog/yes.cpp
         dialog/color.cpp
         dialog/books.cpp
@@ -394,10 +390,6 @@ add_library( # Sets the name of the library.
         resource/manage.cpp
         resource/print.cpp
         resource/download.cpp
-        resource/images.cpp
-        resource/image.cpp
-        resource/img.cpp
-        resource/imagefetch.cpp
         resource/sword.cpp
         resource/select.cpp
         resource/cache.cpp
@@ -495,7 +487,6 @@ add_library( # Sets the name of the library.
         read/verse.cpp
         read/load.cpp
         manage/accounts.cpp
-        dialog/list2.cpp
         developer/delay.cpp
         database/bibleimages.cpp
         images/logic.cpp
@@ -513,6 +504,9 @@ add_library( # Sets the name of the library.
         filter/quill.cpp
         styles/new.cpp
         styles/view.cpp
+        manage/bibles.cpp
+        dialog/select.cpp
+        checks/issues.cpp
 
 
         # End Bibledit kernel.
