@@ -70,7 +70,6 @@ libbibledit_a_SOURCES = \
 	database/notes.cpp \
 	database/temporal.cpp \
 	database/maintenance.cpp \
-	database/imageresources.cpp \
 	database/state.cpp \
 	database/noteassignment.cpp \
 	database/strong.cpp \
@@ -158,10 +157,9 @@ libbibledit_a_SOURCES = \
 	manage/users.cpp \
 	manage/accounts.cpp \
 	manage/exports.cpp \
-	manage/hyphenation.cpp \
-	manage/hyphenate.cpp \
 	manage/write.cpp \
 	manage/privileges.cpp \
+	manage/bibles.cpp \
 	system/index.cpp \
 	system/logic.cpp \
 	collaboration/index.cpp \
@@ -173,8 +171,7 @@ libbibledit_a_SOURCES = \
 	access/bible.cpp \
 	access/logic.cpp \
 	dialog/entry.cpp \
-	dialog/list.cpp \
-	dialog/list2.cpp \
+	dialog/select.cpp \
 	dialog/yes.cpp \
 	dialog/color.cpp \
 	dialog/books.cpp \
@@ -276,10 +273,6 @@ libbibledit_a_SOURCES = \
 	resource/manage.cpp \
 	resource/print.cpp \
 	resource/download.cpp \
-	resource/images.cpp \
-	resource/image.cpp \
-	resource/img.cpp \
-	resource/imagefetch.cpp \
 	resource/sword.cpp \
 	resource/select.cpp \
 	resource/cache.cpp \
@@ -305,6 +298,7 @@ libbibledit_a_SOURCES = \
 	checks/run.cpp \
 	checks/headers.cpp \
 	checks/index.cpp \
+	checks/issues.cpp \
 	checks/logic.cpp \
 	checks/sentences.cpp \
 	checks/settings.cpp \
@@ -579,13 +573,10 @@ unittest_SOURCES = \
 	unittests/usfm-html.cpp \
 	unittests/workspaces.cpp \
 	unittests/client.cpp \
-	unittests/sentences.cpp \
 	unittests/versification.cpp \
 	unittests/usfm.cpp \
 	unittests/verses.cpp \
-	unittests/pairs.cpp \
 	unittests/paratext.cpp \
-	unittests/hyphenate.cpp \
 	unittests/search.cpp \
 	unittests/json.cpp \
 	unittests/related.cpp \
@@ -594,7 +585,6 @@ unittest_SOURCES = \
 	unittests/memory.cpp \
 	unittests/tasks.cpp \
 	unittests/rss.cpp \
-	unittests/space.cpp \
 	unittests/roles.cpp \
 	unittests/md5.cpp \
 	unittests/string.cpp \
@@ -618,7 +608,7 @@ unittest_SOURCES = \
 	unittests/config.cpp \
 	unittests/log.cpp \
 	unittests/books.cpp \
-	unittests/check.cpp \
+	unittests/checks.cpp \
 	unittests/localization.cpp \
 	unittests/confirm.cpp \
 	unittests/jobs.cpp \
@@ -643,7 +633,6 @@ unittest_SOURCES = \
 	unittests/statistics.cpp \
 	unittests/webview.cpp \
 	unittests/javascript.cpp \
-	unittests/french.cpp \
 	unittests/merge.cpp \
 	unittests/html2format.cpp \
 	unittests/bibleimages.cpp \

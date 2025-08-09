@@ -21,7 +21,7 @@
 #include <styles/view.h>
 #include <assets/view.h>
 #include <assets/page.h>
-#include <dialog/list2.h>
+#include <dialog/select.h>
 #include <filter/roles.h>
 #include <filter/url.h>
 #include <filter/string.h>
@@ -70,7 +70,7 @@ std::string styles_new (Webserver_Request& webserver_request)
   if (userlevel >= roles::admin) write = true;
   
   // Allowed characters in the style.
-  constexpr const std::string_view allowed {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"};
+  constexpr const std::string_view allowed {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789-"};
   
   // Handle new style submission.
   if (webserver_request.post.count ("style")) {
@@ -110,8 +110,8 @@ std::string styles_new (Webserver_Request& webserver_request)
     std::vector<std::string> markers{database::styles::get_markers(stylesv2::standard_sheet())};
     markers.push_back(std::string());
     std::sort(markers.begin(), markers.end());
-    std::string base = dialog_list2_create_options(markers, markers, std::string());
-    view.set_variable ("base", std::move(base));
+    for (const auto& marker : markers)
+      view.add_iteration ("option", { std::pair ("style", marker) } );
   }
   
   page += view.render ("styles", "new");

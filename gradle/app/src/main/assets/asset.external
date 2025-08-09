@@ -102,13 +102,6 @@ mapping/French_Louise_Segond.txt
 mapping/Dutch_Traditional.txt
 mapping/Russian_Orthodox.txt
 mapping/Spanish.txt
-coloris/LICENSE
-coloris/coloris.css
-coloris/coloris.min.css
-coloris/README.md
-coloris/coloris.min.js
-coloris/examples.html
-coloris/coloris.js
 sword/dev.txt
 sword/mods.d/globals.conf
 sword/locales.d/mt-utf8.conf
@@ -315,6 +308,7 @@ utf8/readme.txt
 config/googletranslate.txt
 config/userfacingurl.txt
 config/ldap.txt
+config/certificates.sh
 images/index.html
 images/gitflag
 images/view.html
@@ -452,9 +446,10 @@ search/strongs.html
 search/search2.html
 exports/gitflag
 dialog/text.html
-dialog/list.html
 dialog/books.html
+dialog/selectform.js
 dialog/yes.html
+dialog/selectajax.js
 dialog/upload.html
 dialog/color.html
 dialog/entry.html
@@ -481,6 +476,7 @@ styles/new.html
 styles/definitions.hpp
 system/index.html
 system/googletranslate.html
+system/index.js
 public/index.html
 public/create.html
 public/index.js
@@ -557,13 +553,12 @@ index/index.html
 index/listing.html
 manage/index.html
 manage/accounts.html
-manage/users.js
-manage/hyphenation.html
 manage/exports.html
 manage/privileges.js
 manage/users.html
 manage/privileges.html
 manage/write.html
+manage/bibles.html
 ipc/holder
 pugixml/LICENSE.md
 pugixml/pugiconfig.hpp
@@ -585,11 +580,9 @@ export/usfm.html
 jobs/index.html
 resource/select.html
 resource/user9view.html
-resource/image.html
 resource/index.html
 resource/user9edit.html
 resource/comparative9edit.html
-resource/img.html
 resource/manage.html
 resource/translated1edit.html
 resource/bbgateway.html
@@ -601,7 +594,6 @@ resource/bb2resource.html
 resource/comparative1edit.html
 resource/studylight.html
 resource/user1edit.html
-resource/images.html
 resource/divider.html
 resource/organize.html
 resource/sword.html

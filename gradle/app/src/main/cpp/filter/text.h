@@ -223,4 +223,7 @@ public:
 private:
   void set_to_zero (std::string& value);
   void close_text_style_all();
+  
+private:
+  std::string handle_tilde_and_double_slash(std::string);
 };

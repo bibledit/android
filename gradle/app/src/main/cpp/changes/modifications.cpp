@@ -106,7 +106,7 @@ void changes_process_identifiers (Webserver_Request& webserver_request,
           email += " ";
           email += modification;
           email += "</div>";
-          if (webserver_request.database_config_user()->getUserUserChangesNotificationsOnline (user)) {
+          if (webserver_request.database_config_user()->get_user_user_changes_notifications_online (user)) {
             database::modifications::recordNotification ({user}, changes_personal_category (), bible, book, chapter, verse, old_html, modification, new_html);
           }
           // Go over all the receipients to record the change for them.
@@ -173,7 +173,7 @@ void changes_modifications ()
   {
     const std::vector <std::string> users = webserver_request.database_users ()->get_users ();
     for (const auto& user : users) {
-      if (webserver_request.database_config_user ()->getContributorChangesNotificationsOnline (user)) {
+      if (webserver_request.database_config_user ()->get_contributor_changes_notifications_online (user)) {
         recipients_named_contributors.push_back (user);
       }
     }
@@ -192,7 +192,7 @@ void changes_modifications ()
   {
     const std::vector <std::string> users = webserver_request.database_users ()->get_users ();
     for (const auto & user : users) {
-      const std::vector <std::string> bibles = webserver_request.database_config_user ()->getChangeNotificationsBiblesForUser (user);
+      const std::vector <std::string> bibles = webserver_request.database_config_user ()->get_change_notifications_bibles_for_user (user);
       notification_bibles_per_user [user] = bibles;
     }
   }
@@ -265,9 +265,9 @@ void changes_modifications ()
       // Check whether there's any email to be sent.
       if (email.length () != empty_email_length) {
         // Send the user email with the user's personal changes if the user opted to receive it.
-        if (webserver_request.database_config_user()->getUserUserChangesNotification (user)) {
+        if (webserver_request.database_config_user()->get_user_user_changes_notification (user)) {
           const std::string subject = translate("Changes you entered in") + " " + bible;
-          if (!client_logic_client_enabled ()) email_schedule (user, subject, email);
+          if (!client_logic_client_enabled ()) email::schedule (user, subject, email);
         }
       }
     }
@@ -280,7 +280,7 @@ void changes_modifications ()
     
     
     // Clear checksum cache.
-    webserver_request.database_config_user ()->setUserChangeNotificationsChecksum (user, "");
+    webserver_request.database_config_user ()->set_user_change_notifications_checksum (user, "");
   }
   
   
@@ -298,7 +298,7 @@ void changes_modifications ()
     std::vector <std::string> all_users = webserver_request.database_users ()->get_users ();
     for (const auto& user : all_users) {
       if (access_bible::read (webserver_request, bible, user)) {
-        if (webserver_request.database_config_user()->getUserGenerateChangeNotifications (user)) {
+        if (webserver_request.database_config_user()->get_user_generate_change_notifications (user)) {
           // The recipient may have set which Bibles to get the change notifications for.
           // This is stored like this:
           // container [user] = list of bibles.
@@ -320,7 +320,7 @@ void changes_modifications ()
     int processedChangesCount = 0;
     
     
-    // The files get stored at http://site.org:<port>/revisions/<Bible>/<date>
+    // The files get stored at https://site.org:<port>/revisions/<Bible>/<date>
     const int seconds = filter::date::seconds_since_epoch ();
     std::string timepath;
     timepath.append (std::to_string (filter::date::numerical_year (seconds)));
@@ -415,26 +415,25 @@ void changes_modifications ()
     
     // Email the changes to the subscribed users.
     if (!email_changes.empty ()) {
+      constexpr const int max_body_size {static_cast<int>(email::max_email_size * 0.8)};
       // Split large emails up into parts.
       // The size of the parts has been found by checking the maximum size that the emailer will send,
       // then each part should remain well below that maximum size.
       // The size was reduced even more later on:
       // https://github.com/bibledit/cloud/issues/727
       std::vector <std::string> bodies {};
-      int counter {0};
       std::string body {};
       for (const auto & line : email_changes) {
         body.append ("<div>");
         body.append (line);
         body.append ("</div>\n");
-        counter++;
-        if (counter >= 150) {
-          bodies.push_back (body);
+        if (body.size() >= max_body_size) {
+          bodies.push_back (std::move(body));
           body.clear ();
-          counter = 0;
         }
       }
-      if (!body.empty ()) bodies.push_back (body);
+      if (!body.empty ())
+        bodies.push_back (body);
       for (size_t b = 0; b < bodies.size (); b++) {
         std::string subject = translate("Recent changes:") + " " + bible;
         if (bodies.size () > 1) {
@@ -442,10 +441,10 @@ void changes_modifications ()
         }
         const std::vector <std::string> all_users_2 = webserver_request.database_users ()->get_users ();
         for (const auto& user : all_users_2) {
-          if (webserver_request.database_config_user()->getUserBibleChangesNotification (user)) {
+          if (webserver_request.database_config_user()->get_user_bible_changes_notification (user)) {
             if (access_bible::read (webserver_request, bible, user)) {
               if (!client_logic_client_enabled ()) {
-                email_schedule (user, subject, bodies[b]);
+                email::schedule (user, subject, bodies[b]);
               }
             }
           }
@@ -488,7 +487,7 @@ void changes_modifications ()
   // Clear checksum caches.
   users = webserver_request.database_users ()->get_users ();
   for (const auto & user : users) {
-    webserver_request.database_config_user ()->setUserChangeNotificationsChecksum (user, "");
+    webserver_request.database_config_user ()->set_user_change_notifications_checksum (user, "");
   }
   
   

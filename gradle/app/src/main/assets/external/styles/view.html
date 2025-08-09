@@ -24,47 +24,27 @@
 
 <tr>
   <td>translate("Italic")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="italic" onchange="this.form.submit()">##italic##</select>
-    </form>
-  </td>
+  <td>##italic##</td>
 </tr>
 
 <tr>
   <td>translate("Bold")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="bold" onchange="this.form.submit()">##bold##</select>
-    </form>
-  </td>
+  <td>##bold##</td>
 </tr>
 
 <tr>
   <td>translate("Underline")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="underline" onchange="this.form.submit()">##underline##</select>
-    </form>
-  </td>
+  <td>##underline##</td>
 </tr>
 
 <tr>
   <td>translate("Small caps")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="smallcaps" onchange="this.form.submit()">##smallcaps##</select>
-    </form>
-  </td>
+  <td>##smallcaps##</td>
 </tr>
 
 <tr>
   <td>translate("Text alignment")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="textalignment" onchange="this.form.submit()">##textalignment##</select>
-    </form>
-  </td>
+  <td>##textalignment##</td>
 </tr>
 
 <tr>
@@ -128,58 +108,38 @@
 
 <tr>
   <td>translate("Italic")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="italic" onchange="this.form.submit()">##italic##</select>
-    </form>
-  </td>
+  <td>##italic##</td>
 </tr>
 
 <tr>
   <td>translate("Bold")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="bold" onchange="this.form.submit()">##bold##</select>
-    </form>
-  </td>
+  <td>##bold##</td>
 </tr>
 
 <tr>
   <td>translate("Underline")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="underline" onchange="this.form.submit()">##underline##</select>
-    </form>
-  </td>
+  <td>##underline##</td>
 </tr>
 
 <tr>
   <td>translate("Small caps")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="smallcaps" onchange="this.form.submit()">##smallcaps##</select>
-    </form>
-  </td>
+  <td>##smallcaps##</td>
 </tr>
 
 <tr>
   <td>translate("Superscript")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="superscript" onchange="this.form.submit()">##superscript##</select>
-    </form>
-  </td>
+  <td>##superscript##</td>
 </tr>
 
 <!-- #BEGINZONE character_color -->
 <tr>
   <td>translate("Foreground color")</td>
-  <td><input id="fgcolor" type="text" class="coloris" value="##foregroundcolor##"></td>
+  <td><input id="fgcolor" type="color" value="##foregroundcolor##"></td>
 </tr>
 
 <tr>
   <td>translate("Background color")</td>
-  <td><input id="bgcolor" type="text" class="coloris" value="##backgroundcolor##"></td>
+  <td><input id="bgcolor" type="color" value="##backgroundcolor##"></td>
 </tr>
 <!-- #ENDZONE character_color -->
 
@@ -258,11 +218,7 @@
 <!-- #BEGINZONE note_numbering_restart -->
 <tr>
   <td>translate("Restart")</td>
-  <td>
-    <form action="" method="POST">
-      <select name="note_numbering_restart" onchange="this.form.submit()">##restart_options##</select>
-    </form>
-  </td>
+  <td>##noterestart##</td>
 </tr>
 <!-- #ENDZONE note_numbering_restart -->
 
@@ -296,21 +252,30 @@
   </td>
 </tr>
 
+
+<tr>
+  <td>translate("Reset")</td>
+  <td>
+    <!-- #BEGINZONE reset -->
+    <a href="?sheet=##sheet##&style=##style##&reset">translate("Reset this style")</a>
+    <!-- #ENDZONE reset -->
+    <!-- #BEGINZONE noreset -->
+    translate("Cannot reset this custom style")
+    <!-- #ENDZONE noreset -->
+  </td>
+</tr>
+
+
+
+
+
+
 </table>
 
-<link rel="stylesheet" type="text/css" href="../coloris/coloris.min.css">
-<style type="text/css">
-.clr-field button {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  border-style: solid;
-}
-</style>
-<script type="text/javascript" src="../coloris/coloris.min.js"></script>
 <script type="text/javascript" src="view.js?##VERSION##"></script>
 <script type="text/javascript" src="../assets/checkbox.js?##VERSION##"></script>
 <script type="text/javascript">
 var sheet = "##sheet##";
 var style = "##style##";
 </script>
+<script type="text/javascript" src="../assets/external.js"></script>
