@@ -110,9 +110,8 @@ rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
 find $EXTERNALFOLDER -name "*.c" -delete
-# Not needed after $ make distclean
-#find $EXTERNALFOLDER -name ".deps" -exec rm -r "{}" \;
-#find $CPPFOLDER -name ".deps" -exec rm -r "{}" \;
+find $EXTERNALFOLDER -name ".deps" -print | xargs rm -rf
+find $CPPFOLDER -name ".deps" -print | xargs rm -rf
 find $EXTERNALFOLDER -name ".dirstamp" -delete
 find $CPPFOLDER -name ".dirstamp" -delete
 
