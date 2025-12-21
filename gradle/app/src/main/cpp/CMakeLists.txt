@@ -135,8 +135,6 @@ add_library( # Sets the name of the library.
         utf8proc/utf8proc.c
         sqlite/sqlite3.c
         jsonxx/jsonxx.cpp
-        parsewebdata/ParseMultipartFormData.cpp
-        parsewebdata/ParseWebData.cpp
         library/bibledit.cpp
         webserver/webserver.cpp
         webserver/http.cpp
@@ -388,7 +386,6 @@ add_library( # Sets the name of the library.
         resource/convert2resource.cpp
         resource/convert2bible.cpp
         resource/manage.cpp
-        resource/print.cpp
         resource/download.cpp
         resource/sword.cpp
         resource/select.cpp

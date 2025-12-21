@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "org.bibledit.android"
         minSdkVersion 22
-        targetSdkVersion 34
-        versionCode 167
-        versionName "5.1.027"
+        targetSdkVersion 35
+        versionCode 169
+        versionName "5.1.035"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++20"
