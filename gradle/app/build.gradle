@@ -14,7 +14,7 @@ android {
             }
         }
         ndk {
-            debugSymbolLevel 'FULL'
+            debugSymbolLevel = 'FULL'
         }
     }
     buildTypes {
@@ -22,17 +22,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
-                debugSymbolLevel 'FULL'
+                debugSymbolLevel = 'FULL'
             }
         }
     }
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-            version "3.10.2"
+            version = "4.1.2"
         }
     }
-    namespace 'org.bibledit.android'
+    namespace = 'org.bibledit.android'
 }
 
 dependencies {
