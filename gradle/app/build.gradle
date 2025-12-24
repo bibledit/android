@@ -6,8 +6,8 @@ android {
         applicationId "org.bibledit.android"
         minSdkVersion 22
         targetSdkVersion 35
-        versionCode 169
-        versionName "5.1.035"
+        versionCode 170
+        versionName "5.1.036"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++20"
@@ -33,6 +33,7 @@ android {
         }
     }
     namespace = 'org.bibledit.android'
+    ndkVersion '29.0.14206865'
 }
 
 dependencies {
