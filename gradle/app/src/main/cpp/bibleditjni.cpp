@@ -22,9 +22,6 @@
 #include <string.h>
 
 
-using namespace std;
-
-
 extern "C" JNIEXPORT jstring JNICALL
 Java_org_bibledit_android_MainActivity_GetVersionNumber (JNIEnv * env, jobject obj)
 {

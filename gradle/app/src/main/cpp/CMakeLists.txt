@@ -483,7 +483,6 @@ add_library( # Sets the name of the library.
         session/confirm.cpp
         read/verse.cpp
         read/load.cpp
-        manage/accounts.cpp
         developer/delay.cpp
         database/bibleimages.cpp
         images/logic.cpp

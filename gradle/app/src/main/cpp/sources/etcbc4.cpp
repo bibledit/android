@@ -1,5 +1,5 @@
 /*
- Copyright (©) 2003-2025 Teus Benschop.
+ Copyright (©) 2003-2026 Teus Benschop.
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -124,11 +124,11 @@ void sources_etcbc4_download ()
 
 std::string sources_etcbc4_clean (std::string item)
 {
-  item = filter::strings::replace ("/", "", item);
-  item = filter::strings::replace ("]", "", item);
-  item = filter::strings::replace ("[", "", item);
-  item = filter::strings::replace ("=", "", item);
-  item = filter::strings::trim (item);
+  item = filter::string::replace ("/", "", item);
+  item = filter::string::replace ("]", "", item);
+  item = filter::string::replace ("[", "", item);
+  item = filter::string::replace ("=", "", item);
+  item = filter::string::trim (item);
   return item;
 }
 
@@ -149,7 +149,7 @@ void sources_etcbc4_parse ()
         // The raw data for the verse.
         std::string data = database::etcbc4::raw (book, chapter, verse);
         if (data.empty ()) continue;
-        data = filter::strings::replace (filter::strings::unicode_non_breaking_space_entity (), "", data);
+        data = filter::string::replace (filter::string::unicode_non_breaking_space_entity (), "", data);
         // Parse the data.
         pugi::xml_document document;
         document.load_string (data.c_str());
