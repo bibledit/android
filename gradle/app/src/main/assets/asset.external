@@ -531,7 +531,6 @@ sources/hebrewlexicon.txt
 index/index.html
 index/listing.html
 manage/index.html
-manage/accounts.html
 manage/exports.html
 manage/privileges.js
 manage/users.html
