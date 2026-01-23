@@ -12,18 +12,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/filter/string.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/filter/string.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/external/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/access/bible.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/bb/book.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/bb/book.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/config.h." beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/config.h." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/filter/string.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/filter/string.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/help/changelog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/manage/users.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/manage/users.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="87df3b3a-493f-46d4-83e9-6875f412c32b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
