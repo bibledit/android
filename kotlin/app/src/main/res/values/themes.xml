@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <!-- By default there was an action bar at the top. Remove it: Change DarkActionBar to NoActionBar.-->
+    <!-- By default there is an action bar at the top. Remove it: Change DarkActionBar to NoActionBar.-->
     <style name="Theme.Bibledit" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
