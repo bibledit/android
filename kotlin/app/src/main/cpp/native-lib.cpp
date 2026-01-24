@@ -4,6 +4,7 @@
 extern "C" JNIEXPORT jstring JNICALL
 Java_org_bibledit_android_MainActivity_stringFromJNI(JNIEnv* env, jobject activity)
 {
-    const std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+    static int counter{0};
+    const std::string message = std::to_string(++counter) + " hello from C++";
+    return env->NewStringUTF(message.c_str());
 }

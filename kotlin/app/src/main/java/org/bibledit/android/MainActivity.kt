@@ -9,28 +9,20 @@ import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
     val timer = Timer()
-    var counter = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
+        setContentView(R.layout.activity_main)
 
         timer.schedule(2000L, 5000L) {
             onRepeatingTimeout()
         }
     }
 
-    // A native method that is implemented by the bibledit native library,
-    // which is packaged with this application.
+    // The native methods implemented by the bibledit native library.
     external fun stringFromJNI(): String
 
     companion object {
@@ -42,7 +34,11 @@ class MainActivity : AppCompatActivity() {
 
     fun onRepeatingTimeout ()
     {
-        counter++
-        println("Timer tick " + counter.toString())
+        // Modifying widgets must be done on the UI thread.
+        runOnUiThread(Runnable {
+            var textview : TextView = this.findViewById(R.id.sample_text)
+            textview.text = stringFromJNI()
+        })
+
     }
 }
