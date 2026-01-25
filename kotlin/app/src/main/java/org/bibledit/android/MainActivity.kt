@@ -1,9 +1,11 @@
 package org.bibledit.android
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import org.bibledit.android.databinding.ActivityMainBinding
+import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -11,11 +13,24 @@ class MainActivity : AppCompatActivity() {
 
     val timer = Timer()
 
+    var show = true
 
+
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        val webview: WebView = findViewById(R.id.webview)
+
+        webview.settings.javaScriptEnabled = true
+
+        // Without this line the URL will open in an external browser.
+        // With this line, the URL will open within the app.
+        webview.webViewClient = WebViewClient()
+
+        webview.loadUrl("https://bibledit.org:8091")
 
         timer.schedule(2000L, 5000L) {
             onRepeatingTimeout()
@@ -36,8 +51,14 @@ class MainActivity : AppCompatActivity() {
     {
         // Modifying widgets must be done on the UI thread.
         runOnUiThread(Runnable {
-            var textview : TextView = this.findViewById(R.id.sample_text)
-            textview.text = stringFromJNI()
+            var webview : WebView = this.findViewById(R.id.webview)
+            println(stringFromJNI())
+            show = !show
+            if (show) {
+                webview.loadUrl("https://bibledit.org:8091")
+            } else {
+                webview.loadUrl("https://bibledit.org:8091/editone/index")
+            }
         })
 
     }
