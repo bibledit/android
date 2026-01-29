@@ -1,13 +1,13 @@
 package org.bibledit.android
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import java.util.Timer
 import kotlin.concurrent.schedule
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,11 +24,24 @@ class MainActivity : AppCompatActivity() {
 
         val webview: WebView = findViewById(R.id.webview)
 
+
         webview.settings.javaScriptEnabled = true
+
+        // This forces Chrome client enabled.
+//        webview.webViewClient = MyWebViewClient()
+//        webview.settings.supportMultipleWindows()
+
+//        webview.webChromeClient = WebChromeClient()
+
+
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
         webview.webViewClient = WebViewClient()
+//        webview.webChromeClient = WebChromeClient()
+
+
+
 
         webview.loadUrl("https://bibledit.org:8091")
 
@@ -55,11 +68,12 @@ class MainActivity : AppCompatActivity() {
             println(stringFromJNI())
             show = !show
             if (show) {
-                webview.loadUrl("https://bibledit.org:8091")
+                //webview.loadUrl("https://bibledit.org:8091")
             } else {
-                webview.loadUrl("https://bibledit.org:8091/editone/index")
+                //webview.loadUrl("https://bibledit.org:8091/editone/index")
             }
         })
 
     }
+
 }
