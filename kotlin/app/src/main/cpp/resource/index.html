@@ -1,0 +1,12 @@
+<p>
+  translate("Resources")
+<!-- #BEGINZONE organize -->
+[<a href="organize">translate("organize")</a>]
+<!-- #ENDZONE organize -->
+</p>
+<hr>
+##resourceblock##
+<div id="reload" style="display: none;"></div>
+<script>##script##</script>
+<script type="text/javascript" src="index.js?##VERSION##"></script>
+<script type="text/javascript" src="/navigation/nav.js?##VERSION##"></script>

@@ -1,0 +1,33 @@
+<div>
+  <label for="bibleselect">translate("Bible"): </label>
+  ##bibleselect##
+</div>
+<p>
+  <input id="searchentry" type="text" value="" placeholder="translate("Search for")" autocorrect="off" autocapitalize="off" />
+  <input id="searchbutton" type="button" value="translate("Search")"  />
+  <img id="searchloading" src="/pix/loading.gif">
+  <span id="hitcount"></span>
+  <progress value="0" max="100"></progress>
+</p>
+<p><input type="checkbox" id="casesensitive">translate("Case sensitive")</p>
+<p>
+translate("Search")
+<input type="radio" id="searchplain" name="where" checked="checked">translate ("plain text")
+<input type="radio" name="where">translate("underlying USFM")
+</p>
+<p>
+translate("Search")
+<input type="radio" id="allbooks" name="books" checked="checked">translate ("all books")
+<input type="radio" id="currentbook" name="books">translate ("current book")
+<input type="radio" id="otbooks" name="books">translate ("Old Testament")
+<input type="radio" id="ntbooks" name="books">translate ("New Testament")
+</p>
+<p>translate("What to do with the search results"):</p>
+<p><input type="radio" id="load" name="share" checked="checked">translate("Display them on the page")</p>
+<p><input type="radio" id="add" name="share">translate("Add them to the ones already on the page")</p>
+<p><input type="radio" id="remove" name="share">translate("Remove them from the ones already on the page")</p>
+<p><input type="radio" id="intersect" name="share">translate("Display the intersection of them and the ones already on the page")</p>
+<div id="searchresults"></div>
+<script>##script##</script>
+<script type="text/javascript" src="search2.js?##VERSION##"></script>
+<script type="text/javascript" src="/filter/passage.js?##VERSION##"></script>

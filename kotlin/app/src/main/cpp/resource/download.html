@@ -1,0 +1,40 @@
+<h3>##name##</h3>
+<p><a href="cache">[translate("back")]</a></p>
+<br>
+<!-- #BEGINZONE installable -->
+<p>
+translate("Bibledit can display this resource.")
+translate("It fetches the resource from the Internet.")
+translate("Bibledit may not always be able to reach the Internet.")
+translate("Or the connection is slow.")
+translate("You can install the resource.")
+translate("When the resource is displayed, the content is fetched from the installed copy, rather than from the Internet.")
+translate("This works faster.")
+translate("And you can work offline.")
+</p>
+<br>
+<p>
+  translate("Number of installed books for this resource:")
+  ##count##
+  [<a href="?name=##name##&clear">translate("clear")</a>]
+</p>
+<p><a href="?name=##name##&download">translate("Start installing the resource and view the progress in the Journal.")</a></p>
+<br>
+<p>
+  translate("Installing the resource takes the existing installed verses in account.")
+  translate("It only downloads the missing pieces.")
+  translate("Clear the installed resource to do a clean installation.")
+</p>
+<!-- #ENDZONE installable -->
+<!-- #BEGINZONE nocache -->
+<p>
+translate("The Cloud has set this resource to not be cached.")
+translate("Every time this resource is displayed, it fetches fresh content from the Cloud.")
+</p>
+<!-- #ENDZONE nocache -->
+<!-- #BEGINZONE embedded -->
+<p>
+translate("This resource comes with Bibledit.")
+translate("It is already installed locally.")
+</p>
+<!-- #ENDZONE embedded -->

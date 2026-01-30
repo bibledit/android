@@ -1,0 +1,39 @@
+<h2>translate("Privileges")</h2>
+<p>translate("You can set the privileges for the user.")</p>
+<p>translate("User:") ##user##.</p>
+<br>
+
+<p>
+<input type="checkbox" name="viewresources" onchange="checkbox_v2(this, '##user##')" ##viewresourceschecked## ##viewresourcesdisabled## />
+translate("Can view the resources.")
+</p>
+
+<p>
+<input type="checkbox" id="view" name="viewnotes" onchange="checkbox_v2(this, '##user##')" ##viewnoteschecked## ##viewnotesdisabled## />
+translate("Can view the consultation notes.")
+</p>
+
+<p>
+<input type="checkbox" id="create" name="createcommentnotes" onchange="checkbox_v2(this, '##user##')" ##createcommentnoteschecked## ##createcommentnotesdisabled## />
+translate("Can create and comment on consultation notes.")
+</p>
+
+<p>
+<input type="checkbox" name="deletenotes" onchange="checkbox_v2(this, '##user##')" ##deletenoteschecked## ##deletenotesdisabled## />
+translate("Can delete consultation notes.")
+</p>
+
+<p>
+<input type="checkbox" name="useadvancedmode" onchange="checkbox_v2(this, '##user##')" ##useadvancedmodechecked## ##useadvancedmodedisabled## />
+translate("Can use advanced mode in Cloud.")
+</p>
+
+<p>
+<input type="checkbox" name="editstylesheets" onchange="checkbox_v2(this, '##user##')" ##editstylesheetschecked## ##editstylesheetsdisabled## />
+translate("Can apply stylesheets.")
+</p>
+
+<br>
+<p><a href="users">translate ("Go back.")</a></p>
+<script type="text/javascript" src="../assets/checkbox.js?##VERSION##"></script>
+<script type="text/javascript" src="privileges.js"></script>

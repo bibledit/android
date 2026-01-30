@@ -1,0 +1,181 @@
+/*
+ Copyright (©) 2003-2026 Teus Benschop.
+ 
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <workspace/index.h>
+#include <assets/view.h>
+#include <assets/page.h>
+#include <assets/header.h>
+#include <filter/roles.h>
+#include <filter/string.h>
+#include <filter/url.h>
+#include <webserver/request.h>
+#include <locale/translate.h>
+#include <database/config/general.h>
+#include <database/notes.h>
+#include <database/cache.h>
+#include <workspace/logic.h>
+#include <menu/logic.h>
+#include <ipc/focus.h>
+#include <navigation/passage.h>
+
+
+std::string workspace_index_url ()
+{
+  return "workspace/index";
+}
+
+
+bool workspace_index_acl (Webserver_Request& webserver_request)
+{
+  return roles::access_control (webserver_request, roles::consultant);
+}
+
+
+std::string workspace_index (Webserver_Request& webserver_request)
+{
+  const std::vector <std::string> workspaces = workspace_get_names (webserver_request);
+
+  // Set the requested workspace as the active one.
+  if (webserver_request.query.count ("bench")) {
+    const size_t bench = static_cast <size_t> (filter::string::convert_to_int (webserver_request.query ["bench"]));
+    if (bench < workspaces.size ()) {
+      const std::string workspace = workspaces [bench];
+      webserver_request.database_config_user()->set_active_workspace (workspace);
+    }
+  }
+  
+  
+  // Check that the active workspace exists, else set the first available workspace as the active one.
+  {
+    const std::string workspace = webserver_request.database_config_user ()->get_active_workspace ();
+    if (!filter::string::in_array (workspace, workspaces)) {
+      if (!workspaces.empty ()) {
+        webserver_request.database_config_user ()->set_active_workspace (workspaces [0]);
+      }
+    }
+  }
+  
+  
+  // Create default set of workspaces if there are none.
+  bool create = workspaces.empty ();
+  if (!create) {
+    create = (workspaces [0] == workspace_get_default_name ());
+  }
+  if (create) {
+    workspace_create_defaults (webserver_request);
+  }
+
+  
+  // In case the workspace is opened from a consultation note email,
+  // read the note, and set the active passage to the passage the note refers to.
+  const int note_id = filter::string::convert_to_int (webserver_request.query ["note"]);
+  if (note_id) {
+    Database_Notes database_notes (webserver_request);
+    const std::vector <Passage> passages = database_notes.get_passages (note_id);
+    if (!passages.empty ()) {
+      ipc_focus::set_passage (webserver_request, passages[0].m_book, passages[0].m_chapter, filter::string::convert_to_int (passages[0].m_verse));
+      navigation_passage::record_history (webserver_request, passages[0].m_book, passages[0].m_chapter, filter::string::convert_to_int (passages[0].m_verse));
+    }
+  }
+  
+  
+  // The focus group.
+  const int focus_group = ipc_focus::get_focus_group(webserver_request);
+  
+  
+  std::string page{};
+  Assets_Header header = Assets_Header (translate("Workspace"), webserver_request);
+  header.set_navigator ();
+  header.set_fading_menu (menu_logic_workspace_category (webserver_request));
+  header.set_focus_group(focus_group);
+  page = header.run ();
+  Assets_View view;
+
+  
+  std::map <int, std::string> urls = workspace_get_urls (webserver_request, true);
+  std::map <int, std::string> widths = workspace_get_widths (webserver_request);
+  // The Bible editor number, starting from 1, increasing.
+  std::map <int, int> editor_numbers = workspace_add_bible_editor_number (urls);
+  // Set the data for the pages in the workspace.
+  for (int key = 0; key < 15; key++) {
+    // If a focus group is given other than the default focus group, add this to the URL.
+    const auto handle_focus_group = [focus_group](const std::string& url) {
+      if (url.empty())
+        return url;
+      if (!focus_group)
+        return url;
+      return filter_url_build_http_query (url, {{ipc_focus::focusgroup, std::to_string(focus_group)}});
+    };
+    const std::string url = handle_focus_group(urls[key]);
+    // Continue with the other parameters for the workspace.
+    const std::string width = widths [key];
+    const int editor_number = editor_numbers [key];
+    const int row = static_cast<int> (round (key / 5)) + 1;
+    const int column = key % 5 + 1;
+    std::string variable = "url" + std::to_string (row) + std::to_string (column);
+    view.set_variable (variable, url);
+    variable = "width" + std::to_string (row) + std::to_string (column);
+    view.set_variable (variable, width);
+    if (filter::string::convert_to_int (width) > 0) 
+      view.enable_zone (variable);
+    variable = "editorno" + std::to_string (row) + std::to_string (column);
+    view.set_variable (variable, std::to_string (editor_number));
+  }
+  
+  
+  std::map <int, std::string> heights = workspace_get_heights (webserver_request);
+  for (int key = 0; key < 3; key++) {
+    const std::string height = heights [key];
+    const int row = key + 1;
+    const std::string variable = "height" + std::to_string (row);
+    view.set_variable (variable, height);
+    if (filter::string::convert_to_int (height) > 0) 
+      view.enable_zone (variable);
+  }
+  
+  
+  std::string workspacewidth = workspace_get_entire_width (webserver_request);
+  if (!workspacewidth.empty ()) {
+    workspacewidth.insert (0, "width: ");
+    workspacewidth.append (";");
+  }
+  view.set_variable ("workspacewidth", workspacewidth);
+  
+  
+  // When the URLs loaded specify a Bible, then set this as the active Bible.
+  // Extract the first Bible, if any, to do that.
+  // See https://github.com/bibledit/cloud/issues/1004 for more info.
+  {
+    std::optional<std::string> bible = get_first_bible_from_urls (urls);
+    if (bible)
+      webserver_request.database_config_user()->set_bible(bible.value());
+  }
+  
+  
+  // The rendered template disables framekillers through the "sandbox" attribute on the iframe elements.
+  page += view.render ("workspace", "index");
+  page += assets_page::footer ();
+  return page;
+}
+
+
+// It used to use a sandbox restriction in the iframe.
+// sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-modals"
+// But that led to issues:
+// https://github.com/bibledit/cloud/issues/744
