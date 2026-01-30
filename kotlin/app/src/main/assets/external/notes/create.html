@@ -1,0 +1,21 @@
+<p>
+  translate("Create consultation note for")
+  ##passage##
+  ##versetext##
+</p>
+<p>translate("Summary"):</p>
+<p><input type="text" id="summary" maxlength="100" class="width100" value="##summary##"/></p>
+<p>translate("Body"): </p>
+<div id="body" name="contents" class="width100 height50">##contents##</div>
+<p>
+  <input type="submit" id="create" value="translate("Create")" onclick="this.disabled=true" />
+  <input type="submit" id="cancel" value="translate("Cancel")" />
+</p>
+<input type="hidden" id="bible" value="##bible##" />
+<input type="hidden" id="book" value="##book##" />
+<input type="hidden" id="chapter" value="##chapter##" />
+<input type="hidden" id="verse" value="##verse##" />
+<link rel="stylesheet" type="text/css" href="../quill/quill.notes.css?##VERSION##">
+<script type="text/javascript" src="/filter/url.js?##VERSION##"></script>
+<script src="../quill/quill.min.js?##VERSION##"></script>
+<script src="quill.js?##VERSION##"></script>

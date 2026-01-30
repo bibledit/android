@@ -1,0 +1,63 @@
+<p><a href="note?id=##id##">translate("Go back to the note contents")</a></p>
+<p>translate("Summary"): ##summary##</p>
+<p>
+<!-- #BEGINZONE subscribed -->
+translate("You are subscribed to this note") <a href="?id=##id##&unsubscribe=">[translate ("unsubscribe")]</a>
+<!-- #ENDZONE subscribed -->
+<!-- #BEGINZONE subscribe -->
+<a href="?id=##id##&subscribe=">translate("Subscribe to this note")</a>
+<!-- #ENDZONE subscribe -->
+<p>translate("The note has been assigned to"):
+##assigneeblock##
+<!-- #BEGINZONE assign -->
+<a href="assign-1?id=##id##">[translate("add assignee")]</a>
+<!-- #ENDZONE assign -->
+</p>
+<!-- #BEGINZONE assigned -->
+<p>
+translate("This note has been assigned to you for you to take action on.")
+<a href="?id=##id##&done=">translate("I have done my part on it.")</a>
+</p>
+<!-- #ENDZONE assigned -->
+<p>
+translate("Status"):
+<!-- #BEGINZONE editstatus -->
+<a href="status-1?id=##id##">##status##</a>
+<!-- #ENDZONE editstatus -->
+<!-- #BEGINZONE viewstatus -->
+##status##
+<!-- #ENDZONE viewstatus -->
+</p>
+<p>translate("Verses"): ##verses## | <a href="verses?id=##id##">[translate("edit")]</a></p>
+<p>translate("Severity"): <a href="severity-1?id=##id##">##severity##</a></p>
+<p>
+translate("Bible"):
+##bible##
+<!-- #BEGINZONE nobible -->
+translate("This is a general note, it does not apply to any specific Bible")
+<!-- #ENDZONE nobible -->
+<a href="bb-1?id=##id##">[translate("change")]</a>
+</p>
+<p><a href="edit?identifier=##id##">translate("Edit contents")</a></p>
+<!-- #BEGINZONE deletenote -->
+<p>
+<!-- #BEGINZONE marked -->
+  translate("The note will be deleted after it expires")
+  <a href="?id=##id##&unmarkdel=">[translate("cancel")]</a>
+<!-- #ENDZONE marked -->
+<!-- #BEGINZONE mark -->
+  <a href="?id=##id##&markdel=">translate("Mark the note for deletion after a week")</a>
+<!-- #ENDZONE mark -->
+</p>
+<p><a href="?id=##id##&delete=">translate("Delete the note now")</a></p>
+<!-- #ENDZONE deletenote -->
+<!-- #BEGINZONE cloud -->
+<p>
+<input type="checkbox" name="public" onchange="checkbox_v2(this, ##id##)" ##public## ##disabled## />
+translate("Make this a public note.")
+</p>
+<!-- #ENDZONE cloud -->
+<p class="error">##error##</p>
+<p class="success">##success##</p>
+<script type="text/javascript" src="poll.js?##VERSION##"></script>
+<script type="text/javascript" src="../assets/checkbox.js?##VERSION##"></script>

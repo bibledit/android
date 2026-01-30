@@ -1,0 +1,36 @@
+<h1>translate("Install Bibledit on macOS")</h1>
+<p>
+translate("This assumes a standard installation of the operating system.")
+</p>
+
+<ol>
+
+  <li><a href="https://itunes.apple.com/us/app/bibledit/id996639148" ##external##>translate("Install Bibledit from the App Store.")</a></li>
+
+<!--<li>-->
+<!--  translate("Download Bibledit.zip from")-->
+<!--  <a href="https://github.com/bibledit/macos/releases" ##external##>https://github.com/bibledit/macos/releases</a>-->
+<!--</li>-->
+
+<!--  <li>translate("Install Bibledit.")</li>-->
+
+<!--<li>-->
+<!--translate("Unpack it.")-->
+<!--translate("But most likely macOS will already have done this for you.")-->
+<!--</li>-->
+<!---->
+<!--<li>translate("Drag Bibledit to the Applications folder.")</li>-->
+
+<!--<li>translate("Start it from the Applications.")</li>-->
+
+<li>translate("Open Bibledit.")</li>
+
+<li>translate("Connect to Bibledit Cloud via menu Settings / Cloud.")</li>
+
+<li>translate("Give it enough time to download all the data from Bibledit Cloud.")</li>
+
+<li>translate("Bibledit is ready for online and offline use.")</li>
+
+</ol>
+
+<script type="text/javascript" src="../assets/external.js"></script>
