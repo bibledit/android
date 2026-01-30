@@ -106,6 +106,11 @@ rm_rf_assets_cpp sources/oshb.xml.gz
 rm_rf_assets_cpp unittests
 rm_rf_assets_cpp config/local.server.key
 rm_rf_assets_cpp config/local.privkey.pem
+rm_rf_assets_cpp .git*
+rm_rf_assets_cpp xcode*
+rm_rf_assets_cpp cloud-macos.entitlements
+rm_rf_assets_cpp index.html
+rm_rf_assets_cpp Makefile.am
 rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
