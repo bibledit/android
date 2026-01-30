@@ -499,7 +499,6 @@ microtar/LICENSE
 microtar/source.txt
 microtar/readme.txt
 consultations/gitflag
-.github/workflows/build.yml
 pkgdata/files.txt
 pkgdata/install.sh
 pkgdata/create.sh
@@ -666,8 +665,6 @@ help/introduction.html
 help/installcloudsource.html
 help/consistency.html
 help/navigation.html
-tbsx/specs.html
-tbsx/example.txt
 session/login.html
 session/signedup.html
 session/login.js
