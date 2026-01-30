@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     var show = true
 
 
-    @SuppressLint("SetJavaScriptEnabled")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,24 +24,13 @@ class MainActivity : AppCompatActivity() {
 
         val webview: WebView = findViewById(R.id.webview)
 
-
+        @SuppressLint("SetJavaScriptEnabled")
         webview.settings.javaScriptEnabled = true
-
-        // This forces Chrome client enabled.
-//        webview.webViewClient = MyWebViewClient()
-//        webview.settings.supportMultipleWindows()
-
-//        webview.webChromeClient = WebChromeClient()
-
-
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
-        webview.webViewClient = WebViewClient()
-//        webview.webChromeClient = WebChromeClient()
-
-
-
+        //webview.webViewClient = MyWebViewClient()
+        MyWebViewClient().also { webview.webViewClient = it }
 
         webview.loadUrl("https://bibledit.org:8091")
 

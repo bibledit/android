@@ -14,6 +14,6 @@ class MyWebViewClient : WebViewClient() {
             return false
         }
         // Don't override URL loading.
-        return true
+        return false
     }
 }
