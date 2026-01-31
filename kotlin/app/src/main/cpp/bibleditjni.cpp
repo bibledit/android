@@ -21,8 +21,6 @@
 #include "library/bibledit.h"
 #include <string.h>
 
-/* Todo
-
 extern "C" JNIEXPORT jstring JNICALL
 Java_org_bibledit_android_MainActivity_GetVersionNumber (JNIEnv * env, jobject obj)
 {
@@ -134,4 +132,3 @@ Java_org_bibledit_android_MainActivity_DisableSelectionPopupChromeOS (JNIEnv * e
   return env->NewStringUTF(bibledit_disable_selection_popup_chrome_os ());
 }
 
- */
