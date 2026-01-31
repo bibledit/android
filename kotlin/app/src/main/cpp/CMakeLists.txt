@@ -3,6 +3,7 @@
 # For more examples on how to use CMake, see https://github.com/android/ndk-samples.
 
 # Sets the minimum CMake version required for this project.
+# Bibledit in Java used minimum version 4.1.2. See to this later if needed. Todo
 cmake_minimum_required(VERSION 3.22.1)
 
 # Declares the project name. The project name can be accessed via ${ PROJECT_NAME},
@@ -24,9 +25,13 @@ project("bibledit")
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
-add_library(${CMAKE_PROJECT_NAME} SHARED
+add_library(
+        ${CMAKE_PROJECT_NAME}
+        SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
+        native.cpp
         bibleditjni.cpp
+        stub.cpp
 )
 
 # Specifies libraries CMake should link to your target library. You
