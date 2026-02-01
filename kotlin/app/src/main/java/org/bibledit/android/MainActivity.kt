@@ -8,8 +8,10 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
+import java.io.File
 import java.util.Timer
 import kotlin.concurrent.schedule
+
 
 const val REQUEST_CODE = 1000
 
@@ -35,6 +37,27 @@ class MainActivity : AppCompatActivity() {
         // Get the free port number found by the Bibledit library.
         val port: String = GetNetworkPort()
         webAppUrl = "http://localhost:" + port + "/"
+
+        // The directory of the external files.
+        // Usually this is /storage/emulated/0/Android/data/org.bibledit.android/files
+        // Files in this directory cannot be made executable
+        // because system has a protection mechanism for this.
+        val externalDirectory: String = getExternalFilesDir(null)!!.getAbsolutePath()
+
+        // The protected directory.
+        // Usually this is /data/user/0/org.bibledit.android/files normally.
+        // Files there can be set executable.
+        val internalDirectory: String = getFilesDir().getAbsolutePath()
+
+        // Take the external directory for the webroot, if it exists, else the internal directory.
+        var webroot: String = externalDirectory
+        run {
+            val file = File(externalDirectory)
+            if (!file.exists()) webroot = internalDirectory
+        }
+
+
+
 
 
 
