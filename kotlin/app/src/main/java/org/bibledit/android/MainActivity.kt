@@ -5,7 +5,10 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.webkit.WebView
+import android.widget.TabHost
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import java.io.File
@@ -20,6 +23,11 @@ const val REQUEST_CODE = 1000
 // It writes files to subfolder files.
 
 class MainActivity : AppCompatActivity() {
+
+    var layout: ConstraintLayout? = null
+    var textview: TextView? = null
+    var webview: WebView? = null
+    var tabhost: TabHost? = null // Todo deprecated: Use modern version, see to that later.
 
     val timer = Timer()
 
@@ -56,28 +64,65 @@ class MainActivity : AppCompatActivity() {
             if (!file.exists()) webroot = internalDirectory
         }
 
+        InitializeLibrary (webroot, webroot);
 
+        SetTouchEnabled (true);
 
-
-
-
-
+        StartLibrary ();
 
         setContentView(R.layout.activity_main)
 
-        val webview: WebView = findViewById(R.id.webview)
+        val layout: ConstraintLayout = findViewById(R.id.main)
+
+        // Create and center the dynamic TextView.
+        textview = TextView(this).apply {
+            text = "Created text"
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
+                endToEnd = ConstraintLayout.LayoutParams.END
+                startToStart = ConstraintLayout.LayoutParams.START
+                topToTop = ConstraintLayout.LayoutParams.TOP
+            }
+        }
+//        layout.addView(textview)
+
+
+        webview = WebView(this).apply {
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
+                endToEnd = ConstraintLayout.LayoutParams.END
+                startToStart = ConstraintLayout.LayoutParams.START
+                topToTop = ConstraintLayout.LayoutParams.TOP
+            }
+        }
+        layout.addView(webview)
+
+
+
+
+//        StartWebView ("");
 
         @SuppressLint("SetJavaScriptEnabled")
-        webview.settings.javaScriptEnabled = true
+        webview?.settings?.javaScriptEnabled = true
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
         //webview.webViewClient = MyWebViewClient()
-        MyWebViewClient().also { webview.webViewClient = it }
+        MyWebViewClient().also { webview?.webViewClient = it }
 
-        webview.loadUrl("https://bibledit.org:8091")
+        webview?.loadUrl("https://bibledit.org:8091")
 
-        timer.schedule(2000L, 5000L) {
+        val html : String = "Hello World"
+        webview?.loadData(html, "text/html", "utf-8")
+
+
+        timer.schedule(2000L, 50L) {
             onRepeatingTimeout()
         }
     }
@@ -118,8 +163,10 @@ class MainActivity : AppCompatActivity() {
     {
         // Modifying widgets must be done on the UI thread.
         runOnUiThread(Runnable {
-            var webview : WebView = this.findViewById(R.id.webview)
-            println(StringFromJNI())
+            val msg : String = StringFromJNI()
+            println(msg)
+            textview?.text = StringFromJNI()
+            webview?.loadData(msg, "text/html", "utf-8")
             show = !show
             if (show) {
                 //webview.loadUrl("https://bibledit.org:8091")
@@ -199,6 +246,71 @@ class MainActivity : AppCompatActivity() {
                 // Ignore all other requests.
             }
         }
+    }
+
+
+    // Open the single webview configuration.
+    private fun StartWebView(PageToOpen : String) // Todo implement.
+    {
+        // Indicate that the view is now plain.
+        tabhost = null
+
+        // Set up the webview.
+        webview = GetNewWebViewWithSettings (true);
+        //setContentView (webview);
+
+        layout?.addView(webview)
+
+        // Enable debugging this WebView from a developer's machine.
+        // But this failed to work since December 2018 on some Android versions:
+        // W/dalvikvm(14740): VFY: unable to resolve static method 45: Landroid/webkit/WebView;.setWebContentsDebuggingEnabled
+        // webview.setWebContentsDebuggingEnabled (true);
+        // Load page.
+        //val url : String = webAppUrl + PageToOpen
+//        val url = "http://bibledit.org:8090"
+//        webview?.loadUrl (url);
+
+        val html : String = "Hello World"
+        webview?.loadData(html, "text/html", "utf-8")
+
+
+    }
+
+
+    private fun GetNewWebViewWithSettings (zoom: Boolean) : WebView
+    {
+        val webview = WebView(this).apply {
+//            text = "Created text"
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
+                endToEnd = ConstraintLayout.LayoutParams.END
+                startToStart = ConstraintLayout.LayoutParams.START
+                topToTop = ConstraintLayout.LayoutParams.TOP
+            }
+        }
+
+        @SuppressLint("SetJavaScriptEnabled")
+        webview.getSettings().setJavaScriptEnabled(true)
+
+        // No built-in zoom controls,
+        // because these may cover clickable links,
+        // which then can't be clicked anymore.
+        // https://github.com/bibledit/cloud/issues/321
+        webview.getSettings().setBuiltInZoomControls(false)
+        webview.getSettings().setSupportZoom(false)
+        webview.getSettings().setDisplayZoomControls(false)
+
+        webview.getSettings().setDomStorageEnabled(true)
+
+        // Without this line the URL will open in an external browser.
+        // With this line, the URL will open within the app.
+        //webview.webViewClient = MyWebViewClient()
+        MyWebViewClient().also { webview.webViewClient = it }
+
+        return webview
     }
 
 
