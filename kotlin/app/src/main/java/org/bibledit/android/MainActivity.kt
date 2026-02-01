@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // The native methods implemented by the bibledit native library wrapper.
-    external fun stringFromJNI(): String
+    external fun StringFromJNI(): String
 
 
     companion object {
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         // Modifying widgets must be done on the UI thread.
         runOnUiThread(Runnable {
             var webview : WebView = this.findViewById(R.id.webview)
-            println(stringFromJNI())
+            println(StringFromJNI())
             show = !show
             if (show) {
                 //webview.loadUrl("https://bibledit.org:8091")

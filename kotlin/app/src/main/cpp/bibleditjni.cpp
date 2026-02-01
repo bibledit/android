@@ -22,28 +22,28 @@
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_stringFromJNI(JNIEnv *env, jobject activity)
+Java_org_bibledit_android_MainActivity_StringFromJNI(JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF("Hello World From C++");
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_GetVersionNumber (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_GetVersionNumber(JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_get_version_number ());
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_GetNetworkPort (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_GetNetworkPort (JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_get_network_port ());
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_InitializeLibrary (JNIEnv * env, jobject obj, jstring package, jstring webroot)
+Java_org_bibledit_android_MainActivity_InitializeLibrary (JNIEnv* env, jobject activity, jstring package, jstring webroot)
 {
     const char * native_package = env->GetStringUTFChars(package, 0);
     const char * native_webroot = env->GetStringUTFChars(webroot, 0);
@@ -52,7 +52,7 @@ Java_org_bibledit_android_MainActivity_InitializeLibrary (JNIEnv * env, jobject 
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_SetTouchEnabled (JNIEnv * env, jobject obj, jboolean enabled)
+Java_org_bibledit_android_MainActivity_SetTouchEnabled (JNIEnv* env, jobject activity, jboolean enabled)
 {
     // This fails to work on Android 6.
     bibledit_set_touch_enabled ((enabled == JNI_TRUE));
@@ -62,56 +62,56 @@ Java_org_bibledit_android_MainActivity_SetTouchEnabled (JNIEnv * env, jobject ob
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_StartLibrary (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_StartLibrary (JNIEnv* env, jobject activity)
 {
     bibledit_start_library ();
 }
 
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_org_bibledit_android_MainActivity_IsRunning (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_IsRunning (JNIEnv* env, jobject activity)
 {
     return bibledit_is_running ();
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_IsSynchronizing (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_IsSynchronizing (JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_is_synchronizing ());
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_GetExternalUrl (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_GetExternalUrl (JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_get_external_url ());
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_GetPagesToOpen (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_GetPagesToOpen (JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_get_pages_to_open ());
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_StopLibrary (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_StopLibrary (JNIEnv* env, jobject activity)
 {
     bibledit_stop_library ();
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_ShutdownLibrary (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_ShutdownLibrary (JNIEnv* env, jobject activity)
 {
     bibledit_shutdown_library ();
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_Log (JNIEnv * env, jobject obj, jstring message)
+Java_org_bibledit_android_MainActivity_Log (JNIEnv* env, jobject activity, jstring message)
 {
     const char * native_message = env->GetStringUTFChars(message, 0);
     bibledit_log (native_message);
@@ -120,21 +120,21 @@ Java_org_bibledit_android_MainActivity_Log (JNIEnv * env, jobject obj, jstring m
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_GetLastPage (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_GetLastPage (JNIEnv* env, jobject activity)
 {
     return env->NewStringUTF(bibledit_get_last_page ());
 }
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_bibledit_android_MainActivity_RunOnChromeOS (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_RunOnChromeOS (JNIEnv* env, jobject activity)
 {
   bibledit_run_on_chrome_os ();
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_bibledit_android_MainActivity_DisableSelectionPopupChromeOS (JNIEnv * env, jobject obj)
+Java_org_bibledit_android_MainActivity_DisableSelectionPopupChromeOS (JNIEnv* env, jobject activity)
 {
   return env->NewStringUTF(bibledit_disable_selection_popup_chrome_os ());
 }
