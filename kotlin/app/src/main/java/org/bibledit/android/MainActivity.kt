@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.TabHost
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     val timer = Timer()
     var show = true
 
-    var webAppUrl: String = ""
+    var webAppBaseUrl: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,25 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         // Get the free port number found by the Bibledit library.
         val port: String = GetNetworkPort()
-        webAppUrl = "http://localhost:" + port + "/"
+        webAppBaseUrl = "http://localhost:" + port + "/"
 
-        // The directory of the external files.
-        // Usually this is /storage/emulated/0/Android/data/org.bibledit.android/files
-        // Files in this directory cannot be made executable
-        // because system has a protection mechanism for this.
-        val externalDirectory: String = getExternalFilesDir(null)!!.getAbsolutePath()
-
-        // The protected directory.
-        // Usually this is /data/user/0/org.bibledit.android/files normally.
-        // Files there can be set executable.
-        val internalDirectory: String = getFilesDir().getAbsolutePath()
-
-        // Take the external directory for the webroot, if it exists, else the internal directory.
-        var webroot: String = externalDirectory
-        run {
-            val file = File(externalDirectory)
-            if (!file.exists()) webroot = internalDirectory
-        }
+        // Root folder for the web app.
+        val webroot: String = getWebRoot()
 
         InitializeLibrary (webroot, webroot);
 
@@ -295,5 +279,26 @@ class MainActivity : AppCompatActivity() {
         return webview
     }
 
+    private fun getWebRoot() : String
+    {
+        // The directory of the external files.
+        // Usually this is /storage/emulated/0/Android/data/org.bibledit.android/files
+        // Files in this directory cannot be made executable
+        // because system has a protection mechanism for this.
+        val externalDirectory: String = getExternalFilesDir(null)!!.getAbsolutePath()
+
+        // Take the external directory for the webroot if it exists.
+        val file = File(externalDirectory)
+        if (file.exists()) {
+            return externalDirectory
+        }
+
+        // External directory does not exist.
+        // The protected directory.
+        // Usually this is /data/user/0/org.bibledit.android/files normally.
+        // Files there can be set executable.
+        val internalDirectory: String = getFilesDir().getAbsolutePath()
+        return internalDirectory
+    }
 
 }
