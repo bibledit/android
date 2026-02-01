@@ -25,12 +25,10 @@ const val REQUEST_CODE = 1000
 class MainActivity : AppCompatActivity() {
 
     var layout: ConstraintLayout? = null
-    var textview: TextView? = null
     var webview: WebView? = null
     var tabhost: TabHost? = null // Todo deprecated: Use modern version, see to that later.
 
     val timer = Timer()
-
     var show = true
 
     var webAppUrl: String = ""
@@ -38,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+        layout = findViewById(R.id.main)
 
         // Handle permissions right at the start of the app.
         checkPermissions();
@@ -70,24 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         StartLibrary ();
 
-        setContentView(R.layout.activity_main)
 
-        val layout: ConstraintLayout = findViewById(R.id.main)
-
-        // Create and center the dynamic TextView.
-        textview = TextView(this).apply {
-            text = "Created text"
-            layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
-                endToEnd = ConstraintLayout.LayoutParams.END
-                startToStart = ConstraintLayout.LayoutParams.START
-                topToTop = ConstraintLayout.LayoutParams.TOP
-            }
-        }
-//        layout.addView(textview)
 
 
         webview = WebView(this).apply {
@@ -101,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 topToTop = ConstraintLayout.LayoutParams.TOP
             }
         }
-        layout.addView(webview)
+        layout?.addView(webview)
 
 
 
@@ -122,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         webview?.loadData(html, "text/html", "utf-8")
 
 
-        timer.schedule(2000L, 50L) {
+        timer.schedule(2000L, 1000L) { // Todo better 5000 ms.
             onRepeatingTimeout()
         }
     }
@@ -163,15 +147,13 @@ class MainActivity : AppCompatActivity() {
     {
         // Modifying widgets must be done on the UI thread.
         runOnUiThread(Runnable {
-            val msg : String = StringFromJNI()
-            println(msg)
-            textview?.text = StringFromJNI()
-            webview?.loadData(msg, "text/html", "utf-8")
             show = !show
             if (show) {
-                //webview.loadUrl("https://bibledit.org:8091")
+                webview?.loadUrl("https://bibledit.org:8091")
             } else {
-                //webview.loadUrl("https://bibledit.org:8091/editone/index")
+                val msg : String = StringFromJNI()
+                println(msg)
+                webview?.loadData(msg, "text/html", "utf-8")
             }
         })
 
