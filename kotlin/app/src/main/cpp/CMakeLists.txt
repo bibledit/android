@@ -29,9 +29,7 @@ add_library(
         ${CMAKE_PROJECT_NAME}
         SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        native.cpp
         bibleditjni.cpp
-        stub.cpp
 
         # Start Bibledit kernel.
         miniz/miniz.c

@@ -38,11 +38,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // The native methods implemented by the bibledit native library.
+    // The native methods implemented by the bibledit native library wrapper.
     external fun stringFromJNI(): String
 
+
     companion object {
-        // Load the bibledit kernel library on application startup.
+        // Load the native Bibledit library on application startup.
+        // The library has already been unpacked into
+        // /data/data/org.bibledit.android
+        // at installation time by the package manager.
         init {
             System.loadLibrary("bibledit")
         }
