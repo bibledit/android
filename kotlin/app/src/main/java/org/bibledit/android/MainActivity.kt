@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     var show = true
 
+    var webAppUrl: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         // Handle permissions right at the start of the app.
         checkPermissions();
+
+        // Get the free port number found by the Bibledit library.
+        val port: String = GetNetworkPort()
+        webAppUrl = "http://localhost:" + port + "/"
+
 
 
 
@@ -69,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     external fun GetPagesToOpen(): String
     external fun StopLibrary()
     external fun ShutdownLibrary()
-    external fun Log(message: String)
+    external fun Log(message: String, string: String)
     external fun GetLastPage(): String
     external fun RunOnChromeOS()
     external fun DisableSelectionPopupChromeOS(): String
