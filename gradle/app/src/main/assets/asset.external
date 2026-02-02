@@ -258,6 +258,7 @@ odf/template.odt
 tasks/holder
 bibles/gitflag
 personalize/index.html
+personalize/index.js
 sendreceive/index.html
 sendreceive/index.js
 index.html
@@ -678,8 +679,6 @@ help/introduction.html
 help/installcloudsource.html
 help/consistency.html
 help/navigation.html
-tbsx/specs.html
-tbsx/example.txt
 session/login.html
 session/signedup.html
 session/login.js
