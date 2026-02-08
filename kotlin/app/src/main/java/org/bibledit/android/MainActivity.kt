@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebView
 import android.widget.TabHost
 import androidx.appcompat.app.AppCompatActivity
@@ -11,11 +12,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.Timer
 import kotlin.concurrent.schedule
+import kotlin.math.log
 
 
-const val REQUEST_CODE = 1000
+const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 
 // The activity's data is at /data/data/org.bibledit.android.
@@ -57,6 +63,22 @@ class MainActivity : AppCompatActivity() {
 
         StartWebView (webAppBaseUrl);
 
+        // Install the assets if needed.
+        installAssets (webroot);
+
+        // Log information about where to find Bibledit's data. Todo test this.
+        Log ("Bibledit data location: " + webroot);
+
+        // Log information about whether running on Android or on Chrome OS. Todo test this on ChromeOS
+        if (applicationContext.packageManager.hasSystemFeature("org.chromium.arc.device_management")) {
+            Log ("Running on Chrome OS");
+            // Enable Chrome OS in the library, for something specific to Chrome.
+            // See https://github.com/bibledit/cloud/issues/282.
+            RunOnChromeOS ();
+        } else {
+            Log ("Running on Android"); // Todo test this on Android whether it logs.
+        }
+
         timer.schedule(2000L, 2000L) { // Todo better 5000 ms.
             onRepeatingTimeout()
         }
@@ -78,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     external fun GetPagesToOpen(): String
     external fun StopLibrary()
     external fun ShutdownLibrary()
-    external fun Log(message: String, string: String)
+    external fun Log(message: String)
     external fun GetLastPage(): String
     external fun RunOnChromeOS()
     external fun DisableSelectionPopupChromeOS(): String
@@ -100,11 +122,11 @@ class MainActivity : AppCompatActivity() {
         runOnUiThread(Runnable {
             show = !show
             if (show) {
-                StartWebView(webAppBaseUrl)
+//                StartWebView(webAppBaseUrl)
             } else {
                 val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
-                println(msg)
-                webview?.loadData(msg, "text/html", "utf-8")
+                Log.i("Timer", msg)
+//                webview?.loadData(msg, "text/html", "utf-8")
             }
             val count : Int? = layout?.childCount
         })
@@ -147,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         // it's recommended that you use it when possible.
         requestPermissions(
             this,
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
 
         // Indicate to the caller that the permission was not granted (yet).
         // But the dialog for requesting permissions will be visible to the user now.
@@ -158,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                                             permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_CODE -> {
+            WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
@@ -261,6 +283,85 @@ class MainActivity : AppCompatActivity() {
         // Files there can be set executable.
         val internalDirectory: String = getFilesDir().getAbsolutePath()
         return internalDirectory
+    }
+
+    private fun installAssets (webroot: String) // Todo working here.
+    {
+        Thread {
+
+            val logtag = "InstallAssets"
+
+            // Check whether the Bibledit kernel's version has been installed, if not install it.
+            val libraryVersion: String = GetVersionNumber()
+            val preferences = getPreferences(MODE_PRIVATE)
+            val installedVersion: String = preferences.getString("version", "")!!
+            Log.i(logtag,"Library version is $libraryVersion and installed version is $installedVersion")
+            if (installedVersion != libraryVersion) {
+
+                try {
+
+                    Log.i(logtag, "Install version $libraryVersion over version $installedVersion")
+
+                    // The assets are not visible in the standard filesystem, but remain inside the .apk file.
+                    // The manager accesses them.
+                    val assetManager = assets
+
+                    // Read the asset index and convert it to a list of file names.
+                    val readAssetIndex = { ->
+                        val input: InputStream = assetManager.open("asset.external")
+                        val size = input.available()
+                        val buffer = ByteArray(size)
+                        input.read(buffer)
+                        input.close()
+                        val text = String(buffer)
+                        text.split("\\r?\\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    }
+                    val files = readAssetIndex()
+                    Log.i(logtag, "Install ${files.count()} assets")
+
+                    // Iterate through the asset files.
+                    for (filename in files) {
+                        try {
+                            // Read the file into memory.
+                            val input = assetManager.open("external/" + filename)
+                            val size = input.available()
+                            val buffer = ByteArray(size)
+                            input.read(buffer)
+                            input.close()
+                            // Optionally create output directories.
+                            var file: File? = File(filename)
+                            val parent = file!!.getParent()
+                            if (parent != null) {
+                                val parentFile = File(webroot, parent)
+                                if (!parentFile.exists()) {
+                                    parentFile.mkdirs()
+                                }
+                            }
+                            file = null
+                            // Write the file to the external webroot directory.
+                            var outFile: File? = File(webroot, filename)
+                            var out: OutputStream? = FileOutputStream(outFile)
+                            out!!.write(buffer, 0, size)
+                            out.flush()
+                            out.close()
+                            outFile = null
+                            out = null
+                            //Log.i(logtag, "Writing $filename to $webroot")
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                catch (e : Exception) {
+                    e.printStackTrace ();
+                }
+                finally {
+                }
+
+                // Store the Bibledit kernel's version number as the installed version.
+                preferences.edit ().putString ("version", GetVersionNumber() + ".1").apply (); // Todo fix
+            }
+        }.start()
     }
 
 }
