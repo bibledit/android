@@ -125,9 +125,6 @@ find $CPPFOLDER -name ".dirstamp" -delete
 echo Adapting native source to Android
 pushd $CPPFOLDER
 
-echo Android does not provide 'stoi' in C++
-sed -i. '/HAVE_STOI/d' config.h
-
 echo No libsword
 sed -i. '/HAVE_SWORD/d' config.h
 
