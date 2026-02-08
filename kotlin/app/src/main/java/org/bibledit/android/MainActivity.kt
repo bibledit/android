@@ -15,10 +15,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.io.OutputStream
 import java.util.Timer
 import kotlin.concurrent.schedule
-import kotlin.math.log
 
 
 const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
@@ -124,8 +122,8 @@ class MainActivity : AppCompatActivity() {
             if (show) {
 //                StartWebView(webAppBaseUrl)
             } else {
-                val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
-                Log.i("Timer", msg)
+//                val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
+//                Log.i("Timer", msg)
 //                webview?.loadData(msg, "text/html", "utf-8")
             }
             val count : Int? = layout?.childCount
@@ -285,22 +283,22 @@ class MainActivity : AppCompatActivity() {
         return internalDirectory
     }
 
-    private fun installAssets (webroot: String) // Todo working here.
+    private fun installAssets (webroot: String)
     {
         Thread {
 
-            val logtag = "InstallAssets"
+            val logTag = "InstallAssets"
 
-            // Check whether the Bibledit kernel's version has been installed, if not install it.
-            val libraryVersion: String = GetVersionNumber()
+            // Check whether the Bibledit kernel version has been installed, if not install it.
+            val libraryVersion = GetVersionNumber()
             val preferences = getPreferences(MODE_PRIVATE)
-            val installedVersion: String = preferences.getString("version", "")!!
-            Log.i(logtag,"Library version is $libraryVersion and installed version is $installedVersion")
+            val installedVersion = preferences.getString("version", "")!!
+            Log.i(logTag,"Library version is $libraryVersion and installed version is $installedVersion")
             if (installedVersion != libraryVersion) {
 
                 try {
 
-                    Log.i(logtag, "Install version $libraryVersion over version $installedVersion")
+                    Log.i(logTag, "Install version $libraryVersion over version $installedVersion")
 
                     // The assets are not visible in the standard filesystem, but remain inside the .apk file.
                     // The manager accesses them.
@@ -317,35 +315,40 @@ class MainActivity : AppCompatActivity() {
                         text.split("\\r?\\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     }
                     val files = readAssetIndex()
-                    Log.i(logtag, "Install ${files.count()} assets")
+                    Log.i(logTag, "Install ${files.count()} assets")
 
                     // Iterate through the asset files.
                     for (filename in files) {
                         try {
                             // Read the file into memory.
-                            val input = assetManager.open("external/" + filename)
-                            val size = input.available()
-                            val buffer = ByteArray(size)
-                            input.read(buffer)
-                            input.close()
+                            val readAssetFile = { ->
+                                val input = assetManager.open("external/$filename")
+                                val size = input.available()
+                                val buffer = ByteArray(size)
+                                input.read(buffer)
+                                input.close()
+                                // The last statement is implicitly returned.
+                                buffer
+                            }
+                            val buffer = readAssetFile();
                             // Optionally create output directories.
-                            var file: File? = File(filename)
-                            val parent = file!!.getParent()
-                            if (parent != null) {
-                                val parentFile = File(webroot, parent)
-                                if (!parentFile.exists()) {
-                                    parentFile.mkdirs()
+                            val createOutputDirectories = { ->
+                                var file = File(filename)
+                                val parent = file.parent
+                                if (parent != null) {
+                                    val parentFile = File(webroot, parent)
+                                    if (!parentFile.exists()) {
+                                        parentFile.mkdirs()
+                                    }
                                 }
                             }
-                            file = null
+                            createOutputDirectories();
                             // Write the file to the external webroot directory.
-                            var outFile: File? = File(webroot, filename)
-                            var out: OutputStream? = FileOutputStream(outFile)
-                            out!!.write(buffer, 0, size)
-                            out.flush()
-                            out.close()
-                            outFile = null
-                            out = null
+                            var outFile = File(webroot, filename)
+                            var outStream = FileOutputStream(outFile)
+                            outStream.write(buffer, 0, buffer.size)
+                            outStream.flush()
+                            outStream.close()
                             //Log.i(logtag, "Writing $filename to $webroot")
                         } catch (e: IOException) {
                             e.printStackTrace()
@@ -358,8 +361,8 @@ class MainActivity : AppCompatActivity() {
                 finally {
                 }
 
-                // Store the Bibledit kernel's version number as the installed version.
-                preferences.edit ().putString ("version", GetVersionNumber() + ".1").apply (); // Todo fix
+                // Store the Bibledit kernel version number as the installed version.
+                preferences.edit ().putString ("version", GetVersionNumber()).apply ();
             }
         }.start()
     }
