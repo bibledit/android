@@ -3,10 +3,14 @@ package org.bibledit.android
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.Menu
 import android.webkit.WebView
 import android.widget.TabHost
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -31,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     var webview: WebView? = null
     var tabhost: TabHost? = null // Todo deprecated: Use modern version, see to that later.
 
-    val timer = Timer()
+    var timer: Timer? = null
     var show = true
 
     var webAppBaseUrl: String = ""
@@ -59,7 +63,8 @@ class MainActivity : AppCompatActivity() {
 
         StartLibrary ();
 
-        StartWebView (webAppBaseUrl);
+        StartSplashScreen()
+        //StartWebView (webAppBaseUrl) // Todo
 
         // Install the assets if needed.
         installAssets (webroot);
@@ -76,11 +81,64 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log ("Running on Android"); // Todo test this on Android whether it logs.
         }
-
-        timer.schedule(2000L, 2000L) { // Todo better 5000 ms.
-            onRepeatingTimeout()
-        }
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Don't create the menu.
+        return false
+    }
+
+
+    // Function is called when the user starts the app.
+    override fun onStart() {
+        super.onStart()
+        StartLibrary()
+        startTimer()
+    }
+
+
+    // Function is called when the user returns to the activity.
+    override fun onRestart() {
+        super.onRestart()
+        StartLibrary()
+        startTimer()
+    }
+
+
+    // Function is called when the app is moved to the foreground again.
+    public override fun onResume() {
+        super.onResume()
+        StartLibrary()
+        startTimer()
+    }
+
+
+    // Function is called when the app is obscured.
+    public override fun onPause() {
+        super.onPause()
+        StopLibrary()
+        stopTimer()
+    }
+
+
+    // Function is called when the user completely leaves the activity.
+    override fun onStop() {
+        super.onStop()
+        StopLibrary()
+        stopTimer()
+    }
+
+
+    // Function is called when the app gets completely destroyed.
+    public override fun onDestroy() {
+        super.onDestroy()
+        StopLibrary()
+        stopTimer()
+        // Crashes: while (IsRunning ()) {};
+        ShutdownLibrary()
+    }
+
 
     // The native methods implemented by the bibledit native library wrapper
     // which is packaged with this application.
@@ -122,8 +180,8 @@ class MainActivity : AppCompatActivity() {
             if (show) {
 //                StartWebView(webAppBaseUrl)
             } else {
-//                val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
-//                Log.i("Timer", msg)
+                val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
+                Log.i("Timer", msg)
 //                webview?.loadData(msg, "text/html", "utf-8")
             }
             val count : Int? = layout?.childCount
@@ -200,6 +258,28 @@ class MainActivity : AppCompatActivity() {
                 // Ignore all other requests.
             }
         }
+    }
+
+
+    private fun StartSplashScreen() // Todo
+    {
+        var textview = TextView(this).apply {
+            text = "Bibledit"
+            gravity = Gravity.CENTER
+            textSize = 32.0f
+            setTextColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
+                endToEnd = ConstraintLayout.LayoutParams.END
+                startToStart = ConstraintLayout.LayoutParams.START
+                topToTop = ConstraintLayout.LayoutParams.TOP
+            }
+        }
+        layout?.addView(textview)
     }
 
 
@@ -365,6 +445,27 @@ class MainActivity : AppCompatActivity() {
                 preferences.edit ().putString ("version", GetVersionNumber()).apply ();
             }
         }.start()
+    }
+
+
+    private fun startTimer()
+    {
+        stopTimer()
+        timer = Timer()
+//        initializeTimerTask() // Todo check on this.
+//        timer.schedule(timerTask, 1000)
+        timer!!.schedule(2000L, 1000L) { // Todo better 5000 ms.
+            onRepeatingTimeout()
+        }
+    }
+
+
+    private fun stopTimer()
+    {
+        if (timer != null) {
+            timer!!.cancel();
+            timer = null;
+        }
     }
 
 }
