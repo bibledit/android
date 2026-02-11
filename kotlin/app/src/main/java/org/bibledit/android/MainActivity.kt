@@ -3,6 +3,7 @@ package org.bibledit.android
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -139,6 +140,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // https://developer.android.com/guide/topics/resources/runtime-changes
+    // The attribute android:configChanges is added to the <activity> element in AndroidManifest.xml.
+    // Function below is called on device orientation and keyboard hide.
+    // This changes the following behaviour:
+    // 1. It prevents app restart on device orientation change.
+    // 2. It prevents app restart on Bluetooth keyboard (dis)connect.
+    // The result is that any Bibledit editor windows open remain open and are not lost.
+    // https://developer.android.com/guide/topics/resources/runtime-changes
+    override fun onConfigurationChanged(newConfig: Configuration)
+    {
+        super.onConfigurationChanged(newConfig)
+    }
+
+
     // The native methods implemented by the bibledit native library wrapper
     // which is packaged with this application.
     // There should be no understores (_) in the function name.
@@ -258,7 +273,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startSplashScreen() // Todo
+    private fun startSplashScreen()
     {
         var textview = TextView(this).apply {
             text = "Bibledit"
@@ -447,9 +462,7 @@ class MainActivity : AppCompatActivity() {
     {
         stopTimer()
         timer = Timer()
-//        initializeTimerTask() // Todo check on this.
-//        timer.schedule(timerTask, 1000)
-        timer!!.schedule(1000L, 1000L) { // Todo better 5000 ms.
+        timer!!.schedule(1000L, 1000L) {
             onRepeatingTimeout()
         }
     }
