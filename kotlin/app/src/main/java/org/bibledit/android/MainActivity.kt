@@ -3,7 +3,6 @@ package org.bibledit.android
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         StartLibrary ();
 
-        StartSplashScreen()
+        startSplashScreen()
         //StartWebView (webAppBaseUrl) // Todo
 
         // Install the assets if needed.
@@ -261,7 +260,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun StartSplashScreen() // Todo
+    private fun startSplashScreen() // Todo
     {
         var textview = TextView(this).apply {
             text = "Bibledit"
@@ -282,12 +281,12 @@ class MainActivity : AppCompatActivity() {
 
 
     // Open the single webview configuration.
-    private fun StartWebView(url : String)
+    private fun startWebView(url : String)
     {
         // Indicate that the view is now plain.
         tabhost = null
 
-        webview = GetNewWebViewWithSettings()
+        webview = getNewWebViewWithSettings()
 
         layout?.removeAllViews()
         layout?.addView(webview)
@@ -304,9 +303,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun GetNewWebViewWithSettings () : WebView
+    private fun getNewWebViewWithSettings () : WebView
     {
-        var newwebview = WebView(this).apply {
+        var newWebview = WebView(this).apply {
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
@@ -319,24 +318,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         @SuppressLint("SetJavaScriptEnabled")
-        newwebview.getSettings().setJavaScriptEnabled(true)
+        newWebview.getSettings().setJavaScriptEnabled(true)
 
         // No built-in zoom controls,
         // because these may cover clickable links,
         // which then can't be clicked anymore.
         // https://github.com/bibledit/cloud/issues/321
-        newwebview.getSettings().setBuiltInZoomControls(false)
-        newwebview.getSettings().setSupportZoom(false)
-        newwebview.getSettings().setDisplayZoomControls(false)
+        newWebview.getSettings().setBuiltInZoomControls(false)
+        newWebview.getSettings().setSupportZoom(false)
+        newWebview.getSettings().setDisplayZoomControls(false)
 
-        newwebview.getSettings().setDomStorageEnabled(true)
+        newWebview.getSettings().setDomStorageEnabled(true)
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
         //webview.webViewClient = MyWebViewClient()
-        MyWebViewClient().also { newwebview.webViewClient = it }
+        MyWebViewClient().also { newWebview.webViewClient = it }
 
-        return newwebview
+        return newWebview
     }
 
     private fun getWebRoot() : String
