@@ -141,3 +141,10 @@ Java_org_bibledit_android_MainActivity_DisableSelectionPopupChromeOS (JNIEnv* en
   return env->NewStringUTF(bibledit_disable_selection_popup_chrome_os ());
 }
 
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_org_bibledit_android_MainActivity_InternalServerIsUp (JNIEnv* env, jobject activity, jint port)
+{
+    return bibledit_internal_server_is_up (port);
+}
+

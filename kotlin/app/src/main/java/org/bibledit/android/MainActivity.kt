@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
     var tabhost: TabHost? = null // Todo deprecated: Use modern version, see to that later.
 
     var timer: Timer? = null
-    var show = true
 
+    var webAppPortNumber: Int = 0
     var webAppBaseUrl: String = ""
 
 
@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
         checkPermissions();
 
         // Get the free port number found by the Bibledit library.
-        val port: String = GetNetworkPort()
-        webAppBaseUrl = "http://localhost:" + port + "/"
+        webAppPortNumber = GetNetworkPort().toInt()
+        webAppBaseUrl = "http://localhost:" + webAppPortNumber.toString() + "/"
 
         // Root folder for the web app.
         val webroot: String = getWebRoot()
@@ -159,6 +159,7 @@ class MainActivity : AppCompatActivity() {
     external fun GetLastPage(): String
     external fun RunOnChromeOS()
     external fun DisableSelectionPopupChromeOS(): String
+    external fun InternalServerIsUp(port: Int) : Boolean
 
 
     companion object {
@@ -175,17 +176,14 @@ class MainActivity : AppCompatActivity() {
     {
         // Modifying widgets must be done on the UI thread.
         runOnUiThread(Runnable {
-            show = !show
-            if (show) {
-//                StartWebView(webAppBaseUrl)
-            } else {
-                val msg : String = "webAppBaseUrl is " + webAppBaseUrl + " " + StringFromJNI()
-                Log.i("Timer", msg)
-//                webview?.loadData(msg, "text/html", "utf-8")
-            }
-            val count : Int? = layout?.childCount
-        })
 
+            // Handle switching from the splash screen to a Bibledit GUI.
+            if (webview == null && tabhost == null && webAppPortNumber != 0 && InternalServerIsUp(webAppPortNumber)) {
+                startWebView(webAppBaseUrl)
+            }
+
+            Log.i("Timer", StringFromJNI())
+        })
     }
 
 
@@ -451,7 +449,7 @@ class MainActivity : AppCompatActivity() {
         timer = Timer()
 //        initializeTimerTask() // Todo check on this.
 //        timer.schedule(timerTask, 1000)
-        timer!!.schedule(2000L, 1000L) { // Todo better 5000 ms.
+        timer!!.schedule(1000L, 1000L) { // Todo better 5000 ms.
             onRepeatingTimeout()
         }
     }
