@@ -267,8 +267,6 @@ class MainActivity : AppCompatActivity() {
             text = "Bibledit"
             gravity = Gravity.CENTER
             textSize = 32.0f
-            setTextColor(Color.BLACK)
-            setBackgroundColor(Color.WHITE)
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
