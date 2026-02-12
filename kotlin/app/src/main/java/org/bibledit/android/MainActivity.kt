@@ -9,12 +9,14 @@ import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.webkit.WebView
-import android.widget.TabHost
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.edit
+import com.google.android.material.tabs.TabLayout
+import org.json.JSONArray
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -33,12 +35,16 @@ class MainActivity : AppCompatActivity() {
 
     var layout: ConstraintLayout? = null
     var webview: WebView? = null
-    var tabhost: TabHost? = null // Todo deprecated: Use modern version, see to that later.
+    var tablayout: TabLayout? = null
 
     var timer: Timer? = null
 
     var webAppPortNumber: Int = 0
     var webAppBaseUrl: String = ""
+
+    var previousTabsState: String = "NonEmptyInitially"
+    var lastTabUrl: String? = null
+    var lastTabIdentifier: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         layout = findViewById(R.id.main)
 
         // Handle permissions right at the start of the app.
-        checkPermissions();
+        checkPermissions()
 
         // Get the free port number found by the Bibledit library.
         webAppPortNumber = GetNetworkPort().toInt()
@@ -57,29 +63,29 @@ class MainActivity : AppCompatActivity() {
         // Root folder for the web app.
         val webroot: String = getWebRoot()
 
-        InitializeLibrary (webroot, webroot);
+        InitializeLibrary (webroot, webroot)
 
-        SetTouchEnabled (true);
+        SetTouchEnabled (true)
 
-        StartLibrary ();
+        StartLibrary ()
 
         startSplashScreen()
         //StartWebView (webAppBaseUrl) // Todo
 
         // Install the assets if needed.
-        installAssets (webroot);
+        installAssets (webroot)
 
         // Log information about where to find Bibledit's data. Todo test this.
-        Log ("Bibledit data location: " + webroot);
+        Log ("Bibledit data location: " + webroot)
 
         // Log information about whether running on Android or on Chrome OS. Todo test this on ChromeOS
         if (applicationContext.packageManager.hasSystemFeature("org.chromium.arc.device_management")) {
-            Log ("Running on Chrome OS");
+            Log ("Running on Chrome OS")
             // Enable Chrome OS in the library, for something specific to Chrome.
             // See https://github.com/bibledit/cloud/issues/282.
-            RunOnChromeOS ();
+            RunOnChromeOS ()
         } else {
-            Log ("Running on Android"); // Todo test this on Android whether it logs.
+            Log ("Running on Android") // Todo test this on Android whether it logs.
         }
     }
 
@@ -189,16 +195,37 @@ class MainActivity : AppCompatActivity() {
 
     fun onRepeatingTimeout ()
     {
-        // Modifying widgets must be done on the UI thread.
-        runOnUiThread(Runnable {
+        // On app startup is displays a splash screen.
+        // If the embedded webserver does not yet run, quit right here.
+        if (webview == null && tablayout == null && webAppPortNumber != 0 && !InternalServerIsUp(webAppPortNumber)) {
+            return;
+        }
+        // From here on and below, the embedded webserver is running.
 
-            // Handle switching from the splash screen to a Bibledit GUI.
-            if (webview == null && tabhost == null && webAppPortNumber != 0 && InternalServerIsUp(webAppPortNumber)) {
-                startWebView(webAppBaseUrl)
+        // Get the pages to open in JSON.
+        // Take action if it differs from previous time.
+        val jsonString: String = GetPagesToOpen ()
+        if (jsonString != previousTabsState) {
+
+            // If no pages to open are given, it means the app is in advanced mode.
+            if (jsonString.isEmpty()) {
+                // Modifying widgets must be done on the UI thread.
+                runOnUiThread(Runnable {
+                    startWebView(webAppBaseUrl)
+                })
             }
 
-            Log.i("Timer", StringFromJNI())
-        })
+            // Pages to open are given: Open the tabs for basic mode.
+            else {
+                // Modifying widgets must be done on the UI thread.
+                runOnUiThread(Runnable {
+                    startTabLayout(jsonString)
+                })
+            }
+
+            // Save the JSON for next time.
+            previousTabsState = jsonString
+        }
     }
 
 
@@ -275,7 +302,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startSplashScreen()
     {
-        var textview = TextView(this).apply {
+        val textview = TextView(this).apply {
             text = "Bibledit"
             gravity = Gravity.CENTER
             textSize = 32.0f
@@ -297,7 +324,7 @@ class MainActivity : AppCompatActivity() {
     private fun startWebView(url : String)
     {
         // Indicate that the view is now plain.
-        tabhost = null
+        tablayout = null
 
         webview = getNewWebViewWithSettings()
 
@@ -318,7 +345,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getNewWebViewWithSettings () : WebView
     {
-        var newWebview = WebView(this).apply {
+        val newWebview = WebView(this).apply {
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
@@ -350,6 +377,56 @@ class MainActivity : AppCompatActivity() {
 
         return newWebview
     }
+
+    private fun startTabLayout(tabsJSON: String)
+    {
+        layout?.removeAllViews()
+
+        webview = null
+
+        tablayout = TabLayout(this).apply {
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
+                endToEnd = ConstraintLayout.LayoutParams.END
+                startToStart = ConstraintLayout.LayoutParams.START
+                topToTop = ConstraintLayout.LayoutParams.TOP
+            }
+        }
+
+        //Log.i("Tabs", tabsJSON)
+
+        val jsonArray = JSONArray(tabsJSON)
+        val length = jsonArray.length()
+        var active = 0
+
+        for (i in 0..<length) {
+            val jsonObject = jsonArray.getJSONObject(i)
+
+            val tab = tablayout!!.newTab()
+
+            val label = jsonObject.getString("label")
+            tab.setText(label)
+
+            val url = jsonObject.getString("url")
+            val webview = getNewWebViewWithSettings()
+            webview.loadUrl(webAppBaseUrl + url)
+            tab.setCustomView(webview)
+
+            tablayout!!.addTab(tab)
+
+            if (url.contains("resource"))
+                active = i
+            lastTabIdentifier = label
+            lastTabUrl = url
+        }
+        val tab: Int = active
+
+        layout?.addView(tablayout)
+    }
+
 
     private fun getWebRoot() : String
     {
@@ -411,7 +488,7 @@ class MainActivity : AppCompatActivity() {
                     for (filename in files) {
                         try {
                             // Read the file into memory.
-                            val readAssetFile = { ->
+                            val readAssetFile = {
                                 val input = assetManager.open("external/$filename")
                                 val size = input.available()
                                 val buffer = ByteArray(size)
@@ -420,10 +497,10 @@ class MainActivity : AppCompatActivity() {
                                 // The last statement is implicitly returned.
                                 buffer
                             }
-                            val buffer = readAssetFile();
+                            val buffer = readAssetFile()
                             // Optionally create output directories.
-                            val createOutputDirectories = { ->
-                                var file = File(filename)
+                            val createOutputDirectories = {
+                                val file = File(filename)
                                 val parent = file.parent
                                 if (parent != null) {
                                     val parentFile = File(webroot, parent)
@@ -432,10 +509,10 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-                            createOutputDirectories();
+                            createOutputDirectories()
                             // Write the file to the external webroot directory.
-                            var outFile = File(webroot, filename)
-                            var outStream = FileOutputStream(outFile)
+                            val outFile = File(webroot, filename)
+                            val outStream = FileOutputStream(outFile)
                             outStream.write(buffer, 0, buffer.size)
                             outStream.flush()
                             outStream.close()
@@ -452,7 +529,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // Store the Bibledit kernel version number as the installed version.
-                preferences.edit ().putString ("version", GetVersionNumber()).apply ();
+                preferences.edit { putString("version", GetVersionNumber()) };
             }
         }.start()
     }
