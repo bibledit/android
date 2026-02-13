@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.webkit.WebView
 import android.widget.TabHost
+import android.widget.TabHost.OnTabChangeListener
 import android.widget.TabHost.TabContentFactory
 import android.widget.TabHost.TabSpec
 import android.widget.TextView
@@ -216,17 +217,17 @@ class MainActivity : AppCompatActivity() {
             // If no pages to open are given, it means the app is in advanced mode.
             if (jsonString.isEmpty()) {
                 // Modifying widgets must be done on the UI thread.
-                runOnUiThread(Runnable {
+                runOnUiThread {
                     startSingleView(webAppBaseUrl)
-                })
+                }
             }
 
             // Pages to open are given: Open the tabs for basic mode.
             else {
                 // Modifying widgets must be done on the UI thread.
-                runOnUiThread(Runnable {
+                runOnUiThread {
                     startTabbedView(jsonString)
-                })
+                }
             }
 
             // Save the JSON for next time.
@@ -424,8 +425,6 @@ class MainActivity : AppCompatActivity() {
         var tabspec: TabSpec?
         var factory: TabContentFactory?
 
-        //Log.i("Tabs", tabsJSON)
-
         val jsonArray = JSONArray(tabsJSON)
         val length = jsonArray.length()
         var active = 0
@@ -436,7 +435,6 @@ class MainActivity : AppCompatActivity() {
             val url = jsonObject.getString("url")
             tabspec = tabhost!!.newTabSpec (label);
             tabspec.setIndicator (label);
-
 
             factory = TabHost.TabContentFactory () {
                 val webview = getNewWebViewWithSettings()
@@ -454,9 +452,6 @@ class MainActivity : AppCompatActivity() {
         }
         val tab: Int = active
 
-
-        // Code above this has been implemented in Kotlin already.
-
         // It used to halve the height of the tabs on the screen.
         // The goal of that was to use less space on the screen,
         // leaving more space for the editing areas.
@@ -470,6 +465,36 @@ class MainActivity : AppCompatActivity() {
         }
 
         tabhost!!.setCurrentTab (active);
+
+        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
+            override fun onTabChanged(tabId: String) {
+                // Check whether to reload the settings page.
+                // The reason for this is as follows:
+                // When the user clicks any of the links in the settings page,
+                // there is no way to go back to the main settings page.
+                // The above applies in tabbed mode, as there's no menu then.
+                // So when the settings tab is activated,
+                // it ensures that the main setting page is loaded.
+                if (tabId == lastTabIdentifier) {
+                    val webview = tabhost!!.getCurrentView() as WebView
+                    val actualUrl = webview.getUrl()
+                    val desiredUrl = webAppBaseUrl + lastTabUrl
+                    if (actualUrl != desiredUrl) {
+                        runOnUiThread {
+                            webview.loadUrl(desiredUrl)
+                        }
+                    }
+                }
+                // Hide the soft keyboard.
+                // See https://github.com/bibledit/cloud/issues/269 for reasons.
+                val webview = tabhost!!.getCurrentView() as WebView?
+                runOnUiThread {
+                    // Todo hideKeyboard(webview)
+                }
+            }
+        })
+
+
     }
 
 
