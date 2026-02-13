@@ -2,11 +2,11 @@ package org.bibledit.android
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.ActionMode
 import android.view.Gravity
 import android.view.Menu
 import android.view.inputmethod.InputMethodManager
@@ -622,5 +622,18 @@ class MainActivity : AppCompatActivity() {
             timer = null;
         }
     }
+
+    public override fun onActionModeStarted(mode: ActionMode) {
+        // https://developer.android.com/reference/android/view/ActionMode.html
+        val disable = DisableSelectionPopupChromeOS()
+        if (disable == "true") {
+            val menu: Menu = mode.getMenu()
+            menu.clear()
+            //mode.finish ();
+            //mode.invalidate ();
+        }
+        super.onActionModeStarted(mode)
+    }
+
 
 }
