@@ -2,12 +2,14 @@ package org.bibledit.android
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.TabHost
 import android.widget.TabHost.OnTabChangeListener
@@ -489,17 +491,12 @@ class MainActivity : AppCompatActivity() {
                 // See https://github.com/bibledit/cloud/issues/269 for reasons.
                 val webview = tabhost!!.getCurrentView() as WebView?
                 runOnUiThread {
-                    // Todo hideKeyboard(webview)
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
                 }
             }
         })
-
-
     }
-
-
-
-
 
     private fun getWebRoot() : String
     {
