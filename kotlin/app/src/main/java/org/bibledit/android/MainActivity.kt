@@ -9,6 +9,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.webkit.WebView
+import android.widget.TabHost
+import android.widget.TabHost.TabContentFactory
+import android.widget.TabHost.TabSpec
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -33,9 +36,11 @@ const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 class MainActivity : AppCompatActivity() {
 
-    var layout: ConstraintLayout? = null
+//    var layout: ConstraintLayout? = null Todo
     var webview: WebView? = null
-    var tablayout: TabLayout? = null
+    var tablayout: TabLayout? = null // Todo out.
+    var tabhost: TabHost? = null
+    var displayingSplashScreen: Boolean = false
 
     var timer: Timer? = null
 
@@ -50,8 +55,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-        layout = findViewById(R.id.main)
+        setContentView(R.layout.splash_screen)
+        displayingSplashScreen = true
 
         // Handle permissions right at the start of the app.
         checkPermissions()
@@ -69,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         StartLibrary ()
 
-        startSplashScreen()
+//        startSplashScreen()
         //StartWebView (webAppBaseUrl) // Todo
 
         // Install the assets if needed.
@@ -197,9 +202,10 @@ class MainActivity : AppCompatActivity() {
     {
         // On app startup is displays a splash screen.
         // If the embedded webserver does not yet run, quit right here.
-        if (webview == null && tablayout == null && webAppPortNumber != 0 && !InternalServerIsUp(webAppPortNumber)) {
+        if (displayingSplashScreen && webAppPortNumber != 0 && !InternalServerIsUp(webAppPortNumber)) {
             return;
         }
+        displayingSplashScreen = false
         // From here on and below, the embedded webserver is running.
 
         // Get the pages to open in JSON.
@@ -211,7 +217,7 @@ class MainActivity : AppCompatActivity() {
             if (jsonString.isEmpty()) {
                 // Modifying widgets must be done on the UI thread.
                 runOnUiThread(Runnable {
-                    startWebView(webAppBaseUrl)
+                    startSingleView(webAppBaseUrl)
                 })
             }
 
@@ -219,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 // Modifying widgets must be done on the UI thread.
                 runOnUiThread(Runnable {
-                    startTabLayout(jsonString)
+                    startTabbedView(jsonString)
                 })
             }
 
@@ -300,7 +306,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startSplashScreen()
+    private fun startSplashScreen() // Todo goes out.
     {
         val textview = TextView(this).apply {
             text = "Bibledit"
@@ -316,20 +322,22 @@ class MainActivity : AppCompatActivity() {
                 topToTop = ConstraintLayout.LayoutParams.TOP
             }
         }
-        layout?.addView(textview)
+//        layout?.addView(textview)
     }
 
 
     // Open the single webview configuration.
-    private fun startWebView(url : String)
+    private fun startSingleView(url : String)
     {
-        // Indicate that the view is now plain.
         tablayout = null
+        setContentView(R.layout.single_view)
+        webview = findViewById<WebView>(R.id.singleview)
+        applySettingsToWebView(webview)
 
-        webview = getNewWebViewWithSettings()
+//        webview = getNewWebViewWithSettings()
 
-        layout?.removeAllViews()
-        layout?.addView(webview)
+//        layout?.removeAllViews()
+//        layout?.addView(webview)
 
         @SuppressLint("SetJavaScriptEnabled")
         webview?.settings?.javaScriptEnabled = true
@@ -337,7 +345,7 @@ class MainActivity : AppCompatActivity() {
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
         //webview.webViewClient = MyWebViewClient()
-        MyWebViewClient().also { webview?.webViewClient = it }
+//        MyWebViewClient().also { webview?.webViewClient = it }
 
         webview?.loadUrl(webAppBaseUrl)
     }
@@ -378,23 +386,43 @@ class MainActivity : AppCompatActivity() {
         return newWebview
     }
 
-    private fun startTabLayout(tabsJSON: String)
-    {
-        layout?.removeAllViews()
 
+    // Apply settings to the passed WebView.
+    // Kotlin always use pass-by-value.
+    // When passing objects or non-primitive types, the function copies the reference, simulating pass-by-reference.
+    // Changes inside the method affect the external object due to the shared reference.
+    private fun applySettingsToWebView (webView: WebView?)
+    {
+        @SuppressLint("SetJavaScriptEnabled")
+        webview!!.getSettings().setJavaScriptEnabled(true)
+
+        // No built-in zoom controls,
+        // because these may cover clickable links,
+        // which then can't be clicked anymore.
+        // https://github.com/bibledit/cloud/issues/321
+        webview!!.getSettings().setBuiltInZoomControls(false)
+        webview!!.getSettings().setSupportZoom(false)
+        webview!!.getSettings().setDisplayZoomControls(false)
+
+        webview!!.getSettings().setDomStorageEnabled(true)
+
+        // Without this line the URL will open in an external browser.
+        // With this line, the URL will open within the app.
+        //webview.webViewClient = MyWebViewClient()
+        MyWebViewClient().also { webview!!.webViewClient = it }
+    }
+
+
+    private fun startTabbedView(tabsJSON: String) {
         webview = null
 
-        tablayout = TabLayout(this).apply {
-            layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
-                endToEnd = ConstraintLayout.LayoutParams.END
-                startToStart = ConstraintLayout.LayoutParams.START
-                topToTop = ConstraintLayout.LayoutParams.TOP
-            }
-        }
+        setContentView(R.layout.tabbed_view)
+
+        tabhost = findViewById (R.id.tabhost);
+        tabhost!!.setup ();
+
+        var tabspec: TabSpec?
+        var factory: TabContentFactory?
 
         //Log.i("Tabs", tabsJSON)
 
@@ -404,18 +432,20 @@ class MainActivity : AppCompatActivity() {
 
         for (i in 0..<length) {
             val jsonObject = jsonArray.getJSONObject(i)
-
-            val tab = tablayout!!.newTab()
-
             val label = jsonObject.getString("label")
-            tab.setText(label)
-
             val url = jsonObject.getString("url")
-            val webview = getNewWebViewWithSettings()
-            webview.loadUrl(webAppBaseUrl + url)
-            tab.setCustomView(webview)
+            tabspec = tabhost!!.newTabSpec (label);
+            tabspec.setIndicator (label);
 
-            tablayout!!.addTab(tab)
+
+            factory = TabHost.TabContentFactory () {
+                val webview = getNewWebViewWithSettings()
+                webview.loadUrl(webAppBaseUrl + url)
+                return@TabContentFactory webview
+            }
+
+            tabspec.setContent(factory);
+            tabhost!!.addTab (tabspec);
 
             if (url.contains("resource"))
                 active = i
@@ -424,8 +454,26 @@ class MainActivity : AppCompatActivity() {
         }
         val tab: Int = active
 
-        layout?.addView(tablayout)
+
+        // Code above this has been implemented in Kotlin already.
+
+        // It used to halve the height of the tabs on the screen.
+        // The goal of that was to use less space on the screen,
+        // leaving more space for the editing areas.
+        // But a user made a remark that on his 8 inch tablet,
+        // the tabbed menu was so small
+        // that he often missed and the top Android status bar pulled down instead.
+        // So it is better to not halve the height, but use another reduction factor.
+        for (i in 0..<tabhost!!.getTabWidget().getChildCount()) {
+            tabhost!!.getTabWidget().getChildAt(i).getLayoutParams().height =
+                (tabhost!!.getTabWidget().getChildAt(i).getLayoutParams().height * 0.75).toInt()
+        }
+
+        tabhost!!.setCurrentTab (active);
     }
+
+
+
 
 
     private fun getWebRoot() : String
