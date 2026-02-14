@@ -205,10 +205,15 @@ class MainActivity : AppCompatActivity() {
     {
         // On app startup is displays a splash screen.
         // If the embedded webserver does not yet run, quit right here.
-        if (displayingSplashScreen && webAppPortNumber != 0 && !InternalServerIsUp(webAppPortNumber)) {
-            return;
+        if (webAppPortNumber == 0) {
+            return
         }
-        displayingSplashScreen = false
+        if (displayingSplashScreen) {
+            if (InternalServerIsUp(webAppPortNumber)) {
+                displayingSplashScreen = false
+            }
+            return
+        }
         // From here on and below, the embedded webserver is running.
 
         // Get the pages to open in JSON.
