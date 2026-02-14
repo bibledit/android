@@ -2,8 +2,10 @@ package org.bibledit.android
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.ActionMode
@@ -231,6 +233,15 @@ class MainActivity : AppCompatActivity() {
 
             // Save the JSON for next time.
             previousTabsState = jsonString
+        }
+
+        // Check whether the Bibledit kernel has an external URL to be opened.
+        // If so open it in the system browser.
+        val externalUrl: String? = GetExternalUrl()
+        if (externalUrl != null && !externalUrl.isEmpty()) {
+            Log.d("Bibledit start browser", externalUrl)
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl))
+            startActivity(browserIntent)
         }
     }
 
