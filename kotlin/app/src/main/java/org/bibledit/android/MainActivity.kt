@@ -7,7 +7,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.ActionMode
-import android.view.Gravity
 import android.view.Menu
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -15,13 +14,11 @@ import android.widget.TabHost
 import android.widget.TabHost.OnTabChangeListener
 import android.widget.TabHost.TabContentFactory
 import android.widget.TabHost.TabSpec
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
-import com.google.android.material.tabs.TabLayout
 import org.json.JSONArray
 import java.io.File
 import java.io.FileOutputStream
@@ -39,9 +36,7 @@ const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 class MainActivity : AppCompatActivity() {
 
-//    var layout: ConstraintLayout? = null Todo
     var webview: WebView? = null
-    var tablayout: TabLayout? = null // Todo out.
     var tabhost: TabHost? = null
     var displayingSplashScreen: Boolean = false
 
@@ -50,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     var webAppPortNumber: Int = 0
     var webAppBaseUrl: String = ""
 
-    var previousTabsState: String = "NonEmptyInitially"
+    var previousTabsState: String? = null
     var lastTabUrl: String? = null
     var lastTabIdentifier: String? = null
 
@@ -76,9 +71,6 @@ class MainActivity : AppCompatActivity() {
         SetTouchEnabled (true)
 
         StartLibrary ()
-
-//        startSplashScreen()
-        //StartWebView (webAppBaseUrl) // Todo
 
         // Install the assets if needed.
         installAssets (webroot)
@@ -314,47 +306,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startSplashScreen() // Todo goes out.
-    {
-        val textview = TextView(this).apply {
-            text = "Bibledit"
-            gravity = Gravity.CENTER
-            textSize = 32.0f
-            layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
-                endToEnd = ConstraintLayout.LayoutParams.END
-                startToStart = ConstraintLayout.LayoutParams.START
-                topToTop = ConstraintLayout.LayoutParams.TOP
-            }
-        }
-//        layout?.addView(textview)
-    }
-
-
     // Open the single webview configuration.
     private fun startSingleView(url : String)
     {
-        tablayout = null
+        tabhost = null
         setContentView(R.layout.single_view)
         webview = findViewById<WebView>(R.id.singleview)
         applySettingsToWebView(webview)
-
-//        webview = getNewWebViewWithSettings()
-
-//        layout?.removeAllViews()
-//        layout?.addView(webview)
-
-        @SuppressLint("SetJavaScriptEnabled")
-        webview?.settings?.javaScriptEnabled = true
-
-        // Without this line the URL will open in an external browser.
-        // With this line, the URL will open within the app.
-        //webview.webViewClient = MyWebViewClient()
-//        MyWebViewClient().also { webview?.webViewClient = it }
-
         webview?.loadUrl(webAppBaseUrl)
     }
 
@@ -416,7 +374,6 @@ class MainActivity : AppCompatActivity() {
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
-        //webview.webViewClient = MyWebViewClient()
         MyWebViewClient().also { webview!!.webViewClient = it }
     }
 
@@ -639,6 +596,5 @@ class MainActivity : AppCompatActivity() {
         }
         super.onActionModeStarted(mode)
     }
-
 
 }
