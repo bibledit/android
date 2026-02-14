@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.TabHost
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     var previousTabsState: String? = null
     var lastTabUrl: String? = null
     var lastTabIdentifier: String? = null
+
+    var previousSyncState: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -243,6 +246,24 @@ class MainActivity : AppCompatActivity() {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl))
             startActivity(browserIntent)
         }
+
+        // Check whether to keep the screen on during send and receive.
+        // Keeping the screen on is needed because that will keep the app in the foreground.
+        // If the app went into the background, then it would not complete the send/receive cycle.
+        val syncState: String? = IsSynchronizing()
+        if (syncState == "true") {
+            runOnUiThread {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+        if (syncState == "false") {
+            if (syncState == previousSyncState) {
+                runOnUiThread {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
+            }
+        }
+        previousSyncState = syncState
     }
 
 
