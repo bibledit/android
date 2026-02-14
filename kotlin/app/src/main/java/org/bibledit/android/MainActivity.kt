@@ -608,4 +608,25 @@ class MainActivity : AppCompatActivity() {
         super.onActionModeStarted(mode)
     }
 
+    override fun onBackPressed()
+    {
+        Log.i("Back", "on back pressed")
+        // The Android back button navigates back in the web view.
+        // This is the behaviour people expect.
+        if ((webview != null) && webview!!.canGoBack()) {
+            webview!!.goBack()
+            return
+        } else if (tabhost != null) {
+            val webview = tabhost!!.getCurrentView() as WebView
+            if (webview.canGoBack()) {
+                webview.goBack()
+                return
+            }
+        }
+
+        // Otherwise defer to system default behavior.
+        super.onBackPressed()
+    }
+
+
 }
