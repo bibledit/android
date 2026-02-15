@@ -10,16 +10,19 @@ android {
 
     defaultConfig {
         applicationId = "org.bibledit.android"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 174
+        versionName = "5.1.040"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags += "-std=c++20"
             }
+        }
+        ndk {
+            debugSymbolLevel = "FULL"
         }
     }
 
@@ -30,6 +33,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {
@@ -39,7 +45,7 @@ android {
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
+            version = "4.1.2"
         }
     }
     buildFeatures {

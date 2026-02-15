@@ -638,7 +638,7 @@ class MainActivity : AppCompatActivity() {
             webview!!.goBack()
             return
         } else if (tabhost != null) {
-            val webview = tabhost!!.getCurrentView() as WebView
+            val webview = tabhost!!.    getCurrentView() as WebView
             if (webview.canGoBack()) {
                 webview.goBack()
                 return
