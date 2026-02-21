@@ -12,8 +12,8 @@ android {
         applicationId = "org.bibledit.android"
         minSdk = 23
         targetSdk = 36
-        versionCode = 174
-        versionName = "5.1.040"
+        versionCode = 175
+        versionName = "5.1.041"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {

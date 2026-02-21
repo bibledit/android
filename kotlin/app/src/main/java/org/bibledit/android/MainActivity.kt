@@ -92,6 +92,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log ("Running on Android") // Todo test this on Android whether it logs.
         }
+
+        // Configure all the app's WebViews for debugging.
+        WebView.setWebContentsDebuggingEnabled(true)
     }
 
 
