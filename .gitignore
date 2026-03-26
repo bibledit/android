@@ -15,3 +15,8 @@ gradle/app/build/intermediates/javac/debug/classes/org/bibledit/android/BuildCon
 gradle/app/build/intermediates/processed_res/debug/out/resources-debug.ap_
 *.aab
 /gradle/app/release
+/kotlin/app/src/main/assets/external/build
+/kotlin/app/src/main/assets/external/mbedtls.old
+/kotlin/app/src/main/cpp/build
+/kotlin/app/src/main/cpp/mbedtls.old
+/kotlin/app/src/main/cpp/psa.old
