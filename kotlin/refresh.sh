@@ -121,6 +121,7 @@ find $CPPFOLDER -name ".deps" -print | xargs rm -rf
 find $EXTERNALFOLDER -name ".dirstamp" -delete
 find $CPPFOLDER -name ".dirstamp" -delete
 find $CPPFOLDER -not -name "*.h" -not -name "*.c" -not -name "*.cpp" -not -name "*.hpp" -not -name CMakeLists.txt -delete
+rm -rf $ASSETSFOLDER/external/build
 
 
 echo Adapting native source to Android
