@@ -321,6 +321,7 @@ changes/changes.js
 changes/statistics.html
 processes/gitflag
 workspace/index.html
+workspace/index.js
 workspace/organize.html
 workspace/settings.html
 read/index.html
@@ -665,6 +666,7 @@ help/introduction.html
 help/installcloudsource.html
 help/consistency.html
 help/navigation.html
+mbedtls.old/0readme.txt
 session/login.html
 session/signedup.html
 session/login.js
