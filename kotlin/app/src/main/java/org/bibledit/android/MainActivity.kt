@@ -12,14 +12,8 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-import android.widget.TabHost
-import android.widget.TabHost.OnTabChangeListener
-import android.widget.TabHost.TabContentFactory
-import android.widget.TabHost.TabSpec
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
@@ -43,7 +37,6 @@ const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 class MainActivity : AppCompatActivity() {
 
     var webview: WebView? = null
-    var tabhost: TabHost? = null
     var tablayout : TabLayout? = null
     var displayingSplashScreen: Boolean = false
 
@@ -70,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get the free port number found by the Bibledit library.
         webAppPortNumber = GetNetworkPort().toInt()
-        webAppBaseUrl = "http://localhost:" + webAppPortNumber.toString() + "/"
+        webAppBaseUrl = "http://localhost:$webAppPortNumber/"
 
         // Root folder for the web app.
         val webroot: String = getWebRoot()
@@ -85,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         installAssets (webroot)
 
         // Log information about where to find Bibledit's data.
-        Log ("Bibledit data location: " + webroot)
+        Log ("Bibledit data location: $webroot")
 
         // Log information about whether running on Android or on Chrome OS.
         if (applicationContext.packageManager.hasSystemFeature("org.chromium.arc.device_management")) {
@@ -237,7 +230,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 // Modifying widgets must be done on the UI thread.
                 runOnUiThread {
-                    startTabbedViewV2(jsonString)
+                    startTabbedView(jsonString)
                 }
             }
 
@@ -348,7 +341,6 @@ class MainActivity : AppCompatActivity() {
     // Open the single webview configuration.
     private fun startSingleView(url : String)
     {
-        tabhost = null
         tablayout = null
         setContentView(R.layout.single_view)
         webview = findViewById<WebView>(R.id.singleview)
@@ -382,10 +374,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startTabbedViewV2(tabsJSON: String) { // Todo
+    private fun startTabbedView(tabsJSON: String) { 
         webview = null
 
-        setContentView(R.layout.tabbed_view_v2)
+        setContentView(R.layout.tabbed_view)
 
         tablayout = findViewById(R.id.tabLayout2)
 
@@ -444,7 +436,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
+// Todo transfer this code below:
 //        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
 //            override fun onTabChanged(tabId: String) {
 //                // Check whether to reload the settings page.
@@ -620,12 +612,12 @@ class MainActivity : AppCompatActivity() {
         if ((webview != null) && webview!!.canGoBack()) {
             webview!!.goBack()
             return
-        } else if (tabhost != null) {
-            val webview = tabhost!!.    getCurrentView() as WebView
-            if (webview.canGoBack()) {
-                webview.goBack()
-                return
-            }
+//        } else if (tabhost != null) {
+//            val webview = tabhost!!.getCurrentView() as WebView
+//            if (webview.canGoBack()) {
+//                webview.goBack()
+//                return
+//            }
         }
 
         // Otherwise defer to system default behavior.
