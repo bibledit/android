@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -22,6 +23,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.json.JSONArray
 import java.io.File
 import java.io.FileOutputStream
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     var webview: WebView? = null
     var tabhost: TabHost? = null
+    var tablayout : TabLayout? = null
     var displayingSplashScreen: Boolean = false
 
     var timer: Timer? = null
@@ -80,17 +84,17 @@ class MainActivity : AppCompatActivity() {
         // Install the assets if needed.
         installAssets (webroot)
 
-        // Log information about where to find Bibledit's data. Todo test this.
+        // Log information about where to find Bibledit's data.
         Log ("Bibledit data location: " + webroot)
 
-        // Log information about whether running on Android or on Chrome OS. Todo test this on ChromeOS
+        // Log information about whether running on Android or on Chrome OS.
         if (applicationContext.packageManager.hasSystemFeature("org.chromium.arc.device_management")) {
             Log ("Running on Chrome OS")
             // Enable Chrome OS in the library, for something specific to Chrome.
             // See https://github.com/bibledit/cloud/issues/282.
             RunOnChromeOS ()
         } else {
-            Log ("Running on Android") // Todo test this on Android whether it logs.
+            Log ("Running on Android")
         }
 
         // Configure all the app's WebViews for debugging.
@@ -233,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 // Modifying widgets must be done on the UI thread.
                 runOnUiThread {
-                    startTabbedView(jsonString)
+                    startTabbedViewV2(jsonString)
                 }
             }
 
@@ -345,6 +349,7 @@ class MainActivity : AppCompatActivity() {
     private fun startSingleView(url : String)
     {
         tabhost = null
+        tablayout = null
         setContentView(R.layout.single_view)
         webview = findViewById<WebView>(R.id.singleview)
         applySettingsToWebView(webview)
@@ -352,7 +357,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getNewWebViewWithSettings () : WebView
+    private fun getNewWebViewWithSettings () : WebView // Todo transfer all functionality and remove it.
     {
         val newWebview = WebView(this).apply {
             layoutParams = ConstraintLayout.LayoutParams(
@@ -395,21 +400,21 @@ class MainActivity : AppCompatActivity() {
     private fun applySettingsToWebView (webView: WebView?)
     {
         @SuppressLint("SetJavaScriptEnabled")
-        webview!!.getSettings().setJavaScriptEnabled(true)
+        webView!!.getSettings().setJavaScriptEnabled(true)
 
         // No built-in zoom controls,
         // because these may cover clickable links,
         // which then can't be clicked anymore.
         // https://github.com/bibledit/cloud/issues/321
-        webview!!.getSettings().setBuiltInZoomControls(false)
-        webview!!.getSettings().setSupportZoom(false)
-        webview!!.getSettings().setDisplayZoomControls(false)
+        webView!!.getSettings().setBuiltInZoomControls(false)
+        webView!!.getSettings().setSupportZoom(false)
+        webView!!.getSettings().setDisplayZoomControls(false)
 
-        webview!!.getSettings().setDomStorageEnabled(true)
+        webView!!.getSettings().setDomStorageEnabled(true)
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
-        MyWebViewClient().also { webview!!.webViewClient = it }
+        MyWebViewClient().also { webView!!.webViewClient = it }
     }
 
 
@@ -493,6 +498,99 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun startTabbedViewV2(tabsJSON: String) { // Todo
+        webview = null
+
+        setContentView(R.layout.tabbed_view_v2)
+
+        tablayout = findViewById(R.id.tabLayout2)
+
+        tablayout!!.tabGravity = TabLayout.GRAVITY_FILL
+
+        val jsonArray = JSONArray(tabsJSON)
+        val length = jsonArray.length()
+        var active = 0
+
+        fun getWebView (i: Int) : WebView {
+            when (i) {
+                0 -> return findViewById<WebView>(R.id.testwebview1)
+                1 -> return findViewById<WebView>(R.id.testwebview2)
+                2 -> return findViewById<WebView>(R.id.testwebview3)
+                3 -> return findViewById<WebView>(R.id.testwebview4)
+                4 -> return findViewById<WebView>(R.id.testwebview5)
+                // If the input is out of range, return the last WebView.
+                else -> return return findViewById<WebView>(R.id.testwebview5)
+            }
+        }
+
+        for (i in 0..<length) {
+            val jsonObject = jsonArray.getJSONObject(i)
+
+            val label = jsonObject.getString("label")
+            tablayout!!.addTab(tablayout!!.newTab().setText(label))
+
+            val url = jsonObject.getString("url")
+
+            val tabwebview: WebView = getWebView(i)
+            applySettingsToWebView(tabwebview)
+            tabwebview?.loadUrl(webAppBaseUrl + url)
+
+            if (url.contains("resource"))
+                active = i
+            lastTabIdentifier = label
+            lastTabUrl = url
+        }
+
+        tablayout!!.getTabAt(active)?.select()
+        val activeWebView = getWebView(active)
+        activeWebView.visibility = View.VISIBLE
+
+        tablayout!!.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val webview = getWebView(tab.position)
+                webview.visibility = View.VISIBLE
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                val webview = getWebView(tab.position)
+                webview.visibility = View.GONE
+            }
+            override fun onTabReselected(tab: TabLayout.Tab) {
+            }
+        })
+
+
+
+
+//        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
+//            override fun onTabChanged(tabId: String) {
+//                // Check whether to reload the settings page.
+//                // The reason for this is as follows:
+//                // When the user clicks any of the links in the settings page,
+//                // there is no way to go back to the main settings page.
+//                // The above applies in tabbed mode, as there's no menu then.
+//                // So when the settings tab is activated,
+//                // it ensures that the main setting page is loaded.
+//                if (tabId == lastTabIdentifier) {
+//                    val webview = tabhost!!.getCurrentView() as WebView
+//                    val actualUrl = webview.getUrl()
+//                    val desiredUrl = webAppBaseUrl + lastTabUrl
+//                    if (actualUrl != desiredUrl) {
+//                        runOnUiThread {
+//                            webview.loadUrl(desiredUrl)
+//                        }
+//                    }
+//                }
+//                // Hide the soft keyboard.
+//                // See https://github.com/bibledit/cloud/issues/269 for reasons.
+//                val webview = tabhost!!.getCurrentView() as WebView?
+//                runOnUiThread {
+//                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+//                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
+//                }
+//            }
+//        })
     }
 
     private fun getWebRoot() : String
