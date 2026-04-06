@@ -357,42 +357,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getNewWebViewWithSettings () : WebView // Todo transfer all functionality and remove it.
-    {
-        val newWebview = WebView(this).apply {
-            layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                bottomToBottom = ConstraintLayout.LayoutParams.BOTTOM
-                endToEnd = ConstraintLayout.LayoutParams.END
-                startToStart = ConstraintLayout.LayoutParams.START
-                topToTop = ConstraintLayout.LayoutParams.TOP
-            }
-        }
-
-        @SuppressLint("SetJavaScriptEnabled")
-        newWebview.getSettings().setJavaScriptEnabled(true)
-
-        // No built-in zoom controls,
-        // because these may cover clickable links,
-        // which then can't be clicked anymore.
-        // https://github.com/bibledit/cloud/issues/321
-        newWebview.getSettings().setBuiltInZoomControls(false)
-        newWebview.getSettings().setSupportZoom(false)
-        newWebview.getSettings().setDisplayZoomControls(false)
-
-        newWebview.getSettings().setDomStorageEnabled(true)
-
-        // Without this line the URL will open in an external browser.
-        // With this line, the URL will open within the app.
-        //webview.webViewClient = MyWebViewClient()
-        MyWebViewClient().also { newWebview.webViewClient = it }
-
-        return newWebview
-    }
-
-
     // Apply settings to the passed WebView.
     // Kotlin always use pass-by-value.
     // When passing objects or non-primitive types, the function copies the reference, simulating pass-by-reference.
@@ -417,88 +381,6 @@ class MainActivity : AppCompatActivity() {
         MyWebViewClient().also { webView!!.webViewClient = it }
     }
 
-
-    private fun startTabbedView(tabsJSON: String) {
-        webview = null
-
-        setContentView(R.layout.tabbed_view)
-
-        tabhost = findViewById (R.id.tabhost);
-        tabhost!!.setup ();
-
-        var tabspec: TabSpec?
-        var factory: TabContentFactory?
-
-        val jsonArray = JSONArray(tabsJSON)
-        val length = jsonArray.length()
-        var active = 0
-
-        for (i in 0..<length) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            val label = jsonObject.getString("label")
-            val url = jsonObject.getString("url")
-            tabspec = tabhost!!.newTabSpec (label);
-            tabspec.setIndicator (label);
-
-            factory = TabHost.TabContentFactory () {
-                val webview = getNewWebViewWithSettings()
-                webview.loadUrl(webAppBaseUrl + url)
-                return@TabContentFactory webview
-            }
-
-            tabspec.setContent(factory);
-            tabhost!!.addTab (tabspec);
-
-            if (url.contains("resource"))
-                active = i
-            lastTabIdentifier = label
-            lastTabUrl = url
-        }
-        val tab: Int = active
-
-        // It used to halve the height of the tabs on the screen.
-        // The goal of that was to use less space on the screen,
-        // leaving more space for the editing areas.
-        // But a user made a remark that on his 8 inch tablet,
-        // the tabbed menu was so small
-        // that he often missed and the top Android status bar pulled down instead.
-        // So it is better to not halve the height, but use another reduction factor.
-        for (i in 0..<tabhost!!.getTabWidget().getChildCount()) {
-            tabhost!!.getTabWidget().getChildAt(i).getLayoutParams().height =
-                (tabhost!!.getTabWidget().getChildAt(i).getLayoutParams().height * 0.75).toInt()
-        }
-
-        tabhost!!.setCurrentTab (active);
-
-        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
-            override fun onTabChanged(tabId: String) {
-                // Check whether to reload the settings page.
-                // The reason for this is as follows:
-                // When the user clicks any of the links in the settings page,
-                // there is no way to go back to the main settings page.
-                // The above applies in tabbed mode, as there's no menu then.
-                // So when the settings tab is activated,
-                // it ensures that the main setting page is loaded.
-                if (tabId == lastTabIdentifier) {
-                    val webview = tabhost!!.getCurrentView() as WebView
-                    val actualUrl = webview.getUrl()
-                    val desiredUrl = webAppBaseUrl + lastTabUrl
-                    if (actualUrl != desiredUrl) {
-                        runOnUiThread {
-                            webview.loadUrl(desiredUrl)
-                        }
-                    }
-                }
-                // Hide the soft keyboard.
-                // See https://github.com/bibledit/cloud/issues/269 for reasons.
-                val webview = tabhost!!.getCurrentView() as WebView?
-                runOnUiThread {
-                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
-                }
-            }
-        })
-    }
 
     private fun startTabbedViewV2(tabsJSON: String) { // Todo
         webview = null
