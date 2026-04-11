@@ -14,7 +14,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <WebView
-        android:id="@+id/testwebview1"
+        android:id="@+id/tabwebview1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tabLayout2"
@@ -27,10 +27,10 @@
     </WebView>
 
     <WebView
-        android:id="@+id/testwebview2"
+        android:id="@+id/tabwebview2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/testwebview1"
+        android:layout_below="@id/tabwebview1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,10 +40,10 @@
     </WebView>
 
     <WebView
-        android:id="@+id/testwebview3"
+        android:id="@+id/tabwebview3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/testwebview2"
+        android:layout_below="@id/tabwebview2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,10 +53,10 @@
     </WebView>
 
     <WebView
-        android:id="@+id/testwebview4"
+        android:id="@+id/tabwebview4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/testwebview3"
+        android:layout_below="@id/tabwebview3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,10 +66,10 @@
     </WebView>
 
     <WebView
-        android:id="@+id/testwebview5"
+        android:id="@+id/tabwebview5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/testwebview4"
+        android:layout_below="@id/tabwebview4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

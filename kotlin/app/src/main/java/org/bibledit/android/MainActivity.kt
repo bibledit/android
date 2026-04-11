@@ -32,12 +32,12 @@ const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 
 // The activity's data is at /data/data/org.bibledit.android.
-// It writes files to subfolder files.
+// It writes files to subfolder "files".
 
 class MainActivity : AppCompatActivity() {
 
-    var webview: WebView? = null
-    var tablayout : TabLayout? = null
+    var webView: WebView? = null
+    var tabLayout : TabLayout? = null
     var displayingSplashScreen: Boolean = false
 
     var timer: Timer? = null
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         // Handle permissions right at the start of the app.
         checkPermissions()
 
-        // Get the free port number found by the Bibledit library.
+        // Build the base URL from the free port number from the Bibledit library.
         webAppPortNumber = GetNetworkPort().toInt()
         webAppBaseUrl = "http://localhost:$webAppPortNumber/"
 
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         // Install the assets if needed.
         installAssets (webroot)
 
-        // Log information about where to find Bibledit's data.
+        // Log information about where to find the Bibledit data.
         Log ("Bibledit data location: $webroot")
 
         // Log information about whether running on Android or on Chrome OS.
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             Log ("Running on Android")
         }
 
-        // Configure all the app's WebViews for debugging.
+        // Configure the WebViews for debugging.
         WebView.setWebContentsDebuggingEnabled(true)
     }
 
@@ -341,11 +341,11 @@ class MainActivity : AppCompatActivity() {
     // Open the single webview configuration.
     private fun startSingleView(url : String)
     {
-        tablayout = null
+        tabLayout = null
         setContentView(R.layout.single_view)
-        webview = findViewById<WebView>(R.id.singleview)
-        applySettingsToWebView(webview)
-        webview?.loadUrl(webAppBaseUrl)
+        webView = findViewById<WebView>(R.id.singleview)
+        applySettingsToWebView(webView)
+        webView?.loadUrl(webAppBaseUrl)
     }
 
 
@@ -375,13 +375,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun startTabbedView(tabsJSON: String) { 
-        webview = null
+        webView = null
 
         setContentView(R.layout.tabbed_view)
 
-        tablayout = findViewById(R.id.tabLayout2)
+        tabLayout = findViewById(R.id.tabLayout2)
 
-        tablayout!!.tabGravity = TabLayout.GRAVITY_FILL
+        tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
         val jsonArray = JSONArray(tabsJSON)
         val length = jsonArray.length()
@@ -389,13 +389,13 @@ class MainActivity : AppCompatActivity() {
 
         fun getWebView (i: Int) : WebView {
             when (i) {
-                0 -> return findViewById<WebView>(R.id.testwebview1)
-                1 -> return findViewById<WebView>(R.id.testwebview2)
-                2 -> return findViewById<WebView>(R.id.testwebview3)
-                3 -> return findViewById<WebView>(R.id.testwebview4)
-                4 -> return findViewById<WebView>(R.id.testwebview5)
+                0 -> return findViewById<WebView>(R.id.tabwebview1)
+                1 -> return findViewById<WebView>(R.id.tabwebview2)
+                2 -> return findViewById<WebView>(R.id.tabwebview3)
+                3 -> return findViewById<WebView>(R.id.tabwebview4)
+                4 -> return findViewById<WebView>(R.id.tabwebview5)
                 // If the input is out of range, return the last WebView.
-                else -> return return findViewById<WebView>(R.id.testwebview5)
+                else -> return return findViewById<WebView>(R.id.tabwebview5)
             }
         }
 
@@ -403,7 +403,7 @@ class MainActivity : AppCompatActivity() {
             val jsonObject = jsonArray.getJSONObject(i)
 
             val label = jsonObject.getString("label")
-            tablayout!!.addTab(tablayout!!.newTab().setText(label))
+            tabLayout!!.addTab(tabLayout!!.newTab().setText(label))
 
             val url = jsonObject.getString("url")
 
@@ -417,11 +417,11 @@ class MainActivity : AppCompatActivity() {
             lastTabUrl = url
         }
 
-        tablayout!!.getTabAt(active)?.select()
+        tabLayout!!.getTabAt(active)?.select()
         val activeWebView = getWebView(active)
         activeWebView.visibility = View.VISIBLE
 
-        tablayout!!.addOnTabSelectedListener(object : OnTabSelectedListener {
+        tabLayout!!.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val webview = getWebView(tab.position)
                 webview.visibility = View.VISIBLE
@@ -609,8 +609,8 @@ class MainActivity : AppCompatActivity() {
         Log.i("Back", "on back pressed")
         // The Android back button navigates back in the web view.
         // This is the behaviour people expect.
-        if ((webview != null) && webview!!.canGoBack()) {
-            webview!!.goBack()
+        if ((webView != null) && webView!!.canGoBack()) {
+            webView!!.goBack()
             return
 //        } else if (tabhost != null) {
 //            val webview = tabhost!!.getCurrentView() as WebView
