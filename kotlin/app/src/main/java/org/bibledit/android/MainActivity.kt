@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     var previousTabsState: String? = null
     var lastTabUrl: String? = null
-    var lastTabIdentifier: String? = null
+    var lastTabIdentifier: Int = 0
 
     var previousSyncState: String? = null
 
@@ -411,9 +411,10 @@ class MainActivity : AppCompatActivity() {
             applySettingsToWebView(tabwebview)
             tabwebview?.loadUrl(webAppBaseUrl + url)
 
+            // The Resources should display when going to basic mode.
             if (url.contains("resource"))
                 active = i
-            lastTabIdentifier = label
+            lastTabIdentifier = i
             lastTabUrl = url
         }
 
@@ -423,8 +424,28 @@ class MainActivity : AppCompatActivity() {
 
         tabLayout!!.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
+                // Get the webview for this tab.
                 val webview = getWebView(tab.position)
+                // Set the webview visible.
                 webview.visibility = View.VISIBLE
+                // Check whether to reload the settings page.
+                // The reason for this is as follows:
+                // When the user clicks any of the links in the settings page,
+                // there is no way to go back to the main settings page.
+                // The above applies in tabbed mode, as there's no menu then.
+                // So when the settings tab is activated,
+                // it ensures that the main setting page is loaded.
+                if (tab.position == lastTabIdentifier) {
+                    val actualUrl = webview.getUrl()
+                    val desiredUrl = webAppBaseUrl + lastTabUrl
+                    if (actualUrl != desiredUrl) {
+                        runOnUiThread {
+                            webview.loadUrl(desiredUrl)
+                        }
+                    }
+                }
+
+
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 val webview = getWebView(tab.position)
@@ -439,23 +460,6 @@ class MainActivity : AppCompatActivity() {
 // Todo transfer this code below:
 //        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
 //            override fun onTabChanged(tabId: String) {
-//                // Check whether to reload the settings page.
-//                // The reason for this is as follows:
-//                // When the user clicks any of the links in the settings page,
-//                // there is no way to go back to the main settings page.
-//                // The above applies in tabbed mode, as there's no menu then.
-//                // So when the settings tab is activated,
-//                // it ensures that the main setting page is loaded.
-//                if (tabId == lastTabIdentifier) {
-//                    val webview = tabhost!!.getCurrentView() as WebView
-//                    val actualUrl = webview.getUrl()
-//                    val desiredUrl = webAppBaseUrl + lastTabUrl
-//                    if (actualUrl != desiredUrl) {
-//                        runOnUiThread {
-//                            webview.loadUrl(desiredUrl)
-//                        }
-//                    }
-//                }
 //                // Hide the soft keyboard.
 //                // See https://github.com/bibledit/cloud/issues/269 for reasons.
 //                val webview = tabhost!!.getCurrentView() as WebView?
