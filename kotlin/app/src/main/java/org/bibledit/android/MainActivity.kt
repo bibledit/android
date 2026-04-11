@@ -12,6 +12,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -444,8 +445,12 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-
+                // Hide the soft keyboard.
+                // See https://github.com/bibledit/cloud/issues/269 for reasons.
+                runOnUiThread {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
+                }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 val webview = getWebView(tab.position)
@@ -454,21 +459,6 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
-
-
-
-// Todo transfer this code below:
-//        tabhost!!.setOnTabChangedListener(object : OnTabChangeListener {
-//            override fun onTabChanged(tabId: String) {
-//                // Hide the soft keyboard.
-//                // See https://github.com/bibledit/cloud/issues/269 for reasons.
-//                val webview = tabhost!!.getCurrentView() as WebView?
-//                runOnUiThread {
-//                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-//                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
-//                }
-//            }
-//        })
     }
 
     private fun getWebRoot() : String
