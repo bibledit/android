@@ -241,8 +241,8 @@ class MainActivity : AppCompatActivity() {
 
         // Check whether the Bibledit kernel has an external URL to be opened.
         // If so open it in the system browser.
-        val externalUrl: String? = GetExternalUrl()
-        if (externalUrl != null && !externalUrl.isEmpty()) {
+        val externalUrl: String = GetExternalUrl()
+        if (externalUrl.isNotEmpty()) {
             Log.d("Bibledit start browser", externalUrl)
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl))
             startActivity(browserIntent)
@@ -357,17 +357,17 @@ class MainActivity : AppCompatActivity() {
     private fun applySettingsToWebView (webView: WebView?)
     {
         @SuppressLint("SetJavaScriptEnabled")
-        webView!!.getSettings().setJavaScriptEnabled(true)
+        webView!!.settings.setJavaScriptEnabled(true)
 
         // No built-in zoom controls,
         // because these may cover clickable links,
         // which then can't be clicked anymore.
         // https://github.com/bibledit/cloud/issues/321
-        webView!!.getSettings().setBuiltInZoomControls(false)
-        webView!!.getSettings().setSupportZoom(false)
-        webView!!.getSettings().setDisplayZoomControls(false)
+        webView!!.settings.setBuiltInZoomControls(false)
+        webView!!.settings.setSupportZoom(false)
+        webView!!.settings.setDisplayZoomControls(false)
 
-        webView!!.getSettings().setDomStorageEnabled(true)
+        webView!!.settings.setDomStorageEnabled(true)
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
@@ -396,7 +396,7 @@ class MainActivity : AppCompatActivity() {
                 3 -> return findViewById<WebView>(R.id.tabwebview4)
                 4 -> return findViewById<WebView>(R.id.tabwebview5)
                 // If the input is out of range, return the last WebView.
-                else -> return return findViewById<WebView>(R.id.tabwebview5)
+                else -> return findViewById<WebView>(R.id.tabwebview5)
             }
         }
 
@@ -410,7 +410,7 @@ class MainActivity : AppCompatActivity() {
 
             val tabwebview: WebView = getWebView(i)
             applySettingsToWebView(tabwebview)
-            tabwebview?.loadUrl(webAppBaseUrl + url)
+            tabwebview.loadUrl(webAppBaseUrl + url)
 
             // The Resources should display when going to basic mode.
             if (url.contains("resource"))
@@ -467,7 +467,7 @@ class MainActivity : AppCompatActivity() {
         // Usually this is /storage/emulated/0/Android/data/org.bibledit.android/files
         // Files in this directory cannot be made executable
         // because system has a protection mechanism for this.
-        val externalDirectory: String = getExternalFilesDir(null)!!.getAbsolutePath()
+        val externalDirectory: String = getExternalFilesDir(null)!!.absolutePath
 
         // Take the external directory for the webroot if it exists.
         val file = File(externalDirectory)
@@ -479,7 +479,7 @@ class MainActivity : AppCompatActivity() {
         // The protected directory.
         // Usually this is /data/user/0/org.bibledit.android/files normally.
         // Files there can be set executable.
-        val internalDirectory: String = getFilesDir().getAbsolutePath()
+        val internalDirectory: String = getFilesDir().absolutePath
         return internalDirectory
     }
 
@@ -571,8 +571,8 @@ class MainActivity : AppCompatActivity() {
     private fun startTimer()
     {
         stopTimer()
-        timer = Timer()
-        timer!!.schedule(1000L, 1000L) {
+        this.timer = Timer()
+        this.timer!!.schedule(1000L, 1000L) {
             onRepeatingTimeout()
         }
     }

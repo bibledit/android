@@ -3,7 +3,7 @@
 # For more examples on how to use CMake, see https://github.com/android/ndk-samples.
 
 # Sets the minimum CMake version required for this project.
-# Bibledit in Java used minimum version 4.1.2. See to this later if needed. Todo
+# Bibledit in Java used minimum version 4.1.2. See to this later if needed.
 cmake_minimum_required(VERSION 3.22.1)
 
 # Declares the project name. The project name can be accessed via ${ PROJECT_NAME},
