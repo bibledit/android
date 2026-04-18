@@ -259,13 +259,13 @@ class MainActivity : AppCompatActivity() {
         val syncState: String = IsSynchronizing()
         if (syncState == "true") {
             runOnUiThread {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
         if (syncState == "false") {
             if (syncState == previousSyncState) {
                 runOnUiThread {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 }
             }
         }
@@ -507,7 +507,7 @@ class MainActivity : AppCompatActivity() {
         // The protected directory.
         // Usually this is /data/user/0/org.bibledit.android/files normally.
         // Files there can be set executable.
-        val internalDirectory: String = getFilesDir().absolutePath
+        val internalDirectory: String = filesDir.absolutePath
         return internalDirectory
     }
 
@@ -618,7 +618,7 @@ class MainActivity : AppCompatActivity() {
         // https://developer.android.com/reference/android/view/ActionMode.html
         val disable = DisableSelectionPopupChromeOS()
         if (disable == "true") {
-            val menu: Menu = mode.getMenu()
+            val menu: Menu = mode.menu
             menu.clear()
             //mode.finish ();
             //mode.invalidate ();
