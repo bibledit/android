@@ -2,11 +2,13 @@ package org.bibledit.android
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
@@ -14,10 +16,12 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.json.JSONArray
@@ -25,6 +29,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.net.URLDecoder
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -223,7 +228,7 @@ class MainActivity : AppCompatActivity() {
             if (jsonString.isEmpty()) {
                 // Modifying widgets must be done on the UI thread.
                 runOnUiThread {
-                    startSingleView(webAppBaseUrl)
+                    startSingleView()
                 }
             }
 
@@ -251,7 +256,7 @@ class MainActivity : AppCompatActivity() {
         // Check whether to keep the screen on during send and receive.
         // Keeping the screen on is needed because that will keep the app in the foreground.
         // If the app went into the background, then it would not complete the send/receive cycle.
-        val syncState: String? = IsSynchronizing()
+        val syncState: String = IsSynchronizing()
         if (syncState == "true") {
             runOnUiThread {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -340,7 +345,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // Open the single webview configuration.
-    private fun startSingleView(url : String)
+    private fun startSingleView()
     {
         tabLayout = null
         setContentView(R.layout.single_view)
@@ -351,8 +356,9 @@ class MainActivity : AppCompatActivity() {
 
 
     // Apply settings to the passed WebView.
-    // Kotlin always use pass-by-value.
-    // When passing objects or non-primitive types, the function copies the reference, simulating pass-by-reference.
+    // Kotlin always uses pass-by-value.
+    // When passing objects or non-primitive types, the function copies the reference,
+    // simulating pass-by-reference.
     // Changes inside the method affect the external object due to the shared reference.
     private fun applySettingsToWebView (webView: WebView?)
     {
@@ -372,6 +378,28 @@ class MainActivity : AppCompatActivity() {
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
         MyWebViewClient().also { webView!!.webViewClient = it }
+
+        webView!!.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+
+            // Extract the filename from the Content-Disposition header or from the URL.
+            val filename = URLDecoder.decode(getFilename(contentDisposition, url), "UTF-8")
+
+            Log.i("Download", "Download $filename from $url as $userAgent")
+
+            val request = DownloadManager.Request(url.toUri())
+            request.apply {
+                setTitle(filename)
+                setDescription("Downloading file...")
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+                setMimeType(mimeType)
+            }
+
+            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
+
+            Toast.makeText(this, "Downloading $filename $contentLength bytes to the Downloads directory", Toast.LENGTH_LONG).show()
+        }
     }
 
 
@@ -598,24 +626,33 @@ class MainActivity : AppCompatActivity() {
         super.onActionModeStarted(mode)
     }
 
-    override fun onBackPressed()
-    {
-        Log.i("Back", "on back pressed")
-        // The Android back button navigates back in the web view.
-        // This is the behaviour people expect.
-        if ((webView != null) && webView!!.canGoBack()) {
-            webView!!.goBack()
-            return
+//    override fun onBackPressed()
+//    {
+//        Log.i("Back", "on back pressed")
+//        // The Android back button navigates back in the web view.
+//        // This is the behaviour people expect.
+//        if ((webView != null) && webView!!.canGoBack()) {
+//            webView!!.goBack()
+//            return
 //        } else if (tabhost != null) {
 //            val webview = tabhost!!.getCurrentView() as WebView
 //            if (webview.canGoBack()) {
 //                webview.goBack()
 //                return
 //            }
-        }
+//        }
+//
+//        // Otherwise defer to system default behavior.
+//        super.onBackPressed()
+//    }
 
-        // Otherwise defer to system default behavior.
-        super.onBackPressed()
+
+    private fun getFilename (contentDisposition : String?, url: String) : String {
+        return if (contentDisposition != null && contentDisposition.contains("filename")) {
+            contentDisposition.substringAfter("filename=").replace("\"", "")
+        } else {
+            url.substringAfterLast("/")
+        }
     }
 
 
