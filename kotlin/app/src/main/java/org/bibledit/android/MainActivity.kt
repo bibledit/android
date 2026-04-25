@@ -17,6 +17,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
@@ -98,6 +99,16 @@ class MainActivity : AppCompatActivity() {
 
         // Configure the WebViews for debugging.
         WebView.setWebContentsDebuggingEnabled(true)
+
+        // Properly handle the back button or gesture.
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    handleBackPress()
+                }
+            }
+        )
     }
 
 
@@ -653,6 +664,20 @@ class MainActivity : AppCompatActivity() {
         } else {
             url.substringAfterLast("/")
         }
+    }
+
+    private fun handleBackPress() {
+        // The Android back button navigates back in the web view.
+        // This is the behavior people expect.
+        webView?.let {
+            if (it.canGoBack()) {
+                it.goBack()
+                return
+            }
+        }
+
+        // Otherwise defer to the default behavior.
+        finish()
     }
 
 
