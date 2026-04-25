@@ -6,7 +6,6 @@ import android.app.DownloadManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -184,7 +183,7 @@ class MainActivity : AppCompatActivity() {
 
     // The native methods implemented by the bibledit native library wrapper
     // which is packaged with this application.
-    // There should be no understores (_) in the function name.
+    // There should be no underscores (_) in the function name.
     // This avoids a "java.lang.UnsatisfiedLinkError: Native method not found" exception.
     external fun StringFromJNI(): String
     external fun GetVersionNumber(): String
@@ -260,7 +259,7 @@ class MainActivity : AppCompatActivity() {
         val externalUrl: String = GetExternalUrl()
         if (externalUrl.isNotEmpty()) {
             Log.d("Bibledit start browser", externalUrl)
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl))
+            val browserIntent = Intent(Intent.ACTION_VIEW, externalUrl.toUri())
             startActivity(browserIntent)
         }
 
@@ -380,17 +379,17 @@ class MainActivity : AppCompatActivity() {
         // because these may cover clickable links,
         // which then can't be clicked anymore.
         // https://github.com/bibledit/cloud/issues/321
-        webView!!.settings.setBuiltInZoomControls(false)
-        webView!!.settings.setSupportZoom(false)
-        webView!!.settings.setDisplayZoomControls(false)
+        webView.settings.setBuiltInZoomControls(false)
+        webView.settings.setSupportZoom(false)
+        webView.settings.setDisplayZoomControls(false)
 
-        webView!!.settings.setDomStorageEnabled(true)
+        webView.settings.setDomStorageEnabled(true)
 
         // Without this line the URL will open in an external browser.
         // With this line, the URL will open within the app.
-        MyWebViewClient().also { webView!!.webViewClient = it }
+        MyWebViewClient().also { webView.webViewClient = it }
 
-        webView!!.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
 
             // Extract the filename from the Content-Disposition header or from the URL.
             val filename = URLDecoder.decode(getFilename(contentDisposition, url), "UTF-8")
@@ -476,7 +475,7 @@ class MainActivity : AppCompatActivity() {
                 // See https://github.com/bibledit/cloud/issues/269 for reasons.
                 runOnUiThread {
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-                    imm?.hideSoftInputFromWindow (webview!!.getWindowToken(), 0);
+                    imm?.hideSoftInputFromWindow (webview.getWindowToken(), 0)
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -583,13 +582,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 catch (e : Exception) {
-                    e.printStackTrace ();
+                    e.printStackTrace ()
                 }
                 finally {
                 }
 
                 // Store the Bibledit kernel version number as the installed version.
-                preferences.edit { putString("version", GetVersionNumber()) };
+                preferences.edit { putString("version", GetVersionNumber()) }
             }
         }.start()
     }
@@ -608,12 +607,12 @@ class MainActivity : AppCompatActivity() {
     private fun stopTimer()
     {
         if (timer != null) {
-            timer!!.cancel();
-            timer = null;
+            timer!!.cancel()
+            timer = null
         }
     }
 
-    public override fun onActionModeStarted(mode: ActionMode) {
+    override fun onActionModeStarted(mode: ActionMode) {
         // https://developer.android.com/reference/android/view/ActionMode.html
         val disable = DisableSelectionPopupChromeOS()
         if (disable == "true") {
