@@ -425,19 +425,7 @@ class MainActivity : AppCompatActivity() {
 
         val jsonArray = JSONArray(tabsJSON)
         val length = jsonArray.length()
-        var active = 0
-
-        fun getWebView (i: Int) : WebView {
-            when (i) {
-                0 -> return findViewById<WebView>(R.id.tabwebview1)
-                1 -> return findViewById<WebView>(R.id.tabwebview2)
-                2 -> return findViewById<WebView>(R.id.tabwebview3)
-                3 -> return findViewById<WebView>(R.id.tabwebview4)
-                4 -> return findViewById<WebView>(R.id.tabwebview5)
-                // If the input is out of range, return the last WebView.
-                else -> return findViewById<WebView>(R.id.tabwebview5)
-            }
-        }
+        var activateTab = 0
 
         for (i in 0..<length) {
             val jsonObject = jsonArray.getJSONObject(i)
@@ -447,25 +435,25 @@ class MainActivity : AppCompatActivity() {
 
             val url = jsonObject.getString("url")
 
-            val tabwebview: WebView = getWebView(i)
+            val tabwebview: WebView = getTabbedWebView(i)
             applySettingsToWebView(tabwebview)
             tabwebview.loadUrl(webAppBaseUrl + url)
 
             // The Resources should display when going to basic mode.
             if (url.contains("resource"))
-                active = i
+                activateTab = i
             lastTabIdentifier = i
             lastTabUrl = url
         }
 
-        tabLayout!!.getTabAt(active)?.select()
-        val activeWebView = getWebView(active)
+        tabLayout!!.getTabAt(activateTab)?.select()
+        val activeWebView = getTabbedWebView(activateTab)
         activeWebView.visibility = View.VISIBLE
 
         tabLayout!!.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 // Get the webview for this tab.
-                val webview = getWebView(tab.position)
+                val webview = getTabbedWebView(tab.position)
                 // Set the webview visible.
                 webview.visibility = View.VISIBLE
                 // Check whether to reload the settings page.
@@ -492,7 +480,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
-                val webview = getWebView(tab.position)
+                val webview = getTabbedWebView(tab.position)
                 webview.visibility = View.GONE
             }
             override fun onTabReselected(tab: TabLayout.Tab) {
@@ -637,27 +625,6 @@ class MainActivity : AppCompatActivity() {
         super.onActionModeStarted(mode)
     }
 
-//    override fun onBackPressed()
-//    {
-//        Log.i("Back", "on back pressed")
-//        // The Android back button navigates back in the web view.
-//        // This is the behaviour people expect.
-//        if ((webView != null) && webView!!.canGoBack()) {
-//            webView!!.goBack()
-//            return
-//        } else if (tabhost != null) {
-//            val webview = tabhost!!.getCurrentView() as WebView
-//            if (webview.canGoBack()) {
-//                webview.goBack()
-//                return
-//            }
-//        }
-//
-//        // Otherwise defer to system default behavior.
-//        super.onBackPressed()
-//    }
-
-
     private fun getFilename (contentDisposition : String?, url: String) : String {
         return if (contentDisposition != null && contentDisposition.contains("filename")) {
             contentDisposition.substringAfter("filename=").replace("\"", "")
@@ -669,9 +636,19 @@ class MainActivity : AppCompatActivity() {
     private fun handleBackPress() {
         // The Android back button navigates back in the web view.
         // This is the behavior people expect.
-        webView?.let {
-            if (it.canGoBack()) {
-                it.goBack()
+        if (webView != null) {
+            webView?.let {
+                if (it.canGoBack()) {
+                    it.goBack()
+                    return
+                }
+            }
+        }
+        if (tabLayout != null) {
+            val selected = tabLayout!!.selectedTabPosition
+            val tabWebView = getTabbedWebView(selected)
+            if (tabWebView.canGoBack()) {
+                tabWebView.goBack()
                 return
             }
         }
@@ -680,5 +657,16 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun getTabbedWebView (i: Int) : WebView {
+        return when (i) {
+            0 -> findViewById(R.id.tabwebview1)
+            1 -> findViewById(R.id.tabwebview2)
+            2 -> findViewById(R.id.tabwebview3)
+            3 -> findViewById(R.id.tabwebview4)
+            4 -> findViewById(R.id.tabwebview5)
+            // If the input is out of range, return the last WebView.
+            else -> findViewById(R.id.tabwebview5)
+        }
+    }
 
 }
