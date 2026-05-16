@@ -16,7 +16,7 @@ set -e
 echo Put all the code of the Bibledit kernel into the following folder:
 echo $EXTERNALFOLDER
 echo This is in preparation for subsequent steps
-rsync -a --delete --exclude .git ../../cloud/ $EXTERNALFOLDER/
+rsync -a --delete --exclude .git --exclude cmake-build-debug --exclude .idea ../../cloud/ $EXTERNALFOLDER/
 
 
 echo Clean the code up a bit by removing a couple of things
@@ -112,6 +112,7 @@ rm_rf_assets_cpp xcode*
 rm_rf_assets_cpp cloud-macos.entitlements
 rm_rf_assets_cpp index.html
 rm_rf_assets_cpp Makefile.am
+rm_rf_assets_cpp CMakeLists.txt
 rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete

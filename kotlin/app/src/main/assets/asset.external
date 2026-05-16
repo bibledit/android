@@ -444,6 +444,7 @@ styles/indexm.html
 styles/view.js
 styles/new.html
 styles/definitions.hpp
+cmake_config.h.in
 system/index.html
 system/googletranslate.html
 system/index.js
