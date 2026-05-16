@@ -112,7 +112,6 @@ rm_rf_assets_cpp xcode*
 rm_rf_assets_cpp cloud-macos.entitlements
 rm_rf_assets_cpp index.html
 rm_rf_assets_cpp Makefile.am
-rm_rf_assets_cpp CMakeLists.txt
 rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
