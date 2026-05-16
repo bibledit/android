@@ -261,6 +261,7 @@ personalize/index.html
 personalize/index.js
 sendreceive/index.html
 sendreceive/index.js
+CMakeLists.txt
 locale/lt.po
 locale/uk.po
 locale/cs.po
