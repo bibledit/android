@@ -12,7 +12,7 @@ android {
         applicationId = "org.bibledit.android"
         minSdk = 23
         targetSdk = 36
-        versionCode = 176
+        versionCode = 178
         versionName = "5.1.043"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
