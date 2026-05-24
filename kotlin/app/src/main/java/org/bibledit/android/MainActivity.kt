@@ -6,12 +6,14 @@ import android.app.DownloadManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -22,6 +24,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
+import androidx.core.view.doOnAttach
+import androidx.core.view.updateLayoutParams
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.json.JSONArray
@@ -108,6 +113,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         )
+
+        // Manually enable edge-to-edge display on Android versions older than 15.
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.isAppearanceLightNavigationBars = true
+        }
     }
 
 
@@ -362,6 +375,15 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById<WebView>(R.id.singleview)
         applySettingsToWebView(webView)
         webView?.loadUrl(webAppBaseUrl)
+        // Because of edge-to-edge display, update the margins for the insets.
+        webView?.doOnAttach {
+            val bottom = it.rootWindowInsets?.stableInsetBottom?: 0
+            val top = it.rootWindowInsets?.stableInsetTop?: 0
+            webView?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = top
+                bottomMargin = bottom
+            }
+        }
     }
 
 
@@ -485,6 +507,16 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
+
+        // Because of edge-to-edge display, update the margins for the insets.
+        tabLayout?.doOnAttach {
+            val bottom = it.rootWindowInsets?.stableInsetBottom?: 0
+            val top = it.rootWindowInsets?.stableInsetTop?: 0
+            tabLayout?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = top
+                bottomMargin = bottom
+            }
+        }
     }
 
     private fun getWebRoot() : String
