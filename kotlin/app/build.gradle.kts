@@ -12,10 +12,9 @@ android {
         applicationId = "org.bibledit.android"
         minSdk = 23
         targetSdk = 36
-        versionCode = 180
-        versionName = "5.1.045"
+        versionCode = 181
+        versionName = "5.1.046"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags += "-std=c++20"

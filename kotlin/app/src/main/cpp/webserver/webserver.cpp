@@ -32,6 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma clang diagnostic ignored "-Wswitch-enum"
 #include <mbedtls/platform.h>
 #include <mbedtls/version.h>
+
+#include "assets/page.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/debug.h"
 #include "mbedtls/entropy.h"
@@ -98,8 +100,9 @@ static_assert (false, "MbedTLS version other than 2 or 3");
 #endif
 
 
+#ifdef HAVE_THREADPOOL
 static void enqueue_task(std::function<void()> task);
-static void test_task();
+#endif
 
 // Gets a line from a socket.
 // The line may end with a newline, a carriage return, or a CR-LF combination.
@@ -164,10 +167,9 @@ static void convert_ipv6_notation_to_pure_ipv4_notation (std::string& address)
 
 
 // Processes a single request from a web client.
-static void webserver_process_request (const int conn_fd, const std::string& client_address)
+// ReSharper disable once CppPassValueParameterByConstReference
+static void webserver_process_request (const int conn_fd, const std::string client_address)
 {
-    enqueue_task(test_task);
-
     // The environment for this request.
     // A reference to this object gets passed around from function to function during the entire request.
     // This provides thread-safety to the request.
@@ -277,7 +279,8 @@ static void webserver_process_request (const int conn_fd, const std::string& cli
                                 (file_fd, stream_buffer, 1024));
                             if (byte_count > 0)
                             {
-                                send(conn_fd, stream_buffer, static_cast<size_t>(byte_count), 0);
+                                // ReSharper disable once CppRedundantCastExpression
+                                send (conn_fd, reinterpret_cast<const char *> (stream_buffer), static_cast<size_t>(byte_count), 0);
                             }
                         }
                         while (byte_count > 0);
@@ -426,9 +429,12 @@ void http_server()
             convert_ipv6_notation_to_pure_ipv4_notation(client_address);
 
             // Handle this request in a thread, enabling parallel requests.
-            auto request_thread = std::thread(webserver_process_request, conn_fd, client_address);
-            // Detach and delete thread object.
-            request_thread.detach();
+#ifdef HAVE_THREADPOOL
+            enqueue_task([conn_fd, client_address] { webserver_process_request(conn_fd, client_address); });
+#else
+            auto request_thread = std::thread (webserver_process_request, conn_fd, client_address);
+            request_thread.detach ();
+#endif
         }
         else
         {
@@ -460,7 +466,7 @@ void http_server_acceptor_processor(SOCKET listen_socket)
     socklen_t clientlen = sizeof (clientaddr);
     // The SOCKET in Windows will be closed when it goes out of scope.
     // This is different from a Unix file descriptor.
-    // Therefore there's a difference in web server architecture between them.
+    // Therefore, there's a difference in web server architecture between them.
     SOCKET client_socket = accept(listen_socket, (struct sockaddr*)&clientaddr, &clientlen);
     server_accepting_mutex.lock();
     server_accepting_flag = false;
@@ -561,10 +567,8 @@ void http_server()
         server_accepting_mutex.unlock();
         if (start_acceptor)
         {
-            // Handle waiting for and processing the request in a thread, enabling parallel requests.
-            std::thread request_thread = std::thread(http_server_acceptor_processor, listen_socket);
-            // Detach and delete thread object.
-            request_thread.detach();
+            // Handle this request via the thread pool, enabling parallel requests.
+            enqueue_task(std::bind(http_server_acceptor_processor, listen_socket));
         }
         // Wait shortly before next poll iteration.
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -582,7 +586,6 @@ void http_server()
 // Processes a single request from a web client.
 static void secure_webserver_process_request(mbedtls_ssl_config* conf, mbedtls_net_context client_fd)
 {
-    enqueue_task(test_task);
     // Socket receive timeout, secure https.
 #ifndef HAVE_WINDOWS
     timeval tv;
@@ -1070,10 +1073,14 @@ void https_server()
             continue;
         }
 
-        // Handle this request in a thread, enabling parallel requests.
-        auto request_thread = std::thread(secure_webserver_process_request, &conf, client_fd);
-        // Detach and delete thread object.
-        request_thread.detach();
+        // Handle this request via the thread pool, enabling parallel requests.
+#ifdef HAVE_THREADPOOL
+        const auto conf_ptr = std::addressof(conf);
+        enqueue_task([conf_ptr, client_fd] { secure_webserver_process_request(conf_ptr, client_fd); });
+#else
+        auto request_thread = std::thread (secure_webserver_process_request, &conf, client_fd);
+        request_thread.detach ();
+#endif
     }
 
     // Wait shortly to give sufficient time to let the connection fail,
@@ -1110,14 +1117,11 @@ static std::mutex mutex;
 static std::condition_variable cv;
 
 // Flag to indicate whether the thread pool should stop.
-static std::atomic stop {false};
+[[maybe_unused]] static std::atomic stop {false};
 
-// Temporal variables for testing. Todo
-static std::atomic enqueued_task_count{0};
-static std::atomic executed_task_count{0};
-
-void start_thread_pool(const std::size_t num_threads)
+void start_thread_pool([[maybe_unused]] const std::size_t num_threads)
 {
+#ifdef HAVE_THREADPOOL
     // Creating worker threads.
     for (size_t i = 0; i < num_threads; ++i) {
         thread_pool.emplace_back([] {
@@ -1135,10 +1139,9 @@ void start_thread_pool(const std::size_t num_threads)
                         return not tasks.empty() or stop;
                     });
 
-                    // Exit the thread in case the pool is stopped and there are no tasks.
-                    if (stop and tasks.empty()) {
+                    // Exit the thread in case the pool is stopped, disregarding pending http requests.
+                    if (stop)
                         return;
-                    }
 
                     // Get the next task from the queue.
                     task = std::move(tasks.front());
@@ -1150,42 +1153,38 @@ void start_thread_pool(const std::size_t num_threads)
             }
         });
     }
+#endif
 }
 
 
 void stop_thread_pool()
 {
+#ifdef HAVE_THREADPOOL
     // Indicate stop.
     stop = true;
 
     // Notify all threads
     cv.notify_all();
 
-    // Join all worker threads to ensure they have completed their tasks.
-    std::ranges::for_each(thread_pool, [](std::thread &t) { t.join(); });
+    // Join all worker threads, if possible, to ensure they have completed their tasks.
+    std::ranges::for_each(thread_pool, [](std::thread &t)
+    {
+        if (t.joinable())
+            t.join();
+    });
+    // Clear them so they are no longer available on a possible subsequent shutdown.
+    thread_pool.clear();
+#endif
 }
 
 
+#ifdef HAVE_THREADPOOL
 void enqueue_task(std::function<void()> task)
 {
-    enqueued_task_count++;
     {
         std::unique_lock<std::mutex> lock(mutex);
         tasks.emplace(std::move(task));
     }
     cv.notify_one();
 }
-
-
-void thread_statistics_log() // Todo out.
-{
-    Database_Logs::log ("Enqueued tasks: " + std::to_string(enqueued_task_count)
-        + " Executed tasks: " + std::to_string(executed_task_count));
-}
-
-
-void test_task()
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    executed_task_count++;
-};
+#endif
