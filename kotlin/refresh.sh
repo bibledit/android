@@ -4,26 +4,26 @@
 echo Run this script from the directory where it is located: $ ./refresh.sh
 
 
+echo Exit script on any error
+set -e
+
+
 echo Define the assets
 ASSETSFOLDER=app/src/main/assets
 EXTERNALFOLDER=$ASSETSFOLDER/external
 
 
-echo Exit script on any error
-set -e
-
-
 echo Put all the code of the Bibledit kernel into the following folder:
 echo $EXTERNALFOLDER
 echo This is in preparation for subsequent steps
-rsync -a --delete --exclude .git --exclude cmake-build-debug --exclude .idea ../../cloud/ $EXTERNALFOLDER/
 
-
-echo Clean the code up a bit by removing a couple of things
-pushd $EXTERNALFOLDER
-rm -f *.gz
+pushd ../../cloud
+cmake -B build
+rm build/*.gz
+cmake --build build --target dist
 popd
-
+rm -rf $EXTERNALFOLDER/*
+tar xf ../../cloud/build/bibledit-5.1.047.tar.gz -C $EXTERNALFOLDER --strip-components=1
 
 echo Build several databases and other data for inclusion with the Android package
 echo Reason: Building them on Android takes a lot of time during the setup phase
@@ -31,17 +31,21 @@ echo Including pre-built data speeds up the setup phase of Bibledit on Android
 echo This gives a better user experience
 echo At the end it removes the journal entries that were logged in the process
 pushd $EXTERNALFOLDER
-./configure
-make --jobs=4
-./generate . locale
-./generate . mappings
-./generate . versifications
+cmake -B build
+cmake --build build --target generate -j8
+./build/generate . locale
+./build/generate . mappings
+./build/generate . versifications
 popd
 
+echo Configure for Android
+pushd $EXTERNALFOLDER
+cmake -B build -DHAVE_ANDROID=ON
+popd
 
 echo Clean the Bibledit kernel source code
 pushd $EXTERNALFOLDER
-make distclean
+rm -rf build
 popd
 
 
@@ -53,7 +57,8 @@ rsync -av --delete --exclude bibleditjni.cpp --exclude CMakeLists.txt --exclude 
 
 echo Configure the code in the $CPPFOLDER folder for Android
 pushd $CPPFOLDER
-./configure --enable-android
+rm -rf build
+cmake -B build -DHAVE_ANDROID=ON
 popd
 
 
@@ -112,6 +117,7 @@ rm_rf_assets_cpp xcode*
 rm_rf_assets_cpp cloud-macos.entitlements
 rm_rf_assets_cpp index.html
 rm_rf_assets_cpp Makefile.am
+rm_rf_assets_cpp build
 rm -rf $CPPFOLDER/databases
 find $EXTERNALFOLDER -name "*.h" -delete
 find $EXTERNALFOLDER -name "*.cpp" -delete
