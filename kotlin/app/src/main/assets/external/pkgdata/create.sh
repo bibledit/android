@@ -20,6 +20,13 @@
 # Exit script on error.
 set -e
 
+# Work in the project root directory
+SOURCE=$(dirname $0)
+cd "$SOURCE"
+cd ..
+
+echo -- Creating pkgdata/files.txt
+
 # Remove unwanted files.
 find . -name ".DS_Store" -delete
 

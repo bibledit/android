@@ -16,7 +16,7 @@
 
 
 # Set the minimum CMake version required.
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.28)
 
 
 # Print info.
@@ -24,17 +24,17 @@ message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 # Start a project by setting the project name and version.
-project(bibledit VERSION 5.1.046)
+project(bibledit VERSION 5.1.047)
 
 
 set(bibledit_VERSION "${bibledit_VERSION_MAJOR}.${bibledit_VERSION_MINOR}.${bibledit_VERSION_PATCH}")
 
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(COMPILERGCC ON)
+    set(COMPILER_GCC ON)
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(COMPILERCLANG ON)
+    set(COMPILER_CLANG ON)
 endif()
 
 
@@ -55,6 +55,16 @@ endif()
 option(CMAKE_INSTALL_PREFIX "Install prefix" "/usr")
 # Set it during install: $ cmake --install . --prefix "/path"
 # Set it during configure: $ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+
+
+# Default values for building the unit tests:
+# - Cloud configuration: ON
+# - Other configurations: OFF
+# Set it off: $ cmake .. -DBUILD_UNITTESTS=OFF
+option(BUILD_UNITTESTS "Build and use the unit tests" ON)
+if (HAVE_LINUX OR HAVE_WINDOWS OR HAVE_ANDROID OR HAVE_MACOS OR HAVE_IOS)
+    set(BUILD_UNITTESTS OFF)
+endif ()
 
 
 # Whether to have an internal MbedTLS library.
@@ -96,7 +106,7 @@ add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wunused-parameter>)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wvla>)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wzero-as-null-pointer-constant>)
 add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wmismatched-tags>)
-if (COMPILERGCC)
+if (COMPILER_GCC)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wcatch-value=2>)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wconditionally-supported>)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wduplicated-branches>)
@@ -112,7 +122,7 @@ if (COMPILERGCC)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wredundant-tags>)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wvolatile>)
 endif()
-if (COMPILERCLANG)
+if (COMPILER_CLANG)
 endif()
 
 # Compilers on some systems may treat warnings as errors.
@@ -692,16 +702,21 @@ add_library(bibledit STATIC
 )
 
 
-# The Bibledit executable.
+# The Bibledit Cloud executable.
 add_executable(server
         executable/bibledit.cpp
 )
 target_link_libraries(server bibledit)
 
 
-# Building the unit tests is optional, default is on.
-# Set it off: $ cmake .. -DBUILD_UNITTESTS=OFF
-option(BUILD_UNITTESTS "Build and use the unit tests" ON)
+# The Bibledit Linux client executable called "bibledit".
+if (HAVE_LINUX)
+    add_executable(client
+            executable/client.cpp
+    )
+    set_target_properties(client PROPERTIES OUTPUT_NAME "bibledit")
+    target_link_libraries(client bibledit)
+endif ()
 
 
 # The unit test executable
@@ -797,9 +812,7 @@ target_link_libraries(generate bibledit)
 
 
 # The include directories for all items
-include_directories(bibledit PUBLIC
-        .
-)
+include_directories( . )
 
 
 # Where to look for the built libraries.
@@ -810,26 +823,30 @@ link_directories(build)
 find_package(PkgConfig REQUIRED)
 include(CheckIncludeFile)
 
-pkg_check_modules(LIBCURL REQUIRED libcurl>=7.20.0)
-target_include_directories(bibledit PUBLIC ${LIBCURL_INCLUDE_DIRS})
-target_compile_options(bibledit PUBLIC ${LIBCURL_CFLAGS_OTHER})
-target_link_directories(bibledit PUBLIC ${LIBCURL_LIBRARY_DIRS})
-target_link_libraries(server ${LIBCURL_LIBRARIES})
-if (BUILD_UNITTESTS)
-    target_link_libraries(unittest ${LIBCURL_LIBRARIES})
+if (NOT HAVE_LINUX)
+    pkg_check_modules(LIBCURL REQUIRED libcurl>=7.20.0)
+    target_include_directories(bibledit PUBLIC ${LIBCURL_INCLUDE_DIRS})
+    target_compile_options(bibledit PUBLIC ${LIBCURL_CFLAGS_OTHER})
+    target_link_directories(bibledit PUBLIC ${LIBCURL_LIBRARY_DIRS})
+    target_link_libraries(server ${LIBCURL_LIBRARIES})
+    if (BUILD_UNITTESTS)
+        target_link_libraries(unittest ${LIBCURL_LIBRARIES})
+    endif ()
+    target_link_libraries(generate ${LIBCURL_LIBRARIES})
+    check_include_file(curl/curl.h, INCLUDE_CURL_H)
 endif ()
-target_link_libraries(generate ${LIBCURL_LIBRARIES})
-check_include_file(curl/curl.h, INCLUDE_CURL_H)
 
-pkg_check_modules(OPENSSL REQUIRED openssl>=0.9.0)
-target_include_directories(bibledit PUBLIC ${OPENSSL_INCLUDE_DIRS})
-target_compile_options(bibledit PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_directories(bibledit PUBLIC ${OPENSSL_LIBRARY_DIRS})
-target_link_libraries(server ${OPENSSL_LIBRARIES})
-if (BUILD_UNITTESTS)
-    target_link_libraries(unittest ${OPENSSL_LIBRARIES})
+if (NOT HAVE_LINUX)
+    pkg_check_modules(OPENSSL REQUIRED openssl>=0.9.0)
+    target_include_directories(bibledit PUBLIC ${OPENSSL_INCLUDE_DIRS})
+    target_compile_options(bibledit PUBLIC ${OPENSSL_CFLAGS_OTHER})
+    target_link_directories(bibledit PUBLIC ${OPENSSL_LIBRARY_DIRS})
+    target_link_libraries(server ${OPENSSL_LIBRARIES})
+    if (BUILD_UNITTESTS)
+        target_link_libraries(unittest ${OPENSSL_LIBRARIES})
+    endif ()
+    target_link_libraries(generate ${OPENSSL_LIBRARIES})
 endif ()
-target_link_libraries(generate ${OPENSSL_LIBRARIES})
 
 pkg_check_modules(LIBXML2 REQUIRED libxml-2.0>=2.9.0)
 target_include_directories(bibledit PUBLIC ${LIBXML2_INCLUDE_DIRS})
@@ -849,6 +866,9 @@ if (ICU_FOUND)
     target_link_directories(bibledit PUBLIC ${ICU_LIBRARY_DIRS})
     # The pkg-config does not give all libraries needed: Add one manually.
     target_link_libraries(server ${ICU_LIBRARIES} icuuc)
+    if (HAVE_LINUX)
+        target_link_libraries(client ${ICU_LIBRARIES} icuuc)
+    endif ()
     if (BUILD_UNITTESTS)
         target_link_libraries(unittest ${ICU_LIBRARIES} icuuc)
     endif ()
@@ -883,15 +903,15 @@ if (UTF8PROC_FOUND)
     target_link_libraries(generate ${UTF8PROC_LIBRARIES})
 endif ()
 
-pkg_check_modules(TIDY REQUIRED tidy>=5.4.0)
-target_include_directories(bibledit PUBLIC ${TIDY_INCLUDE_DIRS})
-target_compile_options(bibledit PUBLIC ${TIDY_CFLAGS_OTHER})
-target_link_directories(bibledit PUBLIC ${TIDY_LIBRARY_DIRS})
-target_link_libraries(server ${TIDY_LIBRARIES})
-if (BUILD_UNITTESTS)
-    target_link_libraries(unittest ${TIDY_LIBRARIES})
-endif ()
-target_link_libraries(generate ${TIDY_LIBRARIES})
+#pkg_check_modules(TIDY REQUIRED tidy>=5.4.0)
+#target_include_directories(bibledit PUBLIC ${TIDY_INCLUDE_DIRS})
+#target_compile_options(bibledit PUBLIC ${TIDY_CFLAGS_OTHER})
+#target_link_directories(bibledit PUBLIC ${TIDY_LIBRARY_DIRS})
+#target_link_libraries(server ${TIDY_LIBRARIES})
+#if (BUILD_UNITTESTS)
+#    target_link_libraries(unittest ${TIDY_LIBRARIES})
+#endif ()
+#target_link_libraries(generate ${TIDY_LIBRARIES})
 
 pkg_check_modules(PUGIXML pugixml>=1.10)
 if (PUGIXML_FOUND)
@@ -900,6 +920,9 @@ if (PUGIXML_FOUND)
     target_compile_options(bibledit PUBLIC ${PUGIXML_CFLAGS_OTHER})
     target_link_directories(bibledit PUBLIC ${PUGIXML_LIBRARY_DIRS})
     target_link_libraries(server ${PUGIXML_LIBRARIES})
+    if (HAVE_LINUX)
+        target_link_libraries(client ${PUGIXML_LIBRARIES})
+    endif ()
     if (BUILD_UNITTESTS)
         target_link_libraries(unittest ${PUGIXML_LIBRARIES})
     endif ()
@@ -918,22 +941,19 @@ if (GTEST_FOUND)
 endif ()
 
 # Whether to use GTK for the client edition.
-option(USE_GTK "Use GTK" OFF)
-# Default is OFF. Set it on: $ cmake .. -DUSE_GTK=ON
-
-if (USE_GTK)
+if (HAVE_LINUX)
 
     pkg_check_modules(GTK REQUIRED gtk+-3.0)
-    target_include_directories(bibledit PUBLIC ${GTK_INCLUDE_DIRS})
-    target_compile_options(bibledit PUBLIC ${GTK_CFLAGS_OTHER})
-    target_link_directories(bibledit PUBLIC ${GTK_LIBRARY_DIRS})
-    target_link_libraries(server ${GTK_LIBRARIES})
+    target_include_directories(client PUBLIC ${GTK_INCLUDE_DIRS})
+    target_compile_options(client PUBLIC ${GTK_CFLAGS_OTHER})
+    target_link_directories(client PUBLIC ${GTK_LIBRARY_DIRS})
+    target_link_libraries(client ${GTK_LIBRARIES})
 
     pkg_check_modules(WEBKIT2GTK REQUIRED webkit2gtk-4.1)
-    target_include_directories(bibledit PUBLIC ${WEBKIT2GTK_INCLUDE_DIRS})
-    target_compile_options(bibledit PUBLIC ${WEBKIT2GTK_CFLAGS_OTHER})
-    target_link_directories(bibledit PUBLIC ${WEBKIT2GTK_LIBRARY_DIRS})
-    target_link_libraries(server ${WEBKIT2GTK_LIBRARIES})
+    target_include_directories(client PUBLIC ${WEBKIT2GTK_INCLUDE_DIRS})
+    target_compile_options(client PUBLIC ${WEBKIT2GTK_CFLAGS_OTHER})
+    target_link_directories(client PUBLIC ${WEBKIT2GTK_LIBRARY_DIRS})
+    target_link_libraries(client ${WEBKIT2GTK_LIBRARIES})
 
 endif ()
 
@@ -956,7 +976,27 @@ message(STATUS "Linux            (cmake -DHAVE_LINUX=ON)              ${HAVE_LIN
 message(STATUS "iOS              (cmake -DHAVE_IOS=ON)                ${HAVE_IOS}")
 
 # Write the variables in the template to config.h.
-configure_file(cmake_config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+configure_file(config.h.in ${PROJECT_SOURCE_DIR}/config.h)
 
 # Installation.
-install(TARGETS server DESTINATION bin)
+if (HAVE_LINUX)
+    install(TARGETS client DESTINATION bin)
+    install(FILES gtk/bibledit.desktop DESTINATION share/applications)
+    install(FILES pix/bbe48x48.xpm pix/bbe512x512.png DESTINATION share/icons)
+    install(FILES pix/bbe48x48.xpm pix/bbe512x512.png DESTINATION share/pixmaps)
+    install(FILES gtk/bibledit.appdata.xml DESTINATION share/metainfo)
+else ()
+    install(TARGETS server DESTINATION bin)
+endif ()
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/pkgdata/create.sh)")
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/pkgdata/install.sh ${PROJECT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX} share/bibledit)")
+install(FILES man/bibledit.1 TYPE MAN)
+install(FILES man/bibledit-cloud.1 TYPE MAN)
+
+# Create tarball with target "dist"
+set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${PROJECT_VERSION})
+add_custom_target(dist
+        COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD --format=tar.gz ":(exclude).idea" ":(exclude).github" ":(exclude).gitignore" ":(exclude)cloud-macos.entitlements" > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        VERBATIM
+)

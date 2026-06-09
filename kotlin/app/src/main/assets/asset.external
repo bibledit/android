@@ -262,6 +262,7 @@ personalize/index.js
 sendreceive/index.html
 sendreceive/index.js
 CMakeLists.txt
+.DS_Store
 locale/lt.po
 locale/uk.po
 locale/cs.po
@@ -445,7 +446,6 @@ styles/indexm.html
 styles/view.js
 styles/new.html
 styles/definitions.hpp
-cmake_config.h.in
 system/index.html
 system/googletranslate.html
 system/index.js
@@ -461,17 +461,21 @@ tidy/0readme.txt
 tidy/module.modulemap
 pix/favicon-16x16.png
 pix/check.png
+pix/bbe512x512.png
 pix/safari-pinned-tab.svg
 pix/favicon.ico
 pix/android-chrome-192x192.png
+pix/screenshot-main.png
 pix/apple-touch-icon.png
 pix/book.svg
 pix/loading.gif
 pix/splash.jpg
+pix/screenshot-workspace.png
 pix/android-chrome-512x512.png
 pix/bibledit_logo.svg
 pix/mstile-150x150.png
 pix/favicon-32x32.png
+pix/bbe48x48.xpm
 notes/status-n.html
 notes/quill.js
 notes/select.html
@@ -529,6 +533,8 @@ manage/privileges.html
 manage/write.html
 manage/bibles.html
 ipc/holder
+gtk/bibledit.appdata.xml
+gtk/bibledit.desktop
 pugixml/LICENSE.md
 pugixml/pugiconfig.hpp
 pugixml/pugixml.hpp
