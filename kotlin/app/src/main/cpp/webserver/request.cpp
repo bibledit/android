@@ -20,25 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <webserver/request.h>
 
 
-Webserver_Request::Webserver_Request()
-{
-    secure = false;
-    get = "/index";
-    is_post = false;
-    user_agent.assign("Browser/1.0");
-    accept_language = "en-US";
-    content_length = 0;
-    response_code = 200;
-    resend_cookie = false;
-}
-
-
 Webserver_Request::~Webserver_Request()
 {
     delete session_logic_instance;
     delete database_config_user_instance;
     delete database_users_instance;
-    delete database_ipc_instance;
 }
 
 
@@ -84,12 +70,4 @@ Database_Users* Webserver_Request::database_users()
     if (!database_users_instance)
         database_users_instance = new Database_Users();
     return database_users_instance;
-}
-
-
-Database_Ipc* Webserver_Request::database_ipc()
-{
-    if (!database_ipc_instance)
-        database_ipc_instance = new Database_Ipc(*this);
-    return database_ipc_instance;
 }

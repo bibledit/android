@@ -19,14 +19,20 @@
 
 #pragma once
 
-#include <config/libraries.h>
+#include <config.h>
 
-class Webserver_Request;
+// Including pugixml is a multi-line operations.
+// Therefore, this file makes that simple for clients.
+// Include just this file, that's all.
 
-namespace ipc_notes
-{
-void open (Webserver_Request& webserver_request, int identifier);
-int get (Webserver_Request& webserver_request);
-void erase (Webserver_Request& webserver_request);
-bool alive (Webserver_Request& webserver_request, bool set, bool alive = false);
-}
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wsuggest-override"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#ifndef HAVE_PUGIXML
+#include <pugixml/pugixml.hpp>
+#endif
+#ifdef HAVE_PUGIXML
+#include <pugixml.hpp>
+#endif
+#pragma GCC diagnostic pop

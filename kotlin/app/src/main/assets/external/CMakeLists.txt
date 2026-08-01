@@ -24,7 +24,8 @@ message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 # Start a project by setting the project name and version.
-project(bibledit VERSION 5.1.047)
+project(bibledit VERSION 5.1.055)
+message(STATUS "Bibledit version ${bibledit_VERSION}")
 
 
 set(bibledit_VERSION "${bibledit_VERSION_MAJOR}.${bibledit_VERSION_MINOR}.${bibledit_VERSION_PATCH}")
@@ -38,14 +39,27 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 
-option(HAVE_WINDOWS "Compile for Windows" OFF)
+option(HAVE_WINDOWS "Build for Windows" OFF)
 if (HAVE_WINDOWS)
     set(WIN32 ON)
 endif ()
-option(HAVE_ANDROID "Compile for Android" OFF)
-option(HAVE_MACOS "Compile for macOS" OFF)
-option(HAVE_LINUX "Compile for Linux" OFF)
-option(HAVE_IOS "Compile for iOS" OFF)
+message(STATUS "Build for Windows ${HAVE_WINDOWS} (enable: $cmake -DHAVE_WINDOWS=ON)")
+
+
+option(HAVE_ANDROID "Build for Android" OFF)
+message(STATUS "Build for Android ${HAVE_ANDROID} (enable: $cmake -DHAVE_ANDROID=ON)")
+
+
+option(HAVE_MACOS "Build for macOS" OFF)
+message(STATUS "Build for macOS ${HAVE_MACOS} (enable: $cmake -DHAVE_MACOS=ON)")
+
+
+option(HAVE_LINUX "Build for Linux" OFF)
+message(STATUS "Build for Linux ${HAVE_LINUX} (enable: $cmake -DHAVE_LINUX=ON)")
+
+
+option(HAVE_IOS "Build for iOS" OFF)
+message(STATUS "Build for iOS ${HAVE_IOS} (enable: $cmake -DHAVE_IOS=ON)")
 
 
 # Handle the install prefix.
@@ -53,8 +67,8 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "/usr")
 endif()
 option(CMAKE_INSTALL_PREFIX "Install prefix" "/usr")
+message(STATUS "Install prefix is ${CMAKE_INSTALL_PREFIX} (change: $cmake -DCMAKE_INSTALL_PREFIX=path)")
 # Set it during install: $ cmake --install . --prefix "/path"
-# Set it during configure: $ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
 
 # Default values for building the unit tests:
@@ -65,10 +79,7 @@ option(BUILD_UNITTESTS "Build and use the unit tests" ON)
 if (HAVE_LINUX OR HAVE_WINDOWS OR HAVE_ANDROID OR HAVE_MACOS OR HAVE_IOS)
     set(BUILD_UNITTESTS OFF)
 endif ()
-
-
-# Whether to have an internal MbedTLS library.
-option(INTERNAL_MBEDTLS "Have internal MbedTLS" ON)
+message(STATUS "Build unit tests is ${BUILD_UNITTESTS} (disable: $cmake -DBUILD_UNITTESTS=OFF)")
 
 
 # Compiler to emit info for the debugger.
@@ -499,114 +510,114 @@ add_library(bibledit STATIC
         public/comment.cpp
         utf8proc/utf8proc.c
         search/logic.cpp
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/aes.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/aesce.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/aesni.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/aria.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/asn1parse.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/asn1write.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/base64.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/bignum.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/bignum_core.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/bignum_mod.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/bignum_mod_raw.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/block_cipher.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/camellia.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ccm.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/chacha20.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/chachapoly.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/cipher.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/cipher_wrap.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/cmac.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/constant_time.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ctr_drbg.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/debug.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/des.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/dhm.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecdh.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecdsa.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecjpake.>c
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecp.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecp_curves.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ecp_curves_new.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/entropy.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/entropy_poll.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/error.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/gcm.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/hkdf.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/hmac_drbg.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/lmots.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/lms.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/md.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/md5.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/memory_buffer_alloc.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/mps_reader.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/mps_trace.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/net_sockets.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/nist_kw.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/oid.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/padlock.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pem.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pk.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pk_ecc.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pk_wrap.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pkcs12.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pkcs5.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pkcs7.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pkparse.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/pkwrite.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/platform.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/platform_util.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/poly1305.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_aead.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_cipher.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_client.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_driver_wrappers_no_static.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_ecp.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_ffdh.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_hash.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_mac.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_pake.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_rsa.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_se.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_slot_management.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_crypto_storage.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_its_file.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/psa_util.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ripemd160.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/rsa.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/rsa_alt_helpers.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/sha1.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/sha256.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/sha3.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/sha512.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_cache.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_ciphersuites.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_client.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_cookie.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_debug_helpers_generated.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_msg.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_ticket.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls12_client.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls12_server.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls13_client.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls13_generic.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls13_keys.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/ssl_tls13_server.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/threading.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/timing.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/version.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/version_features.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509_create.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509_crl.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509_crt.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509_csr.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509write.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509write_crt.c>
-        $<$<BOOL:INTERNAL_MBEDTLS>:mbedtls/x509write_csr.c>
+        mbedtls/aes.c
+        mbedtls/aesce.c
+        mbedtls/aesni.c
+        mbedtls/aria.c
+        mbedtls/asn1parse.c
+        mbedtls/asn1write.c
+        mbedtls/base64.c
+        mbedtls/bignum.c
+        mbedtls/bignum_core.c
+        mbedtls/bignum_mod.c
+        mbedtls/bignum_mod_raw.c
+        mbedtls/block_cipher.c
+        mbedtls/camellia.c
+        mbedtls/ccm.c
+        mbedtls/chacha20.c
+        mbedtls/chachapoly.c
+        mbedtls/cipher.c
+        mbedtls/cipher_wrap.c
+        mbedtls/cmac.c
+        mbedtls/constant_time.c
+        mbedtls/ctr_drbg.c
+        mbedtls/debug.c
+        mbedtls/des.c
+        mbedtls/dhm.c
+        mbedtls/ecdh.c
+        mbedtls/ecdsa.c
+        mbedtls/ecjpake.c
+        mbedtls/ecp.c
+        mbedtls/ecp_curves.c
+        mbedtls/ecp_curves_new.c
+        mbedtls/entropy.c
+        mbedtls/entropy_poll.c
+        mbedtls/error.c
+        mbedtls/gcm.c
+        mbedtls/hkdf.c
+        mbedtls/hmac_drbg.c
+        mbedtls/lmots.c
+        mbedtls/lms.c
+        mbedtls/md.c
+        mbedtls/md5.c
+        mbedtls/memory_buffer_alloc.c
+        mbedtls/mps_reader.c
+        mbedtls/mps_trace.c
+        mbedtls/net_sockets.c
+        mbedtls/nist_kw.c
+        mbedtls/oid.c
+        mbedtls/padlock.c
+        mbedtls/pem.c
+        mbedtls/pk.c
+        mbedtls/pk_ecc.c
+        mbedtls/pk_wrap.c
+        mbedtls/pkcs12.c
+        mbedtls/pkcs5.c
+        mbedtls/pkcs7.c
+        mbedtls/pkparse.c
+        mbedtls/pkwrite.c
+        mbedtls/platform.c
+        mbedtls/platform_util.c
+        mbedtls/poly1305.c
+        mbedtls/psa_crypto.c
+        mbedtls/psa_crypto_aead.c
+        mbedtls/psa_crypto_cipher.c
+        mbedtls/psa_crypto_client.c
+        mbedtls/psa_crypto_driver_wrappers_no_static.c
+        mbedtls/psa_crypto_ecp.c
+        mbedtls/psa_crypto_ffdh.c
+        mbedtls/psa_crypto_hash.c
+        mbedtls/psa_crypto_mac.c
+        mbedtls/psa_crypto_pake.c
+        mbedtls/psa_crypto_rsa.c
+        mbedtls/psa_crypto_se.c
+        mbedtls/psa_crypto_slot_management.c
+        mbedtls/psa_crypto_storage.c
+        mbedtls/psa_its_file.c
+        mbedtls/psa_util.c
+        mbedtls/ripemd160.c
+        mbedtls/rsa.c
+        mbedtls/rsa_alt_helpers.c
+        mbedtls/sha1.c
+        mbedtls/sha256.c
+        mbedtls/sha3.c
+        mbedtls/sha512.c
+        mbedtls/ssl_cache.c
+        mbedtls/ssl_ciphersuites.c
+        mbedtls/ssl_client.c
+        mbedtls/ssl_cookie.c
+        mbedtls/ssl_debug_helpers_generated.c
+        mbedtls/ssl_msg.c
+        mbedtls/ssl_ticket.c
+        mbedtls/ssl_tls.c
+        mbedtls/ssl_tls12_client.c
+        mbedtls/ssl_tls12_server.c
+        mbedtls/ssl_tls13_client.c
+        mbedtls/ssl_tls13_generic.c
+        mbedtls/ssl_tls13_keys.c
+        mbedtls/ssl_tls13_server.c
+        mbedtls/threading.c
+        mbedtls/timing.c
+        mbedtls/version.c
+        mbedtls/version_features.c
+        mbedtls/x509.c
+        mbedtls/x509_create.c
+        mbedtls/x509_crl.c
+        mbedtls/x509_crt.c
+        mbedtls/x509_csr.c
+        mbedtls/x509write.c
+        mbedtls/x509write_crt.c
+        mbedtls/x509write_csr.c
         related/logic.cpp
         sqlite/sqlite3.c
         ldap/logic.cpp
@@ -702,11 +713,13 @@ add_library(bibledit STATIC
 )
 
 
-# The Bibledit Cloud executable.
+# The Bibledit Cloud executable. Easily patchable.
 add_executable(server
         executable/bibledit.cpp
 )
+set_target_properties(server PROPERTIES OUTPUT_NAME "server")
 target_link_libraries(server bibledit)
+
 
 
 # The Bibledit Linux client executable called "bibledit".
@@ -875,22 +888,51 @@ if (ICU_FOUND)
     target_link_libraries(generate ${ICU_LIBRARIES} icuuc)
 endif ()
 
-if (NOT INTERNAL_MBEDTLS)
-    pkg_check_modules(MBEDTLS mbedtls)
-    if (MBEDTLS_FOUND)
-        set(HAVE_LIBMBEDTLS ON)
-        target_include_directories(bibledit PUBLIC ${MBEDTLS_INCLUDE_DIRS})
-        target_compile_options(bibledit PUBLIC ${MBEDTLS_CFLAGS_OTHER})
-        target_link_directories(bibledit PUBLIC ${MBEDTLS_LIBRARY_DIRS})
-        target_link_libraries(server ${MBEDTLS_LIBRARIES})
-        if (BUILD_UNITTESTS)
-            target_link_libraries(unittest ${MBEDTLS_LIBRARIES})
-        endif ()
-        target_link_libraries(generate ${MBEDTLS_LIBRARIES})
+pkg_check_modules(MBEDTLS mbedtls>=3.0.0)
+if (MBEDTLS_FOUND)
+    set(HAVE_LIBMBEDTLS ON)
+    target_include_directories(bibledit PUBLIC ${MBEDTLS_INCLUDE_DIRS})
+    target_compile_options(bibledit PUBLIC ${MBEDTLS_CFLAGS_OTHER})
+    target_link_directories(bibledit PUBLIC ${MBEDTLS_LIBRARY_DIRS})
+    target_link_libraries(server ${MBEDTLS_LIBRARIES})
+    if (HAVE_LINUX)
+        target_link_libraries(client ${MBEDTLS_LIBRARIES})
     endif ()
+    if (BUILD_UNITTESTS)
+        target_link_libraries(unittest ${MBEDTLS_LIBRARIES})
+    endif ()
+    target_link_libraries(generate ${MBEDTLS_LIBRARIES})
+endif ()
+pkg_check_modules(MBEDX509 mbedx509>=3.0.0)
+if (MBEDX509_FOUND)
+    target_include_directories(bibledit PUBLIC ${MBEDX509_INCLUDE_DIRS})
+    target_compile_options(bibledit PUBLIC ${MBEDX509_CFLAGS_OTHER})
+    target_link_directories(bibledit PUBLIC ${MBEDX509_LIBRARY_DIRS})
+    target_link_libraries(server ${MBEDX509_LIBRARIES})
+    if (HAVE_LINUX)
+        target_link_libraries(client ${MBEDX509_LIBRARIES})
+    endif ()
+    if (BUILD_UNITTESTS)
+        target_link_libraries(unittest ${MBEDX509_LIBRARIES})
+    endif ()
+    target_link_libraries(generate ${MBEDX509_LIBRARIES})
+endif ()
+pkg_check_modules(MBEDCRYPTO mbedcrypto>=3.0.0)
+if (MBEDCRYPTO_FOUND)
+    target_include_directories(bibledit PUBLIC ${MBEDCRYPTO_INCLUDE_DIRS})
+    target_compile_options(bibledit PUBLIC ${MBEDCRYPTO_CFLAGS_OTHER})
+    target_link_directories(bibledit PUBLIC ${MBEDCRYPTO_LIBRARY_DIRS})
+    target_link_libraries(server ${MBEDCRYPTO_LIBRARIES})
+    if (HAVE_LINUX)
+        target_link_libraries(client ${MBEDCRYPTO_LIBRARIES})
+    endif ()
+    if (BUILD_UNITTESTS)
+        target_link_libraries(unittest ${MBEDCRYPTO_LIBRARIES})
+    endif ()
+    target_link_libraries(generate ${MBEDCRYPTO_LIBRARIES})
 endif ()
 
-pkg_check_modules(UTF8PROC mbedtls)
+pkg_check_modules(UTF8PROC libutf8proc)
 if (UTF8PROC_FOUND)
     set(HAVE_UTF8PROC ON)
     target_include_directories(bibledit PUBLIC ${UTF8PROC_INCLUDE_DIRS})
@@ -966,17 +1008,10 @@ set(PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/bibledit")
 
 set(PACKAGE_PREFIX_DIR "${CMAKE_INSTALL_PREFIX}")
 
-message(STATUS "Bibledit ${bibledit_VERSION} configuration summary")
-message(STATUS "Build unit tests (cmake -DBUILD_UNITTESTS=OFF)        ${BUILD_UNITTESTS}")
-message(STATUS "Install prefix   (cmake -DCMAKE_INSTALL_PREFIX=path)  ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Windows          (cmake -DHAVE_WINDOWS=ON)            ${HAVE_WINDOWS}")
-message(STATUS "Android          (cmake -DHAVE_ANDROID=ON)            ${HAVE_ANDROID}")
-message(STATUS "macOS            (cmake -DHAVE_MACOS=ON)              ${HAVE_MACOS}")
-message(STATUS "Linux            (cmake -DHAVE_LINUX=ON)              ${HAVE_LINUX}")
-message(STATUS "iOS              (cmake -DHAVE_IOS=ON)                ${HAVE_IOS}")
 
 # Write the variables in the template to config.h.
 configure_file(config.h.in ${PROJECT_SOURCE_DIR}/config.h)
+
 
 # Installation.
 if (HAVE_LINUX)
@@ -990,8 +1025,8 @@ else ()
 endif ()
 install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/pkgdata/create.sh)")
 install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/pkgdata/install.sh ${PROJECT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX} share/bibledit)")
-install(FILES man/bibledit.1 TYPE MAN)
-install(FILES man/bibledit-cloud.1 TYPE MAN)
+install(FILES man/bibledit.1 DESTINATION share/man/man1)
+install(FILES man/bibledit-cloud.1 DESTINATION share/man/man1)
 
 # Create tarball with target "dist"
 set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${PROJECT_VERSION})

@@ -22,17 +22,7 @@
 #include <changes/statistics.h>
 #include <changes/manage.h>
 #include <tasks/logic.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#pragma GCC diagnostic ignored "-Wsuggest-override"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#ifndef HAVE_PUGIXML
-#include <pugixml/pugixml.hpp>
-#endif
-#ifdef HAVE_PUGIXML
-#include <pugixml.hpp>
-#endif
-#pragma GCC diagnostic pop
+#include <pugixml/include.h>
 #include <locale/translate.h>
 #include <index/listing.h>
 #include <database/logs.h>
@@ -127,9 +117,7 @@ std::string changes_interlinks (Webserver_Request& webserver_request, std::strin
 
 void changes_clear_notifications_user(std::string jobid, std::string username)
 {
-  Database_Logs::log (translate ("Start clearing change notifications") + " " + username);
-  
-  Database_Jobs database_jobs {};
+  database::logs::log (translate ("Start clearing change notifications") + " " + username);
 
   // Get the total amount of change notifications to clear for the user.
   std::string any_bible {};
@@ -139,8 +127,8 @@ void changes_clear_notifications_user(std::string jobid, std::string username)
   int total_cleared {0};
   
   // Feedback.
-  database_jobs.set_percentage (filter::string::convert_to_int (jobid), 0);
-  database_jobs.set_progress (filter::string::convert_to_int (jobid), translate ("Total:") + " " + std::to_string (identifiers.size()));
+  database_jobs::set_percentage (filter::string::convert_to_int (jobid), 0);
+  database_jobs::set_progress (filter::string::convert_to_int (jobid), translate ("Total:") + " " + std::to_string (identifiers.size()));
 
 
   // The amount of notifications it clears in the next iteration.
@@ -149,14 +137,14 @@ void changes_clear_notifications_user(std::string jobid, std::string username)
     cleared_count_in_one_go = database::modifications::clearNotificationsUser (username);
     total_cleared += cleared_count_in_one_go;
     if (!identifiers.empty ()) {
-      database_jobs.set_percentage (filter::string::convert_to_int (jobid), 100 * total_cleared / static_cast<int> (identifiers.size()));
+      database_jobs::set_percentage (filter::string::convert_to_int (jobid), 100 * total_cleared / static_cast<int> (identifiers.size()));
     }
   } while (cleared_count_in_one_go);
   
   Webserver_Request request;
   request.database_config_user ()->set_user_change_notifications_checksum (username, "");
   
-  database_jobs.set_result (filter::string::convert_to_int (jobid), translate ("Ready clearing change notifications"));
+  database_jobs::set_result (filter::string::convert_to_int (jobid), translate ("Ready clearing change notifications"));
   
-  Database_Logs::log (translate ("Ready clearing change notifications") + " " + username);
+  database::logs::log (translate ("Ready clearing change notifications") + " " + username);
 }

@@ -35,17 +35,7 @@
 #include <access/bible.h>
 #include <ipc/notes.h>
 #include <locale/logic.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#pragma GCC diagnostic ignored "-Wsuggest-override"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#ifndef HAVE_PUGIXML
-#include <pugixml/pugixml.hpp>
-#endif
-#ifdef HAVE_PUGIXML
-#include <pugixml.hpp>
-#endif
-#pragma GCC diagnostic pop
+#include <pugixml/include.h>
 
 
 std::string changes_change_url ()
@@ -125,9 +115,9 @@ std::string changes_change (Webserver_Request& webserver_request)
   // Remove the ones marked for deletion.
   const Database_Notes::Selector selector {
     .bibles = bibles,
-    .book = passage.m_book,
-    .chapter = passage.m_chapter,
-    .verse = filter::string::convert_to_int (passage.m_verse),
+    .book = passage.book(),
+    .chapter = passage.chapter(),
+    .verse = filter::string::convert_to_int (passage.verse()),
     .passage_selector = Database_Notes::PassageSelector::current_verse,
   };
   const auto marked4delete = [&database_notes] (const auto note) {
@@ -147,7 +137,7 @@ std::string changes_change (Webserver_Request& webserver_request)
   
   
   // Whether there's a live notes editor available.
-  const bool live_notes_editor = Ipc_Notes::alive (webserver_request, false);
+  const bool live_notes_editor = ipc_notes::alive (webserver_request, false);
   if (live_notes_editor)
     view.enable_zone ("alive");
   else 
