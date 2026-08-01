@@ -9,12 +9,12 @@ set -e
 
 
 echo Define the assets
-ASSETSFOLDER=app/src/main/assets
-EXTERNALFOLDER=$ASSETSFOLDER/external
+ASSETS_FOLDER=app/src/main/assets
+EXTERNAL_FOLDER=$ASSETS_FOLDER/external
 
 
 echo Put all the code of the Bibledit kernel into the following folder:
-echo $EXTERNALFOLDER
+echo $EXTERNAL_FOLDER
 echo This is in preparation for subsequent steps
 
 pushd ../../cloud
@@ -22,15 +22,15 @@ cmake -B build
 rm build/*.gz
 cmake --build build --target dist
 popd
-rm -rf $EXTERNALFOLDER/*
-tar xf ../../cloud/build/bibledit-5.1.047.tar.gz -C $EXTERNALFOLDER --strip-components=1
+rm -rf "${EXTERNAL_FOLDER:?}"/*
+tar xf ../../cloud/build/bibledit-*.tar.gz -C "$EXTERNAL_FOLDER" --strip-components=1
 
 echo Build several databases and other data for inclusion with the Android package
 echo Reason: Building them on Android takes a lot of time during the setup phase
 echo Including pre-built data speeds up the setup phase of Bibledit on Android
 echo This gives a better user experience
 echo At the end it removes the journal entries that were logged in the process
-pushd $EXTERNALFOLDER
+pushd "$EXTERNAL_FOLDER"
 cmake -B build
 cmake --build build --target generate -j8
 ./build/generate . locale
@@ -39,24 +39,24 @@ cmake --build build --target generate -j8
 popd
 
 echo Configure for Android
-pushd $EXTERNALFOLDER
+pushd "$EXTERNAL_FOLDER"
 cmake -B build -DHAVE_ANDROID=ON
 popd
 
 echo Clean the Bibledit kernel source code
-pushd $EXTERNALFOLDER
+pushd "$EXTERNAL_FOLDER"
 rm -rf build
 popd
 
 
 
-CPPFOLDER=app/src/main/cpp
-echo Synchronize the Bibledit kernel source code to the cpp folder at $CPPFOLDER
-rsync -av --delete --exclude bibleditjni.cpp --exclude CMakeLists.txt --exclude native.cpp --exclude stub.cpp --exclude stub.h $EXTERNALFOLDER/ $CPPFOLDER/
+CPP_FOLDER=app/src/main/cpp
+echo Synchronize the Bibledit kernel source code to the cpp folder at "$CPP_FOLDER"
+rsync -av --delete --exclude bibleditjni.cpp --exclude CMakeLists.txt --exclude native.cpp --exclude stub.cpp --exclude stub.h $EXTERNAL_FOLDER/ $CPP_FOLDER/
 
 
-echo Configure the code in the $CPPFOLDER folder for Android
-pushd $CPPFOLDER
+echo Configure the code in the "$CPP_FOLDER" folder for Android
+pushd "$CPP_FOLDER"
 rm -rf build
 cmake -B build -DHAVE_ANDROID=ON
 popd
@@ -65,8 +65,8 @@ popd
 echo Cleaning files out from the assets and the cpp folders.
 function rm_rf_assets_cpp
 {
-  rm -rf $EXTERNALFOLDER/$1
-  rm -rf $CPPFOLDER/$1
+  rm -rf "${EXTERNAL_FOLDER:?}"/"$1"
+  rm -rf "${CPP_FOLDER:?}"/"$1"
 }
 rm_rf_assets_cpp bibledit
 rm_rf_assets_cpp autom4te.cache
@@ -118,20 +118,20 @@ rm_rf_assets_cpp cloud-macos.entitlements
 rm_rf_assets_cpp index.html
 rm_rf_assets_cpp Makefile.am
 rm_rf_assets_cpp build
-rm -rf $CPPFOLDER/databases
-find $EXTERNALFOLDER -name "*.h" -delete
-find $EXTERNALFOLDER -name "*.cpp" -delete
-find $EXTERNALFOLDER -name "*.c" -delete
-find $EXTERNALFOLDER -name ".deps" -print | xargs rm -rf
-find $CPPFOLDER -name ".deps" -print | xargs rm -rf
-find $EXTERNALFOLDER -name ".dirstamp" -delete
-find $CPPFOLDER -name ".dirstamp" -delete
-find $CPPFOLDER -not -name "*.h" -not -name "*.c" -not -name "*.cpp" -not -name "*.hpp" -not -name CMakeLists.txt -delete
-rm -rf $ASSETSFOLDER/external/build
+rm -rf "$CPP_FOLDER"/databases
+find "$EXTERNAL_FOLDER" -name "*.h" -delete
+find "$EXTERNAL_FOLDER" -name "*.cpp" -delete
+find "$EXTERNAL_FOLDER" -name "*.c" -delete
+find "$EXTERNAL_FOLDER" -name ".deps" -print0 | xargs -0 rm -rf
+find "$CPP_FOLDER" -name ".deps" -print0 | xargs -0 rm -rf
+find "$EXTERNAL_FOLDER" -name ".dirstamp" -delete
+find "$CPP_FOLDER" -name ".dirstamp" -delete
+find "$CPP_FOLDER" -not -name "*.h" -not -name "*.c" -not -name "*.cpp" -not -name "*.hpp" -not -name CMakeLists.txt -delete
+rm -rf "$ASSETS_FOLDER"/external/build
 
 
 echo Adapting native source to Android
-pushd $CPPFOLDER
+pushd $CPP_FOLDER
 
 echo No libsword
 sed -i. '/HAVE_SWORD/d' config.h
@@ -158,7 +158,7 @@ popd
 
 
 echo Create assets index.
-pushd $EXTERNALFOLDER
+pushd $EXTERNAL_FOLDER
 find . -type f | cut -c 3- > ../asset.external
 popd
 
