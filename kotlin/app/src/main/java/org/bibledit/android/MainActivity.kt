@@ -24,7 +24,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnAttach
 import androidx.core.view.updateLayoutParams
 import com.google.android.material.tabs.TabLayout
@@ -121,6 +123,8 @@ class MainActivity : AppCompatActivity() {
             val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
             windowInsetsController.isAppearanceLightNavigationBars = true
         }
+
+        applyWindowInsets()
     }
 
 
@@ -375,15 +379,6 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById<WebView>(R.id.singleview)
         applySettingsToWebView(webView)
         webView?.loadUrl(webAppBaseUrl)
-        // Because of edge-to-edge display, update the margins for the insets.
-        webView?.doOnAttach {
-            val bottom = it.rootWindowInsets?.stableInsetBottom?: 0
-            val top = it.rootWindowInsets?.stableInsetTop?: 0
-            webView?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = top
-                bottomMargin = bottom
-            }
-        }
     }
 
 
@@ -507,16 +502,6 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
-
-        // Because of edge-to-edge display, update the margins for the insets.
-        tabLayout?.doOnAttach {
-            val bottom = it.rootWindowInsets?.stableInsetBottom?: 0
-            val top = it.rootWindowInsets?.stableInsetTop?: 0
-            tabLayout?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = top
-                bottomMargin = bottom
-            }
-        }
     }
 
     private fun getWebRoot() : String
@@ -698,6 +683,28 @@ class MainActivity : AppCompatActivity() {
             // If the input is out of range, return the last WebView.
             else -> findViewById(R.id.tabwebview5)
         }
+    }
+
+
+    // The android.R.id.content survives every setContentView() call
+    // (splash, single view, tabbed view),
+    // so one listener in onCreate covers all three.
+    private fun applyWindowInsets() {
+        val root = findViewById<View>(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(
+                bars.left,
+                bars.top,
+                bars.right,
+                maxOf(bars.bottom, ime.bottom) // keyboard height already includes the nav bar
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
 }

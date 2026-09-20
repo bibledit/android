@@ -123,7 +123,7 @@ void sources_kjv_parse_loop (pugi::xml_node element,
       pugi::xml_node textnode = element.first_child ();
       std::string english = textnode.text ().get ();
       std::string location = filter_passage_display (book, chapter, std::to_string (verse));
-      database::logs::log (location + ": Failed to parse element " + element_name + " with value " + english);
+      database::logs::log (location, ":", "Failed to parse element", element_name, "with value", english);
     }
   }
 }
@@ -148,7 +148,7 @@ void sources_kjv_parse ()
       for (pugi::xml_node divbook : osisText.children ()) {
         if (strcmp (divbook.name (), "div") == 0) {
           book++;
-          database::logs::log ("Book " + std::to_string (book));
+          database::logs::log ("Book", book);
           chapter = 0;
           for (pugi::xml_node chapter_element : divbook.children ()) {
             if (strcmp (chapter_element.name (), "chapter") == 0) {

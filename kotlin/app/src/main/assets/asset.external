@@ -306,8 +306,6 @@ config/certificates.sh
 images/index.html
 images/gitflag
 images/view.html
-jsonxx/LICENSE
-jsonxx/README.md
 checks/index.html
 checks/index.js
 checks/suppress.html
@@ -339,6 +337,7 @@ utf8proc/NEWS.md
 utf8proc/MANIFEST
 utf8proc/README.md
 mbedtls/0readme.txt
+mbedtls/0warnings.sh
 nicedit/nicedit.js
 nicedit/nicEditorIcons.gif
 nicedit/COPYING
@@ -502,6 +501,9 @@ notes/summary.html
 notes/assign-1.html
 editone/index.html
 editone/index.js
+nlohmann/json.hpp
+nlohmann/readme.txt
+nlohmann/json_fwd.hpp
 microtar/LICENSE
 microtar/source.txt
 microtar/readme.txt
@@ -587,8 +589,6 @@ fonts/Cardo-Regular.ttf
 fonts/Montserrat-Regular.ttf
 fonts/Esteban-License(OFL).txt
 fonts/SILEOT.ttf
-sprint/index.html
-sprint/index.js
 quill/quill.js
 quill/quill.notes.css
 quill/LICENSE

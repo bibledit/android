@@ -145,7 +145,6 @@ add_library(
         mbedtls/x509write_csr.c
         utf8proc/utf8proc.c
         sqlite/sqlite3.c
-        jsonxx/jsonxx.cpp
         library/bibledit.cpp
         webserver/webserver.cpp
         webserver/http.cpp
@@ -246,7 +245,6 @@ add_library(
         odf/text.cpp
         timer/index.cpp
         tasks/logic.cpp
-        tasks/run.cpp
         config/logic.cpp
         bb/logic.cpp
         bb/manage.cpp
@@ -417,8 +415,6 @@ add_library(
         changes/manage.cpp
         changes/modifications.cpp
         changes/statistics.cpp
-        sprint/burndown.cpp
-        sprint/index.cpp
         checks/run.cpp
         checks/headers.cpp
         checks/index.cpp
@@ -478,8 +474,6 @@ add_library(
         search/logic.cpp
         related/logic.cpp
         ldap/logic.cpp
-        rss/logic.cpp
-        rss/feed.cpp
         editone/index.cpp
         editone/load.cpp
         editone/save.cpp
@@ -514,6 +508,7 @@ add_library(
         manage/bibles.cpp
         dialog/select.cpp
         checks/issues.cpp
+        database/tasks.cpp
         # End Bibledit kernel.
 )
 

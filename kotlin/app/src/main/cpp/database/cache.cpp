@@ -353,7 +353,7 @@ void trim (bool clear)
       }
     }
   }
-  database::logs::log ("Disk space in use is " + std::to_string(percentage_disk_in_use) + "%");
+  database::logs::log ("Disk space in use is", percentage_disk_in_use, "%");
   
   // There have been instances that the cache takes up 4, 5, or 6 Gigabytes in the Cloud.
   // If the cache is left untrimmed, the size can be even larger.
@@ -420,7 +420,7 @@ void trim (bool clear)
   if (clear)
     days = "0";
   
-  database::logs::log ("Will remove resource caches not accessed for " + days + " days");
+  database::logs::log ("Will remove resource caches not accessed for", days, "days");
   
   // Remove database-based cached files that have not been modified for x days.
   output.clear ();

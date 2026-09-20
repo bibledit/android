@@ -99,7 +99,7 @@ std::string zip_folder_miniz_internal (std::string folder)
       status = mz_zip_add_mem_to_archive_file_in_place (zippedfile.c_str(), file.c_str(), contents.c_str(), contents.size(), "", 0, MZ_DEFAULT_LEVEL);
     }
     if (!status) {
-      database::logs::log ("mz_zip_add_mem_to_archive_file_in_place failed for " + path);
+      database::logs::log ("mz_zip_add_mem_to_archive_file_in_place failed for", path);
       return std::string();
     }
   }
@@ -212,13 +212,13 @@ std::string unzip_miniz_internal (std::string zipfile)
           // Extract this file.
           status = mz_zip_reader_extract_to_file (&zip_archive, i, fixed_filename.c_str(), 0);
           if (!status) {
-            database::logs::log ("mz_zip_reader_extract_to_file failure for file " + filename + " in " + zipfile);
+            database::logs::log ("mz_zip_reader_extract_to_file failure for file", filename, "in", zipfile);
             error = true;
           }
         }
         
       } else {
-        database::logs::log ("mz_zip_reader_file_stat failed for " + zipfile);
+        database::logs::log ("mz_zip_reader_file_stat failed for", zipfile);
         error = true;
       }
     }
@@ -227,7 +227,7 @@ std::string unzip_miniz_internal (std::string zipfile)
     mz_zip_reader_end (&zip_archive);
     
   } else {
-    database::logs::log ("mz_zip_reader_init_file failed for " + zipfile);
+    database::logs::log ("mz_zip_reader_init_file failed for", zipfile);
     error = true;
   }
   

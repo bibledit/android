@@ -39,24 +39,22 @@ std::string folder()
 
 
 // Records a journal entry.
-void log(std::string description, const int level)
+void log_internal(std::string description, const int minimum_role)
 {
     // Trim spaces.
     description = filter::string::trim(description);
     // Discard empty line.
     if (description.empty()) return;
     // Truncate very long entry.
-
     constexpr std::size_t maximum_length {50000};
     if (const std::size_t length = description.length(); length > maximum_length)
     {
         description.erase (50000);
         description.append ("... This entry was too large and has been truncated: " + std::to_string(length) + " bytes");
     }
-
     // Save this logbook entry to a filename with seconds and microseconds.
-    const std::string seconds = std::to_string(filter::date::seconds_since_epoch());
-    const std::string time = seconds + filter::string::fill(std::to_string(filter::date::numerical_microseconds()), 8, '0');
+    const std::string seconds = std::to_string(filter::date::get_seconds_since_epoch());
+    const std::string time = seconds + filter::string::fill(std::to_string(filter::date::get_microseconds_within_second()), 8, '0');
     const std::string file = filter_url_create_path({folder(), time});
     // The microseconds granularity depends on the platform.
     // On Windows it is lower than on Linux.
@@ -65,22 +63,12 @@ void log(std::string description, const int level)
     if (file_or_dir_exists(file))
         description.insert(0, " | ");
     else
-        description.insert(0, std::to_string(level) + " ");
+        description.insert(0, std::to_string(minimum_role) + " ");
     filter_url_file_put_contents_append(file, description);
 #ifdef HAVE_WINDOWS
     // Delay to cover for lower usec granularity on Windows.
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
-}
-
-
-// Records an extended journal entry.
-void log(std::string subject, const std::string& body, const int level)
-{
-    std::string description {std::move(subject)};
-    description.append("\n");
-    description.append(body);
-    log(description, level);
 }
 
 
@@ -92,9 +80,9 @@ void rotate()
 
     // Timestamp for removing older records, depending on whether it's a tiny journal.
 #ifdef HAVE_TINY_JOURNAL
-    const int old_timestamp = filter::date::seconds_since_epoch() - 14400;
+    const int old_timestamp = filter::date::get_seconds_since_epoch() - 14400;
 #else
-    const int old_timestamp = filter::date::seconds_since_epoch() - 6 * 86400;
+    const int old_timestamp = filter::date::get_seconds_since_epoch() - 6 * 86400;
 #endif
 
 
@@ -182,7 +170,7 @@ std::string next(std::string& filename)
 void clear()
 {
     for (const std::string directory = folder();
-        const auto& file : filter_url_scandir(directory))
+         const auto& file : filter_url_scandir(directory))
     {
         filter_url_unlink(filter_url_create_path({directory, file}));
     }

@@ -100,7 +100,7 @@ void sources_etcbc4_download ()
           if (verse == 1) book_done = true;
           break;
         }
-        database::logs::log (bookname + " " + std::to_string (chapter) + "." + std::to_string (verse));
+        database::logs::log (bookname, chapter, ".", verse);
         database::etcbc4::store (book, chapter, verse, response);
         // Wait a second: Be polite: Do not overload the website.
         std::this_thread::sleep_for (std::chrono::seconds (1));
@@ -133,7 +133,7 @@ void sources_etcbc4_parse ()
   for (auto book : books) {
     const std::vector <int> chapters = database::etcbc4::chapters (book);
     for (auto chapter : chapters) {
-      database::logs::log ("Parsing book " + std::to_string (book) + " chapter " + std::to_string (chapter));
+      database::logs::log ("Parsing book", book, "chapter", chapter);
       std::vector <int> verses = database::etcbc4::verses (book, chapter);
       for (auto verse : verses) {
         // The raw data for the verse.

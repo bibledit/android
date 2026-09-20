@@ -24,7 +24,7 @@ message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 # Start a project by setting the project name and version.
-project(bibledit VERSION 5.1.055)
+project(bibledit VERSION 5.1.059)
 message(STATUS "Bibledit version ${bibledit_VERSION}")
 
 
@@ -268,7 +268,6 @@ add_library(bibledit STATIC
         odf/text.cpp
         timer/index.cpp
         tasks/logic.cpp
-        tasks/run.cpp
         config/logic.cpp
         bb/logic.cpp
         bb/manage.cpp
@@ -439,7 +438,6 @@ add_library(bibledit STATIC
         resource/bbgateway.cpp
         resource/studylight.cpp
         resource/unload.cpp
-        jsonxx/jsonxx.cpp
         mapping/index.cpp
         mapping/map.cpp
         statistics/statistics.cpp
@@ -449,8 +447,6 @@ add_library(bibledit STATIC
         changes/manage.cpp
         changes/modifications.cpp
         changes/statistics.cpp
-        sprint/burndown.cpp
-        sprint/index.cpp
         checks/run.cpp
         checks/headers.cpp
         checks/index.cpp
@@ -621,8 +617,6 @@ add_library(bibledit STATIC
         related/logic.cpp
         sqlite/sqlite3.c
         ldap/logic.cpp
-        rss/logic.cpp
-        rss/feed.cpp
         microtar/microtar.c
         miniz/miniz.c
         read/index.cpp
@@ -710,6 +704,8 @@ add_library(bibledit STATIC
         gumbo/utf8.c
         gumbo/util.c
         gumbo/vector.c
+	database/tasks.cpp
+	database/tasks.h
 )
 
 
@@ -751,13 +747,11 @@ if (BUILD_UNITTESTS)
             unittests/verses.cpp
             unittests/paratext.cpp
             unittests/search.cpp
-            unittests/json.cpp
             unittests/related.cpp
             unittests/editone.cpp
             unittests/http.cpp
             unittests/memory.cpp
             unittests/tasks.cpp
-            unittests/rss.cpp
             unittests/roles.cpp
             unittests/md5.cpp
             unittests/string.cpp
@@ -788,7 +782,6 @@ if (BUILD_UNITTESTS)
             unittests/kjv.cpp
             unittests/oshb.cpp
             unittests/sblgnt.cpp
-            unittests/sprint.cpp
             unittests/mail.cpp
             unittests/navigation.cpp
             unittests/resources.cpp
@@ -812,6 +805,7 @@ if (BUILD_UNITTESTS)
             unittests/image.cpp
             unittests/scraper.cpp
             unittests/consistency.cpp
+	    unittests/numbers.cpp
     )
     target_link_libraries(unittest bibledit)
 endif ()
