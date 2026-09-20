@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "org.bibledit.android"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 36
         versionCode = 183
         versionName = "5.1.055"
@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.webkit:webkit:1.15.0")
+    implementation("androidx.webkit:webkit:1.17.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
