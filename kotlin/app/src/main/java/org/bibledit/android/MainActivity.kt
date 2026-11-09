@@ -9,11 +9,12 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -27,8 +28,6 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.doOnAttach
-import androidx.core.view.updateLayoutParams
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.json.JSONArray
@@ -64,6 +63,12 @@ class MainActivity : AppCompatActivity() {
 
     var previousSyncState: String? = null
 
+    private val timersHandler = Handler(Looper.getMainLooper())
+
+    private val resumeTimersRunnable = Runnable {
+        webView?.onResume()
+        webView?.resumeTimers()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +144,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         StartLibrary()
         startTimer()
+        resumeWebviewDelayed()
     }
 
 
@@ -147,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestart()
         StartLibrary()
         startTimer()
+        resumeWebviewDelayed()
     }
 
 
@@ -155,6 +162,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         StartLibrary()
         startTimer()
+        resumeWebviewDelayed()
     }
 
 
@@ -163,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         StopLibrary()
         stopTimer()
+        pauseWebviewNow()
     }
 
 
@@ -171,6 +180,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         StopLibrary()
         stopTimer()
+        pauseWebviewNow()
     }
 
 
@@ -181,6 +191,7 @@ class MainActivity : AppCompatActivity() {
         stopTimer()
         // Crashes: while (IsRunning ()) {};
         ShutdownLibrary()
+        pauseWebviewNow()
     }
 
 
@@ -706,5 +717,23 @@ class MainActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(root)
     }
+
+
+    // Schedules webView.resumeTimers() shortly from now.
+    // Idempotent: repeated calls leave exactly one pending resume,
+    // and each call restarts the 500 ms countdown.
+    private fun resumeWebviewDelayed() {
+        timersHandler.removeCallbacks(resumeTimersRunnable)
+        timersHandler.postDelayed(resumeTimersRunnable, 10)
+    }
+
+    // Cancels any pending resume, then pauses immediately.
+    // Idempotent: calling it repeatedly is harmless.
+    private fun pauseWebviewNow() {
+        timersHandler.removeCallbacks(resumeTimersRunnable)
+        webView?.onPause()
+        webView?.pauseTimers()
+    }
+
 
 }
