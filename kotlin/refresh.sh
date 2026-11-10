@@ -136,9 +136,6 @@ pushd $CPP_FOLDER
 echo No libsword
 sed -i. '/HAVE_SWORD/d' config.h
 
-echo No file-upload possible from web view
-sed -i. '/CONFIG_ENABLE_FILE_UPLOAD/d' config/config.h
-
 echo Android does not need BSD memory profiling calls
 sed -i. '/HAVE_MACH_MACH/d' config.h
 
