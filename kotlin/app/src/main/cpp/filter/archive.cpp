@@ -41,7 +41,7 @@ std::string zip_folder (std::string folder)
 #ifdef HAVE_CLOUD
   return zip_folder_shell_internal (folder);
 #endif
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
   return zip_folder_miniz_internal (folder);
 #endif
 }
@@ -88,7 +88,7 @@ std::string zip_folder_miniz_internal (std::string folder)
     // The file names in Windows will be backslashes (\) at this point.
     // But the mzip library, in its current configuration, works with forward slashes (/).
     // So the code below, in case of Windows, updates the type of slashes.
-    file = filter::string::replace (DIRECTORY_SEPARATOR, "/", file);
+    file = filter::string::replace (std::string(1, directory_separator), "/", file);
 #endif
     mz_bool status;
     if (is_dir) {
@@ -114,7 +114,7 @@ std::string unzip (std::string file)
 #ifdef HAVE_CLOUD
   return unzip_shell_internal (file);
 #endif
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
   return unzip_miniz_internal (file);
 #endif
 }
@@ -127,7 +127,7 @@ std::string unzip_shell_internal ([[maybe_unused]] std::string file)
   std::string folder = filter_url_tempfile ();
 #ifdef HAVE_CLOUD
   filter_url_mkdir (folder);
-  folder.append (DIRECTORY_SEPARATOR);
+  folder += directory_separator;
   const std::string logfile = filter_url_tempfile () + ".log";
   file = filter_url_escape_shell_argument (file);
   std::string command = std::string(filter::shell::get_executable(filter::shell::Executable::unzip)) + " -o -d " + folder + " " + file + " > " + logfile + " 2>&1";
@@ -299,7 +299,7 @@ std::string untar_gzip (std::string file)
   file = filter_url_escape_shell_argument (file);
   std::string folder = filter_url_tempfile ();
   filter_url_mkdir (folder);
-  folder.append (DIRECTORY_SEPARATOR);
+  folder += directory_separator;
   std::string logfile = filter_url_tempfile () + ".log";
   std::string command = "cd " + folder + " && " + std::string(filter::shell::get_executable(filter::shell::Executable::tar)) + " zxf " + file + " > " + logfile + " 2>&1";
   int return_var;

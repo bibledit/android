@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <setup/index.h>
 #include <setup/logic.h>
 #include <library/locks.h>
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
 #else
 #include <curl/curl.h>
 #endif
@@ -47,7 +47,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "tasks/logic.h"
 
 
-bool bibledit_started{false};
+static bool bibledit_started{false};
+static std::thread * timer_thread_ptr {nullptr};
+static std::thread * plain_web_server_thread_ptr {nullptr};
+static std::thread * secure_web_server_thread_ptr {nullptr};
 
 
 // Get Bibledit's version number.
@@ -66,7 +69,7 @@ const char* bibledit_get_network_port()
     if (!config_globals_negotiated_port_number.empty()) return config_globals_negotiated_port_number.c_str();
 
     // On a client device, negotiate a local port number.
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     std::vector<int> ports = {9876, 9987, 9998};
     for (auto port : ports)
     {
@@ -122,12 +125,12 @@ void bibledit_initialize_library(const char* package, const char* webroot)
     std::thread ssl_tls = std::thread(filter_url_ssl_tls_initialize);
     ssl_tls.detach();
 
-#ifndef HAVE_CLIENT
+#ifdef HAVE_CLOUD
     // Cloud initializes OpenLDAP server access settings (after webroot has been set).
     ldap_logic_initialize();
 #endif
 
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     // Set local timezone offset in the library on Windows.
     int hours{0};
 #ifdef HAVE_WINDOWS
@@ -190,7 +193,7 @@ void bibledit_start_library()
     bibledit_started = true;
 
     // Setup server behaviour.
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     config_globals_client_prepared = true;
 #else
     config_globals_client_prepared = false;
@@ -217,16 +220,16 @@ void bibledit_start_library()
     // Start the thread pools with the workers.
     start_thread_pool();
     tasks::tasks_logic_load();
-    tasks::tasks_logic_start_thread_pool(MAX_PARALLEL_TASKS);
+    tasks::tasks_logic_start_thread_pool(config::logic::maximum_simultaneous_background_tasks());
 
     // Run the plain web server in a thread.
-    config_globals_http_worker = new std::thread(http_server);
+    plain_web_server_thread_ptr = new std::thread(http_server);
 
     // Run the secure web server in a thread.
-    config_globals_https_worker = new std::thread(https_server);
+    secure_web_server_thread_ptr = new std::thread(https_server);
 
     // Run the timers in a thread.
-    config_globals_timer = new std::thread(timer_index);
+    timer_thread_ptr = new std::thread(timer_index);
 
     // Client should sync right after wake up.
     sendreceive_queue_startup();
@@ -342,18 +345,19 @@ void bibledit_stop_library()
     url.append(config::logic::http_network_port());
     filter_url_http_get(url, error, false);
 
-#ifdef RUN_SECURE_SERVER
-    // If the secure server runs, connect to it to initiate its shutdown mechanism.
-    std::string https_port = config::logic::https_network_port();
-    if (https_port.length() > 1)
+    if constexpr (config::logic::run_secure_server())
     {
-        url = "https://localhost:";
-        url.append(https_port);
-        filter_url_http_get(url, error, false);
-        // Let the connection start, then close it.
-        // The server will then abort the TLS handshake, and shut down.
+        // If the secure server runs, connect to it to initiate its shutdown mechanism.
+        std::string https_port = config::logic::https_network_port();
+        if (https_port.length() > 1)
+        {
+            url = "https://localhost:";
+            url.append(https_port);
+            filter_url_http_get(url, error, false);
+            // Let the connection start, then close it.
+            // The server will then abort the TLS handshake, and shut down.
+        }
     }
-#endif
 
     // Stop the thread pools for the workers.
     stop_thread_pool();
@@ -363,14 +367,17 @@ void bibledit_stop_library()
     // That signal will unblock the blocking BSD sockets, and so allow the shutdown process to proceed.
 
     // Wait till the servers and the timers shut down.
-    config_globals_http_worker->join();
-    config_globals_https_worker->join();
-    config_globals_timer->join();
+    plain_web_server_thread_ptr->join();
+    secure_web_server_thread_ptr->join();
+    timer_thread_ptr->join();
 
     // Clear memory.
-    delete config_globals_http_worker;
-    delete config_globals_https_worker;
-    delete config_globals_timer;
+    delete plain_web_server_thread_ptr;
+    delete secure_web_server_thread_ptr;
+    delete timer_thread_ptr;
+    plain_web_server_thread_ptr = nullptr;
+    secure_web_server_thread_ptr = nullptr;
+    timer_thread_ptr = nullptr;
 }
 
 

@@ -23,18 +23,19 @@ cmake_minimum_required(VERSION 3.28)
 message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
-# Start a project by setting the project name and version.
-project(bibledit VERSION 5.1.059)
+# Start the project.
+project(bibledit
+	VERSION 5.1.060
+	LANGUAGES C CXX
+)
 message(STATUS "Bibledit version ${bibledit_VERSION}")
 
 
-set(bibledit_VERSION "${bibledit_VERSION_MAJOR}.${bibledit_VERSION_MINOR}.${bibledit_VERSION_PATCH}")
-
-
+set(COMPILER_GCC OFF)
+set(COMPILER_CLANG OFF)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(COMPILER_GCC ON)
-endif()
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang") # Clang, AppleClang, ...
     set(COMPILER_CLANG ON)
 endif()
 
@@ -60,6 +61,14 @@ message(STATUS "Build for Linux ${HAVE_LINUX} (enable: $cmake -DHAVE_LINUX=ON)")
 
 option(HAVE_IOS "Build for iOS" OFF)
 message(STATUS "Build for iOS ${HAVE_IOS} (enable: $cmake -DHAVE_IOS=ON)")
+
+
+if (NOT HAVE_WINDOWS AND NOT HAVE_ANDROID AND NOT HAVE_MACOS AND NOT HAVE_LINUX AND NOT HAVE_IOS)
+	set(HAVE_CLOUD ON)
+else ()
+	set(HAVE_CLOUD OFF)
+endif ()
+message(STATUS "Build for Cloud ${HAVE_CLOUD} (when no other platform is enabled)")
 
 
 # Handle the install prefix.

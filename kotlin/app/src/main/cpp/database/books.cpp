@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <database/booksdata.h>
 #include <filter/diff.h>
 #include <filter/string.h>
+#include <nlohmann/json.hpp>
+
 
 
 namespace database::books {
@@ -55,7 +57,7 @@ template <auto search_member, auto result_member, typename DefaultFn>
 {
     if (const auto iter = std::ranges::find(books_table, key, search_member);
         iter != std::ranges::cend(books_table))
-        return iter->*result_member;
+        return std::invoke(result_member, *iter);
     return std::invoke(std::forward<DefaultFn>(default_fn));
 }
 
@@ -97,8 +99,7 @@ book_id get_id_from_osis(const std::string_view osis)
 
 // Tries to interpret $text as the name of a Bible book.
 // Returns the book's identifier if it succeeds.
-// If it fails, it returns 0.
-
+// It cannot fail, it always returns the best match, however bad the match is.
 book_id get_id_like_text(const std::string& text)
 {
     struct candidate
@@ -111,8 +112,6 @@ book_id get_id_like_text(const std::string& text)
 
     // Go through all known book names and abbreviations.
     // Store how much parameter "text" differs from the known names.
-    std::vector<int> ids{};
-    std::vector<int> similarities{};
     for (const auto & record : books_table)
     {
         candidates.emplace_back(record.id, filter_diff_character_similarity(text, filter::string::unicode_string_casefold(std::string{record.english})));
@@ -165,4 +164,45 @@ std::string book_type_to_string(const book_type type)
     default: return {};
     }
 }
+
+
+std::string get_books_json()
+{
+    // Name of a book type, as used in the JSON output.
+    const auto books_json_type_name = [](const book_type type) -> std::string_view
+    {
+        switch (type)
+        {
+        case book_type::front_back:
+            return "frontback";
+        case book_type::old_testament:
+            return "ot";
+        case book_type::new_testament:
+            return "nt";
+        case book_type::other:
+            return "other";
+        case book_type::apocryphal:
+            return "ap";
+        case book_type::unknown:
+        default:
+            return "unknown";
+        }
+    };
+
+    // Exports all book data to JSON.
+    nlohmann::json books = nlohmann::json::array();
+    for (const book_record& book : books_table) {
+        books.push_back({
+            {"english", book.english},
+            {"osis", book.osis},
+            {"usfm", book.usfm},
+            {"id", static_cast<int>(book.id)},
+            {"order", static_cast<int>(book.order)},
+            {"type", books_json_type_name(book.type)},
+        });
+    }
+    return books.dump(2);
+}
+
+
 } // End of namespace.

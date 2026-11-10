@@ -17,95 +17,97 @@
  */
 
 
-#include <fonts/logic.h>
-#include <filter/url.h>
-#include <filter/string.h>
 #include <database/config/bible.h>
+#include <filter/string.h>
+#include <filter/url.h>
+#include <fonts/logic.h>
+
+#include "database/logs.h"
 
 
 namespace fonts::logic {
-
-
-static std::string folder ()
+static std::string folder()
 {
-  return filter_url_create_root_path ({"fonts"});
+    return filter_url_create_root_path({"fonts"});
 }
 
 
-std::vector <std::string> get_fonts ()
+std::vector<std::string> get_fonts()
 {
-  const std::vector <std::string> files = filter_url_scandir (folder());
-  std::vector <std::string> fonts;
-  for (const auto& file : files) {
-    const std::string suffix = filter_url_get_extension (file);
-    if (suffix == "txt") continue;
-    if (suffix == "html") continue;
-    if (suffix == "h") continue;
-    if (suffix == "cpp") continue;
-    if (suffix == "o") continue;
-    fonts.push_back (file);
-  }
-  return fonts;
+    std::vector <std::string> fonts;
+    for (const auto& file : filter_url_scandir (folder ())) {
+        const std::string suffix = filter_url_get_extension (file);
+        if (suffix == "txt") continue;
+        if (suffix == "html") continue;
+        if (suffix == "h") continue;
+        if (suffix == "cpp") continue;
+        if (suffix == "o") continue;
+        fonts.push_back (file);
+    }
+    return fonts;
 }
 
 
-bool font_exists (const std::string& font)
+bool font_exists(const std::string& font)
 {
-  const std::string path = filter_url_create_path ({folder (), font});
-  return file_or_dir_exists (path);
+    const std::string path = filter_url_create_path({folder(), font});
+    return file_or_dir_exists(path);
 }
 
 
-std::string get_font_path (const std::string& font)
+// Get path to font for web.
+// So always use the forward slashes for the web.
+std::string get_web_font_path(const std::string& font)
 {
-  // Case of no font.
-  if (font.empty()) return font;
-  
-  // Case when the font exists within Bibledit.
-  if (font_exists (font)) {
-    return filter_url_create_path ({"../fonts", font});
-  }
-  
-  // Case when the font is available from the browser independent of Bibledit.
-  if (filter_url_basename (font) == font) {
+    // Case of no font.
+    if (font.empty())
+        return font;
+
+    // Case when the font exists within Bibledit.
+    if (font_exists(font))
+    {
+        const auto font_path = filter_url_create_path_web({"..", "fonts", font});
+        return font_path;
+    }
+
+    // Case when the font is available from the browser independent of Bibledit.
+    if (filter_url_basename(font) == font)
+        return font;
+
+    // Font is on external location.
     return font;
-  }
-  
-  // Font is on external location.
-  return font;
 }
 
 
-void erase (const std::string& font)
+void erase(const std::string& font)
 {
-  const std::string path = filter_url_create_path ({folder (), font});
-  filter_url_unlink (path);
+    const std::string path = filter_url_create_path({folder(), font});
+    filter_url_unlink(path);
 }
 
 
 // When a font is set for a Bible in Bibledit Cloud, this becomes the default font for the clients.
 // Ahd when the client sets its own font, this font will be taken instead.
-std::string get_text_font (const std::string& bible)
+std::string get_text_font(const std::string& bible)
 {
-  std::string font = database::config::bible::get_text_font (bible);
-#ifdef HAVE_CLIENT
-  const std::string client_font = database::config::bible::get_text_font_client (bible);
-  if (!client_font.empty ()) {
-    font = client_font;
-  }
+    std::string font = database::config::bible::get_text_font(bible);
+#ifndef HAVE_CLOUD
+    const std::string client_font = database::config::bible::get_text_font_client(bible);
+    if (!client_font.empty())
+    {
+        font = client_font;
+    }
 #endif
-  return font;
+    return font;
 }
 
 
 // Returns true if the $font path has a font suffix.
-bool is_font (const std::string& suffix)
+bool is_font(const std::string& suffix)
 {
-  return (suffix == "ttf")
-  || (suffix == "otf")
-  || (suffix == "otf")
-  || (suffix == "woff");
+    return (suffix == "ttf")
+        || (suffix == "otf")
+        || (suffix == "otf")
+        || (suffix == "woff");
 }
-
-
 } // namespace

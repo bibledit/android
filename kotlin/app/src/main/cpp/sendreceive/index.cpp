@@ -164,7 +164,7 @@ std::string sendreceive_index (Webserver_Request& webserver_request)
    }
   
   
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
   if (client_logic_client_enabled ()) {
     view.enable_zone ("clienton");
   } else {
@@ -192,15 +192,16 @@ std::string sendreceive_index (Webserver_Request& webserver_request)
   view.set_variable ("demo", demo_client_warning ());
 
   
-#ifdef HAVE_PARATEXT
-  std::vector <std::string> bibles = Paratext_Logic::enabledBibles ();
-  if (!bibles.empty ()) {
-    view.enable_zone ("paratexton");
-    view.set_variable ("paratextbibles", filter::string::implode (bibles, ", "));
-  } else {
-    view.enable_zone ("paratextoff");
+  if constexpr (config::logic::work_with_paratext())
+  {
+      std::vector <std::string> bibles = Paratext_Logic::enabledBibles ();
+      if (!bibles.empty ()) {
+          view.enable_zone ("paratexton");
+          view.set_variable ("paratextbibles", filter::string::implode (bibles, ", "));
+      } else {
+          view.enable_zone ("paratextoff");
+      }
   }
-#endif
 
   
   if (database::config::bible::get_read_from_git (bible)) {

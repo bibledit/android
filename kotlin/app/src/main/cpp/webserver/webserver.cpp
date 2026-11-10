@@ -329,7 +329,7 @@ void http_server()
     // Create a listening socket.
     // This represents an endpoint.
     // This prepares to accept incoming connections on.
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     // A client listens on IPv4, see also below.
     const int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 #endif
@@ -360,7 +360,7 @@ void http_server()
     }
 
     // The listening socket will be an endpoint for all requests to a port on this host.
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     // When configured as a client, it listens on the IPv4 loopback device.
     // It has been seen on Ubuntu 16.04 that a Bibledit Client would not listen on a IPv6 loopback device.
     sockaddr_in server_addr{};
@@ -876,7 +876,8 @@ void https_server()
     // On clients, don't run the secure web server.
     // It is not possible to get a https certificate for https://localhost anyway.
     // Not running this secure server saves valuable system resources on low power devices.
-#ifdef RUN_SECURE_SERVER
+    if constexpr (not config::logic::run_secure_server())
+        return;
 
     // The https network port to listen on.
     // Port 0..9 means: Don't run the secure web server.
@@ -1075,8 +1076,6 @@ void https_server()
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     mbedtls_psa_crypto_free();
-
-#endif // ifdef RUN_SECURE_SERVER
 }
 
 

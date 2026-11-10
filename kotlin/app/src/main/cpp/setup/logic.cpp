@@ -86,7 +86,7 @@ void setup_conditionally (const char * package)
       database::logs::log (message);
     }
     
-#ifndef HAVE_CLIENT
+#ifdef HAVE_CLOUD
     // Cloud updates the available SWORD modules and web resources.
     tasks::tasks_logic_queue (tasks::enums::task::refresh_sword_modules);
     tasks::tasks_logic_queue (tasks::enums::task::refresh_web_resources);
@@ -99,7 +99,7 @@ void setup_conditionally (const char * package)
   if (config::logic::version () != database::config::general::get_installed_interface_version ()) {
     
     // In client mode or in demo mode do not display the page for entering the admin's details.
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
     setup_complete_gui ();
 #endif
     if (config::logic::demo_enabled ()) setup_complete_gui ();
@@ -126,7 +126,7 @@ void setup_conditionally (const char * package)
   // Once the tasks are really complete, they will clear the flag.
   tasks::tasks_logic_queue (tasks::enums::task::reindex_bibles);
   tasks::tasks_logic_queue (tasks::enums::task::reindex_notes);
-#ifdef HAVE_CLIENT
+#ifndef HAVE_CLOUD
   // Same for the resource downloader, for the client.
   tasks::tasks_logic_queue (tasks::enums::task::sync_resources);
 #endif
@@ -161,15 +161,13 @@ void setup_write_access()
     };
     for (const auto& folder : folders)
     {
+        // Handle exceptions because not all of the above folders exist on all platforms.
         try
         {
-            if (const std::string path = filter_url_create_root_path({folder}); not filter_url_get_write_permission(path))
-                filter_url_set_write_permission(path);
+            const std::string path = filter_url_create_root_path({folder});
+            filter_url_set_write_permission(path);
         }
-        catch (const std::exception& exception)
-        {
-            database::logs::log(exception.what());
-        }
+        catch (...) { }
     }
 }
 
