@@ -12,8 +12,8 @@ android {
         applicationId = "org.bibledit.android"
         minSdk = 26
         targetSdk = 36
-        versionCode = 185
-        versionName = "5.1.059"
+        versionCode = 186
+        versionName = "5.1.060"
 
         externalNativeBuild {
             cmake {
