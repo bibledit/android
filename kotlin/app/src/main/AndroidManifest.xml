@@ -43,11 +43,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout|keyboardHidden"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|keyboard|navigation|density|uiMode"
             android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"
             android:windowSoftInputMode="adjustResize"
             >
+
+            <!-- Initial freeform window size on Chrome OS and large screens. -->
+            <layout
+                android:defaultWidth="1000dp"
+                android:defaultHeight="700dp"
+                android:minWidth="400dp"
+                android:minHeight="300dp" />
+
             <meta-data
                 android:name="WindowManagerPreference:FreeformWindowSize"
                 android:value="maximized" />
