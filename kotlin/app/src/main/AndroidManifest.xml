@@ -14,9 +14,6 @@
     <!-- It is not essential but still it's good to explicitly state that it does not require touch. -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
-    <!-- Fix for: This app is designed for mobile. Bibledit may not resize well. -->
-    <uses-feature android:name="android.hardware.type.pc" android:required="false" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -57,7 +54,7 @@
 
             <meta-data
                 android:name="WindowManagerPreference:FreeformWindowSize"
-                android:value="maximized" />
+                android:value="maximize" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
