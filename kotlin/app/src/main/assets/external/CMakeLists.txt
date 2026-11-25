@@ -63,7 +63,12 @@ option(HAVE_IOS "Build for iOS" OFF)
 message(STATUS "Build for iOS ${HAVE_IOS} (enable: $cmake -DHAVE_IOS=ON)")
 
 
-if (NOT HAVE_WINDOWS AND NOT HAVE_ANDROID AND NOT HAVE_MACOS AND NOT HAVE_LINUX AND NOT HAVE_IOS)
+option(HAVE_TEST_CLIENT "Build generic client for testing" OFF)
+message(STATUS "Build generic client for testing ${HAVE_TEST_CLIENT} (enable: $cmake -DHAVE_TEST_CLIENT=ON)")
+
+
+if (NOT HAVE_WINDOWS AND NOT HAVE_LINUX AND NOT HAVE_TEST_CLIENT
+	AND NOT HAVE_ANDROID AND NOT HAVE_MACOS AND NOT HAVE_IOS)
 	set(HAVE_CLOUD ON)
 else ()
 	set(HAVE_CLOUD OFF)
@@ -160,7 +165,6 @@ find_program(TAR tar REQUIRED)
 find_program(ZIP zip REQUIRED)
 find_program(UNZIP unzip REQUIRED)
 find_program(INSTALLMGR installmgr)
-find_program(DIATHEKE diatheke)
 
 
 # The C++ standard to use, and it is mandatory.
@@ -252,6 +256,7 @@ add_library(bibledit STATIC
         database/userresources.cpp
         database/statistics.cpp
         database/sample.cpp
+		database/sword.cpp
         session/logic.cpp
         session/login.cpp
         session/logout.cpp
@@ -814,7 +819,8 @@ if (BUILD_UNITTESTS)
             unittests/image.cpp
             unittests/scraper.cpp
             unittests/consistency.cpp
-	    unittests/numbers.cpp
+	        unittests/numbers.cpp
+	        unittests/sword.cpp
     )
     target_link_libraries(unittest bibledit)
 endif ()
@@ -973,6 +979,21 @@ if (PUGIXML_FOUND)
     endif ()
     target_link_libraries(generate ${PUGIXML_LIBRARIES})
 endif ()
+
+# The SWORD library to be installed on macOS manually: Add the search path
+set(ENV{PKG_CONFIG_PATH} "/usr/local/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+pkg_check_modules(SWORD REQUIRED IMPORTED_TARGET sword)
+if (SWORD_FOUND)
+	set(HAVE_SWORD ON)
+#	target_include_directories(bibledit PUBLIC ${SWORD_INCLUDE_DIRS})
+#	target_compile_options(bibledit PUBLIC ${SWORD_CFLAGS_OTHER})
+#	target_link_directories(bibledit PUBLIC ${SWORD_LIBRARY_DIRS})
+#	target_link_libraries(server ${SWORD_LIBRARIES})
+	target_link_libraries(bibledit PRIVATE
+		PkgConfig::SWORD
+	)
+endif ()
+
 
 pkg_check_modules(GTEST gtest>=1.10.0)
 if (GTEST_FOUND)
