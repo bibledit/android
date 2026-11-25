@@ -15,11 +15,6 @@ android {
         versionCode = 188
         versionName = "5.1.060"
 
-        externalNativeBuild {
-            cmake {
-                cppFlags += "-std=c++20"
-            }
-        }
         ndk {
             debugSymbolLevel = "FULL"
         }

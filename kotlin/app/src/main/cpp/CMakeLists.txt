@@ -1,16 +1,16 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html.
-# For more examples on how to use CMake, see https://github.com/android/ndk-samples.
-
 # Sets the minimum CMake version required for this project.
-# Bibledit in Java used minimum version 4.1.2. See to this later if needed.
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 4.1.2)
 
 # Declares the project name. The project name can be accessed via ${ PROJECT_NAME},
 # Since this is the top level CMakeLists.txt, the project name is also accessible
 # with ${CMAKE_PROJECT_NAME} (both CMake variables are in-sync within the top level
 # build script scope).
 project("bibledit")
+
+# C++ standard to use.
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -509,6 +509,7 @@ add_library(
         dialog/select.cpp
         checks/issues.cpp
         database/tasks.cpp
+        database/sword.cpp
         # End Bibledit kernel.
 )
 
