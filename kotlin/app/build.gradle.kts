@@ -12,8 +12,8 @@ android {
         applicationId = "org.bibledit.android"
         minSdk = 26
         targetSdk = 36
-        versionCode = 188
-        versionName = "5.1.060"
+        versionCode = 191
+        versionName = "5.1.061"
 
         ndk {
             debugSymbolLevel = "FULL"
